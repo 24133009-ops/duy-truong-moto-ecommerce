@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kết Quả Thanh Toán VNPAY - Duy Truong Moto</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="d-flex align-items-center justify-content-center min-vh-100 py-5" style="background: radial-gradient(circle at center, #1b2030 0%, #08090d 100%);">
+
+    <div class="container" style="max-width: 580px;">
+        <div class="glass-panel p-5 rounded-4 text-center">
+            <div th:if="${isSuccess}" class="mb-4">
+                <div class="logo-icon mx-auto mb-3 bg-success text-white" style="width: 80px; height: 80px; font-size: 38px;">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <h3 class="fw-bold text-white mb-2">GIAO DỊCH VNPAY THÀNH CÔNG!</h3>
+                <p class="text-secondary small" th:text="${message}"></p>
+                
+                <div class="p-3 bg-black rounded-3 border border-secondary text-start small mb-4">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-secondary">Mã đơn hàng:</span>
+                        <strong class="text-gold" th:text="${orderCode}"></strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-secondary">Phương thức:</span>
+                        <span class="text-white">Cổng VNPAY QR / Thẻ ATM</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="text-secondary">Trạng thái thanh toán:</span>
+                        <span class="badge bg-success">ĐÃ THANH TOÁN TIỀN CỌC</span>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-3 justify-content-center">
+                    <a th:href="@{/orders}" class="btn btn-gold px-4">XEM LỊCH SỬ ĐƠN HÀNG</a>
+                    <a th:href="@{/home}" class="btn btn-outline-light px-4">QUAY LẠI TRANG CHỦ</a>
+                </div>
+            </div>
+
+            <div th:if="${!isSuccess}" class="mb-4">
+                <div class="logo-icon mx-auto mb-3 bg-danger text-white" style="width: 80px; height: 80px; font-size: 38px;">
+                    <i class="fa-solid fa-circle-xmark"></i>
+                </div>
+                <h3 class="fw-bold text-white mb-2">GIAO DỊCH THẤT BẠI HOẶC BỊ HỦY</h3>
+                <p class="text-secondary small" th:text="${message}"></p>
+                <div class="d-flex gap-3 justify-content-center mt-4">
+                    <a th:href="@{/checkout}" class="btn btn-outline-gold px-4">THỬ LẠI THANH TOÁN</a>
+                    <a th:href="@{/home}" class="btn btn-outline-light px-4">QUAY VỀ TRANG CHỦ</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

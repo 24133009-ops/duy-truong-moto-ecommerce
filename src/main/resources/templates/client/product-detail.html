@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${product.name + ' - Duy Truong Moto'}">Chi Tiết Xe</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <!-- Header / Navbar Include -->
+    <div th:replace="~{layout/main :: nav}"></div>
+
+    <div class="container py-5">
+        <!-- Messages -->
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show bg-success text-white border-0 rounded-4 shadow">
+            <i class="fa-solid fa-circle-check me-2"></i> <span th:text="${successMessage}"></span>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+        </div>
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show bg-danger text-white border-0 rounded-4 shadow">
+            <i class="fa-solid fa-triangle-exclamation me-2"></i> <span th:text="${errorMessage}"></span>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Product Overview -->
+        <div class="row g-5">
+            <!-- Left: Media & Gallery -->
+            <div class="col-lg-6">
+                <div class="glass-panel p-3 rounded-4 mb-3 text-center overflow-hidden">
+                    <img th:src="${product.mainImage}" th:alt="${product.name}" class="img-fluid rounded-4 shadow" style="max-height: 450px; width: 100%; object-fit: cover;">
+                </div>
+                <!-- Badges -->
+                <div class="d-flex gap-3 justify-content-center">
+                    <div class="glass-panel px-3 py-2 text-center rounded-3">
+                        <i class="fa-solid fa-shield-check text-gold fs-5 mb-1 d-block"></i>
+                        <span class="small text-secondary">Bảo Hành 3 Năm</span>
+                    </div>
+                    <div class="glass-panel px-3 py-2 text-center rounded-3">
+                        <i class="fa-solid fa-truck-ramp-box text-danger fs-5 mb-1 d-block"></i>
+                        <span class="small text-secondary">Giao Sàn Trượt VIP</span>
+                    </div>
+                    <div class="glass-panel px-3 py-2 text-center rounded-3">
+                        <i class="fa-solid fa-certificate text-info fs-5 mb-1 d-block"></i>
+                        <span class="small text-secondary">Hải Quan Chính Ngạch</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Details & Purchase -->
+            <div class="col-lg-6">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <span class="badge bg-gold text-dark fw-bold" th:text="${product.brand}"></span>
+                    <span class="badge bg-dark border border-secondary text-secondary" th:text="${product.category.name}"></span>
+                    <div class="text-warning small ms-auto">
+                        <i class="fa-solid fa-star text-gold"></i> <strong th:text="${product.rating}"></strong> / 5.0 (Đánh giá)
+                    </div>
+                </div>
+
+                <h2 class="fw-bold text-white mb-3" th:text="${product.name}"></h2>
+
+                <!-- Showroom Origin -->
+                <div class="p-3 bg-black border border-secondary rounded-3 mb-4 d-flex align-items-center gap-3">
+                    <i class="fa-solid fa-store fs-3 text-gold"></i>
+                    <div>
+                        <div class="small text-secondary">Đang trưng bày tại:</div>
+                        <strong class="text-white" th:text="${product.store.name}"></strong>
+                        <div class="small text-gold" th:text="${product.store.address}"></div>
+                    </div>
+                </div>
+
+                <!-- Price Box -->
+                <div class="glass-panel p-4 rounded-4 mb-4">
+                    <div class="small text-secondary mb-1">GIÁ NIÊM YẾT CHÍNH HÃNG:</div>
+                    <div class="d-flex align-items-baseline gap-3">
+                        <div class="fs-2 fw-black text-gradient-gold" th:text="${#numbers.formatDecimal(product.getEffectivePrice(), 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></div>
+                        <div th:if="${product.promotionalPrice != null}" class="fs-5 text-secondary text-decoration-line-through" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></div>
+                    </div>
+                    <div class="small text-secondary mt-1">Đã bao gồm thuế VAT & Hỗ trợ thủ tục đăng ký ra biển số</div>
+                </div>
+
+                <!-- Add to Cart Form -->
+                <form th:action="@{/cart/add}" method="post" class="mb-4">
+                    <input type="hidden" name="productId" th:value="${product.id}">
+                    <div class="row g-3 align-items-center">
+                        <div class="col-sm-4">
+                            <label class="form-label text-secondary small fw-bold">Số lượng đặt:</label>
+                            <input type="number" name="quantity" value="1" min="1" th:max="${product.quantity}" class="form-control form-control-luxury text-center fw-bold text-gold">
+                        </div>
+                        <div class="col-sm-8 d-flex align-items-end gap-2 pt-sm-4">
+                            <button type="submit" class="btn btn-gold w-100 py-3 fw-bold shadow">
+                                <i class="fa-solid fa-cart-plus me-2"></i> THÊM VÀO GIỎ HÀNG
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="d-flex gap-3">
+                    <button class="btn btn-outline-gold w-100 py-2 rounded-pill" data-bs-toggle="modal" data-bs-target="#liveChatModal">
+                        <i class="fa-solid fa-calendar-check me-2"></i> Đặt Lịch Lái Thử Tại Showroom
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Specifications Table & Description -->
+        <div class="row mt-5 g-4">
+            <div class="col-lg-7">
+                <div class="glass-panel p-4 rounded-4 h-100">
+                    <h4 class="fw-bold text-gold mb-3"><i class="fa-solid fa-circle-info me-2"></i> MÔ TẢ CHI TIẾT DÒNG XE</h4>
+                    <div class="text-light" style="white-space: pre-line; line-height: 1.8;" th:text="${product.description}"></div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="glass-panel p-4 rounded-4 h-100">
+                    <h4 class="fw-bold text-gold mb-3"><i class="fa-solid fa-sliders me-2"></i> THÔNG SỐ KỸ THUẬT</h4>
+                    <table class="table table-dark table-borderless text-secondary small">
+                        <tbody>
+                            <tr class="border-bottom border-secondary">
+                                <td class="fw-bold text-white py-2">Thương hiệu:</td>
+                                <td class="text-end text-gold" th:text="${product.brand}"></td>
+                            </tr>
+                            <tr class="border-bottom border-secondary">
+                                <td class="fw-bold text-white py-2">Dung tích xi lanh:</td>
+                                <td class="text-end text-gold" th:text="${product.engineCapacity != null ? product.engineCapacity : 'Đang cập nhật'}"></td>
+                            </tr>
+                            <tr class="border-bottom border-secondary">
+                                <td class="fw-bold text-white py-2">Màu sơn / Ngoại thất:</td>
+                                <td class="text-end text-gold" th:text="${product.color}"></td>
+                            </tr>
+                            <tr class="border-bottom border-secondary">
+                                <td class="fw-bold text-white py-2">Tồn kho Showroom:</td>
+                                <td class="text-end text-success fw-bold" th:text="${product.quantity} + ' chiếc có sẵn'"></td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold text-white py-2">Lượt đã bàn giao:</td>
+                                <td class="text-end text-danger fw-bold" th:text="${product.sold} + ' khách hàng đã sở hữu'"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- REVIEWS & RATINGS (Prompt Requirement: Tối thiểu 50 ký tự + hình ảnh/video) -->
+        <section class="mt-5">
+            <div class="glass-panel p-4 p-md-5 rounded-4">
+                <div class="d-flex justify-content-between align-items-center mb-4 border-bottom border-secondary pb-3">
+                    <div>
+                        <h4 class="fw-bold text-white mb-1"><i class="fa-solid fa-comments text-gold me-2"></i> ĐÁNH GIÁ TỪ CHỦ XE</h4>
+                        <p class="text-secondary small mb-0">Chia sẻ trải nghiệm thực tế sau khi nhận bàn giao siêu mô tô</p>
+                    </div>
+                </div>
+
+                <!-- Write Review Form (For logged in users) -->
+                <div sec:authorize="isAuthenticated()" class="p-4 bg-black border border-gold rounded-4 mb-5">
+                    <h5 class="fw-bold text-gold mb-3"><i class="fa-solid fa-pen-nib me-2"></i> VIẾT ĐÁNH GIÁ TRẢI NGHIỆM</h5>
+                    <form th:action="@{/products/reviews/add}" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="productId" th:value="${product.id}">
+
+                        <div class="mb-3">
+                            <label class="form-label text-secondary small fw-bold">Chấm điểm số sao:</label>
+                            <select name="stars" class="form-select form-select-luxury" style="max-width: 200px;">
+                                <option value="5">⭐⭐⭐⭐⭐ (5 Sao - Xuất sắc)</option>
+                                <option value="4">⭐⭐⭐⭐ (4 Sao - Rất tốt)</option>
+                                <option value="3">⭐⭐⭐ (3 Sao - Bình thường)</option>
+                                <option value="2">⭐⭐ (2 Sao - Kém)</option>
+                                <option value="1">⭐ (1 Sao - Tệ)</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label text-secondary small fw-bold">
+                                Nội dung nhận xét <span class="text-danger">* (Yêu cầu tối thiểu 50 ký tự chia sẻ cảm nhận thực tế)</span>
+                            </label>
+                            <textarea name="content" id="reviewContent" rows="4" class="form-control form-control-luxury" placeholder="Hãy mô tả chi tiết cảm giác lái, gia tốc, tiếng pô, độ êm ái của phuộc, dịch vụ bàn giao tại showroom Duy Truong Moto... (Tối thiểu 50 ký tự)" required minlength="50"></textarea>
+                            <div class="d-flex justify-content-between text-secondary small mt-1">
+                                <span>Độ dài yêu cầu: tối thiểu 50 ký tự</span>
+                                <span id="charCount">0 / 50 ký tự</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label text-secondary small fw-bold">Đính kèm hình ảnh/video xe thực tế (Tải lên Cloudinary):</label>
+                            <input type="file" name="mediaFile" class="form-control form-control-luxury" accept="image/*,video/*">
+                        </div>
+
+                        <button type="submit" class="btn btn-gold px-4 py-2 fw-bold">GỬI ĐÁNH GIÁ CHỦ XE</button>
+                    </form>
+                </div>
+
+                <div sec:authorize="isAnonymous()" class="text-center p-4 bg-black border border-secondary rounded-4 mb-4">
+                    <p class="text-secondary mb-2">Vui lòng đăng nhập để viết đánh giá trải nghiệm dòng xe này</p>
+                    <a th:href="@{/auth/login}" class="btn btn-outline-gold btn-sm px-4">Đăng Nhập Ngay</a>
+                </div>
+
+                <!-- Review Items List -->
+                <div th:if="${#lists.isEmpty(reviews)}" class="text-center py-4 text-secondary">
+                    Chưa có đánh giá nào cho dòng xe này. Hãy là chủ xe đầu tiên để lại cảm nhận!
+                </div>
+
+                <div class="d-flex flex-column gap-3" th:if="${not #lists.isEmpty(reviews)}">
+                    <div class="p-3 bg-dark border border-secondary rounded-4" th:each="rev : ${reviews}">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="d-flex align-items-center gap-2">
+                                <img th:src="${rev.user.avatar}" class="rounded-circle" style="width: 36px; height: 36px; object-fit: cover;">
+                                <div>
+                                    <strong class="text-white small" th:text="${rev.user.getFullName()}"></strong>
+                                    <span class="badge bg-gold text-dark ms-2" style="font-size: 0.65rem;">Chủ xe đã mua</span>
+                                </div>
+                            </div>
+                            <div class="text-warning small">
+                                <span th:each="star : ${#numbers.sequence(1, rev.stars)}">★</span>
+                            </div>
+                        </div>
+                        <p class="text-light mb-2 small" th:text="${rev.content}"></p>
+                        <div th:if="${rev.mediaUrls != null}" class="mt-2">
+                            <img th:src="${rev.mediaUrls}" class="rounded-3 shadow" style="max-height: 180px; object-fit: cover;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer & Chat Include -->
+    <div th:replace="~{layout/main :: footer}"></div>
+    <div th:replace="~{layout/main :: div.floating-chat-btn}"></div>
+    <div th:replace="~{layout/main :: div#liveChatModal}"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script th:src="@{/js/app.js}"></script>
+    <script>
+        const reviewInput = document.getElementById("reviewContent");
+        const charCount = document.getElementById("charCount");
+        if (reviewInput && charCount) {
+            reviewInput.addEventListener("input", function() {
+                const len = this.value.length;
+                charCount.textContent = len + " / 50 ký tự";
+                if (len >= 50) {
+                    charCount.classList.add("text-success");
+                    charCount.classList.remove("text-danger");
+                } else {
+                    charCount.classList.add("text-danger");
+                    charCount.classList.remove("text-success");
+                }
+            });
+        }
+    </script>
+</body>
+</html>

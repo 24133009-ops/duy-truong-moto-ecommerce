@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hồ Sơ & Sổ Địa Chỉ - Duy Truong Moto</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <!-- Header / Navbar Include -->
+    <div th:replace="~{layout/main :: nav}"></div>
+
+    <div class="container py-5">
+        <h2 class="fw-bold text-white mb-4"><i class="fa-solid fa-user-gear text-gold me-2"></i> QUẢN LÝ TÀI KHOẢN & SỔ ĐỊA CHỈ NHẬN XE</h2>
+
+        <!-- Alert Messages -->
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show bg-success text-white border-0 rounded-4 shadow">
+            <i class="fa-solid fa-circle-check me-2"></i> <span th:text="${successMessage}"></span>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+        </div>
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show bg-danger text-white border-0 rounded-4 shadow">
+            <i class="fa-solid fa-triangle-exclamation me-2"></i> <span th:text="${errorMessage}"></span>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div class="row g-4">
+            <!-- Left: Profile Info -->
+            <div class="col-lg-5">
+                <div class="glass-panel p-4 rounded-4 mb-4 text-center">
+                    <img th:src="${currentUser.avatar}" class="rounded-circle border border-gold mb-3 shadow" style="width: 100px; height: 100px; object-fit: cover;">
+                    <h4 class="fw-bold text-white mb-1" th:text="${currentUser.getFullName()}"></h4>
+                    <span class="badge bg-gold text-dark fw-bold mb-3" th:text="${currentUser.userLevel != null ? currentUser.userLevel.name : 'Thành viên Bạc'}"></span>
+
+                    <div class="d-flex justify-content-around border-top border-secondary pt-3 mt-2 text-start">
+                        <div>
+                            <div class="small text-secondary">Điểm tích lũy:</div>
+                            <strong class="text-gold fs-5" th:text="${currentUser.point}"></strong>
+                        </div>
+                        <div>
+                            <div class="small text-secondary">Ví tài khoản:</div>
+                            <strong class="text-white fs-5" th:text="${#numbers.formatDecimal(currentUser.eWallet, 0, 'COMMA', 0, 'POINT')} + ' đ'"></strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Update Profile Form -->
+                <div class="glass-panel p-4 rounded-4">
+                    <h5 class="fw-bold text-gold mb-3">CHỈNH SỬA THÔNG TIN CÁ NHÂN</h5>
+                    <form th:action="@{/user/profile}" method="post" enctype="multipart/form-data">
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label text-secondary small fw-bold">Tên</label>
+                                <input type="text" name="firstname" th:value="${currentUser.firstname}" class="form-control form-control-luxury" required>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label text-secondary small fw-bold">Họ</label>
+                                <input type="text" name="lastname" th:value="${currentUser.lastname}" class="form-control form-control-luxury" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label text-secondary small fw-bold">Số điện thoại</label>
+                            <input type="tel" name="phone" th:value="${currentUser.phone}" class="form-control form-control-luxury" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label text-secondary small fw-bold">Số CMND / Căn cước công dân (Đăng ký xe)</label>
+                            <input type="text" name="idCard" th:value="${currentUser.idCard}" class="form-control form-control-luxury" placeholder="12 số căn cước">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label text-secondary small fw-bold">Ảnh đại diện mới (Cloudinary)</label>
+                            <input type="file" name="avatarFile" class="form-control form-control-luxury" accept="image/*">
+                        </div>
+
+                        <button type="submit" class="btn btn-gold w-100 py-2 fw-bold">LƯU CẬP NHẬT HỒ SƠ</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Right: Address Book (UC_010: Quản lý địa chỉ của tài khoản) -->
+            <div class="col-lg-7">
+                <div class="glass-panel p-4 rounded-4 mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold text-gold mb-0"><i class="fa-solid fa-address-book me-2"></i> SỔ ĐỊA CHỈ NHẬN XE (TỐI ĐA 6 ĐỊA CHỈ)</h5>
+                        <span class="badge bg-dark border border-secondary text-secondary" th:text="${#lists.size(addresses)} + ' / 6'"></span>
+                    </div>
+
+                    <div th:if="${#lists.isEmpty(addresses)}" class="p-4 bg-black rounded-3 text-center text-secondary small mb-3">
+                        Bạn chưa thêm địa chỉ nhận hàng nào. Hãy thêm địa chỉ để thuận tiện nhận bàn giao siêu xe!
+                    </div>
+
+                    <div class="d-flex flex-column gap-3 mb-4" th:if="${not #lists.isEmpty(addresses)}">
+                        <div class="p-3 bg-black border border-secondary rounded-3 d-flex justify-content-between align-items-center" th:each="addr : ${addresses}">
+                            <div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <strong class="text-white" th:text="${addr.recipientName}"></strong>
+                                    <span class="text-secondary small">| <span th:text="${addr.phone}"></span></span>
+                                    <span th:if="${addr.isDefault}" class="badge bg-gold text-dark" style="font-size: 0.65rem;">MẶC ĐỊNH</span>
+                                </div>
+                                <div class="text-secondary small mt-1" th:text="${addr.streetAddress} + ', ' + ${addr.city}"></div>
+                            </div>
+                            <div>
+                                <a th:href="@{/user/addresses/delete/{id}(id=${addr.id})}" class="text-danger p-2" title="Xóa địa chỉ" onclick="return confirm('Bạn có chắc muốn xóa địa chỉ này?')">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Add Address Form -->
+                    <div class="border-top border-secondary pt-3">
+                        <h6 class="fw-bold text-white mb-3"><i class="fa-solid fa-plus text-gold me-2"></i> THÊM ĐỊA CHỈ MỚI</h6>
+                        <form th:action="@{/user/addresses/add}" method="post">
+                            <div class="row g-2 mb-3">
+                                <div class="col-sm-6">
+                                    <label class="form-label text-secondary small">Họ tên người nhận</label>
+                                    <input type="text" name="recipientName" class="form-control form-control-luxury small" placeholder="Ví dụ: Nguyễn Văn A" required>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label text-secondary small">Số điện thoại</label>
+                                    <input type="tel" name="phone" class="form-control form-control-luxury small" placeholder="0901234567" required>
+                                </div>
+                            </div>
+                            <div class="row g-2 mb-3">
+                                <div class="col-sm-8">
+                                    <label class="form-label text-secondary small">Địa chỉ chi tiết (Số nhà, đường)</label>
+                                    <input type="text" name="streetAddress" class="form-control form-control-luxury small" placeholder="123 Lê Lợi, Bến Nghé" required>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="form-label text-secondary small">Tỉnh / Thành phố</label>
+                                    <input type="text" name="city" class="form-control form-control-luxury small" placeholder="TP. Hồ Chí Minh" required>
+                                </div>
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" name="isDefault" value="true" class="form-check-input bg-dark border-gold" id="checkDefault">
+                                <label class="form-check-label text-secondary small" for="checkDefault">Đặt làm địa chỉ nhận xe mặc định</label>
+                            </div>
+                            <button type="submit" class="btn btn-outline-gold btn-sm px-4">LƯU ĐỊA CHỈ MỚI</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Include -->
+    <div th:replace="~{layout/main :: footer}"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
