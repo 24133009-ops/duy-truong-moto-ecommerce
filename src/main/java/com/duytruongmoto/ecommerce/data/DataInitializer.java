@@ -27,7 +27,7 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        if (userRepository.count() > 0) {
+        if (userRepository.count() > 0 || userLevelRepository.count() > 0) {
             log.info("Dữ liệu hệ thống Duy Truong Moto đã tồn tại. Bỏ qua DataInitializer.");
             return;
         }
@@ -58,6 +58,7 @@ public class DataInitializer implements CommandLineRunner {
                 .password(passwordEncoder.encode("admin123"))
                 .role(Role.ROLE_ADMIN)
                 .isEmailActive(true)
+                .isPhoneActive(true)
                 .avatar("https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80")
                 .point(9999L)
                 .eWallet(BigDecimal.valueOf(500000000))
@@ -73,6 +74,7 @@ public class DataInitializer implements CommandLineRunner {
                 .password(passwordEncoder.encode("manager123"))
                 .role(Role.ROLE_MANAGER)
                 .isEmailActive(true)
+                .isPhoneActive(true)
                 .point(500L)
                 .userLevel(gold)
                 .build());
@@ -86,6 +88,7 @@ public class DataInitializer implements CommandLineRunner {
                 .password(passwordEncoder.encode("vendor123"))
                 .role(Role.ROLE_VENDOR)
                 .isEmailActive(true)
+                .isPhoneActive(true)
                 .point(2000L)
                 .eWallet(BigDecimal.valueOf(150000000))
                 .userLevel(gold)
@@ -100,6 +103,7 @@ public class DataInitializer implements CommandLineRunner {
                 .password(passwordEncoder.encode("shipper123"))
                 .role(Role.ROLE_SHIPPER)
                 .isEmailActive(true)
+                .isPhoneActive(true)
                 .point(100L)
                 .build());
 
@@ -112,6 +116,7 @@ public class DataInitializer implements CommandLineRunner {
                 .password(passwordEncoder.encode("user123"))
                 .role(Role.ROLE_USER)
                 .isEmailActive(true)
+                .isPhoneActive(true)
                 .point(350L)
                 .eWallet(BigDecimal.valueOf(50000000))
                 .userLevel(silver)

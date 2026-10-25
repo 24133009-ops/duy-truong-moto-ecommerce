@@ -40,13 +40,16 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private Role role = Role.ROLE_USER;
 
+    @Builder.Default
     @Column(nullable = false)
     private Boolean isEmailActive = false;
 
+    @Builder.Default
     @Column(nullable = false)
     private Boolean isPhoneActive = false;
 
@@ -59,9 +62,11 @@ public class User {
     @Column(length = 500)
     private String cover;
 
+    @Builder.Default
     @Column(nullable = false)
     private Long point = 0L;
 
+    @Builder.Default
     @Column(nullable = false, precision = 18, scale = 2)
     private BigDecimal eWallet = BigDecimal.ZERO;
 
@@ -69,10 +74,13 @@ public class User {
     @JoinColumn(name = "user_level_id")
     private UserLevel userLevel;
 
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Address> addresses = new ArrayList<>();
 
+    @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
+    @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();
 
     public String getFullName() {

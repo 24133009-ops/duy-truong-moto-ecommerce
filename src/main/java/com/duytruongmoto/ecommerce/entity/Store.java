@@ -42,9 +42,11 @@ public class Store {
     @Column(length = 20)
     private String phone;
 
+    @Builder.Default
     @Column(nullable = false)
     private Boolean isActive = true;
 
+    @Builder.Default
     @Column(nullable = false)
     private Boolean isOpen = true;
 
@@ -52,15 +54,20 @@ public class Store {
     @JoinColumn(name = "commission_id")
     private Commission commission;
 
+    @Builder.Default
     @Column(nullable = false)
     private Long point = 0L;
 
+    @Builder.Default
     @Column(nullable = false)
     private Double rating = 5.0;
 
+    @Builder.Default
     @Column(nullable = false, precision = 18, scale = 2)
     private BigDecimal eWallet = BigDecimal.ZERO;
 
+    @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
+    @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();
 }

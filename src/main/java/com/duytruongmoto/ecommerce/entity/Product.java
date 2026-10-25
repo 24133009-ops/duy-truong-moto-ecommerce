@@ -43,15 +43,19 @@ public class Product {
     @Column(precision = 18, scale = 2)
     private BigDecimal promotionalPrice; // Gia khuyen mai
 
+    @Builder.Default
     @Column(nullable = false)
     private Integer quantity = 1; // So luong ton kho showroom
 
+    @Builder.Default
     @Column(nullable = false)
     private Integer sold = 0; // So luong da ban
 
+    @Builder.Default
     @Column(nullable = false)
     private Boolean isActive = true; // Duoc admin cap phep
 
+    @Builder.Default
     @Column(nullable = false)
     private Boolean isSelling = true; // Showroom dang mo ban hay luu tru
 
@@ -65,6 +69,7 @@ public class Product {
     @Column(length = 500)
     private String videoUrl; // Video review tieng po xe / goc nhin 360
 
+    @Builder.Default
     @Column(nullable = false)
     private Double rating = 5.0;
 
@@ -77,6 +82,7 @@ public class Product {
     @Column(length = 50)
     private String brand; // Ducati, Kawasaki, BMW, Harley-Davidson, Honda
 
+    @Builder.Default
     @ManyToMany
     @JoinTable(
         name = "product_style_values",
@@ -85,7 +91,9 @@ public class Product {
     )
     private List<StyleValue> styleValues = new ArrayList<>();
 
+    @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
+    @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();
 
     public BigDecimal getEffectivePrice() {
