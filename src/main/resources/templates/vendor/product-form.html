@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm Xe / Phụ Tùng Mới - Duy Truong Moto</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <!-- Header / Navbar Include -->
+    <div th:replace="~{layout/main :: nav}"></div>
+
+    <div class="container py-5" style="max-width: 800px;">
+        <div class="mb-4">
+            <a th:href="@{/vendor/products}" class="text-gold text-decoration-none small d-inline-block mb-1"><i class="fa-solid fa-arrow-left me-1"></i> Trở về danh sách xe</a>
+            <h3 class="fw-bold text-white mb-0"><i class="fa-solid fa-plus-circle text-gold me-2"></i> NHẬP DÒNG XE / PHỤ TÙNG MỚI VÀO SHOWROOM</h3>
+            <p class="text-secondary small">Điền thông tin kỹ thuật và tải lên hình ảnh chất lượng cao lên Cloudinary</p>
+        </div>
+
+        <div th:if="${errorMessage}" class="alert alert-danger py-2 small rounded-3 mb-3" th:text="${errorMessage}"></div>
+
+        <div class="glass-panel p-4 p-md-5 rounded-4">
+            <form th:action="@{/vendor/products/new}" method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label class="form-label text-secondary small fw-bold">Tên Siêu Xe / Phụ Tùng</label>
+                    <input type="text" name="name" class="form-control form-control-luxury" placeholder="Ví dụ: Ducati Panigale V4 R 2026" required>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-sm-6">
+                        <label class="form-label text-secondary small fw-bold">Đường Dẫn URL (Slug)</label>
+                        <input type="text" name="slug" class="form-control form-control-luxury" placeholder="ducati-panigale-v4-r-2026" required>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="form-label text-secondary small fw-bold">Danh Mục</label>
+                        <select name="categoryId" class="form-select form-select-luxury" required>
+                            <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-sm-4">
+                        <label class="form-label text-secondary small fw-bold">Hãng Xe / Thương Hiệu</label>
+                        <input type="text" name="brand" class="form-control form-control-luxury" placeholder="Ducati, Kawasaki..." required>
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="form-label text-secondary small fw-bold">Dung Tích Động Cơ</label>
+                        <input type="text" name="engineCapacity" class="form-control form-control-luxury" placeholder="Ví dụ: 1.103 cc">
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="form-label text-secondary small fw-bold">Màu Sơn / Ngoại Thất</label>
+                        <input type="text" name="color" class="form-control form-control-luxury" placeholder="Đỏ Corse, Đen Carbon" required>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-sm-6">
+                        <label class="form-label text-secondary small fw-bold">Giá Bán Niêm Yết (VNĐ)</label>
+                        <input type="number" name="price" class="form-control form-control-luxury fw-bold text-gold" placeholder="Ví dụ: 950000000" required>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="form-label text-secondary small fw-bold">Giá Khuyến Mãi (Nếu có)</label>
+                        <input type="number" name="promotionalPrice" class="form-control form-control-luxury" placeholder="Ví dụ: 920000000">
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-sm-6">
+                        <label class="form-label text-secondary small fw-bold">Số Lượng Tồn Kho Showroom</label>
+                        <input type="number" name="quantity" value="1" min="1" class="form-control form-control-luxury" required>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="form-label text-secondary small fw-bold">Hình Ảnh Xe (Tải Lên Cloudinary)</label>
+                        <input type="file" name="imageFile" class="form-control form-control-luxury" accept="image/*">
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label text-secondary small fw-bold">Mô Tả & Cấu Hình Chi Tiết</label>
+                    <textarea name="description" rows="5" class="form-control form-control-luxury" placeholder="Mô tả công suất mã lực, hệ thống phuộc, phanh ABS, công nghệ hỗ trợ lái điện tử..." required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-gold w-100 py-3 fw-bold shadow">
+                    <i class="fa-solid fa-cloud-arrow-up me-2"></i> LƯU XE & TẢI LÊN CLOUDINARY
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer Include -->
+    <div th:replace="~{layout/main :: footer}"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

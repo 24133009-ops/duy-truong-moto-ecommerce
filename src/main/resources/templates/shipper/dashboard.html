@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kênh Shipper Giao Xe - Duy Truong Moto</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <!-- Header / Navbar Include -->
+    <div th:replace="~{layout/main :: nav}"></div>
+
+    <div class="container py-5">
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary">
+            <div>
+                <span class="badge bg-info text-dark fw-bold mb-1">ĐỘI VẬN TẢI CHUYÊN DỤNG DUY TRUONG EXPRESS</span>
+                <h3 class="fw-bold text-white mb-0"><i class="fa-solid fa-truck-ramp-box text-gold me-2"></i> ĐIỀU PHỐI & BÀN GIAO SIÊU XE TẬN NHÀ</h3>
+                <div class="small text-secondary">Tài xế chuyên dụng: <strong class="text-white" th:text="${currentUser.getFullName()}"></strong> (<span th:text="${currentUser.phone}"></span>)</div>
+            </div>
+            <span class="badge bg-gold text-dark fs-6" th:text="${#lists.size(orders)} + ' Cuốc Xe Bàn Giao'"></span>
+        </div>
+
+        <!-- Alert Messages -->
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show bg-success text-white border-0 rounded-4 shadow">
+            <i class="fa-solid fa-circle-check me-2"></i> <span th:text="${successMessage}"></span>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div th:if="${#lists.isEmpty(orders)}" class="glass-panel p-5 text-center rounded-4">
+            <i class="fa-solid fa-truck text-secondary fs-1 mb-3"></i>
+            <h5 class="text-white">Hiện không có đơn giao xe nào đang chờ</h5>
+            <p class="text-secondary small">Khi các Showroom Duy Truong Moto chuẩn bị xong xe, đơn vận chuyển sẽ xuất hiện tại đây.</p>
+        </div>
+
+        <div class="d-flex flex-column gap-4" th:if="${not #lists.isEmpty(orders)}">
+            <div class="glass-panel p-4 rounded-4" th:each="order : ${orders}">
+                <div class="d-flex flex-wrap justify-content-between align-items-center pb-3 border-bottom border-secondary mb-3">
+                    <div>
+                        <span class="text-secondary small">MÃ ĐƠN:</span>
+                        <strong class="text-gold fs-5 ms-2" th:text="${order.orderCode}"></strong>
+                        <span class="badge bg-black border border-secondary text-secondary ms-2" th:text="'Xuất kho: ' + ${order.store.name}"></span>
+                    </div>
+                    <div>
+                        <span class="badge badge-status"
+                              th:classappend="${order.status.name() == 'NOT_PROCESSED' ? 'badge-status-new' : (order.status.name() == 'DELIVERED' ? 'badge-status-delivered' : 'badge-status-confirmed')}"
+                              th:text="${order.status.displayName}">
+                        </span>
+                    </div>
+                </div>
+
+                <div class="row g-4 align-items-center">
+                    <div class="col-lg-8">
+                        <div class="p-3 bg-black rounded-3 border border-secondary mb-3 small">
+                            <div><strong class="text-white">Khách nhận bàn giao:</strong> <span class="text-gold fw-bold" th:text="${order.recipientName}"></span></div>
+                            <div class="mt-1"><strong class="text-white">Số điện thoại:</strong> <span th:text="${order.phone}"></span></div>
+                            <div class="mt-1"><strong class="text-white">Địa chỉ giao xe:</strong> <span class="text-light" th:text="${order.address}"></span></div>
+                            <div class="mt-1" th:if="${order.note != null}"><strong class="text-warning">Ghi chú khách:</strong> <span th:text="${order.note}"></span></div>
+                        </div>
+
+                        <!-- Bike list -->
+                        <div class="d-flex flex-column gap-2">
+                            <div class="d-flex align-items-center gap-3" th:each="item : ${order.items}">
+                                <img th:src="${item.product.mainImage}" class="rounded-2" style="width: 60px; height: 40px; object-fit: cover;">
+                                <div class="small">
+                                    <strong class="text-white" th:text="${item.product.name}"></strong>
+                                    <div class="text-secondary">SL: <span th:text="${item.count}"></span> chiếc</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 text-lg-end border-start-lg border-secondary pt-3 pt-lg-0">
+                        <div class="text-secondary small">Tổng tiền thu hộ (COD):</div>
+                        <div th:if="${!order.isPaidBefore}" class="fs-4 fw-black text-danger mb-3" th:text="${#numbers.formatDecimal(order.amountFromUser, 0, 'COMMA', 0, 'POINT')} + ' đ'"></div>
+                        <div th:if="${order.isPaidBefore}" class="fs-5 fw-bold text-success mb-3"><i class="fa-solid fa-check-circle me-1"></i> KHÁCH ĐÃ CỌC ĐẦY ĐỦ</div>
+
+                        <form th:if="${order.status.name() != 'DELIVERED'}" th:action="@{/shipper/orders/{id}/deliver(id=${order.id})}" method="post">
+                            <button type="submit" class="btn btn-gold w-100 py-2 fw-bold shadow">
+                                <i class="fa-solid fa-signature me-2"></i> XÁC NHẬN ĐÃ BÀN GIAO XE
+                            </button>
+                        </form>
+                        <div th:if="${order.status.name() == 'DELIVERED'}" class="badge bg-success p-2 w-100">
+                            <i class="fa-solid fa-circle-check me-1"></i> ĐÃ BÀN GIAO THÀNH CÔNG
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Include -->
+    <div th:replace="~{layout/main :: footer}"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
