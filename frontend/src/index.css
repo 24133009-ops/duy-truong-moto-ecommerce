@@ -1,13 +1,16 @@
 /* ==========================================================================
-   DUY TRUONG MOTO - ULTRA LUXURY DARK THEME DESIGN SYSTEM (VANILLA CSS)
+   DUY TRƯƠNG MOTOR - DESIGN SYSTEM ĐẲNG CẤP CHUỖI SHOWROOM MÔ TÔ & XE CÀO CÀO
+   Phong cách chuẩn theo Vương Khang Motor (vuongkhangmotor.com)
+   100% Vanilla CSS • Phông chữ chuẩn tiếng Việt UTF-8 không lỗi font
    ========================================================================== */
 
 :root {
+  /* Color Palette */
   --bg-deep: #07080b;
-  --bg-surface: #0e1017;
-  --bg-card: rgba(18, 21, 32, 0.75);
-  --bg-card-hover: rgba(26, 30, 46, 0.9);
-  --bg-glass: rgba(14, 16, 23, 0.85);
+  --bg-surface: #0e111a;
+  --bg-card: rgba(18, 22, 34, 0.85);
+  --bg-card-hover: rgba(26, 32, 50, 0.95);
+  --bg-glass: rgba(14, 17, 26, 0.92);
 
   --gold-primary: #d4af37;
   --gold-light: #f7e7a9;
@@ -19,26 +22,36 @@
   --red-gradient: linear-gradient(135deg, #e50914 0%, #990000 100%);
   --red-glow: 0 0 20px rgba(229, 9, 20, 0.45);
 
+  --orange-ktm: #ff6600;
+  --orange-gradient: linear-gradient(135deg, #ff6600 0%, #cc4400 100%);
+  --orange-glow: 0 0 20px rgba(255, 102, 0, 0.45);
+
   --cyan-neon: #00f2fe;
   --cyan-glow: 0 0 20px rgba(0, 242, 254, 0.3);
 
-  --text-main: #f5f6f9;
-  --text-muted: #8b92a2;
-  --text-sub: #b2b7c4;
+  --green-hqcn: #10b981;
+  --green-glow: 0 0 15px rgba(16, 185, 129, 0.35);
 
-  --border-subtle: rgba(212, 175, 55, 0.18);
-  --border-strong: rgba(212, 175, 55, 0.55);
-  --border-glass: rgba(255, 255, 255, 0.08);
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-sub: #cbd5e1;
+
+  --border-subtle: rgba(212, 175, 55, 0.2);
+  --border-strong: rgba(212, 175, 55, 0.6);
+  --border-glass: rgba(255, 255, 255, 0.1);
 
   --radius-sm: 8px;
   --radius-md: 14px;
-  --radius-lg: 22px;
+  --radius-lg: 20px;
   --radius-full: 9999px;
 
-  --shadow-card: 0 16px 36px -10px rgba(0, 0, 0, 0.8);
-  --shadow-deep: 0 25px 60px -15px rgba(0, 0, 0, 0.95);
-  --font-serif: 'Cinzel', serif;
-  --font-sans: 'Outfit', sans-serif;
+  --shadow-card: 0 16px 36px -10px rgba(0, 0, 0, 0.85);
+  --shadow-deep: 0 25px 60px -15px rgba(0, 0, 0, 0.98);
+
+  /* TYPOGRAPHY CHUẨN TIẾNG VIỆT 100% (Không bao giờ bị lỗi dấu hoặc font lệch) */
+  --font-brand: 'Montserrat', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-racing: 'Barlow Condensed', 'Montserrat', sans-serif;
 }
 
 * {
@@ -56,14 +69,28 @@ body {
   background-image: 
     radial-gradient(circle at 85% 15%, rgba(229, 9, 20, 0.08) 0%, transparent 45%),
     radial-gradient(circle at 15% 55%, rgba(212, 175, 55, 0.06) 0%, transparent 40%),
-    radial-gradient(circle at 50% 90%, rgba(0, 242, 254, 0.05) 0%, transparent 50%);
+    radial-gradient(circle at 50% 90%, rgba(255, 102, 0, 0.05) 0%, transparent 50%);
   background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Typography Helpers */
+/* Typography Classes */
+.brand-title {
+  font-family: var(--font-brand);
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
 .brand-serif {
-  font-family: var(--font-serif);
-  letter-spacing: 1px;
+  font-family: var(--font-brand);
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.font-racing {
+  font-family: var(--font-racing);
+  letter-spacing: 0.5px;
 }
 
 .text-gold {
@@ -74,11 +101,98 @@ body {
   background: var(--gold-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  font-weight: 800;
+  font-weight: 900;
 }
 
 .text-racing {
   color: var(--red-racing) !important;
+}
+
+.text-orange {
+  color: var(--orange-ktm) !important;
+}
+
+/* Top Announcement & Slogan Bar (Vuong Khang Style) */
+.top-slogan-bar {
+  background: #000;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 8px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  font-family: var(--font-sans);
+}
+
+.slogan-highlight {
+  color: var(--gold-light);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.top-contact-info {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  color: var(--text-sub);
+}
+
+.top-contact-info a {
+  color: var(--gold-primary);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+/* Commitment Bar (5 Cam Kết Vàng Như Showroom Lớn) */
+.commitment-bar {
+  background: #0d1017;
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  padding: 16px 24px;
+}
+
+.commitment-grid {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.commitment-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.commitment-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(212, 175, 55, 0.12);
+  border: 1px solid var(--gold-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold-primary);
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.commitment-text h4 {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 2px;
+  font-family: var(--font-brand);
+}
+
+.commitment-text p {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.3;
 }
 
 /* Glassmorphism Containers */
@@ -94,15 +208,15 @@ body {
 
 .glass-box:hover {
   border-color: var(--border-strong);
-  box-shadow: 0 20px 45px -8px rgba(0, 0, 0, 0.9), 0 0 20px rgba(212, 175, 55, 0.15);
+  box-shadow: 0 20px 45px -8px rgba(0, 0, 0, 0.95), 0 0 20px rgba(212, 175, 55, 0.15);
 }
 
 /* Luxury Buttons */
 .btn-gold {
   background: var(--gold-gradient);
   color: #08090c;
-  font-weight: 700;
-  font-family: var(--font-sans);
+  font-weight: 800;
+  font-family: var(--font-brand);
   border: none;
   border-radius: var(--radius-full);
   padding: 12px 28px;
@@ -124,10 +238,11 @@ body {
 .btn-outline-gold {
   background: transparent;
   color: var(--gold-primary);
-  border: 1px solid var(--gold-primary);
+  border: 1.5px solid var(--gold-primary);
   border-radius: var(--radius-full);
-  padding: 11px 26px;
-  font-weight: 600;
+  padding: 11px 24px;
+  font-weight: 700;
+  font-family: var(--font-brand);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -149,7 +264,8 @@ body {
   border: none;
   border-radius: var(--radius-full);
   padding: 12px 28px;
-  font-weight: 700;
+  font-weight: 800;
+  font-family: var(--font-brand);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -165,13 +281,14 @@ body {
 }
 
 .btn-subtle {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   color: var(--text-main);
   border-radius: var(--radius-full);
   padding: 8px 18px;
   font-size: 0.85rem;
   font-weight: 600;
+  font-family: var(--font-brand);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -180,7 +297,7 @@ body {
 }
 
 .btn-subtle:hover, .btn-subtle.active {
-  background: rgba(212, 175, 55, 0.15);
+  background: rgba(212, 175, 55, 0.16);
   border-color: var(--gold-primary);
   color: var(--gold-light);
 }
@@ -188,8 +305,8 @@ body {
 /* Form Inputs */
 .luxury-input {
   width: 100%;
-  background: rgba(14, 17, 26, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(14, 17, 26, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: var(--radius-md);
   padding: 12px 18px;
   color: #fff;
@@ -208,7 +325,7 @@ body {
 .luxury-select {
   width: 100%;
   background: #0e111a;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: var(--radius-md);
   padding: 12px 18px;
   color: #fff;
@@ -222,15 +339,16 @@ body {
   border-color: var(--gold-primary);
 }
 
-/* Navbar */
+/* Header & Navbar */
 .app-header {
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: rgba(7, 8, 11, 0.88);
+  background: rgba(7, 8, 11, 0.92);
   backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border-subtle);
-  padding: 14px 28px;
+  padding: 12px 28px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -244,28 +362,29 @@ body {
 }
 
 .logo-icon-box {
-  width: 44px;
-  height: 44px;
+  width: 46px;
+  height: 46px;
   border-radius: 12px;
   background: var(--gold-gradient);
   display: flex;
   align-items: center;
   justify-content: center;
   color: #07080b;
-  font-size: 22px;
-  box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+  font-size: 24px;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.45);
 }
 
 /* Role HUD Bar */
 .role-hud {
   background: #000;
-  border-bottom: 1px solid rgba(212, 175, 55, 0.25);
-  padding: 8px 20px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+  padding: 7px 20px;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   font-size: 0.8rem;
+  font-family: var(--font-sans);
 }
 
 .role-chips {
@@ -279,10 +398,11 @@ body {
   border-radius: var(--radius-full);
   font-size: 0.75rem;
   font-weight: 700;
+  font-family: var(--font-brand);
   cursor: pointer;
   border: 1px solid transparent;
   transition: all 0.2s ease;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.06);
   color: var(--text-sub);
 }
 
@@ -296,7 +416,7 @@ body {
 /* Bike Grid & Cards */
 .bike-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 28px;
 }
 
@@ -319,7 +439,7 @@ body {
 
 .bike-img-box {
   position: relative;
-  height: 230px;
+  height: 240px;
   overflow: hidden;
   background: #000;
 }
@@ -335,10 +455,11 @@ body {
   transform: scale(1.08);
 }
 
+/* Badges (HQCN, Bao Quay Đầu, Lượt bán) */
 .badge-sold {
   position: absolute;
-  top: 14px;
-  left: 14px;
+  top: 12px;
+  left: 12px;
   background: rgba(0, 0, 0, 0.85);
   border: 1px solid var(--gold-primary);
   color: var(--gold-light);
@@ -351,14 +472,57 @@ body {
 
 .badge-showroom {
   position: absolute;
-  bottom: 14px;
-  left: 14px;
-  background: rgba(14, 16, 23, 0.9);
-  color: #fff;
+  top: 12px;
+  right: 12px;
+  background: rgba(14, 17, 26, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text-sub);
   padding: 4px 10px;
-  border-radius: var(--radius-sm);
-  font-size: 0.7rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
+  font-weight: 600;
+  backdrop-filter: blur(8px);
+}
+
+.badge-hqcn-box {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.badge-hqcn {
+  background: rgba(16, 185, 129, 0.9);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: var(--green-glow);
+}
+
+.badge-odo {
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--gold-light);
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.badge-tag-orange {
+  background: var(--orange-gradient);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
 }
 
 .bike-content {
@@ -368,84 +532,111 @@ body {
   flex-grow: 1;
 }
 
-.price-main {
-  font-size: 1.4rem;
-  font-weight: 900;
-  color: #fff;
+.price-racing {
+  font-family: var(--font-racing);
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: var(--gold-primary);
+  line-height: 1;
 }
 
-.price-old {
-  font-size: 0.9rem;
-  text-decoration: line-through;
-  color: var(--text-muted);
-  margin-left: 8px;
+.price-text-tag {
+  font-size: 0.85rem;
+  color: var(--gold-light);
+  font-weight: 700;
+  margin-left: 6px;
 }
 
-/* Modals & Overlays */
+/* Modals */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.85);
+  z-index: 2000;
+  background: rgba(0, 0, 0, 0.88);
   backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 2000;
   padding: 20px;
   animation: fadeIn 0.3s ease;
 }
 
 .modal-content {
-  background: #0e111a;
-  border: 1px solid var(--gold-primary);
+  background: #0f121b;
+  border: 1px solid var(--border-strong);
   border-radius: var(--radius-lg);
-  max-width: 750px;
+  max-width: 850px;
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 0 50px rgba(212, 175, 55, 0.25);
   position: relative;
-  padding: 32px;
+  box-shadow: var(--shadow-deep);
 }
 
-/* Live Chat Widget */
-.chat-fab {
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-  width: 62px;
-  height: 62px;
+.modal-close-btn {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background: var(--gold-gradient);
-  color: #07080b;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 26px;
-  box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
   cursor: pointer;
-  z-index: 1500;
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: all 0.2s ease;
+  z-index: 10;
 }
 
-.chat-fab:hover {
-  transform: scale(1.1) rotate(6deg);
-  box-shadow: 0 14px 35px rgba(212, 175, 55, 0.65);
+.modal-close-btn:hover {
+  background: var(--red-racing);
+  border-color: var(--red-racing);
 }
 
-.chat-window {
+/* Floating Chat Widget */
+.floating-chat-btn {
   position: fixed;
-  bottom: 100px;
-  right: 25px;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1500;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: var(--gold-gradient);
+  color: #08090c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.floating-chat-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 12px 35px rgba(212, 175, 55, 0.7);
+}
+
+.chat-box-floating {
+  position: fixed;
+  bottom: 92px;
+  right: 24px;
+  z-index: 1500;
   width: 380px;
-  height: 520px;
-  background: #0d0f17;
-  border: 1px solid var(--gold-primary);
+  max-width: calc(100vw - 48px);
+  height: 500px;
+  background: #0f121b;
+  border: 1px solid var(--border-strong);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-deep), var(--gold-glow);
+  box-shadow: var(--shadow-deep);
   display: flex;
   flex-direction: column;
-  z-index: 1500;
   overflow: hidden;
   animation: slideUp 0.3s ease;
 }
@@ -456,22 +647,19 @@ body {
 }
 
 @keyframes slideUp {
-  from { transform: translateY(30px); opacity: 0; }
+  from { transform: translateY(20px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
 
-/* Custom Scrollbars */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-::-webkit-scrollbar-track {
-  background: #08090d;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(212, 175, 55, 0.3);
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--gold-primary);
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .app-header {
+    flex-direction: column;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .role-hud {
+    flex-direction: column;
+    gap: 10px;
+  }
 }
