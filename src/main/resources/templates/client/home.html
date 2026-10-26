@@ -158,16 +158,18 @@
             <div id="contentPhuKien" class="mega-content-box d-none">
                 <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary border-opacity-25">
                     <div class="fw-bold fs-5 text-dark"><i class="fa-solid fa-helmet-safety text-gold me-2"></i> BỘ SƯU TẬP PHỤ KIỆN &amp; PÔ ĐỘ</div>
-                    <a th:href="@{/products}" class="btn btn-warning btn-sm fw-bold px-3 text-dark rounded-pill">Xem Tất Cả Phụ Kiện <i class="fa-solid fa-arrow-right ms-1"></i></a>
+                    <a th:href="@{/products(category='do-bao-ho')}" class="btn btn-warning btn-sm fw-bold px-3 text-dark rounded-pill">Xem Tất Cả Phụ Kiện <i class="fa-solid fa-arrow-right ms-1"></i></a>
                 </div>
                 <div class="vk-brands-grid cols-2">
                     <div class="d-flex flex-column gap-2">
-                        <span class="vk-brand-link">MŨ BẢO HIỂM AGV, SHOEI, ARAI</span>
-                        <span class="vk-brand-link">GIÁP BẢO HỘ DAINESE, ALPINESTARS</span>
+                        <a th:href="@{/products(brand='AGV')}" class="vk-brand-link">MŨ BẢO HIỂM AGV</a>
+                        <a th:href="@{/products(brand='Dainese')}" class="vk-brand-link">GIÁP DAINESE</a>
+                        <a th:href="@{/products(brand='Alpinestars')}" class="vk-brand-link">GĂNG TAY ALPINESTARS</a>
                     </div>
                     <div class="d-flex flex-column gap-2">
-                        <span class="vk-brand-link">PÔ ĐỘ AKRAPOVIC, AUSTIN RACING</span>
-                        <span class="vk-brand-link">PHUỘC OHLINS, HEO DẦU BREMBO</span>
+                        <a th:href="@{/products(brand='Akrapovic')}" class="vk-brand-link">PÔ AKRAPOVIC</a>
+                        <a th:href="@{/products(brand='SC Project')}" class="vk-brand-link">PÔ SC PROJECT</a>
+                        <a th:href="@{/products(brand='Ohlins')}" class="vk-brand-link">PHUỘC OHLINS</a>
                     </div>
                 </div>
             </div>

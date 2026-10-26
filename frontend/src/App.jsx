@@ -122,7 +122,12 @@ export default function App() {
 
   // Filtered Products for Catalog & User tabs
   const filteredProducts = useMemo(() => {
-    const normalize = (str) => (str || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    const normalize = (str) => (str || '')
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, '');
+
     return products.filter(p => {
       const matchStore = selectedShowroomFilter === 'all' || p.storeId === parseInt(selectedShowroomFilter);
       const matchCategory = selectedCategory === 'all' || 
@@ -133,6 +138,8 @@ export default function App() {
       const matchBrand = brandFilter === 'all' || 
                          pNorm === bNorm ||
                          pNorm.includes(bNorm) ||
+                         bNorm.includes(pNorm) ||
+                         normalize(p.name).includes(bNorm) ||
                          bNorm.includes(pNorm);
 
       const matchPrice = (p.promotionalPrice || p.price) >= priceRange.min && (p.promotionalPrice || p.price) <= priceRange.max;
@@ -545,11 +552,34 @@ export default function App() {
                           key={bIdx} 
                           className="vk-brand-link"
                           onClick={() => {
-                            setBrandFilter(bName);
-                            if (selectedMegaKey === 'oto') setSelectedCategory('oto');
-                            else if (selectedMegaKey === 'xenho') setSelectedCategory('xenho');
-                            else if (selectedMegaKey === 'motor') setSelectedCategory('all-motor');
-                            else if (selectedMegaKey === 'phukien') setSelectedCategory('gear-parts');
+                            let targetBrand = bName;
+                            if (selectedMegaKey === 'oto') {
+                              setSelectedCategory('oto');
+                              targetBrand = bName;
+                            } else if (selectedMegaKey === 'xenho') {
+                              setSelectedCategory('xenho');
+                              if (bName.includes('HONDA')) targetBrand = 'HONDA';
+                              else if (bName.includes('VESPA')) targetBrand = 'VESPA';
+                              else if (bName.includes('BMW')) targetBrand = 'BMW';
+                            } else if (selectedMegaKey === 'motor') {
+                              setSelectedCategory('all-motor');
+                              if (bName.includes('HARLEY')) targetBrand = 'HARLEY';
+                              else if (bName.includes('ROYAL')) targetBrand = 'ROYAL ENFIELD';
+                              else if (bName.includes('BMW')) targetBrand = 'BMW';
+                              else if (bName.includes('KTM')) targetBrand = 'KTM';
+                            } else if (selectedMegaKey === 'phukien') {
+                              setSelectedCategory('gear-parts');
+                              const upper = bName.toUpperCase();
+                              if (upper.includes('AGV')) targetBrand = 'AGV';
+                              else if (upper.includes('DAINESE')) targetBrand = 'DAINESE';
+                              else if (upper.includes('ALPINESTARS')) targetBrand = 'ALPINESTARS';
+                              else if (upper.includes('AKRAPOVIC')) targetBrand = 'AKRAPOVIC';
+                              else if (upper.includes('SC PROJECT') || upper.includes('SC-PROJECT')) targetBrand = 'SC PROJECT';
+                              else if (upper.includes('OHLINS')) targetBrand = 'OHLINS';
+                              else targetBrand = bName;
+                            }
+                            setBrandFilter(targetBrand);
+                            setSearchQuery('');
                             setCurrentTab('products');
                           }}
                         >

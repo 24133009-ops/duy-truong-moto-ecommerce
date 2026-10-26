@@ -299,6 +299,96 @@ public class DataInitializer implements CommandLineRunner {
                 .rating(5.0)
                 .build());
 
+        productRepository.save(Product.builder()
+                .store(showroomQ1)
+                .category(catGear)
+                .name("Mũ Bảo Hiểm AGV Pista GP RR Carbon Italia Limited Edition")
+                .slug("mu-bao-hiem-agv-pista-gp-rr-carbon")
+                .description("Mũ bảo hiểm đường đua số 1 thế giới do AGV sản xuất cho MotoGP. Kính quang học Class 1 chống đọng sương Pinlock MaxVision 120, vỏ 100% sợi Carbon 3K siêu nhẹ.")
+                .price(BigDecimal.valueOf(39500000))
+                .promotionalPrice(BigDecimal.valueOf(36800000))
+                .quantity(12)
+                .sold(34) // > 10 cho Guest
+                .isActive(true)
+                .isSelling(true)
+                .mainImage("/images/agv_helmet.jpg")
+                .color("Carbon Bóng Họa Tiết Ý")
+                .brand("AGV")
+                .rating(5.0)
+                .build());
+
+        productRepository.save(Product.builder()
+                .store(showroomQ1)
+                .category(catGear)
+                .name("Bộ Giáp Da Liền Dainese Mugello 3 D-Air Đua Chuyên Nghiệp")
+                .slug("bo-giap-da-dainese-mugello-3-d-air")
+                .description("Bộ áo giáp da đua số 1 thế giới tích hợp túi khí điện tử D-Air kích hoạt 15ms. Da Kangaroo siêu nhẹ bền dẻo dai kèm giáp titan chống mài mòn.")
+                .price(BigDecimal.valueOf(115000000))
+                .promotionalPrice(BigDecimal.valueOf(108000000))
+                .quantity(6)
+                .sold(18) // > 10 cho Guest
+                .isActive(true)
+                .isSelling(true)
+                .mainImage("/images/dainese_suit.jpg")
+                .color("Đen Đỏ Titan Carbon")
+                .brand("Dainese")
+                .rating(4.9)
+                .build());
+
+        productRepository.save(Product.builder()
+                .store(showroomHN)
+                .category(catGear)
+                .name("Găng Tay Đua Alpinestars Supertech GP Carbon Pro")
+                .slug("gang-tay-dua-alpinestars-supertech-gp")
+                .description("Găng tay đua đỉnh cao MotoGP với gù carbon kép DFS, da dê cao cấp gia cố sợi chịu nhiệt Kevlar, chống lật ngón út.")
+                .price(BigDecimal.valueOf(13500000))
+                .promotionalPrice(BigDecimal.valueOf(12200000))
+                .quantity(18)
+                .sold(45) // > 10 cho Guest
+                .isActive(true)
+                .isSelling(true)
+                .mainImage("/images/alpinestars_gloves.jpg")
+                .color("Đen Trắng Neon Fluo")
+                .brand("Alpinestars")
+                .rating(4.9)
+                .build());
+
+        productRepository.save(Product.builder()
+                .store(showroomQ1)
+                .category(catExhaust)
+                .name("Hệ Thống Pô SC-Project SC1-R Titanium WorldSBK Edition")
+                .slug("he-thong-po-sc-project-sc1-r-titanium")
+                .description("Ống xả hiệu năng cao đỉnh cao từ SC-Project Italy thiết kế cho WorldSBK. Thân titan siêu nhẹ kết hợp nắp chụp carbon chống nhiệt độ cao.")
+                .price(BigDecimal.valueOf(78000000))
+                .promotionalPrice(BigDecimal.valueOf(72500000))
+                .quantity(9)
+                .sold(26) // > 10 cho Guest
+                .isActive(true)
+                .isSelling(true)
+                .mainImage("/images/sc_project_exhaust.jpg")
+                .color("Titanium Mờ Ánh Bạc")
+                .brand("SC Project")
+                .rating(5.0)
+                .build());
+
+        productRepository.save(Product.builder()
+                .store(showroomQ1)
+                .category(catExhaust)
+                .name("Bộ Phuộc Trước Sau Ohlins FGR 250 & TTX GP Thụy Điển")
+                .slug("bo-phuoc-ohlins-fgr-250-ttx-gp")
+                .description("Hệ thống giảm xóc xe đua đỉnh cao thế giới Ohlins Thụy Điển với công nghệ van tiết lưu TTX Twin Tube, tùy chỉnh 30 nấc.")
+                .price(BigDecimal.valueOf(155000000))
+                .promotionalPrice(BigDecimal.valueOf(148000000))
+                .quantity(5)
+                .sold(19) // > 10 cho Guest
+                .isActive(true)
+                .isSelling(true)
+                .mainImage("/images/ohlins_suspension.jpg")
+                .color("Vàng Gold Đặc Trưng Ohlins")
+                .brand("Ohlins")
+                .rating(5.0)
+                .build());
+
         // --- SIÊU XE Ô TÔ & XE SANG THỂ THAO ---
         productRepository.save(Product.builder()
                 .store(showroomQ1)
