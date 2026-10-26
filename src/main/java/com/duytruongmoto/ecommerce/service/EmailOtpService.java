@@ -2,6 +2,7 @@ package com.duytruongmoto.ecommerce.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
@@ -17,6 +18,9 @@ public class EmailOtpService {
     private final JavaMailSender mailSender;
     private static final SecureRandom random = new SecureRandom();
 
+    @Value("${spring.mail.username:duytq4906@gmail.com}")
+    private String fromEmail;
+
     public String generateOtp() {
         int otp = 100000 + random.nextInt(900000);
         return String.valueOf(otp);
@@ -31,7 +35,7 @@ public class EmailOtpService {
 
         try {
             SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom("noreply.duytruongmoto@gmail.com");
+            message.setFrom(fromEmail);
             message.setTo(toEmail);
             message.setSubject("[Duy Truong Motor] Mã xác thực OTP: " + otpCode);
             message.setText("Kính chào Quý khách,\n\n" +
@@ -39,8 +43,10 @@ public class EmailOtpService {
                     "Mã có hiệu lực trong vòng 5 phút. Vui lòng tuyệt đối không chia sẻ mã này cho bất kỳ ai!\n\n" +
                     "Trân trọng,\nĐội ngũ CSKH Duy Truong Motor Luxury");
             mailSender.send(message);
+            log.info(">>> [THÀNH CÔNG] Đã chuyển mã OTP {} đến hộp thư {}", otpCode, toEmail);
         } catch (Exception e) {
-            log.warn("Không thể gửi email qua SMTP (có thể do chưa cấu hình mật khẩu ứng dụng Gmail). Mã OTP dự phòng: {}", otpCode);
+            log.error(">>> [LỖI GỬI EMAIL] Không thể gửi email qua SMTP: {}", e.getMessage());
+            log.warn("Mã OTP dự phòng: {}", otpCode);
         }
     }
 }
