@@ -35,7 +35,7 @@
 
     <!-- 3. Main Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-luxury">
-        <div class="container">
+        <div class="container-fluid px-xl-4 px-3">
             <a class="navbar-brand-logo" th:href="@{/home}">
                 <div class="logo-icon">
                     <i class="fa-solid fa-motorcycle"></i>
@@ -58,7 +58,7 @@
             </button>
 
             <div class="collapse navbar-collapse" id="navContent">
-                <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-3 fw-semibold">
+                <ul class="navbar-nav me-auto ms-xl-4 mb-2 mb-lg-0 gap-3 fw-semibold">
                     <li class="nav-item">
                         <a class="nav-link text-light" th:href="@{/home}"><i class="fa-solid fa-house text-gold me-1"></i> Trang Chủ</a>
                     </li>
@@ -80,7 +80,7 @@
                 </ul>
 
                 <!-- Right Actions -->
-                <div class="d-flex align-items-center gap-3">
+                <div class="d-flex align-items-center gap-2 gap-xl-3 ms-auto flex-shrink-0">
                     <!-- Vuong Khang Style Search Pill -->
                     <a th:href="@{/products}" class="search-pill-btn d-none d-lg-inline-flex">
                         <i class="fa-solid fa-magnifying-glass text-gold"></i>
@@ -111,10 +111,10 @@
                     </div>
 
                     <!-- User Account Dropdown -->
-                    <div class="dropdown" sec:authorize="isAuthenticated()">
-                        <button class="btn btn-dark border-secondary dropdown-toggle rounded-pill px-3 py-2 text-gold d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown">
-                            <i class="fa-solid fa-circle-user fs-5"></i>
-                            <span sec:authentication="name" class="d-none d-sm-inline small">Tài khoản</span>
+                    <div class="dropdown flex-shrink-0" sec:authorize="isAuthenticated()">
+                        <button class="btn btn-dark border-secondary dropdown-toggle rounded-pill px-3 py-2 text-gold d-flex align-items-center gap-2 flex-nowrap shadow-sm" type="button" data-bs-toggle="dropdown" style="white-space: nowrap;">
+                            <i class="fa-solid fa-circle-user fs-5 text-gold flex-shrink-0"></i>
+                            <span sec:authentication="name" class="fw-bold text-gold small" style="white-space: nowrap;">Tài khoản</span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow-lg border-secondary p-2">
                             <li><a class="dropdown-item py-2" th:href="@{/user/profile}"><i class="fa-solid fa-user-gear me-2 text-gold"></i> Hồ sơ &amp; Sổ địa chỉ</a></li>

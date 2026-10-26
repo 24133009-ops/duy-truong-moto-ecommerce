@@ -61,6 +61,12 @@ h1, h2, h3, h4, .brand-font {
     color: var(--dt-gold) !important;
 }
 
+.bg-gold {
+    background: linear-gradient(135deg, #ffd700, #d4af37) !important;
+    color: #090a0f !important;
+    font-weight: 700;
+}
+
 .text-gradient-gold {
     background: var(--dt-gradient-gold);
     -webkit-background-clip: text;

@@ -31,8 +31,11 @@
             <div class="col-lg-5">
                 <div class="glass-panel p-4 rounded-4 mb-4 text-center">
                     <img th:src="${currentUser.avatar}" class="rounded-circle border border-gold mb-3 shadow" style="width: 100px; height: 100px; object-fit: cover;">
-                    <h4 class="fw-bold text-white mb-1" th:text="${currentUser.getFullName()}"></h4>
-                    <span class="badge bg-gold text-dark fw-bold mb-3" th:text="${currentUser.userLevel != null ? currentUser.userLevel.name : 'Thành viên Bạc'}"></span>
+                    <div class="d-inline-flex align-items-center justify-content-center gap-2 px-3 py-1 rounded-pill mb-3" style="background: rgba(255, 215, 0, 0.15); border: 1.5px solid #ffd700; box-shadow: 0 0 16px rgba(255, 215, 0, 0.35);">
+                        <i class="fa-solid fa-gem text-gold"></i>
+                        <span th:text="${currentUser.userLevel != null ? currentUser.userLevel.name : 'Khách hàng Kim Cương VIP'}" style="color: #ffd700; font-weight: 800; font-size: 0.95rem; text-shadow: 0 0 12px rgba(255, 215, 0, 0.7); letter-spacing: 0.5px;">Khách hàng Kim Cương VIP</span>
+                        <i class="fa-solid fa-crown text-warning" style="font-size: 1.05rem; filter: drop-shadow(0 0 8px #ffd700);"></i>
+                    </div>
 
                     <div class="d-flex justify-content-around border-top border-secondary pt-3 mt-2 text-start">
                         <div>
