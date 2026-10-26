@@ -33,11 +33,11 @@ public class EmailOtpService {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom("noreply.duytruongmoto@gmail.com");
             message.setTo(toEmail);
-            message.setSubject("[Duy Truong Moto] Mã xác thực OTP: " + otpCode);
+            message.setSubject("[Duy Truong Motor] Mã xác thực OTP: " + otpCode);
             message.setText("Kính chào Quý khách,\n\n" +
-                    "Mã xác thực OTP của bạn cho thao tác " + purpose + " tại Hệ thống Siêu Xe Phân Khối Lớn Duy Truong Moto là: " + otpCode + "\n\n" +
+                    "Mã xác thực OTP của bạn cho thao tác " + purpose + " tại Hệ thống Siêu Xe Phân Khối Lớn Duy Truong Motor là: " + otpCode + "\n\n" +
                     "Mã có hiệu lực trong vòng 5 phút. Vui lòng tuyệt đối không chia sẻ mã này cho bất kỳ ai!\n\n" +
-                    "Trân trọng,\nĐội ngũ CSKH Duy Truong Moto Luxury");
+                    "Trân trọng,\nĐội ngũ CSKH Duy Truong Motor Luxury");
             mailSender.send(message);
         } catch (Exception e) {
             log.warn("Không thể gửi email qua SMTP (có thể do chưa cấu hình mật khẩu ứng dụng Gmail). Mã OTP dự phòng: {}", otpCode);

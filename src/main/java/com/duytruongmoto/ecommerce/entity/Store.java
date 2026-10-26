@@ -18,7 +18,7 @@ public class Store {
     private Long id;
 
     @Column(nullable = false, length = 150)
-    private String name; // Ví dụ: Duy Truong Moto Showroom Quận 1
+    private String name; // Ví dụ: Duy Truong Motor Showroom Quận 1
 
     @Column(nullable = false, unique = true, length = 150)
     private String slug;

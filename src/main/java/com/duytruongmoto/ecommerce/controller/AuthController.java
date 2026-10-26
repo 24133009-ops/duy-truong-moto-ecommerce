@@ -22,7 +22,7 @@ public class AuthController {
             model.addAttribute("errorMessage", "Email hoặc mật khẩu không chính xác!");
         }
         if (logout != null) {
-            model.addAttribute("successMessage", "Bạn đã đăng xuất an toàn khỏi hệ thống Duy Truong Moto.");
+            model.addAttribute("successMessage", "Bạn đã đăng xuất an toàn khỏi hệ thống Duy Truong Motor.");
         }
         return "auth/login";
     }

@@ -182,7 +182,7 @@ public class VendorController {
 
         try {
             storeService.registerStore(userDetails.getUser().getId(), name, slug, bio, address, phone, commissionId);
-            redirectAttributes.addFlashAttribute("successMessage", "Đăng ký mở Showroom Duy Truong Moto thành công!");
+            redirectAttributes.addFlashAttribute("successMessage", "Đăng ký mở Showroom Duy Truong Motor thành công!");
             return "redirect:/vendor/dashboard";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());

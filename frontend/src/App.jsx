@@ -421,11 +421,11 @@ export default function App() {
                   <div style={{ display: 'inline-block', padding: '6px 18px', borderRadius: '20px', background: 'rgba(212,175,55,0.12)', border: '1px solid var(--gold-primary)', color: 'var(--gold-light)', fontSize: '0.85rem', fontWeight: 800, marginBottom: '20px', letterSpacing: '1px' }}>
                     <i className="fa-solid fa-crown me-2"></i> SIÊU THỊ MÔ TÔ PHÂN KHỐI LỚN &amp; XE CÀO CÀO UY TÍN
                   </div>
-                  <h1 className="brand-title" style={{ fontSize: '3.4rem', lineHeight: 1.15, marginBottom: '22px' }}>
+                  <h1 className="brand-title" style={{ fontSize: 'clamp(2.1rem, 3.6vw, 3.1rem)', lineHeight: 1.25, marginBottom: '22px' }}>
                     DUY TRƯƠNG MOTOR <br />
-                    <span className="text-gradient-gold">MÔ TÔ PKL &amp; XE CÀO CÀO</span>
+                    <span className="text-gradient-gold" style={{ display: 'inline-block', whiteSpace: 'nowrap' }}>MÔ TÔ PKL &amp; XE CÀO CÀO</span>
                   </h1>
-                  <p style={{ color: 'var(--text-sub)', fontSize: '1.1rem', marginBottom: '30px', maxWidth: '600px' }}>
+                  <p style={{ color: 'var(--text-sub)', fontSize: '1.05rem', lineHeight: 1.7, marginBottom: '30px', maxWidth: '620px' }}>
                     Hệ thống chuỗi showroom <strong>Duy Trương Motor</strong> chuyên kinh doanh, thu mua trao đổi siêu môtô PKL và các dòng xe cào cào địa hình đỉnh cao: KTM 300 EXC, Husqvarna FE 350, Honda CRF450R, Kawasaki KLX300, Ducati Panigale, Ninja H2, BMW S1000RR. Hải quan chính ngạch (HQCN), bao test hãng, bao quay đầu, giao xe sàn trượt VIP toàn quốc.
                   </p>
 

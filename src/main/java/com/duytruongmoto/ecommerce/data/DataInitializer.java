@@ -28,11 +28,11 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
         if (userRepository.count() > 0 || userLevelRepository.count() > 0) {
-            log.info("Dữ liệu hệ thống Duy Truong Moto đã tồn tại. Bỏ qua DataInitializer.");
+            log.info("Dữ liệu hệ thống Duy Truong Motor đã tồn tại. Bỏ qua DataInitializer.");
             return;
         }
 
-        log.info(">>> Khởi tạo dữ liệu mẫu cho Chuỗi Showroom Xe Luxury Duy Truong Moto...");
+        log.info(">>> Khởi tạo dữ liệu mẫu cho Chuỗi Showroom Xe Luxury Duy Truong Motor...");
 
         // 1. User Levels
         UserLevel silver = userLevelRepository.save(UserLevel.builder().name("Thành viên Bạc").minPoint(0L).discount(BigDecimal.ZERO).isDeleted(false).build());
@@ -122,9 +122,9 @@ public class DataInitializer implements CommandLineRunner {
                 .userLevel(silver)
                 .build());
 
-        // 5. Stores (Showroom Chuỗi Duy Truong Moto)
+        // 5. Stores (Showroom Chuỗi Duy Truong Motor)
         Store showroomQ1 = storeRepository.save(Store.builder()
-                .name("Duy Truong Moto - Flagship Showroom Quận 1")
+                .name("Duy Truong Motor - Flagship Showroom Quận 1")
                 .slug("duy-truong-moto-showroom-quan-1")
                 .owner(vendor)
                 .bio("Showroom trưng bày các dòng siêu môtô đỉnh cao hàng đầu Việt Nam: Ducati, BMW, Kawasaki...")
@@ -141,10 +141,10 @@ public class DataInitializer implements CommandLineRunner {
                 .build());
 
         Store showroomHN = storeRepository.save(Store.builder()
-                .name("Duy Truong Moto - Showroom Cầu Giấy Hà Nội")
+                .name("Duy Truong Motor - Showroom Cầu Giấy Hà Nội")
                 .slug("duy-truong-moto-showroom-cau-giay")
                 .owner(admin)
-                .bio("Chi nhánh miền Bắc chính hãng của hệ thống chuỗi Duy Truong Moto.")
+                .bio("Chi nhánh miền Bắc chính hãng của hệ thống chuỗi Duy Truong Motor.")
                 .address("Số 168 Đường Trần Duy Hưng, Cầu Giấy, Hà Nội")
                 .phone("0901234567")
                 .avatar("https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=300&q=80")
@@ -296,6 +296,6 @@ public class DataInitializer implements CommandLineRunner {
                 .rating(5.0)
                 .build());
 
-        log.info(">>> Khởi tạo dữ liệu mẫu thành công cho Hệ thống Duy Truong Moto!");
+        log.info(">>> Khởi tạo dữ liệu mẫu thành công cho Hệ thống Duy Truong Motor!");
     }
 }

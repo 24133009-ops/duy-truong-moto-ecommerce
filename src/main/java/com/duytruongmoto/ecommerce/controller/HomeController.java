@@ -41,7 +41,7 @@ public class HomeController {
         // 5. Danh mục môtô & phụ tùng
         model.addAttribute("categories", categoryRepository.findByIsDeletedFalse());
 
-        // 6. Danh sách chuỗi Showroom Duy Truong Moto
+        // 6. Danh sách chuỗi Showroom Duy Truong Motor
         model.addAttribute("stores", storeService.getAllActiveStores());
 
         return "client/home";

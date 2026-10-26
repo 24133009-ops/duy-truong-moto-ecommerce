@@ -34,7 +34,7 @@ public class UserService {
     @Transactional
     public User registerUser(String firstname, String lastname, String email, String phone, String rawPassword) {
         if (userRepository.existsByEmail(email)) {
-            throw new IllegalArgumentException("Email đã tồn tại trong hệ thống Duy Truong Moto!");
+            throw new IllegalArgumentException("Email đã tồn tại trong hệ thống Duy Truong Motor!");
         }
 
         String otp = emailOtpService.generateOtp();

@@ -48,10 +48,10 @@
   --shadow-card: 0 16px 36px -10px rgba(0, 0, 0, 0.85);
   --shadow-deep: 0 25px 60px -15px rgba(0, 0, 0, 0.98);
 
-  /* TYPOGRAPHY CHUẨN TIẾNG VIỆT 100% (Không bao giờ bị lỗi dấu hoặc font lệch) */
-  --font-brand: 'Montserrat', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-racing: 'Barlow Condensed', 'Montserrat', sans-serif;
+  /* TYPOGRAPHY CHUẨN TIẾNG VIỆT 100% VỚI BE VIETNAM PRO (Không bao giờ bị lỗi dấu hoặc font lệch) */
+  --font-brand: 'Be Vietnam Pro', 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: 'Be Vietnam Pro', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-racing: 'Be Vietnam Pro', 'Montserrat', -apple-system, sans-serif;
 }
 
 * {
