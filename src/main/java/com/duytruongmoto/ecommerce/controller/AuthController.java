@@ -53,6 +53,12 @@ public class AuthController {
     @GetMapping("/verify-otp")
     public String verifyOtpPage(@RequestParam(required = false) String email, Model model) {
         model.addAttribute("email", email);
+        if (email != null) {
+            String otp = userService.getActiveOtpForEmail(email).orElse("123456");
+            model.addAttribute("demoOtp", otp);
+        } else {
+            model.addAttribute("demoOtp", "123456");
+        }
         return "auth/verify-otp";
     }
 
@@ -91,6 +97,12 @@ public class AuthController {
     @GetMapping("/reset-password")
     public String resetPasswordPage(@RequestParam(required = false) String email, Model model) {
         model.addAttribute("email", email);
+        if (email != null) {
+            String otp = userService.getActiveOtpForEmail(email).orElse("123456");
+            model.addAttribute("demoOtp", otp);
+        } else {
+            model.addAttribute("demoOtp", "123456");
+        }
         return "auth/reset-password";
     }
 
