@@ -35,9 +35,12 @@ github_txt = """================================================================
 ========================================================================================
 
 1. LINK KHO MÃ NGUỒN GITHUB CHÍNH THỨC CỦA NHÓM:
-   https://github.com/duytruong-moto/duy-truong-moto-ecommerce
+   https://github.com/24133009-ops/duy-truong-moto-ecommerce
 
-2. DANH SÁCH THÀNH VIÊN VÀ NHIỆM VỤ:
+2. LINK WEBSITE CHÍNH THỨC ĐÃ TRIỂN KHAI TRỰC TUYẾN (VERCEL LIVE):
+   https://duy-truong-moto.vercel.app (Hoặc Claim tại: https://fleet-beryl-c29gxsp.tmp.now)
+
+3. DANH SÁCH THÀNH VIÊN VÀ NHIỆM VỤ:
    - Trương Quốc Duy   (MSSV: 24133009) - Nhóm trưởng (Leader) & Fullstack Lead Developer (Toàn bộ kiến trúc, Fullstack Spring Boot 3 + React SPA, Security, JWT, OTP, CSDL, VNPAY, WebSocket)
    - Đỗ Trọng Khôi    (MSSV: 20133056) - Database Analyst & QA/Testing Lead (Khảo sát hiện trạng, Lược đồ CSDL, Dữ liệu xe cào cào/mô tô, Kịch bản & thực hiện kiểm thử QA)
    - Lê Nghĩa Tình    (MSSV: 20133096) - System Analyst & Technical Documentation (Đặc tả nghiệp vụ SRS, Sơ đồ Use Case & Activity Diagram luồng Shipper, Báo cáo Word .docx, Kịch bản Video Demo)
