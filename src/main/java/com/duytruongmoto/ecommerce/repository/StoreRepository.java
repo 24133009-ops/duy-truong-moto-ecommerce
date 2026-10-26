@@ -10,7 +10,8 @@ import java.util.Optional;
 @Repository
 public interface StoreRepository extends JpaRepository<Store, Long> {
     Optional<Store> findBySlug(String slug);
-    Optional<Store> findByOwnerId(Long ownerId);
+    List<Store> findByOwnerId(Long ownerId);
+    Optional<Store> findFirstByOwnerId(Long ownerId);
     List<Store> findByIsActiveTrue();
     List<Store> findByIsActive(Boolean isActive);
 }

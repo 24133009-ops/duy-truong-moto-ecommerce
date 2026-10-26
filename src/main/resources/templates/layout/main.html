@@ -105,36 +105,40 @@
                         </a>
                     </div>
 
-                    <!-- User Account Dropdown -->
-                    <div class="dropdown flex-shrink-0" sec:authorize="isAuthenticated()">
-                        <button class="btn btn-dark border-secondary dropdown-toggle rounded-pill px-3 py-2 text-gold d-flex align-items-center gap-2 flex-nowrap shadow-sm" type="button" data-bs-toggle="dropdown" style="white-space: nowrap;">
-                            <i class="fa-solid fa-circle-user fs-5 text-gold flex-shrink-0"></i>
-                            <span sec:authentication="name" class="fw-bold text-gold small" style="white-space: nowrap;">Tài khoản</span>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow-lg border-secondary p-2">
-                            <li><a class="dropdown-item py-2" th:href="@{/user/profile}"><i class="fa-solid fa-user-gear me-2 text-gold"></i> Hồ sơ &amp; Sổ địa chỉ</a></li>
-                            <li><a class="dropdown-item py-2" th:href="@{/orders}"><i class="fa-solid fa-clock-rotate-left me-2 text-gold"></i> Lịch sử đơn mua</a></li>
-                            
-                            <li sec:authorize="hasAnyRole('VENDOR', 'ADMIN')" class="dropdown-divider border-secondary"></li>
-                            <li sec:authorize="hasAnyRole('VENDOR', 'ADMIN')">
-                                <a class="dropdown-item py-2 text-warning fw-bold" th:href="@{/vendor/dashboard}"><i class="fa-solid fa-store me-2"></i> Kênh Showroom Chi Nhánh</a>
-                            </li>
-                            <li sec:authorize="hasRole('SHIPPER')">
-                                <a class="dropdown-item py-2 text-info fw-bold" th:href="@{/shipper/dashboard}"><i class="fa-solid fa-truck-fast me-2"></i> Phân Hệ Shipper Giao Xe</a>
-                            </li>
-                            <li sec:authorize="hasAnyRole('ADMIN', 'MANAGER')" class="dropdown-divider border-secondary"></li>
-                            <li sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
-                                <a class="dropdown-item py-2 text-danger fw-bold" th:href="@{/admin/dashboard}"><i class="fa-solid fa-shield-halved me-2"></i> Admin Quản Trị Hệ Thống</a>
-                            </li>
-                        </ul>
-                    </div>
+                    <!-- User Account & Direct Logout Compact Pill Group (Gọn gàng, nằm chung pill với gmail, không bị tràn màn hình) -->
+                    <div class="d-inline-flex align-items-center bg-dark border border-secondary rounded-pill p-1 shadow-sm flex-nowrap" sec:authorize="isAuthenticated()">
+                        <!-- Dropdown toggle for Account Menu -->
+                        <div class="dropdown">
+                            <button class="btn btn-dark btn-sm rounded-pill py-1 px-2 text-gold d-flex align-items-center gap-1 border-0 dropdown-toggle" type="button" data-bs-toggle="dropdown" title="Menu tài khoản">
+                                <i class="fa-solid fa-circle-user text-gold"></i>
+                                <span sec:authentication="name" class="fw-bold text-gold small text-truncate d-inline-block" style="max-width: 140px; vertical-align: middle;">Tài khoản</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow-lg border-secondary p-2 mt-2">
+                                <li><a class="dropdown-item py-2" th:href="@{/user/profile}"><i class="fa-solid fa-user-gear me-2 text-gold"></i> Hồ sơ &amp; Sổ địa chỉ</a></li>
+                                <li><a class="dropdown-item py-2" th:href="@{/orders}"><i class="fa-solid fa-clock-rotate-left me-2 text-gold"></i> Lịch sử đơn mua</a></li>
+                                
+                                <li sec:authorize="hasAnyRole('VENDOR', 'ADMIN')" class="dropdown-divider border-secondary"></li>
+                                <li sec:authorize="hasAnyRole('VENDOR', 'ADMIN')">
+                                    <a class="dropdown-item py-2 text-warning fw-bold" th:href="@{/vendor/dashboard}"><i class="fa-solid fa-store me-2"></i> Kênh Showroom Chi Nhánh</a>
+                                </li>
+                                <li sec:authorize="hasRole('SHIPPER')">
+                                    <a class="dropdown-item py-2 text-info fw-bold" th:href="@{/shipper/dashboard}"><i class="fa-solid fa-truck-fast me-2"></i> Phân Hệ Shipper Giao Xe</a>
+                                </li>
+                                <li sec:authorize="hasAnyRole('ADMIN', 'MANAGER')" class="dropdown-divider border-secondary"></li>
+                                <li sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+                                    <a class="dropdown-item py-2 text-danger fw-bold" th:href="@{/admin/dashboard}"><i class="fa-solid fa-shield-halved me-2"></i> Admin Quản Trị Hệ Thống</a>
+                                </li>
+                            </ul>
+                        </div>
 
-                    <!-- Direct Visible Logout Button (Nằm gọn gàng, hiển thị thấy hết rõ ràng, không giấu trong hốc) -->
-                    <div sec:authorize="isAuthenticated()" class="flex-shrink-0">
-                        <form th:action="@{/auth/logout}" method="post" class="d-inline m-0">
-                            <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3 py-2 fw-bold d-flex align-items-center gap-1 shadow-sm text-nowrap" title="Đăng xuất khỏi tài khoản">
+                        <!-- Sleek Divider -->
+                        <span class="text-secondary opacity-50 px-1">|</span>
+
+                        <!-- Logout Button right inside the pill next to Gmail -->
+                        <form th:action="@{/auth/logout}" method="post" class="d-inline m-0 p-0">
+                            <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-2 py-1 fw-bold border-0 d-flex align-items-center gap-1 text-danger" title="Đăng xuất khỏi hệ thống">
                                 <i class="fa-solid fa-right-from-bracket"></i>
-                                <span>Đăng Xuất</span>
+                                <span class="small">Đăng xuất</span>
                             </button>
                         </form>
                     </div>

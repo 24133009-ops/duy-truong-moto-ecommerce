@@ -37,8 +37,9 @@ public class VendorController {
         if (userDetails == null) return "redirect:/auth/login";
 
         Store store = storeService.getOrCreateVendorStore(userDetails.getUser());
-        List<Product> products = productService.getProductsByStore(store.getId());
-        List<Order> orders = orderService.getOrdersByStore(store.getId(), null);
+        Long storeId = (store != null) ? store.getId() : null;
+        List<Product> products = (storeId != null) ? productService.getProductsByStore(storeId) : java.util.Collections.emptyList();
+        List<Order> orders = (storeId != null) ? orderService.getOrdersByStore(storeId, null) : java.util.Collections.emptyList();
 
         BigDecimal totalRevenue = orders.stream()
                 .filter(o -> o.getStatus() == OrderStatus.DELIVERED && o.getAmountToStore() != null)
@@ -48,7 +49,7 @@ public class VendorController {
         model.addAttribute("store", store);
         model.addAttribute("totalProducts", products.size());
         model.addAttribute("totalOrders", orders.size());
-        model.addAttribute("totalRevenue", totalRevenue);
+        model.addAttribute("totalRevenue", totalRevenue != null ? totalRevenue : BigDecimal.ZERO);
         model.addAttribute("recentOrders", orders.stream().limit(5).toList());
 
         return "vendor/dashboard";
@@ -58,8 +59,9 @@ public class VendorController {
     public String listProducts(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
         if (userDetails == null) return "redirect:/auth/login";
         Store store = storeService.getOrCreateVendorStore(userDetails.getUser());
+        Long storeId = (store != null) ? store.getId() : null;
         model.addAttribute("store", store);
-        model.addAttribute("products", productService.getProductsByStore(store.getId()));
+        model.addAttribute("products", (storeId != null) ? productService.getProductsByStore(storeId) : java.util.Collections.emptyList());
         return "vendor/products";
     }
 
@@ -126,8 +128,9 @@ public class VendorController {
             Model model) {
         if (userDetails == null) return "redirect:/auth/login";
         Store store = storeService.getOrCreateVendorStore(userDetails.getUser());
+        Long storeId = (store != null) ? store.getId() : null;
         model.addAttribute("store", store);
-        model.addAttribute("orders", orderService.getOrdersByStore(store.getId(), status));
+        model.addAttribute("orders", (storeId != null) ? orderService.getOrdersByStore(storeId, status) : java.util.Collections.emptyList());
         model.addAttribute("statuses", OrderStatus.values());
         model.addAttribute("currentStatus", status);
 

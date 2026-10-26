@@ -33,7 +33,8 @@ public class StoreService {
     }
 
     public Optional<Store> findByOwnerId(Long ownerId) {
-        return storeRepository.findByOwnerId(ownerId);
+        if (ownerId == null) return Optional.empty();
+        return storeRepository.findFirstByOwnerId(ownerId);
     }
 
     public List<Store> getAllActiveStores() {
@@ -44,32 +45,31 @@ public class StoreService {
         return storeRepository.findAll();
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Store getOrCreateVendorStore(User user) {
-        if (user == null) {
-            List<Store> all = storeRepository.findAll();
-            return all.isEmpty() ? null : all.get(0);
-        }
-        Optional<Store> storeOpt = storeRepository.findByOwnerId(user.getId());
-        if (storeOpt.isPresent()) {
-            return storeOpt.get();
+        if (user != null) {
+            Optional<Store> storeOpt = storeRepository.findFirstByOwnerId(user.getId());
+            if (storeOpt.isPresent()) {
+                return storeOpt.get();
+            }
         }
         List<Store> allStores = storeRepository.findAll();
         if (!allStores.isEmpty()) {
             return allStores.get(0);
         }
         Commission comm = commissionRepository.findAll().stream().findFirst().orElse(null);
-        return Store.builder()
+        User fallbackOwner = (user != null) ? user : userRepository.findByEmail("vendor@duytruongmoto.com").orElse(null);
+        return storeRepository.save(Store.builder()
                 .name("Duy Truong Motor - Chi nhánh Phú Nhuận TP.HCM (Trụ Sở Chính)")
-                .slug("duy-truong-motor-phu-nhuan")
-                .owner(user)
+                .slug("duy-truong-motor-phu-nhuan-" + System.currentTimeMillis())
+                .owner(fallbackOwner)
                 .bio("Showroom trưng bày siêu môtô PKL & xe cào cào địa hình lớn nhất miền Nam tại 123 Hoàng Văn Thụ")
                 .address("Số 123 Đường Hoàng Văn Thụ, Phường 8, Quận Phú Nhuận, TP. HCM")
                 .phone("0903.456.789 - 0933.333.382")
                 .avatar("https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=300&q=80")
                 .cover("https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=1200&q=80")
                 .isActive(true).isOpen(true).commission(comm).point(1200L).rating(4.9)
-                .eWallet(BigDecimal.valueOf(120000000)).build();
+                .eWallet(BigDecimal.valueOf(120000000)).build());
     }
 
     @Transactional
