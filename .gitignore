@@ -33,3 +33,12 @@ build/
 
 ### Logs ###
 *.log
+
+### Python & Temporary Scripts ###
+__pycache__/
+*.py[cod]
+*$py.class
+*.tmp
+report_assets/
+tools/
+scratch/
