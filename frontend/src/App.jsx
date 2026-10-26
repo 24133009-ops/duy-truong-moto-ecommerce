@@ -108,16 +108,33 @@ export default function App() {
       .sort((a, b) => b.sold - a.sold);
   }, [products]);
 
+  // Distinct Brand List for Dynamic Select
+  const allBrandList = useMemo(() => {
+    const brandMap = new Map();
+    products.forEach(p => {
+      const bUpper = (p.brand || '').trim().toUpperCase();
+      if (bUpper) {
+        brandMap.set(bUpper, p.brand);
+      }
+    });
+    return Array.from(brandMap.keys()).sort();
+  }, [products]);
+
   // Filtered Products for Catalog & User tabs
   const filteredProducts = useMemo(() => {
+    const normalize = (str) => (str || '').toLowerCase().replace(/[^a-z0-9]/g, '');
     return products.filter(p => {
       const matchStore = selectedShowroomFilter === 'all' || p.storeId === parseInt(selectedShowroomFilter);
       const matchCategory = selectedCategory === 'all' || 
                             (selectedCategory === 'all-motor' ? (p.category !== 'oto' && p.category !== 'xenho' && p.category !== 'gear-parts') : p.category === selectedCategory);
+      
+      const pNorm = normalize(p.brand);
+      const bNorm = normalize(brandFilter);
       const matchBrand = brandFilter === 'all' || 
-                         p.brand.toLowerCase() === brandFilter.toLowerCase() ||
-                         p.brand.toLowerCase().includes(brandFilter.toLowerCase()) ||
-                         brandFilter.toLowerCase().includes(p.brand.toLowerCase());
+                         pNorm === bNorm ||
+                         pNorm.includes(bNorm) ||
+                         bNorm.includes(pNorm);
+
       const matchPrice = (p.promotionalPrice || p.price) >= priceRange.min && (p.promotionalPrice || p.price) <= priceRange.max;
       const matchSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           p.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -746,18 +763,10 @@ export default function App() {
                     Hãng sản xuất:
                   </label>
                   <select className="luxury-select" value={brandFilter} onChange={(e) => setBrandFilter(e.target.value)}>
-                    <option value="all">Tất cả thương hiệu</option>
-                    <option value="KTM">KTM Cào Cào</option>
-                    <option value="Husqvarna">Husqvarna Thụy Điển</option>
-                    <option value="Honda">Honda CRF</option>
-                    <option value="Kawasaki">Kawasaki (KLX &amp; H2)</option>
-                    <option value="Aprilia">Aprilia</option>
-                    <option value="Ducati">Ducati</option>
-                    <option value="BMW">BMW Motorrad</option>
-                    <option value="Harley-Davidson">Harley-Davidson</option>
-                    <option value="Vespa">Vespa Ý</option>
-                    <option value="LS2">LS2 Helmets</option>
-                    <option value="Akrapovic">Akrapovic Exhaust</option>
+                    <option value="all">Tất cả thương hiệu ({products.length} mẫu xe)</option>
+                    {allBrandList.map(b => (
+                      <option key={b} value={b}>{b}</option>
+                    ))}
                   </select>
                 </div>
 
@@ -768,15 +777,20 @@ export default function App() {
                   <input 
                     type="range" 
                     min="10000000" 
-                    max="2000000000" 
-                    step="20000000"
+                    max="30000000000" 
+                    step="200000000"
                     value={priceRange.max} 
                     onChange={(e) => setPriceRange({ ...priceRange, max: parseInt(e.target.value) })}
                     style={{ width: '100%', accentColor: 'var(--gold-primary)' }}
                   />
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                    <span>10 Tr</span>
+                    <span>15 Tỷ</span>
+                    <span>30 Tỷ</span>
+                  </div>
                 </div>
 
-                <button className="btn-outline-gold" style={{ width: '100%' }} onClick={() => { setSearchQuery(''); setSelectedCategory('all'); setBrandFilter('all'); setPriceRange({ min: 0, max: 2000000000 }); }}>
+                <button className="btn-outline-gold" style={{ width: '100%' }} onClick={() => { setSearchQuery(''); setSelectedCategory('all'); setBrandFilter('all'); setPriceRange({ min: 0, max: 30000000000 }); }}>
                   <i className="fa-solid fa-rotate-left"></i> Đặt Lại Bộ Lọc
                 </button>
               </div>
@@ -794,6 +808,15 @@ export default function App() {
                     <i className="fa-solid fa-motorcycle" style={{ fontSize: '40px', color: 'var(--text-muted)', marginBottom: '16px' }}></i>
                     <h3>Không tìm thấy mẫu xe nào!</h3>
                     <p style={{ color: 'var(--text-muted)' }}>Vui lòng thay đổi từ khóa hoặc khoảng giá lọc.</p>
+                    <div style={{ marginTop: '18px' }}>
+                      <button 
+                        className="btn-gold" 
+                        style={{ padding: '10px 24px', fontSize: '0.9rem' }} 
+                        onClick={() => { setBrandFilter('all'); setSelectedCategory('all'); setSearchQuery(''); setPriceRange({ min: 0, max: 30000000000 }); }}
+                      >
+                        <i className="fa-solid fa-rotate-left me-2"></i> Xem Toàn Bộ Kho Xe ({products.length} xe)
+                      </button>
+                    </div>
                   </div>
                 ) : (
                   <div className="bike-grid">
