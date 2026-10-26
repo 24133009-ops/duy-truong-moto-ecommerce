@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -27,103 +29,120 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        if (userRepository.count() > 0 || userLevelRepository.count() > 0) {
-            log.info("Dữ liệu hệ thống Duy Truong Motor đã tồn tại. Bỏ qua DataInitializer.");
-            return;
+        log.info(">>> Duy Truong Motor DataInitializer: Đang đồng bộ toàn bộ dữ liệu 60 sản phẩm...");
+
+        // 1. User Levels & Users
+        if (userLevelRepository.count() == 0 || userRepository.count() == 0) {
+            initBaseData();
         }
 
-        log.info(">>> Khởi tạo dữ liệu mẫu cho Chuỗi Showroom Xe Luxury Duy Truong Motor...");
+        // 2. Categories
+        Map<String, Category> catMap = initCategories();
 
-        // 1. User Levels
+        // 3. Stores
+        Map<Integer, Store> storeMap = initStores();
+
+        // 4. Products: Đảm bảo toàn bộ 60 sản phẩm luôn có mặt trong hệ thống
+        initAll60Products(catMap, storeMap);
+
+        log.info(">>> Đã đồng bộ thành công {} sản phẩm trong kho Duy Truong Motor!", productRepository.count());
+    }
+
+    private void initBaseData() {
+        // User Levels
         UserLevel silver = userLevelRepository.save(UserLevel.builder().name("Thành viên Bạc").minPoint(0L).discount(BigDecimal.ZERO).isDeleted(false).build());
         UserLevel gold = userLevelRepository.save(UserLevel.builder().name("Khách hàng Vàng").minPoint(1000L).discount(BigDecimal.valueOf(3.0)).isDeleted(false).build());
         UserLevel diamond = userLevelRepository.save(UserLevel.builder().name("Khách hàng Kim Cương VIP").minPoint(5000L).discount(BigDecimal.valueOf(7.0)).isDeleted(false).build());
 
-        // 2. Commissions
-        Commission commStandard = commissionRepository.save(Commission.builder().name("Chiết khấu Tiêu chuẩn").cost(BigDecimal.valueOf(5.0)).description("Chiết khấu 5% cho showroom đối tác").isDeleted(false).build());
-        Commission commVip = commissionRepository.save(Commission.builder().name("Chiết khấu Đại lý VIP").cost(BigDecimal.valueOf(3.0)).description("Chiết khấu ưu đãi 3%").isDeleted(false).build());
+        // Commissions
+        commissionRepository.save(Commission.builder().name("Chiết khấu Tiêu chuẩn").cost(BigDecimal.valueOf(5.0)).description("Chiết khấu 5% cho showroom đối tác").isDeleted(false).build());
+        commissionRepository.save(Commission.builder().name("Chiết khấu Đại lý VIP").cost(BigDecimal.valueOf(3.0)).description("Chiết khấu ưu đãi 3%").isDeleted(false).build());
 
-        // 3. Deliveries
-        Delivery delivFlatbed = deliveryRepository.save(Delivery.builder().name("Giao xe sàn trượt thủy lực VIP (Chống trầy xước 100%)").description("Xe chuyên dụng sàn trượt hạ đất, bàn giao tận phòng khách khách hàng").price(BigDecimal.valueOf(1500000)).isDeleted(false).build());
-        Delivery delivVan = deliveryRepository.save(Delivery.builder().name("Xe tải thùng kín chuyên dụng chuyển môtô").description("Xe tải thùng bạt chuyên chở xe PKL đi tỉnh").price(BigDecimal.valueOf(800000)).isDeleted(false).build());
-        Delivery delivStandard = deliveryRepository.save(Delivery.builder().name("Giao hàng tiêu chuẩn (Phụ tùng, đồ bảo hộ)").description("Giao nhanh trong 2-3 ngày").price(BigDecimal.valueOf(50000)).isDeleted(false).build());
+        // Deliveries
+        deliveryRepository.save(Delivery.builder().name("Giao xe sàn trượt thủy lực VIP (Chống trầy xước 100%)").description("Xe chuyên dụng sàn trượt hạ đất, bàn giao tận phòng khách khách hàng").price(BigDecimal.valueOf(1500000)).isDeleted(false).build());
+        deliveryRepository.save(Delivery.builder().name("Xe tải thùng kín chuyên dụng chuyển môtô").description("Xe tải thùng bạt chuyên chở xe PKL đi tỉnh").price(BigDecimal.valueOf(800000)).isDeleted(false).build());
+        deliveryRepository.save(Delivery.builder().name("Giao hàng tiêu chuẩn (Phụ tùng, đồ bảo hộ)").description("Giao nhanh trong 2-3 ngày").price(BigDecimal.valueOf(50000)).isDeleted(false).build());
 
-        // 4. Users
-        User admin = userRepository.save(User.builder()
-                .firstname("Duy")
-                .lastname("Trường")
+        // Users
+        userRepository.save(User.builder()
+                .firstname("Duy").lastname("Trường")
                 .slug("duy-truong-admin")
-                .email("admin@duytruongmoto.com")
-                .phone("0901234567")
+                .email("admin@duytruongmoto.com").phone("0901234567")
                 .password(passwordEncoder.encode("admin123"))
-                .role(Role.ROLE_ADMIN)
-                .isEmailActive(true)
-                .isPhoneActive(true)
+                .role(Role.ROLE_ADMIN).isEmailActive(true).isPhoneActive(true)
                 .avatar("https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80")
-                .point(9999L)
-                .eWallet(BigDecimal.valueOf(500000000))
-                .userLevel(diamond)
-                .build());
+                .point(9999L).eWallet(BigDecimal.valueOf(500000000)).userLevel(diamond).build());
 
-        User manager = userRepository.save(User.builder()
-                .firstname("Quản lý")
-                .lastname("Chi nhánh")
+        userRepository.save(User.builder()
+                .firstname("Quản lý").lastname("Chi nhánh")
                 .slug("manager-duytruong")
-                .email("manager@duytruongmoto.com")
-                .phone("0902345678")
+                .email("manager@duytruongmoto.com").phone("0902345678")
                 .password(passwordEncoder.encode("manager123"))
-                .role(Role.ROLE_MANAGER)
-                .isEmailActive(true)
-                .isPhoneActive(true)
-                .point(500L)
-                .userLevel(gold)
-                .build());
+                .role(Role.ROLE_MANAGER).isEmailActive(true).isPhoneActive(true)
+                .point(500L).userLevel(gold).build());
 
-        User vendor = userRepository.save(User.builder()
-                .firstname("Minh")
-                .lastname("Showroom Q1")
+        userRepository.save(User.builder()
+                .firstname("Minh").lastname("Showroom Q1")
                 .slug("minh-showroom-q1")
-                .email("vendor@duytruongmoto.com")
-                .phone("0903456789")
+                .email("vendor@duytruongmoto.com").phone("0903456789")
                 .password(passwordEncoder.encode("vendor123"))
-                .role(Role.ROLE_VENDOR)
-                .isEmailActive(true)
-                .isPhoneActive(true)
-                .point(2000L)
-                .eWallet(BigDecimal.valueOf(150000000))
-                .userLevel(gold)
-                .build());
+                .role(Role.ROLE_VENDOR).isEmailActive(true).isPhoneActive(true)
+                .point(2000L).eWallet(BigDecimal.valueOf(150000000)).userLevel(gold).build());
 
-        User shipper = userRepository.save(User.builder()
-                .firstname("Tuấn")
-                .lastname("Vận Chuyển")
+        userRepository.save(User.builder()
+                .firstname("Tuấn").lastname("Vận Chuyển")
                 .slug("tuan-shipper")
-                .email("shipper@duytruongmoto.com")
-                .phone("0904567890")
+                .email("shipper@duytruongmoto.com").phone("0904567890")
                 .password(passwordEncoder.encode("shipper123"))
-                .role(Role.ROLE_SHIPPER)
-                .isEmailActive(true)
-                .isPhoneActive(true)
-                .point(100L)
-                .build());
+                .role(Role.ROLE_SHIPPER).isEmailActive(true).isPhoneActive(true)
+                .point(100L).userLevel(silver).build());
 
-        User customer = userRepository.save(User.builder()
-                .firstname("Hoàng")
-                .lastname("Biker")
-                .slug("hoang-biker")
-                .email("customer@gmail.com")
-                .phone("0905678901")
-                .password(passwordEncoder.encode("user123"))
-                .role(Role.ROLE_USER)
-                .isEmailActive(true)
-                .isPhoneActive(true)
-                .point(350L)
-                .eWallet(BigDecimal.valueOf(50000000))
-                .userLevel(silver)
-                .build());
+        userRepository.save(User.builder()
+                .firstname("Hùng").lastname("Biker")
+                .slug("hung-biker")
+                .email("customer@duytruongmoto.com").phone("0905678901")
+                .password(passwordEncoder.encode("customer123"))
+                .role(Role.ROLE_USER).isEmailActive(true).isPhoneActive(true)
+                .point(350L).eWallet(BigDecimal.valueOf(50000000)).userLevel(silver).build());
+    }
 
-        // 5. Stores (Showroom Chuỗi Duy Truong Motor)
-        Store showroomQ1 = storeRepository.save(Store.builder()
+    private Map<String, Category> initCategories() {
+        Map<String, Category> catMap = new HashMap<>();
+        String[][] catDefs = {
+            {"Siêu Xe Ô Tô & Xe Sang", "oto", "/images/lamborghini_huracan.jpg"},
+            {"Xe Nhỏ & Tay Ga Sưu Tầm", "xenho", "/images/honda_monkey_125.jpg"},
+            {"Xe Cào Cào - Địa Hình", "dirtbike", "/images/ktm_300_exc.jpg"},
+            {"Superbike / Thể Thao", "superbike", "/images/ducati_panigale_v4s.jpg"},
+            {"Hyper Naked Đường Phố", "hyper-naked", "/images/ducati_streetfighter.jpg"},
+            {"Cruiser & Chopper Mỹ", "cruiser", "/images/harley_fatboy.jpg"},
+            {"Cruiser & Touring", "cruiser-touring", "/images/harley_fatboy.jpg"},
+            {"Adventure Phượt Bụi", "adventure", "/images/bmw_r1250gs.jpg"},
+            {"Tay Ga Độc Lạ Ý", "scooter", "/images/yamaha_tmax560.jpg"},
+            {"Pô Độ & Đồ Cào Cào", "gear-parts", "/images/akrapovic_exhaust.jpg"},
+            {"Pô Độ & Phụ Tùng Cao Cấp", "phu-tung-po-do", "/images/sc_project_exhaust.jpg"},
+            {"Đồ Bảo Hộ & Nón Bảo Hiểm", "do-bao-ho", "/images/agv_helmet.jpg"}
+        };
+
+        for (String[] def : catDefs) {
+            String name = def[0];
+            String slug = def[1];
+            String img = def[2];
+            Category cat = categoryRepository.findBySlug(slug).orElseGet(() -> 
+                categoryRepository.save(Category.builder().name(name).slug(slug).image(img).isDeleted(false).build())
+            );
+            catMap.put(slug, cat);
+        }
+        return catMap;
+    }
+
+    private Map<Integer, Store> initStores() {
+        Map<Integer, Store> storeMap = new HashMap<>();
+        User vendor = userRepository.findByEmail("vendor@duytruongmoto.com").orElse(null);
+        User admin = userRepository.findByEmail("admin@duytruongmoto.com").orElse(vendor);
+        Commission comm = commissionRepository.findAll().stream().findFirst().orElse(null);
+
+        Store s1 = storeRepository.findBySlug("duy-truong-moto-showroom-quan-1").orElseGet(() ->
+            storeRepository.save(Store.builder()
                 .name("Duy Truong Motor - Flagship Showroom Quận 1")
                 .slug("duy-truong-moto-showroom-quan-1")
                 .owner(vendor)
@@ -132,15 +151,13 @@ public class DataInitializer implements CommandLineRunner {
                 .phone("0903456789")
                 .avatar("https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=300&q=80")
                 .cover("https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=1200&q=80")
-                .isActive(true)
-                .isOpen(true)
-                .commission(commStandard)
-                .point(1200L)
-                .rating(4.9)
-                .eWallet(BigDecimal.valueOf(120000000))
-                .build());
+                .isActive(true).isOpen(true).commission(comm).point(1200L).rating(4.9)
+                .eWallet(BigDecimal.valueOf(120000000)).build())
+        );
+        storeMap.put(1, s1);
 
-        Store showroomHN = storeRepository.save(Store.builder()
+        Store s2 = storeRepository.findBySlug("duy-truong-moto-showroom-cau-giay").orElseGet(() ->
+            storeRepository.save(Store.builder()
                 .name("Duy Truong Motor - Showroom Cầu Giấy Hà Nội")
                 .slug("duy-truong-moto-showroom-cau-giay")
                 .owner(admin)
@@ -149,592 +166,773 @@ public class DataInitializer implements CommandLineRunner {
                 .phone("0901234567")
                 .avatar("https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=300&q=80")
                 .cover("https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=1200&q=80")
-                .isActive(true)
-                .isOpen(true)
-                .commission(commVip)
-                .point(980L)
-                .rating(5.0)
-                .eWallet(BigDecimal.valueOf(85000000))
-                .build());
+                .isActive(true).isOpen(true).commission(comm).point(980L).rating(5.0)
+                .eWallet(BigDecimal.valueOf(85000000)).build())
+        );
+        storeMap.put(2, s2);
 
-        // 6. Categories
-        Category catOto = categoryRepository.save(Category.builder().name("Siêu Xe Ô Tô & Xe Sang").slug("oto").image("/images/lamborghini_huracan.jpg").isDeleted(false).build());
-        Category catXeNho = categoryRepository.save(Category.builder().name("Xe Nhỏ & Tay Ga Sưu Tầm").slug("xenho").image("/images/honda_monkey_125.jpg").isDeleted(false).build());
-        Category catDirtbike = categoryRepository.save(Category.builder().name("Xe Cào Cào Địa Hình").slug("dirtbike").image("/images/ktm_300_exc.jpg").isDeleted(false).build());
-        Category catSuperbike = categoryRepository.save(Category.builder().name("Superbike / Sportbike").slug("superbike").image("/images/ducati_panigale_v4s.jpg").isDeleted(false).build());
-        Category catNaked = categoryRepository.save(Category.builder().name("Hyper Naked").slug("hyper-naked").image("/images/ducati_streetfighter.jpg").isDeleted(false).build());
-        Category catCruiser = categoryRepository.save(Category.builder().name("Cruiser & Touring").slug("cruiser-touring").image("/images/harley_fatboy.jpg").isDeleted(false).build());
-        Category catExhaust = categoryRepository.save(Category.builder().name("Pô Độ & Phụ Tùng Cao Cấp").slug("phu-tung-po-do").image("/images/akrapovic_exhaust.jpg").isDeleted(false).build());
-        Category catGear = categoryRepository.save(Category.builder().name("Đồ Bảo Hộ & Nón Bảo Hiểm").slug("do-bao-ho").image("/images/ls2_helmet.jpg").isDeleted(false).build());
+        Store s3 = storeRepository.findBySlug("duy-truong-moto-showroom-da-nang").orElseGet(() ->
+            storeRepository.save(Store.builder()
+                .name("Duy Truong Motor - Showroom Hải Châu Đà Nẵng")
+                .slug("duy-truong-moto-showroom-da-nang")
+                .owner(vendor)
+                .bio("Chi nhánh miền Trung uy tín chuyên siêu môtô PKL & xe cào cào.")
+                .address("Số 234 Đường Nguyễn Văn Linh, Hải Châu, Đà Nẵng")
+                .phone("0905678901")
+                .avatar("https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=300&q=80")
+                .cover("https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=1200&q=80")
+                .isActive(true).isOpen(true).commission(comm).point(850L).rating(4.9)
+                .eWallet(BigDecimal.valueOf(60000000)).build())
+        );
+        storeMap.put(3, s3);
 
-        // 7. Products (Xe Luxury bán chạy > 10 xe đáp ứng yêu cầu Guest)
-        productRepository.save(Product.builder()
-                .store(showroomQ1)
-                .category(catSuperbike)
-                .name("Ducati Panigale V4 S 2024")
-                .slug("ducati-panigale-v4-s-2024")
-                .description("Siêu phẩm Superbike đỉnh cao trang bị động cơ Desmosedici Stradale V4 1.103cc, công suất 215,5 mã lực. Phuộc Ohlins Smart EC 2.0 điện tử, mâm nhôm rèn Marchesini.")
-                .price(BigDecimal.valueOf(950000000))
-                .promotionalPrice(BigDecimal.valueOf(920000000))
-                .quantity(5)
-                .sold(18) // > 10 cho Guest
-                .isActive(true)
-                .isSelling(true)
-                .mainImage("/images/ducati_panigale_v4s.jpg")
-                .engineCapacity("1103 cc")
-                .color("Đỏ Rosso Corsa")
-                .brand("Ducati")
-                .rating(5.0)
-                .build());
+        return storeMap;
+    }
 
-        productRepository.save(Product.builder()
-                .store(showroomQ1)
-                .category(catSuperbike)
-                .name("Kawasaki Ninja H2 Carbon")
-                .slug("kawasaki-ninja-h2-carbon")
-                .description("Tuyệt tác siêu nạp Supercharged 998cc độc quyền Kawasaki, công suất cực đại 231 mã lực, dàn áo carbon siêu nhẹ.")
-                .price(BigDecimal.valueOf(1350000000))
-                .promotionalPrice(BigDecimal.valueOf(1290000000))
-                .quantity(3)
-                .sold(14) // > 10 cho Guest
+    private void seedProduct(Store store, Category category, String name, String slug, String brand,
+                             BigDecimal price, BigDecimal promoPrice, int qty, int sold, double rating,
+                             String engine, String color, String image, String desc) {
+        if (productRepository.findBySlug(slug).isEmpty()) {
+            productRepository.save(Product.builder()
+                .store(store)
+                .category(category)
+                .name(name)
+                .slug(slug)
+                .brand(brand)
+                .price(price)
+                .promotionalPrice(promoPrice)
+                .quantity(qty)
+                .sold(sold)
+                .rating(rating)
+                .engineCapacity(engine)
+                .color(color)
+                .mainImage(image)
+                .description(desc)
                 .isActive(true)
                 .isSelling(true)
-                .mainImage("/images/kawasaki_ninja_h2.jpg")
-                .engineCapacity("998 cc")
-                .color("Đen Nhám Carbon")
-                .brand("Kawasaki")
-                .rating(4.9)
                 .build());
+        }
+    }
 
-        productRepository.save(Product.builder()
-                .store(showroomHN)
-                .category(catSuperbike)
-                .name("BMW S1000RR M Package 2024")
-                .slug("bmw-s1000rr-m-package")
-                .description("Vua tốc độ 'Cá mập' BMW S1000RR gói M cao cấp: Mâm Carbon, gắp M, ống xả Akrapovic titanium, công suất 210 mã lực ShiftCam.")
-                .price(BigDecimal.valueOf(1099000000))
-                .promotionalPrice(BigDecimal.valueOf(1050000000))
-                .quantity(4)
-                .sold(19) // > 10 cho Guest
-                .isActive(true)
-                .isSelling(true)
-                .mainImage("/images/bmw_s1000rr.jpg")
-                .engineCapacity("999 cc")
-                .color("Trắng Đỏ Xanh M Motorsport")
-                .brand("BMW")
-                .rating(5.0)
-                .build());
+    private void initAll60Products(Map<String, Category> catMap, Map<Integer, Store> storeMap) {
+        seedProduct(storeMap.get(1), catMap.get("dirtbike"),
+            "KTM 300 EXC TPI Factory Edition 2024",
+            "ktm-300-exc-tpi-factory-edition-2024-101",
+            "KTM",
+            new BigDecimal("385000000"),
+            new BigDecimal("368000000"),
+            4, 17, 5.0,
+            "293.2 cc 2-Thì TPI Phun Xăng Điện Tử",
+            "Cam Đen Factory Racing",
+            "/images/ktm_300_exc.jpg",
+            "Vua cào cào Enduro 2 thì số 1 thế giới với công nghệ phun xăng điện tử TPI độc quyền, phuộc trước hành trình ngược WP XPLOR 48mm điều chỉnh độc lập, chảng ba CNC cam anodize, mâm nan hoa DID DirtStar gia cường vượt mọi địa hình bùn lầy, dốc đá hiểm trở.");
 
-        productRepository.save(Product.builder()
-                .store(showroomHN)
-                .category(catCruiser)
-                .name("Harley-Davidson Fat Boy 114")
-                .slug("harley-davidson-fat-boy-114")
-                .description("Biểu tượng cơ bắp Mỹ với khối động cơ Milwaukee-Eight 114 V-Twin 1.868cc, mâm đúc nhôm nguyên khối Lakester.")
-                .price(BigDecimal.valueOf(899000000))
-                .promotionalPrice(BigDecimal.valueOf(870000000))
-                .quantity(6)
-                .sold(12) // > 10 cho Guest
-                .isActive(true)
-                .isSelling(true)
-                .mainImage("/images/harley_fatboy.jpg")
-                .engineCapacity("1868 cc")
-                .color("Vàng Đồng Vivid Black")
-                .brand("Harley-Davidson")
-                .rating(4.8)
-                .build());
+        seedProduct(storeMap.get(1), catMap.get("dirtbike"),
+            "KTM 450 EXC-F Six Days Argentina Edition",
+            "ktm-450-exc-f-six-days-argentina-edition-102",
+            "KTM",
+            new BigDecimal("465000000"),
+            new BigDecimal("445000000"),
+            3, 15, 4.95,
+            "449.9 cc SOHC 4-Van Làm Mát Chất Lỏng",
+            "Trắng Xanh Cam Six Days",
+            "/images/ktm_450_exc.jpg",
+            "Chiến mã cào cào Enduro thi đấu quốc tế phiên bản Six Days danh giá. Động cơ 450cc 4 thì cực kỳ bền bỉ và bốc ở dải tua đầu, trang bị bảo vệ gầm nhôm nguyên khối, quạt tản nhiệt thông minh và hệ thống kiểm soát lực kéo Traction Control đa cấp độ.");
 
-        productRepository.save(Product.builder()
-                .store(showroomQ1)
-                .category(catNaked)
-                .name("Ducati Streetfighter V4 S")
-                .slug("ducati-streetfighter-v4-s")
-                .description("Mẫu Hyper Naked mạnh mẽ nhất hành tinh, cánh gió khí động học Biplane Wings, ghi-đông cao thể thao, 208 mã lực.")
-                .price(BigDecimal.valueOf(890000000))
-                .promotionalPrice(BigDecimal.valueOf(860000000))
-                .quantity(7)
-                .sold(15) // > 10 cho Guest
-                .isActive(true)
-                .isSelling(true)
-                .mainImage("/images/ducati_streetfighter.jpg")
-                .engineCapacity("1103 cc")
-                .color("Xám Nhám Dark Stealth")
-                .brand("Ducati")
-                .rating(4.9)
-                .build());
+        seedProduct(storeMap.get(2), catMap.get("dirtbike"),
+            "Husqvarna FE 350 Pro Edition Thụy Điển",
+            "husqvarna-fe-350-pro-edition-thuy-ien-103",
+            "Husqvarna",
+            new BigDecimal("420000000"),
+            new BigDecimal("399000000"),
+            3, 12, 4.9,
+            "349.7 cc DOHC Piston Rèn Siêu Nhẹ",
+            "Trắng Xanh Vàng Bắc Âu",
+            "/images/husqvarna_fe350.jpg",
+            "Tuyệt tác cào cào cao cấp đến từ Thụy Điển. Sự kết hợp hoàn hảo giữa trọng lượng nhẹ như xe 250cc và sức kéo mạnh mẽ của xe 450cc. Khung phụ bằng sợi carbon composite 2 mảnh, cùm phanh cùm côn thủy lực Brembo và mâm căm nhôm Excel cao cấp.");
 
-        productRepository.save(Product.builder()
-                .store(showroomQ1)
-                .category(catExhaust)
-                .name("Pô Akrapovic Full System Titanium Panigale V4")
-                .slug("po-akrapovic-titanium-panigale-v4")
-                .description("Hệ thống ống xả Akrapovic chính hãng full titan, tăng 12 mã lực, giảm 6kg trọng lượng xe, âm thanh nổ uy lực.")
-                .price(BigDecimal.valueOf(145000000))
-                .promotionalPrice(BigDecimal.valueOf(138000000))
-                .quantity(15)
-                .sold(25) // > 10 cho Guest
-                .isActive(true)
-                .isSelling(true)
-                .mainImage("/images/akrapovic_exhaust.jpg")
-                .color("Titanium Mờ")
-                .brand("Akrapovic")
-                .rating(5.0)
-                .build());
+        seedProduct(storeMap.get(1), catMap.get("dirtbike"),
+            "Honda CRF450R Motocross AMA Champion",
+            "honda-crf450r-motocross-ama-champion-104",
+            "Honda",
+            new BigDecimal("345000000"),
+            new BigDecimal("325000000"),
+            5, 19, 5.0,
+            "449.8 cc Unicam 4 Van Làm Mát Kép",
+            "Đỏ Trắng HRC Honda Racing",
+            "/images/honda_crf450r.jpg",
+            "Chiến mã cào cào bay vô địch các giải đua cào cào địa hình danh giá AMA Motocross và Supercross của Mỹ. Khung nhôm đôi thế hệ thứ 7, phuộc trước Showa ti 49mm hành trình nhún 310mm nuốt trọn mọi cú nhảy tiếp đất từ độ cao 5 mét.");
 
-        productRepository.save(Product.builder()
-                .store(showroomHN)
-                .category(catGear)
-                .name("Mũ Bảo Hiểm Cào Cào LS2 MX703 X-Force Carbon")
-                .slug("mu-bao-hiem-ls2-mx703-carbon")
-                .description("Nón bảo hiểm cào cào 100% sợi carbon siêu nhẹ ECE 22.06, khe hút gió làm mát tối đa.")
-                .price(BigDecimal.valueOf(12500000))
-                .promotionalPrice(BigDecimal.valueOf(11200000))
-                .quantity(20)
-                .sold(42) // > 10 cho Guest
-                .isActive(true)
-                .isSelling(true)
-                .mainImage("/images/ls2_helmet.jpg")
-                .color("Carbon Bóng")
-                .brand("LS2")
-                .rating(5.0)
-                .build());
+        seedProduct(storeMap.get(3), catMap.get("dirtbike"),
+            "Kawasaki KLX300 Dual-Sport Đa Địa Hình",
+            "kawasaki-klx300-dual-sport-a-ia-hinh-105",
+            "Kawasaki",
+            new BigDecimal("185000000"),
+            new BigDecimal("178000000"),
+            6, 22, 4.88,
+            "292 cc DOHC Phun Xăng Điện Tử",
+            "Xanh Lá Đen Lime Green",
+            "/images/kawasaki_klx300.jpg",
+            "Dòng xe cào cào phố và phượt rừng bền bỉ được anh em biker săn đón nhiều nhất tại Duy Trương Motor. Yên xe êm ái, bảo dưỡng tiết kiệm, máy 300cc êm ái chạy phố hàng ngày nhẹ nhàng và leo đèo dốc off-road cực kỳ tự tin.");
 
-        productRepository.save(Product.builder()
-                .store(showroomQ1)
-                .category(catGear)
-                .name("Mũ Bảo Hiểm AGV Pista GP RR Carbon Italia Limited Edition")
-                .slug("mu-bao-hiem-agv-pista-gp-rr-carbon")
-                .description("Mũ bảo hiểm đường đua số 1 thế giới do AGV sản xuất cho MotoGP. Kính quang học Class 1 chống đọng sương Pinlock MaxVision 120, vỏ 100% sợi Carbon 3K siêu nhẹ.")
-                .price(BigDecimal.valueOf(39500000))
-                .promotionalPrice(BigDecimal.valueOf(36800000))
-                .quantity(12)
-                .sold(34) // > 10 cho Guest
-                .isActive(true)
-                .isSelling(true)
-                .mainImage("/images/agv_helmet.jpg")
-                .color("Carbon Bóng Họa Tiết Ý")
-                .brand("AGV")
-                .rating(5.0)
-                .build());
+        seedProduct(storeMap.get(1), catMap.get("dirtbike"),
+            "Aprilia SX 125 Supermoto Bánh Trơn Chạy Phố",
+            "aprilia-sx-125-supermoto-banh-tron-chay-pho-106",
+            "Aprilia",
+            new BigDecimal("98000000"),
+            new BigDecimal("92000000"),
+            7, 16, 4.85,
+            "124.2 cc 4-Thì 4-Van DOHC Euro 5",
+            "Đỏ Đen Thể Thao SX",
+            "/images/aprilia_sx125.jpg",
+            "Chiếc cào cào phố dáng Supermoto bánh trơn cực ngầu đến từ hãng xe đua nước Ý. Hệ thống phuộc up-side-down 41mm cứng cáp, phanh đĩa trước 300mm có ABS chống bó cứng an toàn, dáng ngồi cao ráo tôn dáng người lái.");
 
-        productRepository.save(Product.builder()
-                .store(showroomQ1)
-                .category(catGear)
-                .name("Bộ Giáp Da Liền Dainese Mugello 3 D-Air Đua Chuyên Nghiệp")
-                .slug("bo-giap-da-dainese-mugello-3-d-air")
-                .description("Bộ áo giáp da đua số 1 thế giới tích hợp túi khí điện tử D-Air kích hoạt 15ms. Da Kangaroo siêu nhẹ bền dẻo dai kèm giáp titan chống mài mòn.")
-                .price(BigDecimal.valueOf(115000000))
-                .promotionalPrice(BigDecimal.valueOf(108000000))
-                .quantity(6)
-                .sold(18) // > 10 cho Guest
-                .isActive(true)
-                .isSelling(true)
-                .mainImage("/images/dainese_suit.jpg")
-                .color("Đen Đỏ Titan Carbon")
-                .brand("Dainese")
-                .rating(4.9)
-                .build());
+        seedProduct(storeMap.get(1), catMap.get("superbike"),
+            "Ducati Panigale V4 S 2025",
+            "ducati-panigale-v4-s-2025-1",
+            "Ducati",
+            new BigDecimal("1180000000"),
+            new BigDecimal("1150000000"),
+            4, 18, 5.0,
+            "1.103 cc Desmosedici Stradale V4",
+            "Đỏ Rosso Corsa Ý",
+            "/images/ducati_panigale_v4s.jpg",
+            "Tuyệt tác tốc độ đỉnh cao của Ducati với khối động cơ MotoGP, phuộc điện tử Ohlins Smart EC 2.0 điều chỉnh theo thời gian thực, mâm hợp kim nhôm rèn Marchesini siêu nhẹ, cánh gió kép khí động học Biplane Wings.");
 
-        productRepository.save(Product.builder()
-                .store(showroomHN)
-                .category(catGear)
-                .name("Găng Tay Đua Alpinestars Supertech GP Carbon Pro")
-                .slug("gang-tay-dua-alpinestars-supertech-gp")
-                .description("Găng tay đua đỉnh cao MotoGP với gù carbon kép DFS, da dê cao cấp gia cố sợi chịu nhiệt Kevlar, chống lật ngón út.")
-                .price(BigDecimal.valueOf(13500000))
-                .promotionalPrice(BigDecimal.valueOf(12200000))
-                .quantity(18)
-                .sold(45) // > 10 cho Guest
-                .isActive(true)
-                .isSelling(true)
-                .mainImage("/images/alpinestars_gloves.jpg")
-                .color("Đen Trắng Neon Fluo")
-                .brand("Alpinestars")
-                .rating(4.9)
-                .build());
+        seedProduct(storeMap.get(1), catMap.get("superbike"),
+            "Kawasaki Ninja H2 Carbon Supercharged",
+            "kawasaki-ninja-h2-carbon-supercharged-2",
+            "Kawasaki",
+            new BigDecimal("1350000000"),
+            new BigDecimal("1290000000"),
+            2, 16, 4.98,
+            "998 cc Siêu Nạp Supercharged Độc Quyền",
+            "Đen Nhám Sợi Carbon",
+            "/images/kawasaki_ninja_h2.jpg",
+            "Quái vật siêu nạp sản sinh 231 mã lực, dàn áo sợi carbon CFRP cao cấp phủ sơn tự liền sẹo độc quyền của Kawasaki, hệ thống phanh Brembo Stylema đĩa kép 330mm.");
 
-        productRepository.save(Product.builder()
-                .store(showroomQ1)
-                .category(catExhaust)
-                .name("Hệ Thống Pô SC-Project SC1-R Titanium WorldSBK Edition")
-                .slug("he-thong-po-sc-project-sc1-r-titanium")
-                .description("Ống xả hiệu năng cao đỉnh cao từ SC-Project Italy thiết kế cho WorldSBK. Thân titan siêu nhẹ kết hợp nắp chụp carbon chống nhiệt độ cao.")
-                .price(BigDecimal.valueOf(78000000))
-                .promotionalPrice(BigDecimal.valueOf(72500000))
-                .quantity(9)
-                .sold(26) // > 10 cho Guest
-                .isActive(true)
-                .isSelling(true)
-                .mainImage("/images/sc_project_exhaust.jpg")
-                .color("Titanium Mờ Ánh Bạc")
-                .brand("SC Project")
-                .rating(5.0)
-                .build());
+        seedProduct(storeMap.get(2), catMap.get("superbike"),
+            "BMW S1000RR M Package 2025 (Cá Mập Lên Cánh)",
+            "bmw-s1000rr-m-package-2025-ca-map-len-canh-3",
+            "BMW",
+            new BigDecimal("1099000000"),
+            new BigDecimal("1050000000"),
+            4, 19, 5.0,
+            "999 cc 4-Xi Lanh Thẳng Hàng ShiftCam",
+            "Trắng Đỏ Xanh M Motorsport",
+            "/images/bmw_s1000rr.jpg",
+            "Vua tốc độ 'Cá mập' phiên bản M Performance cao cấp nhất với mâm Carbon M nguyên khối, gắp sau M điều chỉnh độ cao, cánh gió M Winglets khí động học tạo lực ép 17.1kg ở 300 km/h.");
 
-        productRepository.save(Product.builder()
-                .store(showroomQ1)
-                .category(catExhaust)
-                .name("Bộ Phuộc Trước Sau Ohlins FGR 250 & TTX GP Thụy Điển")
-                .slug("bo-phuoc-ohlins-fgr-250-ttx-gp")
-                .description("Hệ thống giảm xóc xe đua đỉnh cao thế giới Ohlins Thụy Điển với công nghệ van tiết lưu TTX Twin Tube, tùy chỉnh 30 nấc.")
-                .price(BigDecimal.valueOf(155000000))
-                .promotionalPrice(BigDecimal.valueOf(148000000))
-                .quantity(5)
-                .sold(19) // > 10 cho Guest
-                .isActive(true)
-                .isSelling(true)
-                .mainImage("/images/ohlins_suspension.jpg")
-                .color("Vàng Gold Đặc Trưng Ohlins")
-                .brand("Ohlins")
-                .rating(5.0)
-                .build());
+        seedProduct(storeMap.get(2), catMap.get("cruiser"),
+            "Harley-Davidson Fat Boy 114 Vivid Black",
+            "harley-davidson-fat-boy-114-vivid-black-4",
+            "Harley-Davidson",
+            new BigDecimal("899000000"),
+            new BigDecimal("860000000"),
+            5, 13, 4.88,
+            "1.868 cc Milwaukee-Eight 114 ci",
+            "Đen Bóng Vivid Black & Chrome",
+            "/images/harley_fatboy.jpg",
+            "Biểu tượng cơ bắp phong trần Mỹ bất hủ. Mâm đúc nhôm nguyên khối Lakester bản to 240mm lốp sau, tiếng pô thì thầm uy lực rung chuyển lồng ngực mỗi cú vít ga.");
 
-        // --- SIÊU XE Ô TÔ & XE SANG THỂ THAO ---
-        productRepository.save(Product.builder()
-                .store(showroomQ1)
-                .category(catOto)
-                .name("Lamborghini Huracán EVO 5.2L V10 2023")
-                .slug("lamborghini-huracan-evo-v10-2023")
-                .description("Siêu xe thể thao biểu tượng nước Ý động cơ V10 hút khí tự nhiên 640 mã lực, tăng tốc 0-100 km/h chỉ 2.9 giây, pô titan thể thao.")
-                .price(BigDecimal.valueOf(17500000000L))
-                .promotionalPrice(BigDecimal.valueOf(16800000000L))
-                .quantity(2)
-                .sold(14)
-                .isActive(true)
-                .isSelling(true)
-                .mainImage("/images/lamborghini_huracan.jpg")
-                .engineCapacity("5.2L V10")
-                .color("Đỏ Corsa Racing")
-                .brand("Lamborghini")
-                .rating(5.0)
-                .build());
+        seedProduct(storeMap.get(1), catMap.get("hyper-naked"),
+            "Ducati Streetfighter V4 SP2 Special Edition",
+            "ducati-streetfighter-v4-sp2-special-edition-5",
+            "Ducati",
+            new BigDecimal("1250000000"),
+            new BigDecimal("1200000000"),
+            2, 15, 4.97,
+            "1.103 cc Desmosedici Stradale",
+            "Đen Nhám Winter Test MotoGP",
+            "/images/ducati_streetfighter.jpg",
+            "Mẫu Hyper Naked mạnh mẽ nhất hành tinh. Động cơ V4 kết hợp bộ nồi khô STM đua MotoGP âm thanh leng keng huyền thoại, mâm carbon 5 chấu siêu nhẹ và cánh gió đôi Biplane Wings.");
 
-        productRepository.save(Product.builder()
-                .store(showroomQ1)
-                .category(catOto)
-                .name("Porsche 911 GT3 RS Weissach Package 2024")
-                .slug("porsche-911-gt3-rs-weissach-2024")
-                .description("Vua đường đua thương mại mạnh nhất thế giới với gói nâng cấp thể thao Weissach Package, cánh gió DRS khí động học chủ động.")
-                .price(BigDecimal.valueOf(19200000000L))
-                .promotionalPrice(BigDecimal.valueOf(18500000000L))
-                .quantity(1)
-                .sold(11)
-                .isActive(true)
-                .isSelling(true)
-                .mainImage("/images/porsche_911_gt3rs.jpg")
-                .engineCapacity("4.0L Boxer 6")
-                .color("Bạc GT Silver Carbon")
-                .brand("Porsche")
-                .rating(5.0)
-                .build());
+        seedProduct(storeMap.get(2), catMap.get("adventure"),
+            "BMW R1250GS Adventure Triple Black (Vua Địa Hình)",
+            "bmw-r1250gs-adventure-triple-black-vua-ia-hinh-6",
+            "BMW",
+            new BigDecimal("799000000"),
+            new BigDecimal("770000000"),
+            5, 24, 4.96,
+            "1.254 cc Động Cơ Boxer Đối Xứng ShiftCam",
+            "Đen Triple Black Huyền Bí",
+            "/images/bmw_r1250gs.jpg",
+            "Vua việt dã thám hiểm thế giới. Động cơ Boxer 1.254cc êm ái đầm chắc, phuộc điện tử Dynamic ESA cân bằng tải trọng tự động, hỗ trợ khởi hành ngang dốc Hill Start Control và full bộ 3 thùng nhôm chính hãng.");
 
-        productRepository.save(Product.builder()
-                .store(showroomHN)
-                .category(catOto)
-                .name("Mercedes-AMG G63 V8 Biturbo Edition 1 2023")
-                .slug("mercedes-amg-g63-v8-biturbo-2023")
-                .description("Vua địa hình SUV hạng sang Mercedes-AMG G63 với ống xả thể thao đặt bên sườn xe uy lực trứ danh, 3 khóa vi sai độc lập.")
-                .price(BigDecimal.valueOf(11800000000L))
-                .promotionalPrice(BigDecimal.valueOf(11200000000L))
-                .quantity(3)
-                .sold(16)
-                .isActive(true)
-                .isSelling(true)
-                .mainImage("/images/mercedes_g63.jpg")
-                .engineCapacity("4.0L V8 Biturbo")
-                .color("Đen Nhám Magno Night Black")
-                .brand("Mercedes")
-                .rating(4.98)
-                .build());
+        seedProduct(storeMap.get(1), catMap.get("scooter"),
+            "Vespa 946 Christian Dior Limited Edition (Hàng Sưu Tầm)",
+            "vespa-946-christian-dior-limited-edition-hang-suu-tam-7",
+            "Vespa",
+            new BigDecimal("750000000"),
+            new BigDecimal("720000000"),
+            2, 11, 4.99,
+            "125 cc 3V i-Get Phun Xăng Điện Tử",
+            "Trắng Ngọc Trai Sữa & Vàng Dior",
+            "/images/vespa_946.jpg",
+            "Tuyệt phẩm thời trang giới hạn do Vespa bắt tay cùng nhà mốt Christian Dior Paris thiết kế. Họa tiết Dior Oblique đặc trưng dưới yên xe, đi kèm túi hành lý và mũ bảo hiểm đồng bộ chính hãng.");
 
-        productRepository.save(Product.builder()
-                .store(showroomQ1)
-                .category(catOto)
-                .name("Ferrari 488 Pista V8 Twin-Turbo 2022")
-                .slug("ferrari-488-pista-v8-twin-turbo-2022")
-                .description("Siêu ngựa Ý 710 mã lực thừa hưởng công nghệ xe đua 488 Challenge, hốc hút gió S-Duct khí động học phía trước, khung xe carbon siêu nhẹ.")
-                .price(BigDecimal.valueOf(21800000000L))
-                .promotionalPrice(BigDecimal.valueOf(21000000000L))
-                .quantity(1)
-                .sold(9)
-                .isActive(true)
-                .isSelling(true)
-                .mainImage("/images/ferrari_488_pista.jpg")
-                .engineCapacity("3.9L V8 Twin-Turbo")
-                .color("Vàng Giallo Modena")
-                .brand("Ferrari")
-                .rating(5.0)
-                .build());
+        seedProduct(storeMap.get(1), catMap.get("gear-parts"),
+            "Mũ Bảo Hiểm Cào Cào LS2 MX703 X-Force Carbon Full Face",
+            "mu-bao-hiem-cao-cao-ls2-mx703-x-force-carbon-full-face-8",
+            "LS2",
+            new BigDecimal("12500000"),
+            new BigDecimal("11200000"),
+            15, 28, 4.95,
+            "Vỏ Sợi Carbon 100% Siêu Nhẹ 1.300g",
+            "Carbon Vân 3K Bóng & Kính 100% Armega",
+            "/images/ls2_helmet.jpg",
+            "Mũ bảo hiểm cào cào cao cấp bằng sợi carbon nguyên khối siêu nhẹ chuẩn thi đấu quốc tế, lót kháng khuẩn tháo giặt, khe hút gió làm mát tối đa khi bay nhảy trên sa mạc hoặc cung đường bùn đất.");
 
-        // --- XE NHỎ & TAY GA SƯU TẦM CAO CẤP ---
-        productRepository.save(Product.builder()
-                .store(showroomQ1)
-                .category(catXeNho)
-                .name("Honda Monkey 125cc Limited Edition 2024")
-                .slug("honda-monkey-125cc-limited-2024")
-                .description("Mẫu xe khỉ Honda Monkey 125cc biểu tượng phong cách đường phố thế giới, bình xăng xi mạ chrome bóng loáng, phuộc USD thể thao.")
-                .price(BigDecimal.valueOf(145000000L))
-                .promotionalPrice(BigDecimal.valueOf(135000000L))
-                .quantity(5)
-                .sold(21)
-                .isActive(true)
-                .isSelling(true)
-                .mainImage("/images/honda_monkey_125.jpg")
-                .engineCapacity("124.9 cc")
-                .color("Vàng Chrome")
-                .brand("Honda")
-                .rating(5.0)
-                .build());
+        seedProduct(storeMap.get(1), catMap.get("gear-parts"),
+            "Hệ Thống Pô Akrapovic Full Titanium Racing Cho Môtô & Cào Cào",
+            "he-thong-po-akrapovic-full-titanium-racing-cho-moto-cao-cao-9",
+            "AKRAPOVIC",
+            new BigDecimal("125000000"),
+            new BigDecimal("118000000"),
+            8, 32, 4.99,
+            "Hợp Kim Titanium Hàng Không Siêu Bền",
+            "Titanium Ánh Xanh Nhiệt Độ",
+            "/images/akrapovic_exhaust.jpg",
+            "Hệ thống ống xả đua danh tiếng số 1 thế giới làm thủ công tại Slovenia. Giúp xe giải nhiệt tức thì, âm thanh uy lực xé gió và được dyno map xăng chuẩn chỉ tại xưởng Duy Trương Motor.");
 
-        productRepository.save(Product.builder()
-                .store(showroomQ1)
-                .category(catXeNho)
-                .name("Piaggio Vespa 946 Christian Dior Limited Edition")
-                .slug("piaggio-vespa-946-christian-dior")
-                .description("Kiệt tác tay ga thời trang cao cấp hợp tác cùng nhà mốt Christian Dior Paris danh giá, từng đường kim mũi chỉ thủ công tại Ý.")
-                .price(BigDecimal.valueOf(750000000L))
-                .promotionalPrice(BigDecimal.valueOf(680000000L))
-                .quantity(1)
-                .sold(12)
-                .isActive(true)
-                .isSelling(true)
-                .mainImage("/images/vespa_946.jpg")
-                .engineCapacity("155 cc")
-                .color("Trắng Sữa Viền Vàng Gold Dior")
-                .brand("Vespa")
-                .rating(5.0)
-                .build());
+        seedProduct(storeMap.get(1), catMap.get("gear-parts"),
+            "Mũ Bảo Hiểm AGV Pista GP RR Carbon Italia Limited Edition",
+            "mu-bao-hiem-agv-pista-gp-rr-carbon-italia-limited-edition-401",
+            "AGV",
+            new BigDecimal("39500000"),
+            new BigDecimal("36800000"),
+            12, 34, 5.0,
+            "Vỏ 100% Sợi Carbon 3K Siêu Nhẹ 1.450g",
+            "Carbon Bóng Họa Tiết Cờ Ý Italia",
+            "/images/agv_helmet.jpg",
+            "Mũ bảo hiểm đường đua đỉnh cao nhất thế giới do AGV sản xuất cho các tay đua MotoGP huyền thoại như Valentino Rossi. Kính quang học Class 1 chống đọng sương Pinlock MaxVision 120, hệ thống thông gió kim loại và cánh gió Pro Spoiler tối ưu khí động học ở tốc độ trên 300 km/h.");
 
-        // --- XE CÀO CÀO ĐỊA HÌNH ---
-        productRepository.save(Product.builder()
-                .store(showroomQ1)
-                .category(catDirtbike)
-                .name("KTM 300 EXC TPI Factory Edition 2024")
-                .slug("ktm-300-exc-tpi-factory-2024")
-                .description("Vua cào cào Enduro 2 thì số 1 thế giới với công nghệ phun xăng điện tử TPI độc quyền, phuộc WP XPLOR 48mm điều chỉnh độc lập.")
-                .price(BigDecimal.valueOf(385000000L))
-                .promotionalPrice(BigDecimal.valueOf(368000000L))
-                .quantity(4)
-                .sold(17)
-                .isActive(true)
-                .isSelling(true)
-                .mainImage("/images/ktm_300_exc.jpg")
-                .engineCapacity("293.2 cc TPI")
-                .color("Cam Đen Factory Racing")
-                .brand("KTM")
-                .rating(5.0)
-                .build());
+        seedProduct(storeMap.get(1), catMap.get("gear-parts"),
+            "Bộ Giáp Da Liền Dainese Mugello 3 D-Air Đua Chuyên Nghiệp",
+            "bo-giap-da-lien-dainese-mugello-3-d-air-ua-chuyen-nghiep-402",
+            "DAINESE",
+            new BigDecimal("115000000"),
+            new BigDecimal("108000000"),
+            6, 18, 4.98,
+            "Da Bò Kangaroo Siêu Bền & Túi Khí Điện Tử D-Air",
+            "Đen Đỏ Titan Phối Vân Carbon",
+            "/images/dainese_suit.jpg",
+            "Bộ áo giáp da đua cao cấp số 1 thế giới tích hợp công nghệ túi khí điện tử thông minh D-Air tự động bung trong 15 mili-giây khi phát hiện va chạm. Gia công hoàn toàn bằng da Kangaroo mềm nhẹ dẻo dai cùng giáp gối, chỏ titan chống mài mòn tuyệt đối.");
 
-        // --- XE Ô TÔ & MÔ TÔ BỔ SUNG CHO MEGA MENU ---
-        productRepository.save(Product.builder()
-                .store(showroomQ1)
-                .category(catOto)
-                .name("VinFast VF9 Plus 7 Chỗ Dual-Motor AWD 2024")
-                .slug("vinfast-vf9-plus-dual-motor-2024")
-                .description("Siêu SUV điện full-size cỡ lớn sang trọng bậc nhất Việt Nam, thiết kế Pininfarina Ý, nội thất ghế cơ trưởng bọc da Nappa cao cấp.")
-                .price(BigDecimal.valueOf(2250000000L))
-                .promotionalPrice(BigDecimal.valueOf(2150000000L))
-                .quantity(4)
-                .sold(19)
-                .isActive(true)
-                .isSelling(true)
-                .mainImage("/images/vinfast_vf9.jpg")
-                .engineCapacity("Dual Electric Motor 123kWh")
-                .color("Xanh Deep Ocean")
-                .brand("VinFast")
-                .rating(4.95)
-                .build());
+        seedProduct(storeMap.get(2), catMap.get("gear-parts"),
+            "Găng Tay Đua Alpinestars Supertech GP Carbon Pro",
+            "gang-tay-ua-alpinestars-supertech-gp-carbon-pro-403",
+            "ALPINESTARS",
+            new BigDecimal("13500000"),
+            new BigDecimal("12200000"),
+            18, 45, 4.96,
+            "Da Dê Siêu Bền Kèm Gù Carbon Kép DFS",
+            "Đen Trắng Neon Fluo Racing",
+            "/images/alpinestars_gloves.jpg",
+            "Dòng găng tay đua đẳng cấp thế giới được các tay đua MotoGP Marc Marquez, Jorge Martin tin dùng. Lòng bàn tay bọc da dê tăng cảm giác tay ga, mu bàn tay gia cố gù carbon tản lực DFS và sợi chịu nhiệt Kevlar cao cấp.");
 
-        productRepository.save(Product.builder()
-                .store(showroomQ1)
-                .category(catOto)
-                .name("Chevrolet Corvette C8 Stingray Z51 2023")
-                .slug("chevrolet-corvette-c8-z51-2023")
-                .description("Siêu xe động cơ đặt giữa thế hệ mới của Corvette C8, gói hiệu năng Z51 bao gồm phanh Brembo lớn hơn và vi sai eLSD.")
-                .price(BigDecimal.valueOf(6800000000L))
-                .promotionalPrice(BigDecimal.valueOf(6500000000L))
-                .quantity(2)
-                .sold(11)
-                .isActive(true)
-                .isSelling(true)
-                .mainImage("/images/chevrolet_corvette_c8.jpg")
-                .engineCapacity("6.2L V8 LT2")
-                .color("Xanh Rapid Blue")
-                .brand("Chevrolet")
-                .rating(4.95)
-                .build());
+        seedProduct(storeMap.get(1), catMap.get("gear-parts"),
+            "Hệ Thống Pô SC-Project SC1-R Titanium WorldSBK Edition",
+            "he-thong-po-sc-project-sc1-r-titanium-worldsbk-edition-404",
+            "SC PROJECT",
+            new BigDecimal("78000000"),
+            new BigDecimal("72500000"),
+            9, 26, 4.97,
+            "Titanium Cao Cấp Cắt CNC Kèm Đuôi Carbon Chịu Nhiệt",
+            "Titanium Mờ Ánh Bạc & Đuôi Carbon 3K",
+            "/images/sc_project_exhaust.jpg",
+            "Ống xả hiệu năng cao đỉnh cao từ SC-Project Italy thiết kế chuyên biệt cho các giải đua WorldSBK. Thân pô titan siêu nhẹ kết hợp nắp chụp carbon chống nhiệt độ cao, mang đến dải âm thanh gầm rú xé gió phấn khích tột độ.");
 
-        productRepository.save(Product.builder()
-                .store(showroomHN)
-                .category(catOto)
-                .name("Ford Mustang GT 5.0 V8 Fastback 2024")
-                .slug("ford-mustang-gt-5-0-v8-2024")
-                .description("Ngựa hoang cơ bắp Mỹ Mustang GT thế hệ mới với động cơ Coyote V8 5.0L nạp khí tự nhiên gầm rú đầy kích thích.")
-                .price(BigDecimal.valueOf(4500000000L))
-                .promotionalPrice(BigDecimal.valueOf(4250000000L))
-                .quantity(2)
-                .sold(15)
-                .isActive(true)
-                .isSelling(true)
-                .mainImage("/images/ford_mustang_gt.jpg")
-                .engineCapacity("5.0L Coyote V8")
-                .color("Xanh Velocity Blue")
-                .brand("Ford")
-                .rating(4.96)
-                .build());
+        seedProduct(storeMap.get(1), catMap.get("gear-parts"),
+            "Bộ Phuộc Trước Sau Ohlins FGR 250 & TTX GP Thụy Điển Cao Cấp",
+            "bo-phuoc-truoc-sau-ohlins-fgr-250-ttx-gp-thuy-ien-cao-cap-405",
+            "OHLINS",
+            new BigDecimal("155000000"),
+            new BigDecimal("148000000"),
+            5, 19, 5.0,
+            "Công Nghệ Giảm Chấn Khí Nén TTX Twin Tube Thụy Điển",
+            "Vàng Gold Đặc Trưng Ohlins & Ti Mạ TiN",
+            "/images/ohlins_suspension.jpg",
+            "Đỉnh cao của hệ thống giảm xóc xe đua thế giới. Trang bị công nghệ van tiết lưu TTX độc quyền triệt tiêu hoàn toàn hiện tượng bọt khí dầu phuộc, đem lại độ êm ái, bám đường tuyệt đối khi vào cua tốc độ cao trên đường đua cũng như đường phố.");
 
-        productRepository.save(Product.builder()
-                .store(showroomDN)
-                .category(catOto)
-                .name("Toyota Land Cruiser LC300 V6 Twin-Turbo 2024")
-                .slug("toyota-land-cruiser-lc300-2024")
-                .description("Vua địa hình SUV việt dã đỉnh cao của Toyota, khung gầm TNGA-F mới giảm 200kg, hệ thống Multi-Terrain Select.")
-                .price(BigDecimal.valueOf(5600000000L))
-                .promotionalPrice(BigDecimal.valueOf(5350000000L))
-                .quantity(3)
-                .sold(18)
-                .isActive(true)
-                .isSelling(true)
-                .mainImage("/images/toyota_lc300.jpg")
-                .engineCapacity("3.5L V6 Twin-Turbo")
-                .color("Trắng Pearl White")
-                .brand("Toyota")
-                .rating(4.98)
-                .build());
+        seedProduct(storeMap.get(1), catMap.get("dirtbike"),
+            "Ducati DesertX Rally 2024 (Vua Cào Cào Sa Mạc)",
+            "ducati-desertx-rally-2024-vua-cao-cao-sa-mac-107",
+            "Ducati",
+            new BigDecimal("710000000"),
+            new BigDecimal("680000000"),
+            3, 14, 4.98,
+            "937 cc Testastretta 11° Desmo",
+            "Trắng Đỏ Iron Giant Rally",
+            "/images/ducati_desertx.jpg",
+            "Mẫu cào cào sa mạc và địa hình khắc nghiệt đỉnh cao của Ducati. Phuộc trước KYB Closed-Cartridge 48mm hành trình 250mm, mâm nan hoa Takasago Excel siêu cứng, gắp nhôm đúc gia cường nuốt trọn mọi cung đường cát lún sa mạc.");
 
-        productRepository.save(Product.builder()
-                .store(showroomQ1)
-                .category(catOto)
-                .name("Mazda MX-5 Miata RF Grand Touring 2024")
-                .slug("mazda-mx5-miata-rf-2024")
-                .description("Mẫu xe mui trần biểu tượng cảm giác lái Jinba Ittai, mui cứng gập điện RF 13 giây, phân bổ trọng lượng 50:50.")
-                .price(BigDecimal.valueOf(2650000000L))
-                .promotionalPrice(BigDecimal.valueOf(2490000000L))
-                .quantity(3)
-                .sold(14)
-                .isActive(true)
-                .isSelling(true)
-                .mainImage("/images/mazda_mx5.jpg")
-                .engineCapacity("2.0L SkyActiv-G")
-                .color("Đỏ Soul Red")
-                .brand("Mazda")
-                .rating(4.9)
-                .build());
+        seedProduct(storeMap.get(3), catMap.get("dirtbike"),
+            "Yamaha WR450F Rally Champion 2024",
+            "yamaha-wr450f-rally-champion-2024-108",
+            "Yamaha",
+            new BigDecimal("380000000"),
+            new BigDecimal("360000000"),
+            4, 18, 4.92,
+            "450 cc 4-Thì DOHC Đầu Bò Đảo Chiều Độc Quyền",
+            "Xanh Dương Trắng Icon Blue",
+            "/images/yamaha_wr450f.jpg",
+            "Chiến mã cào cào Enduro đẳng cấp vô địch các giải đua rally thế giới. Thiết kế xi-lanh nghiêng về sau và đầu bò đảo chiều hút trước xả sau giúp tập trung trọng tâm xe, phuộc KYB Speed Sensitive System nhún cực kỳ êm ái.");
 
-        productRepository.save(Product.builder()
-                .store(showroomHN)
-                .category(catOto)
-                .name("Jeep Wrangler Rubicon 4x4 Unlimited 2024")
-                .slug("jeep-wrangler-rubicon-2024")
-                .description("Chiến thần vượt địa hình của Mỹ với cầu trước và cầu sau Dana 44 siêu bền, ngắt thanh cân bằng điện tử Sway Bar.")
-                .price(BigDecimal.valueOf(4150000000L))
-                .promotionalPrice(BigDecimal.valueOf(3950000000L))
-                .quantity(2)
-                .sold(11)
-                .isActive(true)
-                .isSelling(true)
-                .mainImage("/images/jeep_wrangler.jpg")
-                .engineCapacity("2.0L Turbo Rock-Trac")
-                .color("Đỏ Firecracker Red")
-                .brand("Jeep")
-                .rating(4.92)
-                .build());
+        seedProduct(storeMap.get(1), catMap.get("superbike"),
+            "Yamaha YZF-R1M Carbon 2024 (Chiến Mã MotoGP CP4)",
+            "yamaha-yzf-r1m-carbon-2024-chien-ma-motogp-cp4-10",
+            "Yamaha",
+            new BigDecimal("990000000"),
+            new BigDecimal("950000000"),
+            3, 17, 5.0,
+            "998 cc 4-Xi Lanh Thẳng Hàng Crossplane CP4",
+            "Sợi Carbon Bóng & Bạc Silver Blu Carbon",
+            "/images/yamaha_r1m.jpg",
+            "Siêu phẩm Superbike R1M số lượng giới hạn toàn cầu. Full dàn áo sợi Carbon siêu nhẹ, phuộc trước sau Ohlins ERS điện tử thông minh thế hệ NPX, mâm magie nguyên khối và bộ thu thập dữ liệu viễn thông CCU kết nối smartphone.");
 
-        productRepository.save(Product.builder()
-                .store(showroomQ1)
-                .category(catOto)
-                .name("Nissan GT-R R35 Nismo Special Edition 2024")
-                .slug("nissan-gtr-r35-nismo-2024")
-                .description("Huyền thoại siêu xe Godzilla của Nhật Bản phiên bản Nismo Special Edition, động cơ Takumi lắp thủ công 600 mã lực.")
-                .price(BigDecimal.valueOf(11500000000L))
-                .promotionalPrice(BigDecimal.valueOf(10800000000L))
-                .quantity(1)
-                .sold(11)
-                .isActive(true)
-                .isSelling(true)
-                .mainImage("/images/nissan_gtr.jpg")
-                .engineCapacity("3.8L V6 Twin-Turbo")
-                .color("Xám Stealth Grey")
-                .brand("Nissan")
-                .rating(4.99)
-                .build());
+        seedProduct(storeMap.get(2), catMap.get("superbike"),
+            "Honda CBR1000RR-R Fireblade SP 2024 (Cánh Gió HRC)",
+            "honda-cbr1000rr-r-fireblade-sp-2024-canh-gio-hrc-11",
+            "Honda",
+            new BigDecimal("1090000000"),
+            new BigDecimal("1050000000"),
+            2, 15, 4.97,
+            "999 cc 4-Xi Lanh Thẳng Hàng DOHC Đua MotoGP",
+            "Đỏ Grand Prix Red HRC",
+            "/images/honda_cbr1000rrr.jpg",
+            "Siêu phẩm cờ đỏ Honda đường đua Fireblade SP trang bị cánh gió khí động học thửa từ giải đua MotoGP RC213V, phuộc Ohlins Smart EC bán chủ động thế hệ 2, phanh Brembo Stylema đĩa 330mm.");
 
-        productRepository.save(Product.builder()
-                .store(showroomQ1)
-                .category(catXeNho)
-                .name("BMW CE 04 Futuristic Electric Super Scooter 2024")
-                .slug("bmw-ce-04-electric-scooter-2024")
-                .description("Siêu phi thuyền tay ga điện tương lai BMW CE 04 với thiết kế phá cách, pin lithium-ion cao áp, màn hình TFT 10.25 inch.")
-                .price(BigDecimal.valueOf(580000000L))
-                .promotionalPrice(BigDecimal.valueOf(540000000L))
-                .quantity(3)
-                .sold(15)
-                .isActive(true)
-                .isSelling(true)
-                .mainImage("/images/bmw_ce04.jpg")
-                .engineCapacity("Electric Motor")
-                .color("Trắng Magellan Grey")
-                .brand("BMW")
-                .rating(4.98)
-                .build());
+        seedProduct(storeMap.get(1), catMap.get("hyper-naked"),
+            "KTM 1290 Super Duke R EVO (Quái Thú The Beast)",
+            "ktm-1290-super-duke-r-evo-quai-thu-the-beast-12",
+            "KTM",
+            new BigDecimal("930000000"),
+            new BigDecimal("890000000"),
+            3, 19, 4.99,
+            "1.301 cc LC8 V-Twin 75° Uy Lực Bậc Nhất",
+            "Cam Đen Xám Quái Thú The Beast",
+            "/images/ktm_1290_superduke.jpg",
+            "Được mệnh danh là 'Quái Thú' đường phố mạnh nhất của nhà KTM. Khối động cơ 1.301cc V-Twin mô-men xoắn khủng 140 Nm tạo cú vọt như tên lửa, phuộc điện tử bán chủ động WP APEX SAT với 3 chế độ tùy biến.");
 
-        productRepository.save(Product.builder()
-                .store(showroomQ1)
-                .category(catSport)
-                .name("Suzuki Hayabusa GSX-1300R Thần Gió 2024")
-                .slug("suzuki-hayabusa-gsx-1300r-2024")
-                .description("Huyền thoại Thần Gió Suzuki Hayabusa thế hệ thứ 3 với công nghệ điều khiển điện tử thông minh S.I.R.S.")
-                .price(BigDecimal.valueOf(790000000L))
-                .promotionalPrice(BigDecimal.valueOf(750000000L))
-                .quantity(3)
-                .sold(20)
-                .isActive(true)
-                .isSelling(true)
-                .mainImage("/images/suzuki_hayabusa.jpg")
-                .engineCapacity("1340 cc")
-                .color("Đen Ánh Vàng")
-                .brand("Suzuki")
-                .rating(4.97)
-                .build());
+        seedProduct(storeMap.get(3), catMap.get("hyper-naked"),
+            "Kawasaki Z1000R Edition 2024 (Thần Sấm Biker Việt)",
+            "kawasaki-z1000r-edition-2024-than-sam-biker-viet-13",
+            "Kawasaki",
+            new BigDecimal("520000000"),
+            new BigDecimal("498000000"),
+            5, 26, 4.9,
+            "1.043 cc 4-Xi Lanh Thẳng Hàng Làm Mát Chất Lỏng",
+            "Đen Xám Vân Carbon & Xanh Neon R",
+            "/images/kawasaki_z1000r.jpg",
+            "Mẫu Naked bike quốc dân được hàng triệu biker Việt Nam tôn sùng. Phiên bản R Edition cao cấp trang bị heo dầu Brembo M50 nguyên khối, đĩa phanh Brembo 310mm và phuộc sau Ohlins S46DR1S có núm chỉnh tải trọng từ xa.");
 
-        productRepository.save(Product.builder()
-                .store(showroomHN)
-                .category(catCruiser)
-                .name("Royal Enfield Continental GT 650 Cafe Racer 2024")
-                .slug("royal-enfield-continental-gt-650-2024")
-                .description("Tuyệt tác Cafe Racer cổ điển từ thương hiệu xe Anh Quốc Royal Enfield với bình xăng mạ chrome bóng loáng.")
-                .price(BigDecimal.valueOf(220000000L))
-                .promotionalPrice(BigDecimal.valueOf(199000000L))
-                .quantity(4)
-                .sold(16)
-                .isActive(true)
-                .isSelling(true)
-                .mainImage("/images/royal_enfield_gt650.jpg")
-                .engineCapacity("648 cc 2 Xylanh")
-                .color("Chrome Mr Clean")
-                .brand("Royal Enfield")
-                .rating(4.88)
-                .build());
+        seedProduct(storeMap.get(2), catMap.get("cruiser"),
+            "Triumph Rocket 3 GT 2.500cc (Cơ Bắp Khủng Nhất Thế Giới)",
+            "triumph-rocket-3-gt-2-500cc-co-bap-khung-nhat-the-gioi-14",
+            "Triumph",
+            new BigDecimal("960000000"),
+            new BigDecimal("920000000"),
+            2, 13, 4.96,
+            "2.458 cc 3-Xi Lanh Thẳng Hàng (Dung Tích Lớn Nhất Thế Giới)",
+            "Đen Bóng Phantom Black & Bạc Silver Ice",
+            "/images/triumph_rocket3.jpg",
+            "Chiếc mô tô thương mại có dung tích động cơ lớn nhất hành tinh: 2.500cc 3 xi-lanh sản sinh mô-men xoắn kỷ lục 221 Nm. Bản GT trang bị kính chắn gió cao, tựa lưng hành khách êm ái, gắp đơn hợp kim nhôm và mâm phay đa chấu sang trọng.");
 
-        productRepository.save(Product.builder()
-                .store(showroomQ1)
-                .category(catNaked)
-                .name("MV Agusta Brutale 1000 RR Nurburgring Edition")
-                .slug("mv-agusta-brutale-1000-rr-nurburgring")
-                .description("Kiệt tác Hyper Naked siêu hiếm từ hãng xe nghệ thuật Ý MV Agusta, động cơ 4 xylanh van titan thừa hưởng từ xe đua WorldSBK.")
-                .price(BigDecimal.valueOf(1450000000L))
-                .promotionalPrice(BigDecimal.valueOf(1380000000L))
-                .quantity(2)
-                .sold(11)
-                .isActive(true)
-                .isSelling(true)
-                .mainImage("/images/mv_agusta_brutale.jpg")
-                .engineCapacity("998 cc 4 Xylanh")
-                .color("Xám Bạc Đỏ Nurburgring")
-                .brand("MV Agusta")
-                .rating(4.99)
-                .build());
+        seedProduct(storeMap.get(1), catMap.get("cruiser"),
+            "Ducati Diavel V4 Redline 2025",
+            "ducati-diavel-v4-redline-2025-15",
+            "Ducati",
+            new BigDecimal("1090000000"),
+            new BigDecimal("1050000000"),
+            3, 16, 4.98,
+            "1.158 cc V4 Granturismo Đỉnh Cao",
+            "Đỏ Ducati Red & Đen Huyền Bí",
+            "/images/ducati_diavel_v4.jpg",
+            "Muscle Cruiser tương lai đến từ Bologna. Động cơ V4 Granturismo 168 mã lực với chu kỳ bảo dưỡng van lên đến 60.000 km, thiết kế ống xả 4 nòng đặc trưng, đèn hậu tổ ong ẩn dưới gầm đuôi cực kỳ quyến rũ.");
 
-        log.info(">>> Khởi tạo dữ liệu mẫu thành công cho Hệ thống Duy Truong Motor!");
+        seedProduct(storeMap.get(2), catMap.get("adventure"),
+            "Honda Africa Twin CRF1100L Adventure Sports ES",
+            "honda-africa-twin-crf1100l-adventure-sports-es-16",
+            "Honda",
+            new BigDecimal("750000000"),
+            new BigDecimal("720000000"),
+            4, 21, 4.94,
+            "1.084 cc 2-Xi Lanh Thẳng Hàng SOHC Unicam",
+            "Trắng Xanh Đỏ Tricolour HRC",
+            "/images/honda_africa_twin.jpg",
+            "Chiến mã vượt sa mạc Dakar huyền thoại của Honda. Bản Adventure Sports trang bị phuộc điện tử Showa EERA cân bằng tự động, bình xăng lớn 24.8 lít, màn hình cảm ứng TFT 6.5 inch Apple CarPlay và bộ 3 thùng nhôm chính hãng.");
+
+        seedProduct(storeMap.get(1), catMap.get("scooter"),
+            "Yamaha TMAX 560 Tech MAX 2024 (Vua Xe Ga Phân Khối Lớn)",
+            "yamaha-tmax-560-tech-max-2024-vua-xe-ga-phan-khoi-lon-17",
+            "Yamaha",
+            new BigDecimal("445000000"),
+            new BigDecimal("420000000"),
+            4, 18, 4.91,
+            "562 cc 2-Xi Lanh Song Song DOHC 4-Van",
+            "Xám Xanh Nhám Dark Petrol Tech MAX",
+            "/images/yamaha_tmax560.jpg",
+            "Vua xe ga thể thao Maxi-Scooter châu Âu phiên bản Tech MAX cao cấp nhất. Kính chắn gió chỉnh điện, sưởi ấm yên và tay lái mùa lạnh, kiểm soát hành trình Cruise Control, màn hình màu TFT 7 inch kết nối bản đồ định vị Garmin.");
+
+        seedProduct(storeMap.get(1), catMap.get("oto"),
+            "Lamborghini Huracán EVO 5.2L V10 2023",
+            "lamborghini-huracan-evo-5-2l-v10-2023-201",
+            "LAMBORGHINI",
+            new BigDecimal("17500000000"),
+            new BigDecimal("16800000000"),
+            2, 14, 5.0,
+            "5.2L V10 N/A Hút Khí Tự Nhiên",
+            "Đỏ Corsa Racing",
+            "/images/lamborghini_huracan.jpg",
+            "Siêu bò Ý Huracán EVO sở hữu khối động cơ V10 hút khí tự nhiên âm thanh gầm rú mê hoặc, hệ thống dẫn động 4 bánh toàn thời gian kết hợp đánh lái 4 bánh LDVI thông minh, pô titan thể thao và nội thất bọc da Alcantara cao cấp.");
+
+        seedProduct(storeMap.get(1), catMap.get("oto"),
+            "Porsche 911 GT3 RS Weissach Package 2024",
+            "porsche-911-gt3-rs-weissach-package-2024-202",
+            "PORSCHE",
+            new BigDecimal("19200000000"),
+            new BigDecimal("18500000000"),
+            1, 11, 5.0,
+            "4.0L Boxer 6 Xylanh Hút Khí Tự Nhiên",
+            "Bạc GT Silver Carbon",
+            "/images/porsche_911_gt3rs.jpg",
+            "Vua đường đua thương mại mạnh nhất thế giới với gói nâng cấp thể thao Weissach Package, cánh gió khí động học chủ động DRS đóng mở như xe đua F1, hệ thống treo điều chỉnh độc lập 4 góc từ vô lăng.");
+
+        seedProduct(storeMap.get(2), catMap.get("oto"),
+            "Mercedes-AMG G63 V8 Biturbo Edition 1 2023",
+            "mercedes-amg-g63-v8-biturbo-edition-1-2023-203",
+            "MERCEDES BENZ",
+            new BigDecimal("11800000000"),
+            new BigDecimal("11200000000"),
+            3, 16, 4.98,
+            "4.0L V8 Biturbo Handcrafted AMG",
+            "Đen Nhám Magno Night Black",
+            "/images/mercedes_g63.jpg",
+            "Vua địa hình SUV hạng sang Mercedes-AMG G63 với ống xả thể thao đặt bên sườn xe uy lực trứ danh, 3 khóa vi sai độc lập vượt mọi địa hình, đèn Multibeam LED và nội thất da Nappa Designo đẳng cấp quý tộc.");
+
+        seedProduct(storeMap.get(1), catMap.get("oto"),
+            "Ferrari 488 Pista V8 Twin-Turbo 2022",
+            "ferrari-488-pista-v8-twin-turbo-2022-204",
+            "FERRARI",
+            new BigDecimal("21800000000"),
+            new BigDecimal("21000000000"),
+            1, 9, 5.0,
+            "3.9L V8 Twin-Turbo Speciale",
+            "Vàng Giallo Modena Sọc Đua",
+            "/images/ferrari_488_pista.jpg",
+            "Phiên bản hiệu năng cao siêu giới hạn 488 Pista thừa hưởng trọn vẹn tinh hoa xe đua 488 Challenge, hốc hút gió S-Duct khí động học phía trước, khung xe carbon siêu nhẹ cho cảm giác lái nghẹt thở.");
+
+        seedProduct(storeMap.get(3), catMap.get("oto"),
+            "BMW M4 Competition M xDrive Coupe 2024",
+            "bmw-m4-competition-m-xdrive-coupe-2024-205",
+            "BMW",
+            new BigDecimal("5900000000"),
+            new BigDecimal("5600000000"),
+            2, 12, 4.9,
+            "3.0L I6 M TwinPower Turbo",
+            "Xanh Sao Paulo Yellow",
+            "/images/bmw_m4.jpg",
+            "Coupe thể thao hiệu năng cao hàng đầu từ phân nhánh BMW M, trang bị ghế carbon bucket ôm sát lưng, hệ dẫn động 4 bánh M xDrive có thể ngắt cầu trước chuyển thuần cầu sau drift cực đỉnh.");
+
+        seedProduct(storeMap.get(2), catMap.get("oto"),
+            "Audi R8 V10 Plus Performance Quattro 2023",
+            "audi-r8-v10-plus-performance-quattro-2023-206",
+            "AUDI",
+            new BigDecimal("14500000000"),
+            new BigDecimal("13900000000"),
+            2, 10, 4.95,
+            "5.2L V10 FSI Hút Khí Tự Nhiên",
+            "Xám Xi Măng Nardo Grey",
+            "/images/audi_r8.jpg",
+            "Siêu xe Audi R8 V10 Plus huyền thoại khung gầm nhôm siêu nhẹ Audi Space Frame, hệ dẫn động bốn bánh toàn thời gian Quattro bám đường như nam châm, phanh gốm carbon ceramic cao cấp.");
+
+        seedProduct(storeMap.get(1), catMap.get("oto"),
+            "Land Rover Defender 110 V8 Carpathian 2024",
+            "land-rover-defender-110-v8-carpathian-2024-207",
+            "LAND ROVER",
+            new BigDecimal("9200000000"),
+            new BigDecimal("8800000000"),
+            2, 13, 4.9,
+            "5.0L V8 Supercharged Siêu Nạp",
+            "Xám Carpathian Sơn Mờ",
+            "/images/land_rover_defender.jpg",
+            "SUV địa hình quý tộc Anh Quốc mạnh mẽ nhất của dòng Defender với động cơ V8 siêu nạp 5.0L, vi sai cầu sau chủ động điện tử, phuộc khí nén nâng hạ gầm linh hoạt.");
+
+        seedProduct(storeMap.get(1), catMap.get("oto"),
+            "VinFast VF9 Plus 7 Chỗ Dual-Motor AWD 2024",
+            "vinfast-vf9-plus-7-cho-dual-motor-awd-2024-208",
+            "VINFAST",
+            new BigDecimal("2250000000"),
+            new BigDecimal("2150000000"),
+            4, 19, 4.95,
+            "Dual Electric Motor AWD (Pin 123 kWh)",
+            "Xanh Deep Ocean Sang Trọng",
+            "/images/vinfast_vf9.jpg",
+            "Siêu SUV điện full-size cỡ lớn sang trọng bậc nhất Việt Nam, thiết kế Pininfarina Ý, nội thất ghế cơ trưởng bọc da Nappa cao cấp, massage sưởi làm mát đầy đủ các hàng ghế.");
+
+        seedProduct(storeMap.get(1), catMap.get("oto"),
+            "Chevrolet Corvette C8 Stingray Z51 2023",
+            "chevrolet-corvette-c8-stingray-z51-2023-209",
+            "CHEVROLET",
+            new BigDecimal("6800000000"),
+            new BigDecimal("6500000000"),
+            2, 11, 4.95,
+            "6.2L V8 LT2 Hút Khí Tự Nhiên Đặt Giữa",
+            "Xanh Rapid Blue Thể Thao",
+            "/images/chevrolet_corvette_c8.jpg",
+            "Siêu xe động cơ đặt giữa thế hệ mới của Corvette C8, gói hiệu năng Z51 bao gồm phanh Brembo lớn hơn, vi sai chống trượt điện tử eLSD và cánh gió khí động học thể thao.");
+
+        seedProduct(storeMap.get(2), catMap.get("oto"),
+            "Mazda MX-5 Miata RF Grand Touring 2024",
+            "mazda-mx-5-miata-rf-grand-touring-2024-210",
+            "MAZDA",
+            new BigDecimal("2650000000"),
+            new BigDecimal("2490000000"),
+            3, 14, 4.9,
+            "2.0L SkyActiv-G 4 Xylanh",
+            "Đỏ Pha Lê Soul Red Crystal",
+            "/images/mazda_mx5.jpg",
+            "Mẫu xe mui trần biểu tượng cảm giác lái Jinba Ittai (người và xe là một), mui cứng gập điện RF 13 giây cực êm, phân bổ trọng lượng 50:50 hoàn hảo ôm cua sắc lẹm.");
+
+        seedProduct(storeMap.get(1), catMap.get("oto"),
+            "Ford Mustang GT 5.0 V8 Fastback 2024",
+            "ford-mustang-gt-5-0-v8-fastback-2024-211",
+            "FORD",
+            new BigDecimal("4500000000"),
+            new BigDecimal("4250000000"),
+            2, 15, 4.96,
+            "5.0L Coyote V8 Thế Hệ Thứ 4",
+            "Xanh Velocity Blue Thể Thao",
+            "/images/ford_mustang_gt.jpg",
+            "Ngựa hoang cơ bắp Mỹ Mustang GT thế hệ mới với động cơ Coyote V8 5.0L nạp khí tự nhiên gầm rú đầy kích thích, chế độ drift điện tử và phanh Brembo hiệu năng cao.");
+
+        seedProduct(storeMap.get(3), catMap.get("oto"),
+            "Toyota Land Cruiser LC300 V6 Twin-Turbo 2024",
+            "toyota-land-cruiser-lc300-v6-twin-turbo-2024-212",
+            "TOYOTA",
+            new BigDecimal("5600000000"),
+            new BigDecimal("5350000000"),
+            3, 18, 4.98,
+            "3.5L V6 Twin-Turbo Xăng",
+            "Trắng Ngọc Trai Pearl White",
+            "/images/toyota_lc300.jpg",
+            "Vua địa hình SUV việt dã đỉnh cao của Toyota, khung gầm TNGA-F mới giảm 200kg, hệ thống lựa chọn đa địa hình Multi-Terrain Select và gói công nghệ an toàn Toyota Safety Sense cao cấp.");
+
+        seedProduct(storeMap.get(1), catMap.get("oto"),
+            "Honda Civic Type R FL5 2.0 VTEC Turbo 2024",
+            "honda-civic-type-r-fl5-2-0-vtec-turbo-2024-213",
+            "HONDA",
+            new BigDecimal("2890000000"),
+            new BigDecimal("2750000000"),
+            2, 13, 4.97,
+            "2.0L K20C1 VTEC Turbo",
+            "Trắng Championship White",
+            "/images/honda_civic_typer.jpg",
+            "Vua xe cầu trước thể thao lập kỷ lục đường đua Nürburgring, số sàn 6 cấp tỉ số truyền ngắn có tính năng vù ga tự động Rev-Match cực mượt, cánh gió khí động học nhôm nguyên khối.");
+
+        seedProduct(storeMap.get(2), catMap.get("oto"),
+            "Jeep Wrangler Rubicon 4x4 Unlimited 2024",
+            "jeep-wrangler-rubicon-4x4-unlimited-2024-214",
+            "JEEP",
+            new BigDecimal("4150000000"),
+            new BigDecimal("3950000000"),
+            2, 11, 4.92,
+            "2.0L Turbo 4x4 Rock-Trac Chuyên Dụng",
+            "Đỏ Lửa Firecracker Red",
+            "/images/jeep_wrangler.jpg",
+            "Chiến thần vượt địa hình gồ ghề của Mỹ với cầu trước và cầu sau Dana 44 siêu bền, ngắt thanh cân bằng điện tử Sway Bar tăng độ nhún bánh xe, mui xe có thể tháo rời hoàn toàn.");
+
+        seedProduct(storeMap.get(1), catMap.get("oto"),
+            "Kia Carnival Royal 4 Chỗ VIP Lounge 2024",
+            "kia-carnival-royal-4-cho-vip-lounge-2024-215",
+            "KIA",
+            new BigDecimal("2980000000"),
+            new BigDecimal("2850000000"),
+            3, 16, 4.94,
+            "3.5L V6 Smartstream Xăng êm ái",
+            "Đen Ánh Kim Aurora Black",
+            "/images/kia_carnival.jpg",
+            "Phiên bản Limousine Hoàng Gia đỉnh cao với vách ngăn riêng tư, màn hình giải trí thông minh 32 inch, 2 ghế thương gia bọc da Nappa có đỡ bắp chân, sưởi, làm mát và massage thư giãn.");
+
+        seedProduct(storeMap.get(3), catMap.get("oto"),
+            "Volkswagen Teramont X Platinum 4Motion 2024",
+            "volkswagen-teramont-x-platinum-4motion-2024-216",
+            "VOLKSWAGEN",
+            new BigDecimal("2450000000"),
+            new BigDecimal("2290000000"),
+            3, 12, 4.89,
+            "2.0L TSI Turbo DOHC Phun Kép",
+            "Đỏ R-Line Thể Thao",
+            "/images/volkswagen_teramont.jpg",
+            "SUV Coupe 5 chỗ phong cách thể thao R-Line từ Đức, cửa sổ trời toàn cảnh Panoramic, đèn pha ma trận IQ.Light LED thông minh và dàn âm thanh Harman Kardon 12 loa cao cấp.");
+
+        seedProduct(storeMap.get(2), catMap.get("oto"),
+            "Hyundai Palisade Calligraphy Black Edition 2024",
+            "hyundai-palisade-calligraphy-black-edition-2024-217",
+            "HYUNDAI",
+            new BigDecimal("1850000000"),
+            new BigDecimal("1720000000"),
+            4, 22, 4.93,
+            "2.2L Diesel CRDi E-VGT Cực Tiết Kiệm",
+            "Trắng Ngọc Trai White Cream",
+            "/images/hyundai_palisade.jpg",
+            "SUV cỡ lớn đầu bảng của Hyundai phiên bản Calligraphy sang trọng, trần bọc da lộn da cừu, 2 ghế thương gia hàng hai có thông gió làm mát và hệ thống âm thanh Infinity sống động.");
+
+        seedProduct(storeMap.get(1), catMap.get("oto"),
+            "Jaguar F-Type R-Dynamic 5.0 V8 Supercharged 2023",
+            "jaguar-f-type-r-dynamic-5-0-v8-supercharged-2023-218",
+            "JAGUAR",
+            new BigDecimal("7500000000"),
+            new BigDecimal("7150000000"),
+            2, 10, 4.96,
+            "5.0L V8 Supercharged Siêu Nạp",
+            "Xanh British Racing Green",
+            "/images/jaguar_ftype.jpg",
+            "Mẫu Coupe thể thao quý tộc Anh Quốc F-Type với khối động cơ V8 siêu nạp gầm thét rực lửa, ống xả chủ động thể thao có van bypass cho âm thanh giòn tan đầy cảm xúc.");
+
+        seedProduct(storeMap.get(2), catMap.get("oto"),
+            "Volvo XC90 T8 Recharge Ultimate Dark 2024",
+            "volvo-xc90-t8-recharge-ultimate-dark-2024-219",
+            "VOLVO",
+            new BigDecimal("4850000000"),
+            new BigDecimal("4590000000"),
+            3, 14, 4.97,
+            "2.0L Turbo & Supercharged Plug-in Hybrid",
+            "Xám Xi Măng Thunder Grey",
+            "/images/volvo_xc90.jpg",
+            "Đỉnh cao SUV 7 chỗ Thụy Điển với động cơ Plug-in Hybrid 455 mã lực mạnh mẽ, hệ thống an toàn hàng đầu thế giới City Safety, cần số pha lê thủ công Orrefors và dàn loa đỉnh cao Bowers & Wilkins.");
+
+        seedProduct(storeMap.get(1), catMap.get("oto"),
+            "MINI Cooper JCW (John Cooper Works) 3-Door 2024",
+            "mini-cooper-jcw-john-cooper-works-3-door-2024-220",
+            "MINI",
+            new BigDecimal("2750000000"),
+            new BigDecimal("2590000000"),
+            2, 12, 4.91,
+            "2.0L TwinPower Turbo John Cooper Works",
+            "Xanh Rebel Green Nóc Đỏ",
+            "/images/mini_cooper_jcw.jpg",
+            "Phiên bản đua John Cooper Works mạnh mẽ nhất của dòng hatchback MINI 3 cửa, hệ thống treo thể thao thích ứng thích nghi từng góc cua, phanh Brembo đỏ 4 piston thể thao.");
+
+        seedProduct(storeMap.get(3), catMap.get("oto"),
+            "Peugeot 408 GT Fastback Coupe 2024",
+            "peugeot-408-gt-fastback-coupe-2024-221",
+            "PEUGEOT",
+            new BigDecimal("1450000000"),
+            new BigDecimal("1350000000"),
+            4, 17, 4.88,
+            "1.6L Turbo PureTech 218 HP",
+            "Xanh Obsession Blue Đổi Màu",
+            "/images/peugeot_408.jpg",
+            "Mẫu SUV Fastback Coupe thời trang phong cách Pháp với lưới tản nhiệt tràn viền cùng màu thân xe, cụm đèn nanh sư tử LED Matrix và khoang lái phi thuyền Peugeot 3D i-Cockpit.");
+
+        seedProduct(storeMap.get(1), catMap.get("oto"),
+            "Nissan GT-R R35 Nismo Special Edition 2024",
+            "nissan-gt-r-r35-nismo-special-edition-2024-222",
+            "NISSAN",
+            new BigDecimal("11500000000"),
+            new BigDecimal("10800000000"),
+            1, 11, 4.99,
+            "3.8L V6 Twin-Turbo VR38DETT Handcrafted",
+            "Xám Stealth Grey Nắp Carbon",
+            "/images/nissan_gtr.jpg",
+            "Huyền thoại siêu xe thể thao Godzilla của Nhật Bản phiên bản Nismo Special Edition, nắp capo carbon có hốc gió NACA, mâm rèn RAYS 20 inch siêu nhẹ và phanh gốm carbon Brembo.");
+
+        seedProduct(storeMap.get(2), catMap.get("oto"),
+            "Isuzu D-Max V-Cross 4x4 Off-Road Edition 2024",
+            "isuzu-d-max-v-cross-4x4-off-road-edition-2024-223",
+            "ISUZU",
+            new BigDecimal("950000000"),
+            new BigDecimal("890000000"),
+            4, 19, 4.86,
+            "3.0L Ddi Blue Power Turbo Diesel",
+            "Cam Valencia Orange Cá Tính",
+            "/images/isuzu_dmax.jpg",
+            "Mẫu bán tải địa hình việt dã nồi đồng cối đá bền bỉ số 1 thế giới với động cơ 3.0L Ddi siêu tiết kiệm nhiên liệu, khả năng lội nước 800mm và khóa vi sai cầu sau cơ điện tử.");
+
+        seedProduct(storeMap.get(1), catMap.get("xenho"),
+            "Honda Monkey 125cc Limited Edition 2024",
+            "honda-monkey-125cc-limited-edition-2024-301",
+            "HONDA",
+            new BigDecimal("145000000"),
+            new BigDecimal("135000000"),
+            5, 21, 5.0,
+            "124.9 cc SOHC 4 Cấp Phun Xăng Điện Tử",
+            "Vàng Chrome Cực Đẹp",
+            "/images/honda_monkey_125.jpg",
+            "Mẫu xe khỉ Honda Monkey 125cc biểu tượng phong cách đường phố thế giới, bình xăng xi mạ chrome bóng loáng, phuộc upside down thể thao, bánh béo địa hình cá tính.");
+
+        seedProduct(storeMap.get(1), catMap.get("xenho"),
+            "Piaggio Vespa 946 Christian Dior Limited Edition",
+            "piaggio-vespa-946-christian-dior-limited-edition-302",
+            "PIAGGIO VESPA",
+            new BigDecimal("750000000"),
+            new BigDecimal("680000000"),
+            1, 12, 5.0,
+            "155 cc 3-Van i-Get Tiết Kiệm Nhiên Liệu",
+            "Trắng Sữa Viền Vàng Gold Dior",
+            "/images/vespa_946.jpg",
+            "Kiệt tác tay ga thời trang cao cấp hợp tác cùng nhà mốt Christian Dior Paris danh giá, từng đường kim mũi chỉ và họa tiết Dior Oblique huyền thoại trên yên xe thủ công tại Ý.");
+
+        seedProduct(storeMap.get(2), catMap.get("xenho"),
+            "Honda Super Cub C125 Disney 100th Anniversary",
+            "honda-super-cub-c125-disney-100th-anniversary-303",
+            "HONDA",
+            new BigDecimal("155000000"),
+            new BigDecimal("145000000"),
+            3, 18, 4.95,
+            "124 cc SOHC PGM-FI Làm Mát Không Khí",
+            "Bạc Đen Kỷ Niệm 100 Năm",
+            "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=800&q=80",
+            "Phiên bản giới hạn kỷ niệm 100 năm Disney toàn cầu của dòng xe số huyền thoại Super Cub C125, tem kỷ niệm độc quyền đánh số thứ tự, chìa khóa thông minh Smartkey.");
+
+        seedProduct(storeMap.get(1), catMap.get("xenho"),
+            "BMW CE 04 Futuristic Electric Super Scooter 2024",
+            "bmw-ce-04-futuristic-electric-super-scooter-2024-304",
+            "BMW",
+            new BigDecimal("580000000"),
+            new BigDecimal("540000000"),
+            3, 15, 4.98,
+            "Electric Motor Permanent-Magnet Làm Mát Nước",
+            "Trắng Magellan Grey Tương Lai",
+            "/images/bmw_ce04.jpg",
+            "Siêu phi thuyền tay ga điện tương lai BMW CE 04 với thiết kế phá cách, pin lithium-ion cao áp 8.9 kWh cho tầm hoạt động 130km, màn hình TFT 10.25 inch tích hợp bản đồ dẫn đường.");
+
+        seedProduct(storeMap.get(2), catMap.get("cruiser"),
+            "Royal Enfield Continental GT 650 Cafe Racer 2024",
+            "royal-enfield-continental-gt-650-cafe-racer-2024-111",
+            "ROYAL ENFIELD",
+            new BigDecimal("220000000"),
+            new BigDecimal("199000000"),
+            4, 16, 4.88,
+            "648 cc 2 Xylanh Thẳng Hàng SOHC Làm Mát Gió",
+            "Bình Xăng Chrome Bóng Mr Clean",
+            "/images/royal_enfield_gt650.jpg",
+            "Tuyệt tác Cafe Racer cổ điển từ thương hiệu xe Anh Quốc Royal Enfield với bình xăng mạ chrome bóng loáng, ghi-đông clip-on thể thao và tiếng nổ trầm ấm mê hoặc.");
+
+        seedProduct(storeMap.get(1), catMap.get("superbike"),
+            "Suzuki Hayabusa GSX-1300R Thần Gió 2024",
+            "suzuki-hayabusa-gsx-1300r-than-gio-2024-112",
+            "SUZUKI",
+            new BigDecimal("790000000"),
+            new BigDecimal("750000000"),
+            3, 20, 4.97,
+            "1.340 cc DOHC 4 Xylanh Thẳng Hàng",
+            "Đen Ánh Vàng Glass Sparkle Black",
+            "/images/suzuki_hayabusa.jpg",
+            "Huyền thoại Thần Gió Suzuki Hayabusa thế hệ thứ 3 với công nghệ điều khiển điện tử thông minh Suzuki Intelligent Ride System (S.I.R.S.), kiểm soát bốc đầu và sang số nhanh 2 chiều mượt mà.");
+
+        seedProduct(storeMap.get(1), catMap.get("hyper-naked"),
+            "MV Agusta Brutale 1000 RR Nurburgring Edition",
+            "mv-agusta-brutale-1000-rr-nurburgring-edition-114",
+            "MV AGUSTA",
+            new BigDecimal("1450000000"),
+            new BigDecimal("1380000000"),
+            2, 11, 4.99,
+            "998 cc 4 Xylanh Titan Đua WorldSBK",
+            "Xám Bạc Đỏ Nurburgring Racing",
+            "/images/mv_agusta_brutale.jpg",
+            "Kiệt tác Hyper Naked siêu hiếm từ hãng xe nghệ thuật Ý MV Agusta, động cơ 4 xylanh van titan thừa hưởng từ xe đua WorldSBK, pô độ Arrow titan full system và mâm carbon siêu nhẹ.");
     }
 }

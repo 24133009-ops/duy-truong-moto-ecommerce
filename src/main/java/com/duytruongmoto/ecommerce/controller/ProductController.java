@@ -1,5 +1,6 @@
 package com.duytruongmoto.ecommerce.controller;
 
+import com.duytruongmoto.ecommerce.entity.Category;
 import com.duytruongmoto.ecommerce.entity.Product;
 import com.duytruongmoto.ecommerce.entity.User;
 import com.duytruongmoto.ecommerce.repository.CategoryRepository;
@@ -32,6 +33,7 @@ public class ProductController {
     public String listProducts(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) String category,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(required = false) String brand,
@@ -47,6 +49,15 @@ public class ProductController {
         // Clean up empty string query parameters
         String cleanKeyword = (keyword != null && !keyword.trim().isEmpty()) ? keyword.trim() : null;
         String cleanBrand = (brand != null && !brand.trim().isEmpty()) ? brand.trim() : null;
+
+        // Support category slug (e.g. ?category=oto, ?category=dirtbike, ?category=gear-parts)
+        if (categoryId == null && category != null && !category.trim().isEmpty()) {
+            String cleanCat = category.trim();
+            categoryId = categoryRepository.findBySlug(cleanCat)
+                    .map(Category::getId)
+                    .orElse(null);
+            model.addAttribute("selectedCategorySlug", cleanCat);
+        }
         
         // Prevent negative page numbers
         int pageIndex = (page == null || page < 0) ? 0 : page;

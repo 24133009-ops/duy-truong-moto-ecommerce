@@ -59,26 +59,29 @@
             <a th:href="@{/products}" class="category-tab-pill" th:classappend="${categoryId == null && (keyword == null || keyword == '') && (brand == null || brand == '') ? 'active' : ''}">
                 <i class="fa-solid fa-border-all"></i> Tất Cả Kho Xe
             </a>
-            <a th:href="@{/products(brand='oto')}" class="category-tab-pill" th:classappend="${brand == 'oto'} ? 'active' : ''">
+            <a th:href="@{/products(category='oto')}" class="category-tab-pill" th:classappend="${selectedCategorySlug == 'oto' || brand == 'oto'} ? 'active' : ''">
                 <i class="fa-solid fa-car-side text-gold"></i> Siêu Xe Ô Tô & Xe Sang
             </a>
-            <a th:href="@{/products(keyword='cào cào')}" class="category-tab-pill" th:classappend="${keyword == 'cào cào'} ? 'active' : ''">
+            <a th:href="@{/products(category='dirtbike')}" class="category-tab-pill" th:classappend="${selectedCategorySlug == 'dirtbike'} ? 'active' : ''">
                 <i class="fa-solid fa-mountain text-gold"></i> Xe Cào Cào Địa Hình
             </a>
-            <a th:href="@{/products(keyword='superbike')}" class="category-tab-pill" th:classappend="${keyword == 'superbike'} ? 'active' : ''">
+            <a th:href="@{/products(category='superbike')}" class="category-tab-pill" th:classappend="${selectedCategorySlug == 'superbike'} ? 'active' : ''">
                 <i class="fa-solid fa-gauge-high text-gold"></i> Superbike Thể Thao
             </a>
-            <a th:href="@{/products(keyword='xe nhỏ')}" class="category-tab-pill" th:classappend="${keyword == 'xe nhỏ'} ? 'active' : ''">
+            <a th:href="@{/products(category='xenho')}" class="category-tab-pill" th:classappend="${selectedCategorySlug == 'xenho'} ? 'active' : ''">
                 <i class="fa-solid fa-motorcycle text-gold"></i> Xe Nhỏ / Tay Ga Sưu Tầm
             </a>
-            <a th:href="@{/products(keyword='naked')}" class="category-tab-pill" th:classappend="${keyword == 'naked'} ? 'active' : ''">
+            <a th:href="@{/products(category='hyper-naked')}" class="category-tab-pill" th:classappend="${selectedCategorySlug == 'hyper-naked'} ? 'active' : ''">
                 <i class="fa-solid fa-bolt text-gold"></i> Hyper Naked
             </a>
-            <a th:href="@{/products(keyword='cruiser')}" class="category-tab-pill" th:classappend="${keyword == 'cruiser'} ? 'active' : ''">
+            <a th:href="@{/products(category='cruiser')}" class="category-tab-pill" th:classappend="${selectedCategorySlug == 'cruiser' || selectedCategorySlug == 'cruiser-touring'} ? 'active' : ''">
                 <i class="fa-solid fa-road text-gold"></i> Cruiser Cơ Bắp Mỹ
             </a>
-            <a th:href="@{/products(keyword='akrapovic')}" class="category-tab-pill" th:classappend="${keyword == 'akrapovic'} ? 'active' : ''">
-                <i class="fa-solid fa-fire text-gold"></i> Pô Độ & Đồ Chơi PKL
+            <a th:href="@{/products(category='adventure')}" class="category-tab-pill" th:classappend="${selectedCategorySlug == 'adventure'} ? 'active' : ''">
+                <i class="fa-solid fa-compass text-gold"></i> Adventure Phượt Bụi
+            </a>
+            <a th:href="@{/products(category='gear-parts')}" class="category-tab-pill" th:classappend="${selectedCategorySlug == 'gear-parts' || selectedCategorySlug == 'do-bao-ho' || selectedCategorySlug == 'phu-tung-po-do'} ? 'active' : ''">
+                <i class="fa-solid fa-helmet-safety text-gold"></i> Pô Độ & Phụ Kiện
             </a>
         </div>
     </div>
