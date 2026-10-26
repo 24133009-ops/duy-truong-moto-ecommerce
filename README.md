@@ -34,28 +34,26 @@
 
 ---
 
-## 3. HƯỚNG DẪN CÀI ĐẶT & CHẠY DỰ ÁN TRÊN MÁY TÍNH
+## 3. LIÊN KẾT TRUY CẬP HỆ THỐNG & CÁC PHÂN HỆ
 
-### Bước 1: Khởi động cơ sở dữ liệu SQL Server
-Đảm bảo SQL Server đang chạy và database `DuyTruongMotoDB` đã tồn tại:
-```powershell
-sqlcmd -S localhost -U duytruong_admin -P "Password123@" -d DuyTruongMotoDB -Q "SELECT DB_NAME();"
-```
+### 🌐 Truy cập trực tiếp hệ thống:
+- **Website chính thức (Online Demo):** [https://duytruong-motor.vercel.app](https://duytruong-motor.vercel.app)
+- **Môi trường chạy cục bộ (Local):** [http://localhost:5173](http://localhost:5173)
+- **Backend API (Spring Boot 3):** [https://duy-truong-moto-ecommerce.onrender.com/api/products](https://duy-truong-moto-ecommerce.onrender.com/api/products) *(Local API: [http://localhost:8080/api/products](http://localhost:8080/api/products))*
 
-### Bước 2: Build & Chạy Spring Boot
-```powershell
-$env:JAVA_HOME = "C:\Users\Admin\.jdks\ms-17.0.20.1"
-$env:Path = "C:\Users\Admin\.jdks\ms-17.0.20.1\bin;C:\Program Files\JetBrains\IntelliJ IDEA 2026.2.3\plugins\maven-plugin\lib\maven3\bin;" + $env:Path
-
-mvn clean compile
-mvn package -DskipTests
-java -jar target/duy-truong-moto-1.0.0.jar
-```
-
-### Bước 3: Truy cập ứng dụng
-- Trang chủ Storefront: `http://localhost:8080/home`
-- Đăng nhập: `http://localhost:8080/auth/login`
-- Đăng ký nhận mã OTP Email: `http://localhost:8080/auth/register`
-- Quản lý Showroom (Vendor): `http://localhost:8080/vendor/dashboard`
-- Quản trị viên (Admin): `http://localhost:8080/admin/dashboard`
-- Phân hệ Shipper: `http://localhost:8080/shipper/dashboard`
+### 👥 Trải nghiệm đầy đủ 5 vai trò trên hệ thống:
+Hệ thống tích hợp thanh chuyển đổi vai trò (Role Switcher) ngay trên giao diện để thuận tiện cho việc trình chiếu và chấm điểm:
+1. **Khách vãng lai & Khách mua xe (Guest / Customer):**
+   - Xem danh mục 60 dòng xe, siêu xe & xe cào cào địa hình có bộ lọc đa tiêu chí.
+   - Tiêu chí đề tài: Top xe bán chạy trên 10 chiếc sắp xếp giảm dần theo lượt bán.
+   - Xem chi tiết xe, chọn màu sắc zin chính hãng, yêu cầu đổi màu cavet / Wrap Decal.
+   - Tính năng **Bớt lộc / Giảm giá**: Áp dụng voucher hoặc đề xuất mức giá mong muốn.
+   - Giỏ hàng & đặt cọc qua cổng thanh toán VNPAY QR, gửi đánh giá xe $\ge$ 50 ký tự.
+2. **Quản lý Showroom (Vendor):**
+   - Quản lý kho xe chi nhánh (thêm mới, chỉnh sửa giá, số lượng tồn kho).
+   - Tiếp nhận và duyệt các đơn cọc xe của khách hàng.
+3. **Quản trị viên (Admin):**
+   - Giám sát toàn bộ hệ thống chuỗi 3 Showroom (Phú Nhuận, Cầu Giấy, Hải Châu).
+   - Phân quyền tài khoản người dùng, xem thống kê doanh thu và báo cáo hệ thống.
+4. **Đội xe vận tải (Shipper):**
+   - Theo dõi lộ trình điều phối xe cứu hộ sàn trượt thủy lực VIP qua 6 giai đoạn bàn giao tận nhà.
