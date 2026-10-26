@@ -47,12 +47,6 @@
                 </div>
             </a>
 
-            <!-- Center Shield Badge Logo (Vương Khang Style) -->
-            <a th:href="@{/home}" class="shield-badge-box d-none d-xl-inline-block mx-3">
-                <div class="shield-badge-title">DUY TRƯƠNG</div>
-                <div class="shield-badge-sub">- MOTOR -</div>
-            </a>
-
             <button class="navbar-toggler border-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
                 <i class="fa-solid fa-bars text-gold"></i>
             </button>
@@ -63,19 +57,20 @@
                         <a class="nav-link text-light" th:href="@{/home}"><i class="fa-solid fa-house text-gold me-1"></i> Trang Chủ</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-light" th:href="@{/products}"><i class="fa-solid fa-motorcycle text-gold me-1"></i> Kho Xe (25+)</a>
+                        <a class="nav-link text-light" th:href="@{/products}"><i class="fa-solid fa-motorcycle text-gold me-1"></i> Kho Xe (60)</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-light" th:href="@{/products(brand='Ducati')}">Ducati</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-light" th:href="@{/products(brand='KTM')}">KTM Enduro</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-light" th:href="@{/products(brand='Kawasaki')}">Kawasaki</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-light" th:href="@{/products(brand='BMW')}">BMW Motorrad</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fa-solid fa-gem text-gold me-1"></i> Hãng Xe
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark border-secondary shadow">
+                            <li><a class="dropdown-item py-2" th:href="@{/products(brand='Ducati')}">Ducati</a></li>
+                            <li><a class="dropdown-item py-2" th:href="@{/products(brand='KTM')}">KTM Enduro</a></li>
+                            <li><a class="dropdown-item py-2" th:href="@{/products(brand='Kawasaki')}">Kawasaki</a></li>
+                            <li><a class="dropdown-item py-2" th:href="@{/products(brand='BMW')}">BMW Motorrad</a></li>
+                            <li><hr class="dropdown-divider border-secondary"></li>
+                            <li><a class="dropdown-item py-2 text-gold fw-bold" th:href="@{/products}">Xem Toàn Bộ 60 Xe</a></li>
+                        </ul>
                     </li>
                 </ul>
 

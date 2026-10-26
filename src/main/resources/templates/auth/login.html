@@ -142,7 +142,7 @@
 </head>
 <body class="auth-page-bg d-flex align-items-center justify-content-center min-vh-100 py-5">
 
-    <div class="container" style="max-width: 500px;">
+    <div class="container" style="max-width: 960px;">
         <!-- Brand Header -->
         <div class="text-center mb-4">
             <a th:href="@{/home}" class="navbar-brand-logo justify-content-center mb-3 text-decoration-none">
@@ -156,66 +156,104 @@
             <p class="text-light-50 small" style="color: #cbd5e1;">Hệ thống Chuỗi Siêu Thị Mô Tô PKL & Xe Cào Cào Uy Tín</p>
         </div>
 
-        <!-- Bright Luxury Card -->
+        <!-- Bright Luxury Card (2 Cột rộng rãi, hiển thị trọn vẹn 100% không bị che khuất) -->
         <div class="auth-card-bright p-4 p-md-5">
             <div th:if="${errorMessage}" class="alert alert-danger py-2 small rounded-3 mb-3 fw-semibold" th:text="${errorMessage}"></div>
             <div th:if="${successMessage}" class="alert alert-success py-2 small rounded-3 mb-3 fw-semibold" th:text="${successMessage}"></div>
 
-            <form th:action="@{/auth/login-process}" method="post" id="loginForm">
-                <div class="mb-3">
-                    <label class="form-label">Địa Chỉ Email</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
-                        <input type="email" id="emailInput" name="email" class="form-control form-control-luxury" placeholder="name@example.com" required>
+            <div class="row g-4 align-items-stretch">
+                <!-- Left Column: Form Đăng nhập -->
+                <div class="col-lg-6 d-flex flex-column justify-content-between pe-lg-4 border-end-lg" style="border-color: #e2e8f0;">
+                    <div>
+                        <h5 class="fw-bold text-dark mb-3"><i class="fa-solid fa-arrow-right-to-bracket text-gold me-2"></i> Thông Tin Đăng Nhập</h5>
+                        <form th:action="@{/auth/login-process}" method="post" id="loginForm">
+                            <div class="mb-3">
+                                <label class="form-label">Địa Chỉ Email</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
+                                    <input type="email" id="emailInput" name="email" class="form-control form-control-luxury" placeholder="name@example.com" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <label class="form-label">Mật Khẩu</label>
+                                    <a th:href="@{/auth/forgot-password}" class="small text-decoration-none fw-bold" style="color: #b45309;">Quên mật khẩu?</a>
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+                                    <input type="password" id="passwordInput" name="password" class="form-control form-control-luxury" placeholder="••••••••" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="rememberMe">
+                                <label class="form-check-label text-muted small" for="rememberMe">Ghi nhớ đăng nhập trên thiết bị</label>
+                            </div>
+
+                            <button type="submit" class="btn btn-gold w-100 py-3 fw-bold mb-2 fs-6 shadow-sm">
+                                <i class="fa-solid fa-right-to-bracket me-2"></i> ĐĂNG NHẬP NGAY
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="border-top pt-3 text-center small text-muted mt-3">
+                        Chưa có tài khoản thành viên? 
+                        <a th:href="@{/auth/register}" class="fw-bold text-decoration-none text-warning">Đăng ký kích hoạt bằng OTP</a>
                     </div>
                 </div>
 
-                <div class="mb-3">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <label class="form-label">Mật Khẩu</label>
-                        <a th:href="@{/auth/forgot-password}" class="small text-decoration-none fw-bold" style="color: #b45309;">Quên mật khẩu?</a>
+                <!-- Right Column: 1-Click Điền Tài Khoản Mẫu (Rộng thoáng, đầy đủ) -->
+                <div class="col-lg-6 ps-lg-4 d-flex flex-column justify-content-between">
+                    <div class="demo-account-box h-100 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="fw-bold mb-1 small text-uppercase d-flex align-items-center justify-content-between" style="letter-spacing: 0.5px;">
+                                <span><i class="fa-solid fa-bolt me-1 text-warning"></i> 1-Click Điền Tài Khoản Mẫu:</span>
+                                <span class="badge bg-warning text-dark">Bấm là điền</span>
+                            </div>
+                            <p class="small text-muted mb-3" style="font-size: 0.78rem;">Nhấp vào bất kỳ vai trò nào bên dưới để hệ thống tự điền email &amp; mật khẩu chính xác:</p>
+
+                            <div class="demo-pill" onclick="fillLogin('admin@duytruongmoto.com', 'admin123')">
+                                <div>
+                                    <i class="fa-solid fa-shield-halved text-danger me-2"></i>
+                                    <strong>1. Admin Quản Trị</strong> (Duy Trương)
+                                    <div class="small text-muted" style="font-size: 0.72rem;">admin@duytruongmoto.com</div>
+                                </div>
+                                <span class="badge bg-danger">admin123</span>
+                            </div>
+
+                            <div class="demo-pill" onclick="fillLogin('customer@gmail.com', 'user123')">
+                                <div>
+                                    <i class="fa-solid fa-crown text-warning me-2"></i>
+                                    <strong>2. Khách Hàng VIP</strong> (Biker)
+                                    <div class="small text-muted" style="font-size: 0.72rem;">customer@gmail.com</div>
+                                </div>
+                                <span class="badge bg-success">user123</span>
+                            </div>
+
+                            <div class="demo-pill" onclick="fillLogin('vendor@duytruongmoto.com', 'vendor123')">
+                                <div>
+                                    <i class="fa-solid fa-store text-warning me-2"></i>
+                                    <strong>3. Showroom Phú Nhuận</strong>
+                                    <div class="small text-muted" style="font-size: 0.72rem;">vendor@duytruongmoto.com</div>
+                                </div>
+                                <span class="badge bg-warning text-dark">vendor123</span>
+                            </div>
+
+                            <div class="demo-pill" onclick="fillLogin('shipper@duytruongmoto.com', 'shipper123')">
+                                <div>
+                                    <i class="fa-solid fa-truck-fast text-info me-2"></i>
+                                    <strong>4. Tài Xế Sàn Trượt VIP</strong>
+                                    <div class="small text-muted" style="font-size: 0.72rem;">shipper@duytruongmoto.com</div>
+                                </div>
+                                <span class="badge bg-info text-dark">shipper123</span>
+                            </div>
+                        </div>
+
+                        <div class="text-center pt-2" style="font-size: 0.75rem; color: #78350f;">
+                            <i class="fa-solid fa-shield-check me-1 text-success"></i> Tất cả tài khoản đã được kích hoạt và đồng bộ mật khẩu sẵn sàng.
+                        </div>
                     </div>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
-                        <input type="password" id="passwordInput" name="password" class="form-control form-control-luxury" placeholder="••••••••" required>
-                    </div>
-                </div>
-
-                <div class="mb-4 form-check">
-                    <input type="checkbox" class="form-check-input" id="rememberMe">
-                    <label class="form-check-label text-muted small" for="rememberMe">Ghi nhớ đăng nhập trên thiết bị này</label>
-                </div>
-
-                <button type="submit" class="btn btn-gold w-100 py-3 fw-bold mb-3 fs-6 shadow-sm">
-                    <i class="fa-solid fa-right-to-bracket me-2"></i> ĐĂNG NHẬP NGAY
-                </button>
-            </form>
-
-            <div class="border-top pt-3 text-center small text-muted">
-                Chưa có tài khoản thành viên? 
-                <a th:href="@{/auth/register}" class="fw-bold text-decoration-none" style="color: #b45309;">Đăng ký kích hoạt bằng OTP</a>
-            </div>
-
-            <!-- Quick Auto-fill Demo Accounts -->
-            <div class="mt-4 demo-account-box">
-                <div class="fw-bold mb-2 small text-uppercase" style="letter-spacing: 0.5px;">
-                    <i class="fa-solid fa-bolt me-1 text-warning"></i> 1-Click Điền Tài Khoản Mẫu:
-                </div>
-                <div class="demo-pill" onclick="fillLogin('admin@duytruongmoto.com', 'admin123')">
-                    <span><i class="fa-solid fa-shield-halved text-danger me-1"></i> <strong>Admin Toàn Sàn</strong> (Duy Trương)</span>
-                    <span class="badge bg-danger">admin123</span>
-                </div>
-                <div class="demo-pill" onclick="fillLogin('vendor@duytruongmoto.com', 'vendor123')">
-                    <span><i class="fa-solid fa-store text-warning me-1"></i> <strong>Vendor</strong> (Showroom Phú Nhuận)</span>
-                    <span class="badge bg-warning text-dark">vendor123</span>
-                </div>
-                <div class="demo-pill" onclick="fillLogin('shipper@duytruongmoto.com', 'shipper123')">
-                    <span><i class="fa-solid fa-truck-fast text-info me-1"></i> <strong>Shipper</strong> (Xe Sàn Trượt VIP)</span>
-                    <span class="badge bg-info text-dark">shipper123</span>
-                </div>
-                <div class="demo-pill" onclick="fillLogin('customer@gmail.com', 'user123')">
-                    <span><i class="fa-solid fa-user text-success me-1"></i> <strong>Khách Hàng VIP</strong> (Biker)</span>
-                    <span class="badge bg-success">user123</span>
                 </div>
             </div>
         </div>

@@ -31,10 +31,8 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) {
         log.info(">>> Duy Truong Motor DataInitializer: Đang đồng bộ toàn bộ dữ liệu 60 sản phẩm...");
 
-        // 1. User Levels & Users
-        if (userLevelRepository.count() == 0 || userRepository.count() == 0) {
-            initBaseData();
-        }
+        // 1. User Levels & Demo Accounts (Luôn đồng bộ chính xác mật khẩu demo trên mọi môi trường)
+        syncDemoAccounts();
 
         // 2. Categories
         Map<String, Category> catMap = initCategories();
@@ -48,62 +46,73 @@ public class DataInitializer implements CommandLineRunner {
         log.info(">>> Đã đồng bộ thành công {} sản phẩm trong kho Duy Truong Motor!", productRepository.count());
     }
 
-    private void initBaseData() {
+    private void syncDemoAccounts() {
         // User Levels
-        UserLevel silver = userLevelRepository.save(UserLevel.builder().name("Thành viên Bạc").minPoint(0L).discount(BigDecimal.ZERO).isDeleted(false).build());
-        UserLevel gold = userLevelRepository.save(UserLevel.builder().name("Khách hàng Vàng").minPoint(1000L).discount(BigDecimal.valueOf(3.0)).isDeleted(false).build());
-        UserLevel diamond = userLevelRepository.save(UserLevel.builder().name("Khách hàng Kim Cương VIP").minPoint(5000L).discount(BigDecimal.valueOf(7.0)).isDeleted(false).build());
+        UserLevel silver = userLevelRepository.findAll().stream()
+                .filter(ul -> ul.getName() != null && ul.getName().contains("Bạc"))
+                .findFirst()
+                .orElseGet(() -> userLevelRepository.save(UserLevel.builder().name("Thành viên Bạc").minPoint(0L).discount(BigDecimal.ZERO).isDeleted(false).build()));
 
-        // Commissions
-        commissionRepository.save(Commission.builder().name("Chiết khấu Tiêu chuẩn").cost(BigDecimal.valueOf(5.0)).description("Chiết khấu 5% cho showroom đối tác").isDeleted(false).build());
-        commissionRepository.save(Commission.builder().name("Chiết khấu Đại lý VIP").cost(BigDecimal.valueOf(3.0)).description("Chiết khấu ưu đãi 3%").isDeleted(false).build());
+        UserLevel gold = userLevelRepository.findAll().stream()
+                .filter(ul -> ul.getName() != null && ul.getName().contains("Vàng"))
+                .findFirst()
+                .orElseGet(() -> userLevelRepository.save(UserLevel.builder().name("Khách hàng Vàng").minPoint(1000L).discount(BigDecimal.valueOf(3.0)).isDeleted(false).build()));
 
-        // Deliveries
-        deliveryRepository.save(Delivery.builder().name("Giao xe sàn trượt thủy lực VIP (Chống trầy xước 100%)").description("Xe chuyên dụng sàn trượt hạ đất, bàn giao tận phòng khách khách hàng").price(BigDecimal.valueOf(1500000)).isDeleted(false).build());
-        deliveryRepository.save(Delivery.builder().name("Xe tải thùng kín chuyên dụng chuyển môtô").description("Xe tải thùng bạt chuyên chở xe PKL đi tỉnh").price(BigDecimal.valueOf(800000)).isDeleted(false).build());
-        deliveryRepository.save(Delivery.builder().name("Giao hàng tiêu chuẩn (Phụ tùng, đồ bảo hộ)").description("Giao nhanh trong 2-3 ngày").price(BigDecimal.valueOf(50000)).isDeleted(false).build());
+        UserLevel diamond = userLevelRepository.findAll().stream()
+                .filter(ul -> ul.getName() != null && (ul.getName().contains("Kim Cương") || ul.getName().contains("VIP")))
+                .findFirst()
+                .orElseGet(() -> userLevelRepository.save(UserLevel.builder().name("Khách hàng Kim Cương VIP").minPoint(5000L).discount(BigDecimal.valueOf(7.0)).isDeleted(false).build()));
 
-        // Users
-        userRepository.save(User.builder()
-                .firstname("Duy").lastname("Trường")
-                .slug("duy-truong-admin")
-                .email("admin@duytruongmoto.com").phone("0901234567")
-                .password(passwordEncoder.encode("admin123"))
-                .role(Role.ROLE_ADMIN).isEmailActive(true).isPhoneActive(true)
-                .avatar("https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80")
-                .point(9999L).eWallet(BigDecimal.valueOf(500000000)).userLevel(diamond).build());
+        // Commissions & Deliveries
+        if (commissionRepository.count() == 0) {
+            commissionRepository.save(Commission.builder().name("Chiết khấu Tiêu chuẩn").cost(BigDecimal.valueOf(5.0)).description("Chiết khấu 5% cho showroom đối tác").isDeleted(false).build());
+            commissionRepository.save(Commission.builder().name("Chiết khấu Đại lý VIP").cost(BigDecimal.valueOf(3.0)).description("Chiết khấu ưu đãi 3%").isDeleted(false).build());
+        }
+        if (deliveryRepository.count() == 0) {
+            deliveryRepository.save(Delivery.builder().name("Giao xe sàn trượt thủy lực VIP (Chống trầy xước 100%)").description("Xe chuyên dụng sàn trượt hạ đất, bàn giao tận phòng khách khách hàng").price(BigDecimal.valueOf(1500000)).isDeleted(false).build());
+            deliveryRepository.save(Delivery.builder().name("Xe tải thùng kín chuyên dụng chuyển môtô").description("Xe tải thùng bạt chuyên chở xe PKL đi tỉnh").price(BigDecimal.valueOf(800000)).isDeleted(false).build());
+            deliveryRepository.save(Delivery.builder().name("Giao hàng tiêu chuẩn (Phụ tùng, đồ bảo hộ)").description("Giao nhanh trong 2-3 ngày").price(BigDecimal.valueOf(50000)).isDeleted(false).build());
+        }
 
-        userRepository.save(User.builder()
-                .firstname("Quản lý").lastname("Chi nhánh")
-                .slug("manager-duytruong")
-                .email("manager@duytruongmoto.com").phone("0902345678")
-                .password(passwordEncoder.encode("manager123"))
-                .role(Role.ROLE_MANAGER).isEmailActive(true).isPhoneActive(true)
-                .point(500L).userLevel(gold).build());
+        // 1. Admin Toàn Sàn (pass: admin123)
+        upsertUser("Duy", "Trường", "duy-truong-admin", "admin@duytruongmoto.com", "0901234567", "admin123", Role.ROLE_ADMIN, diamond, 9999L, BigDecimal.valueOf(500000000));
+        upsertUser("Duy", "Trường", "duy-truong-admin-motor", "admin@duytruongmotor.com", "0901234567", "admin123", Role.ROLE_ADMIN, diamond, 9999L, BigDecimal.valueOf(500000000));
 
-        userRepository.save(User.builder()
-                .firstname("Minh").lastname("Showroom Q1")
-                .slug("minh-showroom-q1")
-                .email("vendor@duytruongmoto.com").phone("0903456789")
-                .password(passwordEncoder.encode("vendor123"))
-                .role(Role.ROLE_VENDOR).isEmailActive(true).isPhoneActive(true)
-                .point(2000L).eWallet(BigDecimal.valueOf(150000000)).userLevel(gold).build());
+        // 2. Vendor Showroom (pass: vendor123)
+        upsertUser("Minh", "Showroom Q1", "minh-showroom-q1", "vendor@duytruongmoto.com", "0903456789", "vendor123", Role.ROLE_VENDOR, gold, 2000L, BigDecimal.valueOf(150000000));
+        upsertUser("Minh", "Showroom Q1", "minh-showroom-motor", "vendor@duytruongmotor.com", "0903456789", "vendor123", Role.ROLE_VENDOR, gold, 2000L, BigDecimal.valueOf(150000000));
 
-        userRepository.save(User.builder()
-                .firstname("Tuấn").lastname("Vận Chuyển")
-                .slug("tuan-shipper")
-                .email("shipper@duytruongmoto.com").phone("0904567890")
-                .password(passwordEncoder.encode("shipper123"))
-                .role(Role.ROLE_SHIPPER).isEmailActive(true).isPhoneActive(true)
-                .point(100L).userLevel(silver).build());
+        // 3. Shipper Sàn Trượt (pass: shipper123)
+        upsertUser("Tuấn", "Vận Chuyển", "tuan-shipper", "shipper@duytruongmoto.com", "0904567890", "shipper123", Role.ROLE_SHIPPER, silver, 100L, BigDecimal.ZERO);
+        upsertUser("Tuấn", "Vận Chuyển", "tuan-shipper-motor", "shipper@duytruongmotor.com", "0904567890", "shipper123", Role.ROLE_SHIPPER, silver, 100L, BigDecimal.ZERO);
 
-        userRepository.save(User.builder()
-                .firstname("Hùng").lastname("Biker")
-                .slug("hung-biker")
-                .email("customer@duytruongmoto.com").phone("0905678901")
-                .password(passwordEncoder.encode("customer123"))
-                .role(Role.ROLE_USER).isEmailActive(true).isPhoneActive(true)
-                .point(350L).eWallet(BigDecimal.valueOf(50000000)).userLevel(silver).build());
+        // 4. Khách Hàng VIP (pass: user123)
+        upsertUser("Hoàng", "Biker VIP", "hoang-biker-vip", "customer@gmail.com", "0905678901", "user123", Role.ROLE_USER, diamond, 5500L, BigDecimal.valueOf(75000000));
+        upsertUser("Hùng", "Biker VIP", "hung-biker-vip", "customer@duytruongmoto.com", "0905678902", "user123", Role.ROLE_USER, diamond, 5500L, BigDecimal.valueOf(75000000));
+    }
+
+    private void upsertUser(String firstname, String lastname, String slug, String email, String phone, String plainPassword, Role role, UserLevel userLevel, Long point, BigDecimal eWallet) {
+        User user = userRepository.findByEmail(email).orElse(null);
+        if (user == null) {
+            user = User.builder()
+                    .firstname(firstname).lastname(lastname).slug(slug)
+                    .email(email).phone(phone)
+                    .password(passwordEncoder.encode(plainPassword))
+                    .role(role).userLevel(userLevel)
+                    .point(point).eWallet(eWallet)
+                    .isEmailActive(true).isPhoneActive(true)
+                    .avatar("https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80")
+                    .build();
+        } else {
+            user.setPassword(passwordEncoder.encode(plainPassword));
+            user.setRole(role);
+            user.setIsEmailActive(true);
+            user.setIsPhoneActive(true);
+            user.setUserLevel(userLevel);
+            if (user.getPoint() == null || user.getPoint() == 0) user.setPoint(point);
+            if (user.getEWallet() == null) user.setEWallet(eWallet);
+        }
+        userRepository.save(user);
     }
 
     private Map<String, Category> initCategories() {
