@@ -195,6 +195,17 @@ public class DataInitializer implements CommandLineRunner {
         );
         storeMap.put(3, s3);
 
+        if (vendor != null) {
+            if (s1.getOwner() == null || !vendor.getId().equals(s1.getOwner().getId())) {
+                s1.setOwner(vendor);
+                s1 = storeRepository.save(s1);
+            }
+            if (s3.getOwner() == null || !vendor.getId().equals(s3.getOwner().getId())) {
+                s3.setOwner(vendor);
+                s3 = storeRepository.save(s3);
+            }
+        }
+
         return storeMap;
     }
 

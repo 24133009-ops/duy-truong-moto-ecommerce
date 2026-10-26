@@ -48,6 +48,17 @@
                             <strong class="text-white fs-5" th:text="${#numbers.formatDecimal(currentUser.eWallet, 0, 'COMMA', 0, 'POINT')} + ' đ'"></strong>
                         </div>
                     </div>
+
+                    <div class="border-top border-secondary pt-3 mt-3 d-flex gap-2 justify-content-center flex-wrap">
+                        <a th:href="@{/orders}" class="btn btn-outline-gold btn-sm rounded-pill px-3 py-2 fw-semibold">
+                            <i class="fa-solid fa-clock-rotate-left me-1"></i> Lịch Sử Đơn Mua
+                        </a>
+                        <form th:action="@{/auth/logout}" method="post" class="d-inline m-0">
+                            <button type="submit" class="btn btn-danger btn-sm rounded-pill px-3 py-2 fw-bold shadow">
+                                <i class="fa-solid fa-right-from-bracket me-1"></i> Đăng Xuất
+                            </button>
+                        </form>
+                    </div>
                 </div>
 
                 <!-- Update Profile Form -->

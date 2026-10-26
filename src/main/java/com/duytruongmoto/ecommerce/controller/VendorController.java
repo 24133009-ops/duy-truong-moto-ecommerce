@@ -36,17 +36,12 @@ public class VendorController {
     public String dashboard(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
         if (userDetails == null) return "redirect:/auth/login";
 
-        Optional<Store> storeOpt = storeService.findByOwnerId(userDetails.getUser().getId());
-        if (storeOpt.isEmpty()) {
-            return "redirect:/vendor/register";
-        }
-
-        Store store = storeOpt.get();
+        Store store = storeService.getOrCreateVendorStore(userDetails.getUser());
         List<Product> products = productService.getProductsByStore(store.getId());
         List<Order> orders = orderService.getOrdersByStore(store.getId(), null);
 
         BigDecimal totalRevenue = orders.stream()
-                .filter(o -> o.getStatus() == OrderStatus.DELIVERED)
+                .filter(o -> o.getStatus() == OrderStatus.DELIVERED && o.getAmountToStore() != null)
                 .map(Order::getAmountToStore)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
@@ -62,10 +57,7 @@ public class VendorController {
     @GetMapping("/products")
     public String listProducts(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
         if (userDetails == null) return "redirect:/auth/login";
-        Optional<Store> storeOpt = storeService.findByOwnerId(userDetails.getUser().getId());
-        if (storeOpt.isEmpty()) return "redirect:/vendor/register";
-
-        Store store = storeOpt.get();
+        Store store = storeService.getOrCreateVendorStore(userDetails.getUser());
         model.addAttribute("store", store);
         model.addAttribute("products", productService.getProductsByStore(store.getId()));
         return "vendor/products";
@@ -74,10 +66,8 @@ public class VendorController {
     @GetMapping("/products/new")
     public String newProductForm(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
         if (userDetails == null) return "redirect:/auth/login";
-        Optional<Store> storeOpt = storeService.findByOwnerId(userDetails.getUser().getId());
-        if (storeOpt.isEmpty()) return "redirect:/vendor/register";
-
-        model.addAttribute("store", storeOpt.get());
+        Store store = storeService.getOrCreateVendorStore(userDetails.getUser());
+        model.addAttribute("store", store);
         model.addAttribute("categories", categoryRepository.findByIsDeletedFalse());
         return "vendor/product-form";
     }
@@ -99,8 +89,7 @@ public class VendorController {
             RedirectAttributes redirectAttributes) {
 
         if (userDetails == null) return "redirect:/auth/login";
-        Optional<Store> storeOpt = storeService.findByOwnerId(userDetails.getUser().getId());
-        if (storeOpt.isEmpty()) return "redirect:/vendor/register";
+        Store store = storeService.getOrCreateVendorStore(userDetails.getUser());
 
         try {
             String imageUrl = "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=800&q=80";
@@ -108,7 +97,7 @@ public class VendorController {
                 imageUrl = cloudinaryService.uploadFile(imageFile, "products");
             }
 
-            productService.saveProduct(storeOpt.get().getId(), categoryId, name, slug, description,
+            productService.saveProduct(store.getId(), categoryId, name, slug, description,
                     price, promotionalPrice, quantity, imageUrl, engineCapacity, color, brand);
 
             redirectAttributes.addFlashAttribute("successMessage", "Đã thêm dòng xe / phụ tùng vào Showroom thành công!");
@@ -122,9 +111,10 @@ public class VendorController {
     @PostMapping("/products/{id}/toggle")
     public String toggleSelling(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails) {
         if (userDetails != null) {
-            storeService.findByOwnerId(userDetails.getUser().getId()).ifPresent(store -> {
+            Store store = storeService.getOrCreateVendorStore(userDetails.getUser());
+            if (store != null) {
                 productService.toggleSelling(id, store.getId());
-            });
+            }
         }
         return "redirect:/vendor/products";
     }
@@ -135,10 +125,7 @@ public class VendorController {
             @AuthenticationPrincipal CustomUserDetails userDetails,
             Model model) {
         if (userDetails == null) return "redirect:/auth/login";
-        Optional<Store> storeOpt = storeService.findByOwnerId(userDetails.getUser().getId());
-        if (storeOpt.isEmpty()) return "redirect:/vendor/register";
-
-        Store store = storeOpt.get();
+        Store store = storeService.getOrCreateVendorStore(userDetails.getUser());
         model.addAttribute("store", store);
         model.addAttribute("orders", orderService.getOrdersByStore(store.getId(), status));
         model.addAttribute("statuses", OrderStatus.values());

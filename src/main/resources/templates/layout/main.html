@@ -126,16 +126,17 @@
                             <li sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
                                 <a class="dropdown-item py-2 text-danger fw-bold" th:href="@{/admin/dashboard}"><i class="fa-solid fa-shield-halved me-2"></i> Admin Quản Trị Hệ Thống</a>
                             </li>
-                            
-                            <li class="dropdown-divider border-secondary"></li>
-                            <li>
-                                <form th:action="@{/auth/logout}" method="post">
-                                    <button type="submit" class="dropdown-item text-danger py-2">
-                                        <i class="fa-solid fa-right-from-bracket me-2"></i> Đăng Xuất
-                                    </button>
-                                </form>
-                            </li>
                         </ul>
+                    </div>
+
+                    <!-- Direct Visible Logout Button (Nằm gọn gàng, hiển thị thấy hết rõ ràng, không giấu trong hốc) -->
+                    <div sec:authorize="isAuthenticated()" class="flex-shrink-0">
+                        <form th:action="@{/auth/logout}" method="post" class="d-inline m-0">
+                            <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3 py-2 fw-bold d-flex align-items-center gap-1 shadow-sm text-nowrap" title="Đăng xuất khỏi tài khoản">
+                                <i class="fa-solid fa-right-from-bracket"></i>
+                                <span>Đăng Xuất</span>
+                            </button>
+                        </form>
                     </div>
 
                     <!-- Not logged in buttons -->
