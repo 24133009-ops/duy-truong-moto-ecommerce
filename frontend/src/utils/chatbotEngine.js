@@ -3,6 +3,8 @@
 
 export const SUGGESTION_CHIPS = [
   { id: 'caocao', label: '🏍️ Báo giá Xe Cào Cào', query: 'Tư vấn các dòng xe cào cào địa hình đang có sẵn' },
+  { id: 'doimau', label: '🎨 Đổi màu xe / Wrap Decal', query: 'Showroom có hỗ trợ đổi màu xe, wrap decal hay làm lại cavet màu mới không?' },
+  { id: 'thuongluong', label: '🏷️ Bớt lộc & Thương lượng giá', query: 'Chính sách bớt lộc, giảm giá và thương lượng giá xe như thế nào?' },
   { id: 'over1b', label: '⚡ Siêu môtô trên 1 tỷ', query: 'Showroom có những siêu môtô nào trên 1 tỷ?' },
   { id: 'range300_500', label: '💰 Xe tầm 300 - 500 triệu', query: 'Tầm giá 300 đến 500 triệu mua được xe gì?' },
   { id: 'quaydau', label: '🔄 Chính sách Bao quay đầu', query: 'Chính sách bao quay đầu và thu mua xe cũ thế nào?' },
@@ -96,6 +98,30 @@ Duy Trương Motor nói **KHÔNG** với xe Nopp, GTHL, xe gian hay xe mẹ bồ
 • **100% xe HQCN:** Bao sang tên bấm biển số toàn quốc trong vòng **24 - 48h**.
 • **Bao rút gốc hồ sơ:** Thủ tục công chứng mua bán nhanh gọn, hợp lệ theo quy định pháp luật.
 • **Bồi thường uy tín:** Cam kết hoàn tiền **200% giá trị hợp đồng** nếu xe có tranh chấp pháp lý hoặc không thể sang tên!`;
+  }
+
+  // 5.1. ĐỔI MÀU XE, SƠN XE, WRAP DECAL & LÀM CAVET MÀU MỚI
+  if (clean.includes('doi mau') || clean.includes('mau sac') || clean.includes('wrap') || clean.includes('decal') || clean.includes('son lai') || clean.includes('phong thuy') || clean.includes('mau khac') || clean.includes('cavet mau') || clean.includes('son xe')) {
+    return `🎨 **CHÍNH SÁCH ĐỔI MÀU XE, WRAP DECAL & LÀM CAVET MÀU MỚI TẠI DUY TRƯƠNG MOTOR**
+
+Dạ Quý khách hoàn toàn an tâm! Duy Trương Motor hỗ trợ đổi màu xe 100% theo đúng ý muốn của Quý khách:
+• **Kho màu hãng đa dạng:** Mỗi dòng xe đều hỗ trợ 3 - 5 tùy chọn màu sắc zin chính hãng (Quý khách bấm vào mục "Chi Tiết" để chọn màu ưng ý).
+• **Dịch vụ Wrap Decal TPU Cao Cấp:** Showroom có phòng dán Wrap chuyên dụng TeckWrap / 3M Mỹ chống xước, tự phục hồi vết xước liti, giữ gìn 100% nước sơn zin nguyên bản.
+• **Sơn đổi màu công nghệ lò hấp nhiệt:** Đạt tiêu chuẩn nước sơn siêu xe Ferrari, Porsche, Ducati, bảo hành lớp sơn 5 năm không bong tróc.
+• **Bao trọn gói thủ tục đổi màu cavet xe:** Showroom đại diện làm thủ tục đổi cavet màu sơn mới tại CSGT trên toàn quốc chỉ trong **24h - 48h**, hợp pháp 100% khi lưu thông!
+
+👉 Quý khách đang nhắm mẫu xe nào và muốn đổi sang tông màu gì để em tư vấn phối màu 3D chuẩn xác ạ?`;
+  }
+
+  // 5.2. THƯƠNG LƯỢNG GIÁ, BỚT LỘC & VOUCHER GIẢM GIÁ
+  if (clean.includes('thuong luong') || clean.includes('bot gia') || clean.includes('giam gia') || clean.includes('tra gia') || clean.includes('fix gia') || clean.includes('bot loc') || clean.includes('voucher') || clean.includes('khuyen mai') || clean.includes('gia tot nhat')) {
+    return `🏷️ **CHÍNH SÁCH THƯƠNG LƯỢNG GIÁ & BỚT LỘC SHOWROOM DUY TRƯƠNG MOTOR**
+
+Showroom cam kết: *"MUA CỦA NGƯỜI CHÁN - BÁN CHO NGƯỜI CẦN - LỘC LÁ VUI VẺ ĐÔI BÊN"*:
+• **Voucher Bớt Lộc Cấp Tốc:** Giảm ngay **15.000.000 đ** tiền mặt khi bấm cọc giữ xe!
+• **Tài trợ 100% Lệ Phí Trước Bạ & Biển Số:** Tiết kiệm lên đến **25.000.000 đ - 35.000.000 đ**.
+• **Tự đề xuất giá mong muốn:** Trên mỗi trang chi tiết xe, Quý khách chỉ cần bấm nút **[🤝 Bớt Lộc / Giảm Giá]**, nhập mức giá Quý khách muốn mua. Giám đốc Showroom tự động phê duyệt ngay nếu mức giảm trong biên độ 10%!
+• **Trao đổi trực tiếp:** Quý khách có thể để lại số điện thoại hoặc gọi Hotline VIP Giám Đốc: **0901.234.567** để chốt mức giá tốt nhất thị trường!`;
   }
 
   // 6. CÀO CÀO / OFF-ROAD / ĐỊA HÌNH

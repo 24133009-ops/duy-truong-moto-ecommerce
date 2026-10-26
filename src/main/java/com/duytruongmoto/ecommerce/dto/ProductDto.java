@@ -32,6 +32,8 @@ public class ProductDto {
     private String engine;
     private String power;
     private String color;
+    @Builder.Default
+    private List<String> colors = new ArrayList<>();
     private String odo;
     private String year;
     @Builder.Default
@@ -88,6 +90,7 @@ public class ProductDto {
                 .engine(p.getEngineCapacity() != null ? p.getEngineCapacity() : "Tiêu Chuẩn Showroom")
                 .power(extractPower(p.getDescription()))
                 .color(p.getColor() != null ? p.getColor() : "Nguyên Bản")
+                .colors(generateColorsForProduct(p))
                 .odo("Lướt Mới HQCN")
                 .year("2024")
                 .badges(badgeList)
@@ -121,4 +124,65 @@ public class ProductDto {
         }
         return "Hiệu năng thể thao";
     }
+
+    private static List<String> generateColorsForProduct(Product p) {
+        List<String> colors = new ArrayList<>();
+        String primaryColor = (p.getColor() != null && !p.getColor().isBlank()) ? p.getColor() : "Nguyên Bản Showroom";
+        colors.add(primaryColor);
+        
+        String brand = p.getBrand() != null ? p.getBrand().toUpperCase() : "";
+        String cat = (p.getCategory() != null && p.getCategory().getSlug() != null) ? p.getCategory().getSlug() : "";
+        
+        if (brand.contains("KTM")) {
+            if (!primaryColor.contains("Trắng Cam")) colors.add("Trắng Cam Ready To Race");
+            if (!primaryColor.contains("Đen Mờ")) colors.add("Đen Mờ Six Days Phantom");
+        } else if (brand.contains("DUCATI")) {
+            if (!primaryColor.contains("Đỏ")) colors.add("Đỏ Ducati Red Truyền Thống");
+            if (!primaryColor.contains("Dark Stealth")) colors.add("Đen Mờ Dark Stealth");
+            if (!primaryColor.contains("Corse")) colors.add("Tem Đấu Corse Livery");
+        } else if (brand.contains("VINFAST")) {
+            if (!primaryColor.contains("Jet Black")) colors.add("Đen Jet Black Huyền Bí");
+            if (!primaryColor.contains("Brahmaputra")) colors.add("Trắng Brahmaputra Tinh Khôi");
+            if (!primaryColor.contains("Desat Silver")) colors.add("Bạc Desat Silver Lịch Lãm");
+            if (!primaryColor.contains("Crimson")) colors.add("Đỏ Crimson Red Nổi Bật");
+        } else if (brand.contains("ISUZU")) {
+            if (!primaryColor.contains("Islay Grey")) colors.add("Xám Biển Islay Grey Khỏe Khoắn");
+            if (!primaryColor.contains("Dolomite")) colors.add("Trắng Ngọc Trai Dolomite White");
+            if (!primaryColor.contains("Onyx")) colors.add("Đen Huyền Bí Onyx Black");
+        } else if (brand.contains("BMW")) {
+            if (!primaryColor.contains("Motorsport")) colors.add("Trắng Xanh Đỏ M Motorsport");
+            if (!primaryColor.contains("Black Storm")) colors.add("Đen Black Storm Metallic");
+            if (!primaryColor.contains("San Marino")) colors.add("Xanh San Marino Blue");
+        } else if (brand.contains("KAWASAKI")) {
+            if (!primaryColor.contains("Lime Green")) colors.add("Xanh Cốm Lime Green Huyền Thoại");
+            if (!primaryColor.contains("Spark Black")) colors.add("Đen Xám Metallic Spark Black");
+        } else if (brand.contains("PORSCHE")) {
+            if (!primaryColor.contains("Shark Blue")) colors.add("Xanh Shark Blue Thể Thao");
+            if (!primaryColor.contains("Arctic Grey")) colors.add("Xám Xi Măng Arctic Grey");
+            if (!primaryColor.contains("Racing Yellow")) colors.add("Vàng Racing Yellow");
+        } else if (brand.contains("LAMBORGHINI")) {
+            if (!primaryColor.contains("Arancio Borealis")) colors.add("Cam Arancio Borealis 4 Lớp");
+            if (!primaryColor.contains("Giallo Inti")) colors.add("Vàng Giallo Inti");
+            if (!primaryColor.contains("Nero Noctis")) colors.add("Đen Nero Noctis Nhám");
+        } else if (brand.contains("FERRARI")) {
+            if (!primaryColor.contains("Giallo Modena")) colors.add("Vàng Giallo Modena");
+            if (!primaryColor.contains("Blu Tour")) colors.add("Xanh Biển Blu Tour de France");
+            if (!primaryColor.contains("Nero Daytona")) colors.add("Đen Bóng Nero Daytona");
+        } else if ("oto".equalsIgnoreCase(cat)) {
+            colors.add("Đen Huyền Bí Ánh Kim");
+            colors.add("Trắng Ngọc Trai Cao Cấp");
+            colors.add("Xám Xi Măng Thể Thao");
+        } else {
+            colors.add("Đen Mờ Phantom");
+            colors.add("Trắng Sứ Thể Thao");
+            colors.add("Xám Xi Măng Racing");
+        }
+        
+        List<String> distinct = new ArrayList<>();
+        for (String c : colors) {
+            if (!distinct.contains(c)) distinct.add(c);
+        }
+        return distinct;
+    }
+
 }

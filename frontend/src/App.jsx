@@ -98,6 +98,11 @@ export default function App() {
   const [activeProductDetail, setActiveProductDetail] = useState(null);
   const [isAddBikeModalOpen, setIsAddBikeModalOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [selectedDetailColor, setSelectedDetailColor] = useState('');
+  const [isNegotiateModalOpen, setIsNegotiateModalOpen] = useState(false);
+  const [negotiateProduct, setNegotiateProduct] = useState(null);
+  const [customOfferInput, setCustomOfferInput] = useState('');
+  const [negotiationResult, setNegotiationResult] = useState(null);
 
   // New Bike Form for Vendor
   const [newBike, setNewBike] = useState({
@@ -145,6 +150,49 @@ export default function App() {
 
   // Format VND Currency
   const formatMoney = (val) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(val);
+
+  const getCategoryBadgeTitle = (cat) => {
+    switch (cat) {
+      case 'oto': return 'Siêu Xe & Ô Tô Sang';
+      case 'dirtbike': return 'Xe Cào Cào Địa Hình';
+      case 'xenho': return 'Xe Nhỏ Sưu Tầm';
+      case 'superbike': return 'Superbike Thể Thao';
+      case 'hyper-naked': return 'Hyper Naked Uy Lực';
+      case 'cruiser': return 'Cruiser & Chopper Mỹ';
+      case 'adventure': return 'Adventure Phượt Bụi';
+      case 'scooter': return 'Tay Ga Độc Lạ';
+      case 'gear-parts': return 'Pô Độ & Phụ Tùng Cao Cấp';
+      default: return 'Mô Tô Phân Khối Lớn';
+    }
+  };
+
+  const renderCategoryTag = (cat) => {
+    if (cat === 'dirtbike') return <span className="badge-tag-orange">XE CÀO CÀO</span>;
+    if (cat === 'oto') return <span style={{ background: '#2563eb', color: '#fff', padding: '2px 8px', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 800 }}>Ô TÔ SANG</span>;
+    if (cat === 'xenho') return <span style={{ background: '#7c3aed', color: '#fff', padding: '2px 8px', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 800 }}>XE NHỎ</span>;
+    if (cat === 'gear-parts') return <span style={{ background: '#059669', color: '#fff', padding: '2px 8px', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 800 }}>PHỤ TÙNG</span>;
+    return null;
+  };
+
+  const getColorDot = (colorName) => {
+    const c = (colorName || '').toLowerCase();
+    if (c.includes('cam') || c.includes('orange')) return '#ff6600';
+    if (c.includes('đỏ') || c.includes('red')) return '#e11d48';
+    if (c.includes('xanh rêu') || c.includes('olive') || c.includes('green') || c.includes('cốm') || c.includes('lục')) return '#22c55e';
+    if (c.includes('xanh') || c.includes('blue') || c.includes('ocean') || c.includes('petrol')) return '#0ea5e9';
+    if (c.includes('vàng') || c.includes('yellow') || c.includes('gold')) return '#eab308';
+    if (c.includes('trắng') || c.includes('white') || c.includes('kem') || c.includes('be')) return '#f8fafc';
+    if (c.includes('đen') || c.includes('black') || c.includes('stealth') || c.includes('diablo')) return '#1e293b';
+    if (c.includes('bạc') || c.includes('silver') || c.includes('chrome')) return '#94a3b8';
+    if (c.includes('xám') || c.includes('grey') || c.includes('gray')) return '#64748b';
+    return 'var(--gold-primary)';
+  };
+
+  const openProductDetail = (bike) => {
+    const defaultColor = (bike.colors && bike.colors.length > 0) ? bike.colors[0] : (bike.color || 'Nguyên Bản Showroom');
+    setSelectedDetailColor(defaultColor);
+    setActiveProductDetail(bike);
+  };
 
   // --- DERIVED / FILTERED PRODUCTS ---
   // 1. Guest Requirement: Top sản phẩm bán trên 10 sản phẩm (sắp xếp giảm dần theo lượt bán)
@@ -198,24 +246,31 @@ export default function App() {
 
   // Cart Total Calculation
   const cartSubtotal = useMemo(() => {
-    return cart.reduce((sum, item) => sum + (item.product.promotionalPrice || item.product.price) * item.count, 0);
+    return cart.reduce((sum, item) => {
+      const pPrice = item.negotiatedPrice || item.product.promotionalPrice || item.product.price;
+      return sum + pPrice * item.count;
+    }, 0);
   }, [cart]);
 
   // --- ACTIONS ---
-  const handleAddToCart = (product, count = 1) => {
+  const handleAddToCart = (product, count = 1, chosenColor = null, customPrice = null) => {
+    const colorToUse = chosenColor || selectedDetailColor || (product.colors && product.colors[0]) || product.color || 'Nguyên Bản Showroom';
     setCart(prev => {
-      const existing = prev.find(item => item.product.id === product.id);
-      if (existing) {
-        return prev.map(item => item.product.id === product.id ? { ...item, count: item.count + count } : item);
+      const existingIndex = prev.findIndex(item => item.product.id === product.id && item.selectedColor === colorToUse && (!customPrice || item.negotiatedPrice === customPrice));
+      if (existingIndex > -1) {
+        const copy = [...prev];
+        copy[existingIndex].count += count;
+        return copy;
       }
-      return [...prev, { product, count }];
+      return [...prev, { product, count, selectedColor: colorToUse, negotiatedPrice: customPrice }];
     });
     setIsCartOpen(true);
   };
 
-  const handleUpdateCartCount = (productId, delta) => {
+  const handleUpdateCartCount = (productId, delta, color = null) => {
     setCart(prev => prev.map(item => {
-      if (item.product.id === productId) {
+      const isMatch = (item.product.id === productId) && (!color || item.selectedColor === color);
+      if (isMatch) {
         const newCount = item.count + delta;
         return newCount > 0 ? { ...item, count: newCount } : null;
       }
@@ -223,8 +278,8 @@ export default function App() {
     }).filter(Boolean));
   };
 
-  const handleRemoveFromCart = (productId) => {
-    setCart(prev => prev.filter(item => item.product.id !== productId));
+  const handleRemoveFromCart = (productId, color = null) => {
+    setCart(prev => prev.filter(item => !(item.product.id === productId && (!color || item.selectedColor === color))));
   };
 
   // Submit Review (enforcing >= 50 characters)
@@ -284,7 +339,7 @@ export default function App() {
       customerName: checkoutData.recipientName,
       phone: checkoutData.phone,
       address: checkoutData.address,
-      productName: cart[0].product.name,
+      productName: cart[0].product.name + (cart[0].selectedColor ? ` (Màu: ${cart[0].selectedColor})` : ''),
       productImage: cart[0].product.image,
       storeName: cart[0].product.storeName,
       deliveryName: checkoutData.deliveryName,
@@ -826,12 +881,12 @@ export default function App() {
                       <div className="badge-hqcn-box">
                         <span className="badge-hqcn">HQCN</span>
                         {bike.odo && <span className="badge-odo">{bike.odo}</span>}
-                        {bike.category === 'dirtbike' && <span className="badge-tag-orange">XE CÀO CÀO</span>}
+                        {renderCategoryTag(bike.category)}
                       </div>
                     </div>
                     <div className="bike-content">
                       <div style={{ fontSize: '0.75rem', color: 'var(--gold-primary)', fontWeight: 800, textTransform: 'uppercase' }}>
-                        {bike.brand} • {bike.category === 'dirtbike' ? 'Xe Cào Cào Địa Hình' : 'Phân Khối Lớn'}
+                        {bike.brand} • {getCategoryBadgeTitle(bike.category)}
                       </div>
                       <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: '6px 0 10px', color: '#fff', minHeight: '44px', fontFamily: 'var(--font-brand)' }}>
                         {bike.name}
@@ -844,7 +899,7 @@ export default function App() {
                           <div className="price-racing">{formatMoney(bike.promotionalPrice || bike.price)}</div>
                           {bike.priceDisplay && <span className="price-text-tag">({bike.priceDisplay})</span>}
                         </div>
-                        <button className="btn-gold" style={{ padding: '8px 16px', fontSize: '0.85rem' }} onClick={() => setActiveProductDetail(bike)}>
+                        <button className="btn-gold" style={{ padding: '8px 16px', fontSize: '0.85rem' }} onClick={() => openProductDetail(bike)}>
                           Chi Tiết
                         </button>
                       </div>
@@ -969,12 +1024,12 @@ export default function App() {
                           <div className="badge-hqcn-box">
                             <span className="badge-hqcn">HQCN</span>
                             {bike.odo && <span className="badge-odo">{bike.odo}</span>}
-                            {bike.category === 'dirtbike' && <span className="badge-tag-orange">CÀO CÀO</span>}
+                            {renderCategoryTag(bike.category)}
                           </div>
                         </div>
                         <div className="bike-content">
-                          <div style={{ fontSize: '0.75rem', color: 'var(--gold-primary)', fontWeight: 800 }}>
-                            {bike.brand} • {bike.year || '2024'}
+                          <div style={{ fontSize: '0.75rem', color: 'var(--gold-primary)', fontWeight: 800, textTransform: 'uppercase' }}>
+                            {bike.brand} • {getCategoryBadgeTitle(bike.category)} • {bike.year || '2024'}
                           </div>
                           <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: '6px 0 10px', color: '#fff', minHeight: '44px', fontFamily: 'var(--font-brand)' }}>
                             {bike.name}
@@ -988,7 +1043,7 @@ export default function App() {
                               {bike.priceDisplay && <span className="price-text-tag">({bike.priceDisplay})</span>}
                             </div>
                             <div style={{ display: 'flex', gap: '8px' }}>
-                              <button className="btn-gold" style={{ padding: '8px 14px', fontSize: '0.85rem' }} onClick={() => setActiveProductDetail(bike)}>
+                              <button className="btn-gold" style={{ padding: '8px 14px', fontSize: '0.85rem' }} onClick={() => openProductDetail(bike)}>
                                 Xem Xe
                               </button>
                               <button className="btn-outline-gold" style={{ padding: '8px 12px' }} title="Thêm vào giỏ" onClick={() => handleAddToCart(bike)}>
@@ -1355,21 +1410,42 @@ export default function App() {
               </div>
             ) : (
               <div style={{ flexGrow: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                {cart.map(item => (
-                  <div key={item.product.id} style={{ display: 'flex', gap: '14px', alignItems: 'center', background: 'rgba(255,255,255,0.03)', padding: '12px', borderRadius: '12px' }}>
+                {cart.map((item, idx) => (
+                  <div key={`${item.product.id}-${item.selectedColor || idx}`} style={{ display: 'flex', gap: '14px', alignItems: 'center', background: 'rgba(255,255,255,0.03)', padding: '12px', borderRadius: '12px' }}>
                     <img src={item.product.image} alt={item.product.name} style={{ width: '70px', height: '50px', objectFit: 'cover', borderRadius: '8px' }} />
                     <div style={{ flexGrow: 1 }}>
                       <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#fff' }}>{item.product.name}</div>
-                      <div style={{ color: 'var(--gold-primary)', fontWeight: 800, fontSize: '0.85rem' }}>
-                        {formatMoney(item.product.promotionalPrice || item.product.price)}
+                      <div>
+                        {item.negotiatedPrice ? (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <span style={{ textDecoration: 'line-through', color: 'var(--text-muted)', fontSize: '0.78rem' }}>
+                              {formatMoney(item.product.promotionalPrice || item.product.price)}
+                            </span>
+                            <span style={{ color: '#22c55e', fontWeight: 800, fontSize: '0.9rem' }}>
+                              {formatMoney(item.negotiatedPrice)}
+                            </span>
+                            <span style={{ background: 'rgba(34,197,94,0.15)', color: '#22c55e', fontSize: '0.68rem', padding: '1px 5px', borderRadius: '4px', fontWeight: 700 }}>
+                              Đã bớt lộc
+                            </span>
+                          </div>
+                        ) : (
+                          <div style={{ color: 'var(--gold-primary)', fontWeight: 800, fontSize: '0.85rem' }}>
+                            {formatMoney(item.product.promotionalPrice || item.product.price)}
+                          </div>
+                        )}
                       </div>
+                      {item.selectedColor && (
+                        <div style={{ fontSize: '0.75rem', color: '#ffb080', marginTop: '2px' }}>
+                          🎨 Màu: <strong>{item.selectedColor}</strong>
+                        </div>
+                      )}
                       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '6px' }}>
-                        <button className="btn-subtle" style={{ padding: '2px 8px' }} onClick={() => handleUpdateCartCount(item.product.id, -1)}>-</button>
+                        <button className="btn-subtle" style={{ padding: '2px 8px' }} onClick={() => handleUpdateCartCount(item.product.id, -1, item.selectedColor)}>-</button>
                         <span style={{ fontSize: '0.85rem', fontWeight: 800 }}>{item.count}</span>
-                        <button className="btn-subtle" style={{ padding: '2px 8px' }} onClick={() => handleUpdateCartCount(item.product.id, 1)}>+</button>
+                        <button className="btn-subtle" style={{ padding: '2px 8px' }} onClick={() => handleUpdateCartCount(item.product.id, 1, item.selectedColor)}>+</button>
                       </div>
                     </div>
-                    <button onClick={() => handleRemoveFromCart(item.product.id)} style={{ background: 'transparent', border: 'none', color: 'var(--red-racing)', cursor: 'pointer' }}>
+                    <button onClick={() => handleRemoveFromCart(item.product.id, item.selectedColor)} style={{ background: 'transparent', border: 'none', color: 'var(--red-racing)', cursor: 'pointer' }}>
                       <i className="fa-solid fa-trash"></i>
                     </button>
                   </div>
@@ -1441,6 +1517,23 @@ export default function App() {
                   value={checkoutData.address} 
                   onChange={(e) => setCheckoutData({ ...checkoutData, address: e.target.value })} 
                 />
+              </div>
+
+              {/* Cart items list preview in checkout */}
+              <div style={{ background: '#121520', padding: '12px 14px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.06)' }}>
+                <div style={{ fontSize: '0.8rem', color: 'var(--text-sub)', marginBottom: '8px', fontWeight: 700 }}>
+                  <i className="fa-solid fa-list-check text-gold me-1"></i> Danh sách xe &amp; tùy chọn đặt cọc ({cart.length} mẫu):
+                </div>
+                {cart.map((c, cIdx) => (
+                  <div key={cIdx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.82rem', marginBottom: '6px' }}>
+                    <span style={{ color: '#fff' }}>
+                      <strong>{c.product.name}</strong> {c.selectedColor && <span style={{ color: '#ffb080' }}>[Màu: {c.selectedColor}]</span>} x{c.count}
+                    </span>
+                    <span style={{ color: c.negotiatedPrice ? '#22c55e' : 'var(--gold-primary)', fontWeight: 700 }}>
+                      {formatMoney((c.negotiatedPrice || c.product.promotionalPrice || c.product.price) * c.count)}
+                    </span>
+                  </div>
+                ))}
               </div>
 
               {/* Delivery method */}
@@ -1558,7 +1651,7 @@ export default function App() {
           <div className="modal-content" style={{ maxWidth: '850px' }} onClick={(e) => e.stopPropagation()}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <span style={{ color: 'var(--gold-primary)', fontWeight: 800 }}>{activeProductDetail.brand} • {activeProductDetail.storeName}</span>
+                <span style={{ color: 'var(--gold-primary)', fontWeight: 800 }}>{activeProductDetail.brand} • {getCategoryBadgeTitle(activeProductDetail.category)} • {activeProductDetail.storeName}</span>
                 <span className="badge-hqcn">HQCN SANG TÊN TOÀN QUỐC</span>
               </div>
               <button onClick={() => setActiveProductDetail(null)} className="modal-close-btn">✕</button>
@@ -1589,26 +1682,124 @@ export default function App() {
                   )}
                 </div>
 
-                <div style={{ background: '#121520', padding: '14px', borderRadius: '12px', fontSize: '0.85rem', color: 'var(--text-sub)', marginBottom: '20px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <div style={{ background: '#121520', padding: '14px', borderRadius: '12px', fontSize: '0.85rem', color: 'var(--text-sub)', marginBottom: '18px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   <div><strong style={{ color: '#fff' }}>Động cơ:</strong> {activeProductDetail.engine}</div>
                   <div><strong style={{ color: '#fff' }}>Công suất:</strong> {activeProductDetail.power}</div>
-                  <div><strong style={{ color: '#fff' }}>Màu sắc:</strong> {activeProductDetail.color}</div>
+                  <div><strong style={{ color: '#fff' }}>Phân khúc:</strong> {getCategoryBadgeTitle(activeProductDetail.category)}</div>
                   <div><strong style={{ color: '#fff' }}>Tình trạng:</strong> {activeProductDetail.odo || 'Xe mới 100%'} (Bao rút gốc, sang tên trong 24h)</div>
                   <div><strong style={{ color: '#fff' }}>Tồn kho:</strong> {activeProductDetail.quantity} chiếc sẵn sàng giao</div>
+
+                  {/* INTERACTIVE COLOR SELECTOR */}
+                  <div style={{ margin: '8px 0', borderTop: '1px solid rgba(255,255,255,0.08)', borderBottom: '1px solid rgba(255,255,255,0.08)', padding: '10px 0' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                      <span style={{ color: '#fff', fontWeight: 700, fontSize: '0.85rem' }}>
+                        <i className="fa-solid fa-palette text-gold me-1"></i> Bảng Màu Xe Sẵn Có:
+                      </span>
+                      <span style={{ color: 'var(--gold-primary)', fontWeight: 700, fontSize: '0.82rem' }}>
+                        {selectedDetailColor || activeProductDetail.color}
+                      </span>
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                      {(activeProductDetail.colors && activeProductDetail.colors.length > 0 ? activeProductDetail.colors : [activeProductDetail.color || 'Nguyên Bản Showroom']).map((col, cIdx) => {
+                        const isChosen = (selectedDetailColor || activeProductDetail.color) === col;
+                        return (
+                          <button
+                            key={cIdx}
+                            type="button"
+                            onClick={() => setSelectedDetailColor(col)}
+                            style={{
+                              background: isChosen ? 'rgba(212,175,55,0.2)' : 'rgba(255,255,255,0.04)',
+                              border: isChosen ? '2px solid var(--gold-primary)' : '1px solid rgba(255,255,255,0.15)',
+                              color: isChosen ? '#fff' : 'var(--text-sub)',
+                              borderRadius: '20px',
+                              padding: '5px 12px',
+                              fontSize: '0.78rem',
+                              fontWeight: isChosen ? 700 : 500,
+                              cursor: 'pointer',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '6px',
+                              transition: 'all 0.2s'
+                            }}
+                          >
+                            <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: getColorDot(col), display: 'inline-block', border: '1px solid rgba(255,255,255,0.3)' }}></span>
+                            {col}
+                            {isChosen && <i className="fa-solid fa-check text-gold ms-1" style={{ fontSize: '0.7rem' }}></i>}
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* Wrap / Feng-shui Repaint Notice */}
+                    <div style={{ marginTop: '10px', padding: '8px 12px', background: 'rgba(255, 102, 0, 0.08)', border: '1px dashed var(--orange-ktm)', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontSize: '0.78rem', color: '#ffb080' }}>
+                        🎨 <em>Khách muốn đổi màu cavet / Wrap Decal TPU / Sơn phong thủy?</em>
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsChatOpen(true);
+                          setActiveProductDetail(null);
+                        }}
+                        style={{ background: 'transparent', border: 'none', color: 'var(--gold-primary)', fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', textDecoration: 'underline' }}
+                      >
+                        Tư vấn đổi màu 24h &rarr;
+                      </button>
+                    </div>
+                  </div>
                 </div>
 
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '20px', lineHeight: 1.5 }}>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '16px', lineHeight: 1.5 }}>
                   {activeProductDetail.description}
                 </p>
 
-                <div style={{ display: 'flex', gap: '12px' }}>
-                  <button className="btn-gold" style={{ flexGrow: 1, padding: '14px' }} onClick={() => { handleAddToCart(activeProductDetail); setActiveProductDetail(null); }}>
+                {/* ACTION BUTTONS WITH PRICE NEGOTIATION */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '10px', marginBottom: '10px' }}>
+                  <button 
+                    className="btn-gold" 
+                    style={{ padding: '12px', fontSize: '0.9rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }} 
+                    onClick={() => { 
+                      handleAddToCart(activeProductDetail, 1, selectedDetailColor); 
+                      setActiveProductDetail(null); 
+                    }}
+                  >
                     <i className="fa-solid fa-cart-plus"></i> Đặt Mua &amp; Cọc Xe
                   </button>
-                  <button className="btn-outline-gold" style={{ padding: '14px 20px' }} onClick={() => { setIsChatOpen(true); setActiveProductDetail(null); }}>
-                    <i className="fa-solid fa-comments"></i> Hẹn Lái Thử
+                  <button 
+                    type="button"
+                    className="btn-racing" 
+                    style={{ 
+                      padding: '12px', 
+                      background: 'linear-gradient(135deg, #e11d48, #be123c)', 
+                      color: '#fff', 
+                      border: 'none', 
+                      borderRadius: '8px', 
+                      fontWeight: 800, 
+                      fontSize: '0.85rem', 
+                      cursor: 'pointer', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center', 
+                      gap: '6px', 
+                      boxShadow: '0 4px 15px rgba(225,29,72,0.35)' 
+                    }}
+                    onClick={() => {
+                      setNegotiateProduct(activeProductDetail);
+                      setCustomOfferInput('');
+                      setNegotiationResult(null);
+                      setIsNegotiateModalOpen(true);
+                    }}
+                  >
+                    <i className="fa-solid fa-handshake"></i> Bớt Lộc / Giảm Giá
                   </button>
                 </div>
+                <button 
+                  className="btn-outline-gold" 
+                  style={{ width: '100%', padding: '10px', fontSize: '0.85rem' }} 
+                  onClick={() => { setIsChatOpen(true); setActiveProductDetail(null); }}
+                >
+                  <i className="fa-solid fa-comments me-2"></i> Hẹn Lái Thử &amp; Tư Vấn Đổi Màu Xe (24/7)
+                </button>
               </div>
             </div>
 
@@ -2090,6 +2281,218 @@ export default function App() {
                   Đóng
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+    
+      {/* 9.1 MODAL THƯƠNG LƯỢNG GIÁ & BỚT LỘC SHOWROOM */}
+      {isNegotiateModalOpen && negotiateProduct && (
+        <div className="modal-overlay" onClick={() => setIsNegotiateModalOpen(false)}>
+          <div 
+            className="modal-content" 
+            style={{ maxWidth: '620px', background: '#0c0f17', border: '1px solid var(--gold-primary)', boxShadow: '0 10px 40px rgba(0,0,0,0.8)' }} 
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid rgba(212,175,55,0.3)', paddingBottom: '14px' }}>
+              <div>
+                <div style={{ color: 'var(--red-racing)', fontSize: '0.8rem', fontWeight: 800, letterSpacing: '1px' }}>
+                  <i className="fa-solid fa-handshake me-1"></i> CHÍNH SÁCH BÁN XE ĐÔI BÊN CÙNG CÓ LỢI
+                </div>
+                <h3 className="brand-title" style={{ fontSize: '1.4rem', color: '#fff', margin: '4px 0 0' }}>
+                  THƯƠNG LƯỢNG GIÁ &amp; BỚT LỘC SHOWROOM
+                </h3>
+              </div>
+              <button onClick={() => setIsNegotiateModalOpen(false)} className="modal-close-btn">✕</button>
+            </div>
+
+            {/* Target Product Summary */}
+            <div style={{ display: 'flex', gap: '14px', alignItems: 'center', background: 'rgba(255,255,255,0.03)', padding: '12px 16px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.08)', marginBottom: '20px' }}>
+              <img src={negotiateProduct.image} alt={negotiateProduct.name} style={{ width: '85px', height: '60px', objectFit: 'cover', borderRadius: '8px', border: '1px solid var(--gold-primary)' }} />
+              <div style={{ flexGrow: 1 }}>
+                <div style={{ fontSize: '0.95rem', fontWeight: 800, color: '#fff' }}>{negotiateProduct.name}</div>
+                <div style={{ fontSize: '0.8rem', color: 'var(--text-sub)' }}>
+                  Màu chọn: <strong style={{ color: '#ffb080' }}>{selectedDetailColor || negotiateProduct.color}</strong> • {negotiateProduct.storeName}
+                </div>
+                <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                  Giá niêm yết: <span style={{ textDecoration: 'line-through' }}>{formatMoney(negotiateProduct.price)}</span> &rarr; Giá bán: <strong style={{ color: 'var(--gold-primary)' }}>{formatMoney(negotiateProduct.promotionalPrice || negotiateProduct.price)}</strong>
+                </div>
+              </div>
+            </div>
+
+            {/* Option 1: Instant Showroom Vouchers */}
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ fontSize: '0.88rem', color: '#fff', fontWeight: 700, display: 'block', marginBottom: '10px' }}>
+                🎁 1. Chọn Ngay Voucher Bớt Lộc Cấp Tốc (Duyệt Tức Thì):
+              </label>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '10px' }}>
+                {[
+                  { id: 'v15', title: 'Voucher Khai Lộc Biker', discount: 15000000, desc: 'Trừ thẳng 15.000.000 đ tiền mặt khi chốt cọc xe hôm nay' },
+                  { id: 'v25', title: 'Tài Trợ 100% Thuế Trước Bạ', discount: 25000000, desc: 'Giảm ngay 25.000.000 đ hỗ trợ chi phí ra biển số bấm biển' },
+                  { id: 'v35', title: 'Gói Độ Pô & Phụ Tùng Cao Cấp', discount: 35000000, desc: 'Tặng gói phụ tùng 35.000.000 đ hoặc quy đổi trừ tiền mặt' }
+                ].map(v => {
+                  const basePrice = negotiateProduct.promotionalPrice || negotiateProduct.price;
+                  const finalP = Math.max(0, basePrice - v.discount);
+                  const isApplied = negotiationResult && negotiationResult.approvedPrice === finalP;
+                  return (
+                    <div 
+                      key={v.id} 
+                      onClick={() => {
+                        const pct = Math.round((v.discount / basePrice) * 100);
+                        setNegotiationResult({
+                          status: 'APPROVED',
+                          approvedPrice: finalP,
+                          discountAmount: v.discount,
+                          discountPercent: pct,
+                          message: `🎉 Áp dụng thành công "${v.title}"! Quý khách được bớt lộc ${formatMoney(v.discount)} (-${pct}%).`
+                        });
+                        confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 } });
+                      }}
+                      style={{
+                        padding: '12px 14px',
+                        borderRadius: '10px',
+                        border: isApplied ? '2px solid #22c55e' : '1px solid rgba(255,255,255,0.12)',
+                        background: isApplied ? 'rgba(34,197,94,0.12)' : 'rgba(255,255,255,0.03)',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        transition: 'all 0.2s'
+                      }}
+                    >
+                      <div>
+                        <div style={{ fontWeight: 800, color: isApplied ? '#22c55e' : '#fff', fontSize: '0.88rem' }}>
+                          <i className="fa-solid fa-ticket text-gold me-2"></i>{v.title} (-{formatMoney(v.discount)})
+                        </div>
+                        <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>{v.desc}</div>
+                      </div>
+                      <div style={{ textAlign: 'right' }}>
+                        <span style={{ fontSize: '0.82rem', color: '#22c55e', fontWeight: 800 }}>
+                          {isApplied ? '✓ Đang chọn' : 'Áp Dụng'}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Option 2: Custom Offer Input */}
+            <div style={{ marginBottom: '22px', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '16px' }}>
+              <label style={{ fontSize: '0.88rem', color: '#fff', fontWeight: 700, display: 'block', marginBottom: '8px' }}>
+                💬 2. Hoặc Đề Xuất Mức Giá Mong Muốn Của Quý Khách (VND):
+              </label>
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <input 
+                  type="number"
+                  className="luxury-input"
+                  placeholder={`Ví dụ: ${Math.round((negotiateProduct.promotionalPrice || negotiateProduct.price) * 0.95)}`}
+                  value={customOfferInput}
+                  onChange={(e) => setCustomOfferInput(e.target.value)}
+                  style={{ flexGrow: 1 }}
+                />
+                <button
+                  type="button"
+                  className="btn-gold"
+                  style={{ padding: '0 20px', whiteSpace: 'nowrap' }}
+                  onClick={() => {
+                    const offer = parseFloat(customOfferInput);
+                    const basePrice = negotiateProduct.promotionalPrice || negotiateProduct.price;
+                    if (!offer || offer <= 0) {
+                      alert('Vui lòng nhập số tiền hợp lệ!');
+                      return;
+                    }
+                    if (offer >= basePrice) {
+                      alert('Mức giá đề xuất phải thấp hơn giá hiện tại để áp dụng thương lượng!');
+                      return;
+                    }
+                    const discount = basePrice - offer;
+                    const discountPct = (discount / basePrice) * 100;
+                    if (discountPct <= 10.5) {
+                      setNegotiationResult({
+                        status: 'APPROVED',
+                        approvedPrice: offer,
+                        discountAmount: discount,
+                        discountPercent: Math.round(discountPct),
+                        message: `🎉 GIÁM ĐỐC SHOWROOM ĐÃ DUYỆT! Bớt lộc ngay ${formatMoney(discount)} (-${Math.round(discountPct)}%). Mức giá mới ${formatMoney(offer)} đã sẵn sàng!`
+                      });
+                      confetti({ particleCount: 70, spread: 70, origin: { y: 0.6 } });
+                    } else {
+                      setNegotiationResult({
+                        status: 'PENDING_HOTLINE',
+                        approvedPrice: null,
+                        discountAmount: discount,
+                        discountPercent: Math.round(discountPct),
+                        message: `⚡ Mức giảm đề xuất (${formatMoney(discount)} ~ ${Math.round(discountPct)}%) vượt quá biên độ phê duyệt tự động (10%). Quý khách vui lòng gọi Hotline Giám Đốc 0901.234.567 hoặc nhấn Live Chat để trao đổi chốt giá trực tiếp!`
+                      });
+                    }
+                  }}
+                >
+                  Gửi Đề Xuất
+                </button>
+              </div>
+            </div>
+
+            {/* Negotiation Result Box */}
+            {negotiationResult && (
+              <div style={{ 
+                padding: '14px 18px', 
+                borderRadius: '10px', 
+                marginBottom: '20px',
+                background: negotiationResult.status === 'APPROVED' ? 'rgba(34, 197, 94, 0.12)' : 'rgba(239, 68, 68, 0.12)',
+                border: negotiationResult.status === 'APPROVED' ? '1px solid #22c55e' : '1px solid #ef4444'
+              }}>
+                <div style={{ color: negotiationResult.status === 'APPROVED' ? '#22c55e' : '#f87171', fontWeight: 700, fontSize: '0.88rem', lineHeight: 1.5 }}>
+                  {negotiationResult.message}
+                </div>
+                {negotiationResult.status === 'APPROVED' && (
+                  <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.82rem', color: '#fff' }}>
+                      Giá chốt sau thương lượng: <strong style={{ color: '#22c55e', fontSize: '1.2rem' }}>{formatMoney(negotiationResult.approvedPrice)}</strong>
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            <div style={{ display: 'flex', gap: '12px' }}>
+              {negotiationResult && negotiationResult.status === 'APPROVED' ? (
+                <button
+                  type="button"
+                  className="btn-gold"
+                  style={{ flex: 1, padding: '14px', fontSize: '0.95rem' }}
+                  onClick={() => {
+                    handleAddToCart(negotiateProduct, 1, selectedDetailColor, negotiationResult.approvedPrice);
+                    setIsNegotiateModalOpen(false);
+                    setActiveProductDetail(null);
+                  }}
+                >
+                  <i className="fa-solid fa-cart-shopping me-2"></i> Chốt Cọc Giá Này ({formatMoney(negotiationResult.approvedPrice)})
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="btn-outline-gold"
+                  style={{ flex: 1, padding: '12px', fontSize: '0.88rem' }}
+                  onClick={() => {
+                    setIsNegotiateModalOpen(false);
+                    setActiveProductDetail(null);
+                    setIsChatOpen(true);
+                  }}
+                >
+                  <i className="fa-solid fa-comments me-2"></i> Chat Trực Tiếp Với Showroom (Hotline: 0901.234.567)
+                </button>
+              )}
+              <button
+                type="button"
+                className="btn-subtle"
+                style={{ padding: '12px 20px' }}
+                onClick={() => setIsNegotiateModalOpen(false)}
+              >
+                Đóng
+              </button>
             </div>
           </div>
         </div>
