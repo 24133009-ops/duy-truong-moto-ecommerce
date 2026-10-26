@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  # 1. Database SQL Server 2022
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: duytruong-sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=Password123@
+      - MSSQL_PID=Express
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - duytruong-network
+
+  # 2. Backend Spring Boot 3
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: duytruong-backend
+    depends_on:
+      - sqlserver
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:sqlserver://sqlserver:1433;databaseName=DuyTruongMotoDB;encrypt=false;trustServerCertificate=true
+      - SPRING_DATASOURCE_USERNAME=sa
+      - SPRING_DATASOURCE_PASSWORD=Password123@
+    ports:
+      - "8080:8080"
+    networks:
+      - duytruong-network
+
+  # 3. Frontend React 18 SPA + Nginx
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: duytruong-frontend
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+    networks:
+      - duytruong-network
+
+volumes:
+  sqlserver_data:
+
+networks:
+  duytruong-network:
+    driver: bridge

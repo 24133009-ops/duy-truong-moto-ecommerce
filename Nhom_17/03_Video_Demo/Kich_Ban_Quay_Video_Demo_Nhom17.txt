@@ -1,0 +1,38 @@
+========================================================================================
+  KỊCH BẢN QUAY VIDEO DEMO CHỨC NĂNG - NHÓM 17 - ĐỀ TÀI 2 (HCMUTE)
+========================================================================================
+Thời lượng khuyến nghị: 10 - 12 phút
+Yêu cầu bắt buộc: Có mặt cả 3 thành viên, từng bạn mở webcam giới thiệu bản thân và demo nội dung phụ trách.
+
+[PHẦN 1: GIỚI THIỆU TỔNG QUAN & KIẾN TRÚC HỆ THỐNG - TRƯỞNG NHÓM TRƯƠNG QUỐC DUY] (4 phút)
+- Camera: Mở camera thấy mặt Duy, cầm thẻ sinh viên hoặc giới thiệu rõ:
+  "Kính chào Thầy và các bạn, em tên là Trương Quốc Duy, MSSV 24133009, là nhóm trưởng và người trực tiếp phát triển toàn bộ kiến trúc Fullstack của Nhóm 17. Hôm nay nhóm em xin phép báo cáo Đồ án Lập trình Web Đề tài 2: Xây dựng hệ thống website chuỗi showroom siêu mô tô PKL và xe cào cào địa hình cao cấp mang thương hiệu Duy Trương Motor..."
+- Thao tác trên màn hình:
+  + Mở trang bìa báo cáo Word, giải thích kiến trúc 3 tầng (Spring Boot 3 + React 18 SPA + SQL Server).
+  + Trình bày cơ chế bảo mật Spring Security 6, JWT Stateless, cơ chế gửi OTP kích hoạt qua Email.
+  + Demo trang chủ http://localhost:5173/ với giao diện Dark Luxury chuẩn phong cách Vương Khang Motor.
+  + Demo phân hệ Guest: Trình bày danh sách xe bán trên 10 chiếc sắp xếp theo thứ tự giảm dần.
+  + Demo phân hệ Admin: Đổi sang Admin trên Role Switcher HUD, duyệt các showroom và quản lý doanh thu GMV.
+
+[PHẦN 2: KIỂM THỬ CHỨC NĂNG NGƯỜI DÙNG & MUA SẮM (QA TEST) - ĐỖ TRỌNG KHÔI] (3 phút)
+- Camera: Đỗ Trọng Khôi mở camera giới thiệu bản thân:
+  "Em là Đỗ Trọng Khôi, MSSV 20133056, phụ trách phần khảo sát thị trường, thiết kế cơ sở dữ liệu mẫu và kiểm thử chất lượng chức năng (QA Testing)... Sau đây em xin thực hiện kiểm thử các kịch bản tính năng mua sắm..."
+- Thao tác trên màn hình:
+  + Đổi vai trò sang "User (Hoàng Biker)" trên Role Switcher HUD.
+  + Thực hiện Test Case 1: Lọc xe cào cào theo phân khối, công suất và khoảng giá.
+  + Thực hiện Test Case 2: Kiểm thử điều kiện đánh giá Review >= 50 ký tự (nhập < 50 ký tự bị khóa nút, nhập >= 50 ký tự đăng thành công).
+  + Thực hiện Test Case 3: Thêm xe vào giỏ hàng, mở Drawer kiểm tra giỏ hàng đồng bộ Database.
+  + Thực hiện Test Case 4: Đặt hàng thanh toán qua VNPAY QR Sandbox, kiểm tra hiển thị mã QR động có đồng hồ đếm ngược.
+
+[PHẦN 3: ĐẶC TẢ NGHIỆP VỤ & QUY TRÌNH SHIPPER, LIVE CHAT - LÊ NGHĨA TÌNH] (3 phút)
+- Camera: Lê Nghĩa Tình mở camera giới thiệu bản thân:
+  "Em là Lê Nghĩa Tình, MSSV 20133096, phụ trách phân tích đặc tả yêu cầu SRS, thiết kế quy trình luồng vận chuyển 6 chặng và biên soạn tài liệu kỹ thuật đồ án... Sau đây em xin demo quy trình vận hành chuỗi showroom và đội xe cứu hộ..."
+- Thao tác trên màn hình:
+  + Đổi vai trò sang "Vendor (Showroom Phú Nhuận)" -> Trình diễn bật/tắt trạng thái mở bán/lưu kho của xe.
+  + Đổi vai trò sang "Shipper (Tài xế Tuấn)" -> Demo tiếp nhận đơn hàng vận chuyển siêu mô tô bằng xe sàn trượt VIP, cập nhật trạng thái đơn hàng qua các chặng: Chờ xác nhận -> Chuẩn bị xe -> Đang vận chuyển -> Giao thành công.
+  + Mở Floating Chat Widget ở góc phải màn hình -> Gửi tin nhắn tư vấn xe và nhận phản hồi tức thì qua kênh STOMP WebSocket.
+
+[PHẦN 4: TỔNG KẾT & KẾT THÚC - TRƯỞNG NHÓM TRƯƠNG QUỐC DUY] (1 phút)
+- Camera: Cả 3 thành viên cùng xuất hiện hoặc Trương Quốc Duy đại diện:
+  "Nhóm 17 đã hoàn thành trọn vẹn 100% các chức năng của đề tài, tích hợp 8 điểm sáng tạo ngoài chương trình và tự chấm 100/100 điểm. Chúng em xin chân thành cảm ơn Thầy đã theo dõi!"
+

@@ -1,0 +1,40 @@
+========================================================================================
+  BẢNG TỰ CHẤM ĐIỂM THEO RUBRIC - NHÓM 17 - ĐỀ TÀI 2 (HCMUTE)
+========================================================================================
+File Google Sheet của Thầy: LTWEB_CuoiKy(Rubric)_5tieuchi_ST2_ST4_HK120262027.XLSX
+Link: https://docs.google.com/spreadsheets/d/13f45c1BgWIiv1SToJRQCnXyHbGX1lDLK/edit?usp=sharing
+
+HƯỚNG DẪN ĐIỀN VÀO SHEET:
+1. Nhấp chuột phải vào tab "Nhóm...(mẫu)" ở góc dưới bên trái Google Sheet -> Chọn "Nhân bản" (Duplicate).
+2. Đổi tên sheet mới thành: "17" (Số thứ tự nhóm là 17).
+3. Điền các thông tin đầu sheet:
+   - Tên đề tài: Đề tài 2 - Xây dựng website chuỗi showroom mô tô phân khối lớn "Duy Trương Moto"
+   - STT Nhóm: 17
+   - Danh sách thành viên:
+     (1) Trương Quốc Duy - MSSV: 24133009 - Lớp: 24133A (Nhóm trưởng)
+     (2) Đỗ Trọng Khôi  - MSSV: 20133056 - Lớp: 201331A
+     (3) Lê Nghĩa Tình  - MSSV: 20133096 - Lớp: 201331A
+
+4. BẢNG TỰ CHẤM ĐIỂM (ĐIỀN VÀO CỘT F, G, H TƯƠNG ỨNG (1), (2), (3)):
+
++-----------------------------------------------------------------------+-----+-----+-----+
+| TIÊU CHÍ ĐÁNH GIÁ (RUBRIC)                                            | (1) | (2) | (3) |
++-----------------------------------------------------------------------+-----+-----+-----+
+| Tiêu chí 1: Độ khó, Tính thực tiễn & Phân công nhiệm vụ (10%)         | 10  | 10  | 10  |
+| -> Vấn đề rất khó/Cần nhiều kiến thức tổng hợp, có phân công nhiệm vụ |     |     |     |
++-----------------------------------------------------------------------+-----+-----+-----+
+| Tiêu chí 2: Khả năng sử dụng AI hỗ trợ & Cộng tác Github (20%)        | 20  | 20  | 20  |
+| -> Thành thạo sử dụng, nắm vững và làm chủ những code do AI sinh ra   |     |     |     |
++-----------------------------------------------------------------------+-----+-----+-----+
+| Tiêu chí 3: Chất lượng hình thức (DB, vai trò, Giao diện) (20%)       | 20  | 20  | 20  |
+| -> Phương pháp nghiên cứu rõ ràng, định hướng đúng, giao diện Luxury  |     |     |     |
++-----------------------------------------------------------------------+-----+-----+-----+
+| Tiêu chí 4: Chất lượng ứng dụng, code, cài đặt, chức năng (35%)       | 35  | 35  | 35  |
+| -> Giải pháp rõ ràng, quy trình bài bản, ứng dụng vận hành hoàn hảo   |     |     |     |
++-----------------------------------------------------------------------+-----+-----+-----+
+| Tiêu chí 5: Tính sáng tạo ngoài chương trình học (15%)                | 15  | 15  | 15  |
+| -> Có 8 nội dung sáng tạo (VNPAY QR, Cloudinary, WebSocket, OTP TTL...) |   |     |     |
++-----------------------------------------------------------------------+-----+-----+-----+
+| TỔNG ĐIỂM TỰ CHẤM (THANG 100):                                        | 100 | 100 | 100 |
+| ĐIỂM HỆ 10 ĐỀ NGHỊ:                                                   |10.0 |10.0 |10.0 |
++-----------------------------------------------------------------------+-----+-----+-----+

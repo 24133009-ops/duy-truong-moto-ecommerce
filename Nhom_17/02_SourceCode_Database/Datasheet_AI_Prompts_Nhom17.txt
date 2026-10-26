@@ -1,0 +1,26 @@
+========================================================================================
+  BẢNG TỔNG HỢP PROMPT AI (DATASHEET AI) - NHÓM 17 - ĐỀ TÀI 2
+========================================================================================
+
+TIÊU CHÍ 2: SỬ DỤNG AI HỖ TRỢ VÀ SỰ CỘNG TÁC GITHUB (20/20 ĐIỂM)
+
+[PROMPT 1 - THIẾT KẾ KIẾN TRÚC & ENTITY JPA]
+Đóng vai trò Principal Software Architect. Hãy khảo sát hiện trạng và thiết kế mô hình chuỗi cửa hàng (Multi-Store) cho thương hiệu siêu mô tô Duy Trương Moto với 3 showroom tại TP.HCM, Hà Nội và Đà Nẵng. Tạo 19 JPA Entity với Spring Boot 3.2.5, Java 17, SQL Server 2022.
+
+[PROMPT 2 - SPRING SECURITY 6 & JWT STATELESS]
+Cấu hình Spring Security 6 chuẩn Stateless Session với JwtAuthenticationFilter, JwtUtils tạo HMAC-SHA256 token và phân quyền 5 cấp: ROLE_GUEST, ROLE_USER, ROLE_VENDOR, ROLE_ADMIN, ROLE_SHIPPER kèm CORS cho cổng 5173.
+
+[PROMPT 3 - DỊCH VỤ XÁC THỰC EMAIL OTP (TTL 5 PHÚT)]
+Lập trình EmailOtpService với JavaMailSender, sinh mã OTP 6 số ngẫu nhiên an toàn (SecureRandom), lưu mã vào DB kèm thời hạn hết hạn 5 phút. Gửi email template HTML đen vàng sang trọng kích hoạt tài khoản.
+
+[PROMPT 4 - CỔNG THANH TOÁN VNPAY QR SANDBOX]
+Tích hợp VNPAY Sandbox cho mua xe mô tô. Triển khai thuật toán băm HMAC-SHA512 checksum, sinh mã QR động kèm timer đếm ngược 15 phút, và controller xử lý IPN xác thực giao dịch tự động.
+
+[PROMPT 5 - GIAO DIỆN REACT SPA LUXURY DARK THEME 100% VANILLA CSS]
+Xây dựng Single Page Application bằng React 18 và Vite. Toàn bộ thiết kế bằng Vanilla CSS theo trường phái Dark Luxury phong cách Vương Khang Motor, không dùng Tailwind. Tích hợp Role Switcher HUD đổi nhanh 5 vai trò.
+
+[PROMPT 6 - QUẢN LÝ VẬN CHUYỂN SHIPPER 6 CHẶNG]
+Xây dựng phân hệ Shipper chuyên biệt vận chuyển siêu mô tô bằng xe cứu hộ sàn trượt qua 6 giai đoạn: PENDING -> CONFIRMED -> PREPARING -> SHIPPING -> DELIVERED -> COMPLETED.
+
+[PROMPT 7 - DEBUGGING & KHẮC PHỤC XUNG ĐỘT DATABASE]
+Sửa lỗi Lombok @Builder ghi đè giá trị mặc định thành NULL bằng @Builder.Default, xử lý lỗi Quoted Identifier trong SQL Server 2022, và escape ký tự trong React JSX.

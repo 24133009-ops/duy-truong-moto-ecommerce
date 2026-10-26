@@ -177,7 +177,7 @@ public class DataInitializer implements CommandLineRunner {
                 .sold(18) // > 10 cho Guest
                 .isActive(true)
                 .isSelling(true)
-                .mainImage("https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=800&q=80")
+                .mainImage("/images/ducati_panigale_v4s.jpg")
                 .engineCapacity("1103 cc")
                 .color("Đỏ Rosso Corsa")
                 .brand("Ducati")
@@ -196,7 +196,7 @@ public class DataInitializer implements CommandLineRunner {
                 .sold(14) // > 10 cho Guest
                 .isActive(true)
                 .isSelling(true)
-                .mainImage("https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=800&q=80")
+                .mainImage("/images/kawasaki_ninja_h2.jpg")
                 .engineCapacity("998 cc")
                 .color("Đen Nhám Carbon")
                 .brand("Kawasaki")
@@ -215,7 +215,7 @@ public class DataInitializer implements CommandLineRunner {
                 .sold(19) // > 10 cho Guest
                 .isActive(true)
                 .isSelling(true)
-                .mainImage("https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=800&q=80")
+                .mainImage("/images/bmw_s1000rr.jpg")
                 .engineCapacity("999 cc")
                 .color("Trắng Đỏ Xanh M Motorsport")
                 .brand("BMW")
@@ -234,7 +234,7 @@ public class DataInitializer implements CommandLineRunner {
                 .sold(12) // > 10 cho Guest
                 .isActive(true)
                 .isSelling(true)
-                .mainImage("https://images.unsplash.com/photo-1558981285-6f0c94958bb6?auto=format&fit=crop&w=800&q=80")
+                .mainImage("/images/harley_fatboy.jpg")
                 .engineCapacity("1868 cc")
                 .color("Vàng Đồng Vivid Black")
                 .brand("Harley-Davidson")
@@ -253,7 +253,7 @@ public class DataInitializer implements CommandLineRunner {
                 .sold(15) // > 10 cho Guest
                 .isActive(true)
                 .isSelling(true)
-                .mainImage("https://images.unsplash.com/photo-1558981408-db0ecd8a1ee4?auto=format&fit=crop&w=800&q=80")
+                .mainImage("/images/ducati_streetfighter.jpg")
                 .engineCapacity("1103 cc")
                 .color("Xám Nhám Dark Stealth")
                 .brand("Ducati")
@@ -272,7 +272,7 @@ public class DataInitializer implements CommandLineRunner {
                 .sold(25) // > 10 cho Guest
                 .isActive(true)
                 .isSelling(true)
-                .mainImage("https://images.unsplash.com/photo-1558980664-769d59546b3d?auto=format&fit=crop&w=800&q=80")
+                .mainImage("/images/akrapovic_exhaust.jpg")
                 .color("Titanium Mờ")
                 .brand("Akrapovic")
                 .rating(5.0)
@@ -281,18 +281,18 @@ public class DataInitializer implements CommandLineRunner {
         productRepository.save(Product.builder()
                 .store(showroomHN)
                 .category(catGear)
-                .name("Mũ Bảo Hiểm AGV Pista GP RR Carbon ECE 22.06")
-                .slug("mu-bao-hiem-agv-pista-gp-rr-carbon")
-                .description("Nón bảo hiểm chuẩn đua MotoGP 100% sợi carbon siêu nhẹ, kính chắn gió quang học class 1, hệ thống thông gió IVS.")
-                .price(BigDecimal.valueOf(38000000))
-                .promotionalPrice(BigDecimal.valueOf(35000000))
+                .name("Mũ Bảo Hiểm Cào Cào LS2 MX703 X-Force Carbon")
+                .slug("mu-bao-hiem-ls2-mx703-carbon")
+                .description("Nón bảo hiểm cào cào 100% sợi carbon siêu nhẹ ECE 22.06, khe hút gió làm mát tối đa.")
+                .price(BigDecimal.valueOf(12500000))
+                .promotionalPrice(BigDecimal.valueOf(11200000))
                 .quantity(20)
                 .sold(42) // > 10 cho Guest
                 .isActive(true)
                 .isSelling(true)
-                .mainImage("https://images.unsplash.com/photo-1558981359-219d6364c9c8?auto=format&fit=crop&w=800&q=80")
+                .mainImage("/images/ls2_helmet.jpg")
                 .color("Carbon Bóng")
-                .brand("AGV")
+                .brand("LS2")
                 .rating(5.0)
                 .build());
 

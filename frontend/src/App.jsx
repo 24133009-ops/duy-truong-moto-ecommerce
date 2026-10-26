@@ -7,6 +7,7 @@ import {
   INITIAL_REVIEWS, 
   DEMO_USERS 
 } from './data/mockData';
+import { generateSmartBotReply, SUGGESTION_CHIPS } from './utils/chatbotEngine';
 
 export default function App() {
   // --- STATE LAYER ---
@@ -59,7 +60,7 @@ export default function App() {
     engine: '',
     power: '',
     color: '',
-    image: 'https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?auto=format&fit=crop&w=800&q=80',
+    image: '/images/ktm_300_exc.jpg',
     description: '',
     badges: ['HQCN', 'Bao Quay Đầu']
   });
@@ -80,7 +81,7 @@ export default function App() {
     note: "Vui lòng bọc bạt nhung bàn giao xe tại nhà riêng, hỗ trợ thủ tục sang tên bấm biển số."
   });
 
-  // Chat Widget State (WebSocket Simulation)
+  // Chat Widget State (WebSocket Simulation & Smart AI Engine)
   const [chatMessages, setChatMessages] = useState([
     { 
       sender: "Chuyên Viên Showroom", 
@@ -90,6 +91,7 @@ export default function App() {
     }
   ]);
   const [chatInput, setChatInput] = useState('');
+  const [isBotTyping, setIsBotTyping] = useState(false);
 
   const currentUser = DEMO_USERS[currentRoleKey];
 
@@ -210,27 +212,34 @@ export default function App() {
     setCurrentTab('orders');
   };
 
-  // Chat message send
-  const handleSendMessage = () => {
-    if (!chatInput.trim()) return;
-    const userMsg = { sender: currentUser.name, text: chatInput, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), isBot: false };
+  // Chat message send (Smart AI CSKH Engine)
+  const handleSendMessage = (overrideQuery) => {
+    const textToSend = typeof overrideQuery === 'string' ? overrideQuery : chatInput;
+    if (!textToSend || !textToSend.trim()) return;
+
+    const userMsg = { 
+      sender: currentUser.name || "Khách Hàng", 
+      text: textToSend.trim(), 
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), 
+      isBot: false 
+    };
     setChatMessages(prev => [...prev, userMsg]);
-    setChatInput('');
+    if (typeof overrideQuery !== 'string') {
+      setChatInput('');
+    }
+    setIsBotTyping(true);
 
     setTimeout(() => {
-      const botReplies = [
-        "Dạ em là chuyên viên tư vấn chi nhánh Duy Trương Motor! Mẫu xe cào cào / môtô Quý khách vừa hỏi hiện đang có sẵn tại phòng trưng bày VIP. Xe đầy đủ giấy tờ HQCN, bao sang tên toàn quốc trong 24h ạ!",
-        "Dạ Duy Trương Motor cam kết: Ở đây chúng tôi MUA CỦA NGƯỜI CHÁN - & BÁN CHO NGƯỜI CẦN. Bên em có chính sách bao quay đầu lỗ cực thấp và hỗ trợ thu mua đổi các xe tận nhà ạ!",
-        "Dạ đơn hàng cọc xe qua cổng VNPAY QR sẽ được ưu tiên giữ số VIN máy đẹp và hỗ trợ miễn phí gói giao xe sàn trượt VIP tận nhà 63 tỉnh thành ạ!"
-      ];
+      const reply = generateSmartBotReply(textToSend, products, formatMoney);
       const botMsg = {
-        sender: "Chuyên Viên Showroom",
-        text: botReplies[Math.floor(Math.random() * botReplies.length)],
+        sender: "Chuyên Viên Duy Trương Motor",
+        text: reply,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         isBot: true
       };
       setChatMessages(prev => [...prev, botMsg]);
-    }, 1000);
+      setIsBotTyping(false);
+    }, 650);
   };
 
   return (
@@ -1500,20 +1509,64 @@ export default function App() {
 
           <div style={{ flexGrow: 1, padding: '16px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {chatMessages.map((msg, i) => (
-              <div key={i} style={{ alignSelf: msg.isBot ? 'flex-start' : 'flex-end', maxWidth: '85%' }}>
+              <div key={i} style={{ alignSelf: msg.isBot ? 'flex-start' : 'flex-end', maxWidth: '88%' }}>
                 <div style={{ 
                   background: msg.isBot ? '#181c28' : 'var(--gold-gradient)', 
                   color: msg.isBot ? '#fff' : '#000', 
                   padding: '10px 14px', 
                   borderRadius: '14px', 
                   fontSize: '0.85rem',
+                  lineHeight: '1.55',
                   boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-                  border: msg.isBot ? '1px solid rgba(255,255,255,0.08)' : 'none'
+                  border: msg.isBot ? '1px solid rgba(255,255,255,0.08)' : 'none',
+                  whiteSpace: 'pre-line'
                 }}>
-                  <div style={{ fontSize: '0.7rem', fontWeight: 800, opacity: 0.7, marginBottom: '3px' }}>{msg.sender} • {msg.time}</div>
-                  {msg.text}
+                  <div style={{ fontSize: '0.7rem', fontWeight: 800, opacity: 0.7, marginBottom: '4px' }}>
+                    {msg.sender} • {msg.time}
+                  </div>
+                  {msg.text.split(/(\*\*.*?\*\*)/g).map((part, pIdx) => {
+                    if (part.startsWith('**') && part.endsWith('**')) {
+                      return <strong key={pIdx} style={{ color: msg.isBot ? 'var(--gold-light)' : '#000' }}>{part.slice(2, -2)}</strong>;
+                    }
+                    return part;
+                  })}
                 </div>
               </div>
+            ))}
+
+            {isBotTyping && (
+              <div style={{ alignSelf: 'flex-start', maxWidth: '85%' }}>
+                <div style={{
+                  background: '#181c28',
+                  color: '#fff',
+                  padding: '8px 14px',
+                  borderRadius: '14px',
+                  fontSize: '0.8rem',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--gold-light)' }}>Chuyên viên đang soạn câu trả lời</span>
+                  <div className="chat-typing-dots">
+                    <span></span><span></span><span></span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Quick Suggestion Chips */}
+          <div className="chat-chips-bar">
+            {SUGGESTION_CHIPS.map(chip => (
+              <button 
+                key={chip.id} 
+                className="chat-chip-btn" 
+                onClick={() => handleSendMessage(chip.query)}
+                title={chip.query}
+              >
+                {chip.label}
+              </button>
             ))}
           </div>
 
@@ -1527,7 +1580,7 @@ export default function App() {
               onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
               style={{ padding: '8px 12px', fontSize: '0.85rem' }}
             />
-            <button className="btn-gold" style={{ padding: '8px 16px' }} onClick={handleSendMessage}>
+            <button className="btn-gold" style={{ padding: '8px 16px' }} onClick={() => handleSendMessage()}>
               <i className="fa-solid fa-paper-plane"></i>
             </button>
           </div>
@@ -1571,22 +1624,17 @@ export default function App() {
           </div>
 
           <div>
-            <h5 style={{ color: 'var(--gold-primary)', fontWeight: 800, marginBottom: '16px', fontFamily: 'var(--font-brand)' }}>CHÍNH SÁCH ĐỒ ÁN (3 THÀNH VIÊN)</h5>
+            <h5 style={{ color: 'var(--gold-primary)', fontWeight: 800, marginBottom: '16px', fontFamily: 'var(--font-brand)' }}>NHÓM PHÁT TRIỂN ĐỀ TÀI (NHÓM 17)</h5>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.8 }}>
-              <div>• <strong>Trương Quốc Duy (Leader):</strong> Kiến trúc 3 tầng, Spring Security 6, JWT, OTP Email, Admin Portal</div>
-              <div>• <strong>Đỗ Trọng Khôi:</strong> Giao diện React SPA, Xe Cào Cào, Guest &gt; 10 xe, Giỏ hàng DB, Đánh giá &gt;= 50 ký tự</div>
-              <div>• <strong>Lê Nghĩa Tình:</strong> Showroom Vendor, Phân hệ Shipper 6 chặng, VNPAY QR Sandbox, WebSocket Live Chat</div>
-            </div>
-            <div style={{ marginTop: '16px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-              <span className="badge-hqcn">VNPAY QR</span>
-              <span className="badge-hqcn">Cloudinary Media</span>
-              <span className="badge-hqcn">STOMP WebSocket</span>
+              <div>• <strong>Trương Quốc Duy (Leader &amp; Fullstack Dev):</strong> Kiến trúc toàn hệ thống, phát triển Fullstack Spring Boot 3 &amp; React SPA, Spring Security, JWT, OTP Email, VNPAY, WebSocket Live Chat</div>
+              <div>• <strong>Đỗ Trọng Khôi:</strong> Khảo sát hiện trạng chuỗi showroom, thiết kế lược đồ CSDL &amp; Data xe cào cào/mô tô, Kiểm thử chất lượng (QA/Tester)</div>
+              <div>• <strong>Lê Nghĩa Tình:</strong> Phân tích đặc tả nghiệp vụ SRS, Thiết kế sơ đồ luồng hệ thống &amp; UseCase, Xây dựng tài liệu kỹ thuật &amp; Video demo</div>
             </div>
           </div>
         </div>
 
         <div style={{ maxWidth: '1240px', margin: '40px auto 0', paddingTop: '20px', borderTop: '1px solid rgba(255,255,255,0.08)', textAlign: 'center', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-          © 2026 DUY TRƯƠNG MOTOR - Mua Bán Mô Tô PKL &amp; Xe Cào Cào Uy Tín. Sẵn sàng Deploy Production lên Vercel / Netlify / Render.
+          © 2026 DUY TRƯƠNG MOTOR - Hệ Thống Siêu Thị Mô Tô PKL &amp; Xe Cào Cào Uy Tín Số 1 Việt Nam. Bảo lưu mọi quyền.
         </div>
       </footer>
 
