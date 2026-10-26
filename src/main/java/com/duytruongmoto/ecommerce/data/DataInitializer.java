@@ -158,11 +158,14 @@ public class DataInitializer implements CommandLineRunner {
                 .build());
 
         // 6. Categories
-        Category catSuperbike = categoryRepository.save(Category.builder().name("Superbike / Sportbike").slug("superbike").image("https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=500&q=80").isDeleted(false).build());
-        Category catNaked = categoryRepository.save(Category.builder().name("Hyper Naked").slug("hyper-naked").image("https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=500&q=80").isDeleted(false).build());
-        Category catCruiser = categoryRepository.save(Category.builder().name("Cruiser & Touring").slug("cruiser-touring").image("https://images.unsplash.com/photo-1558981285-6f0c94958bb6?auto=format&fit=crop&w=500&q=80").isDeleted(false).build());
-        Category catExhaust = categoryRepository.save(Category.builder().name("Pô Độ & Phụ Tùng Cao Cấp").slug("phu-tung-po-do").image("https://images.unsplash.com/photo-1558981408-db0ecd8a1ee4?auto=format&fit=crop&w=500&q=80").isDeleted(false).build());
-        Category catGear = categoryRepository.save(Category.builder().name("Đồ Bảo Hộ & Nón AGV").slug("do-bao-ho").image("https://images.unsplash.com/photo-1558980664-769d59546b3d?auto=format&fit=crop&w=500&q=80").isDeleted(false).build());
+        Category catOto = categoryRepository.save(Category.builder().name("Siêu Xe Ô Tô & Xe Sang").slug("oto").image("/images/lamborghini_huracan.jpg").isDeleted(false).build());
+        Category catXeNho = categoryRepository.save(Category.builder().name("Xe Nhỏ & Tay Ga Sưu Tầm").slug("xenho").image("/images/honda_monkey_125.jpg").isDeleted(false).build());
+        Category catDirtbike = categoryRepository.save(Category.builder().name("Xe Cào Cào Địa Hình").slug("dirtbike").image("/images/ktm_300_exc.jpg").isDeleted(false).build());
+        Category catSuperbike = categoryRepository.save(Category.builder().name("Superbike / Sportbike").slug("superbike").image("/images/ducati_panigale_v4s.jpg").isDeleted(false).build());
+        Category catNaked = categoryRepository.save(Category.builder().name("Hyper Naked").slug("hyper-naked").image("/images/ducati_streetfighter.jpg").isDeleted(false).build());
+        Category catCruiser = categoryRepository.save(Category.builder().name("Cruiser & Touring").slug("cruiser-touring").image("/images/harley_fatboy.jpg").isDeleted(false).build());
+        Category catExhaust = categoryRepository.save(Category.builder().name("Pô Độ & Phụ Tùng Cao Cấp").slug("phu-tung-po-do").image("/images/akrapovic_exhaust.jpg").isDeleted(false).build());
+        Category catGear = categoryRepository.save(Category.builder().name("Đồ Bảo Hộ & Nón Bảo Hiểm").slug("do-bao-ho").image("/images/ls2_helmet.jpg").isDeleted(false).build());
 
         // 7. Products (Xe Luxury bán chạy > 10 xe đáp ứng yêu cầu Guest)
         productRepository.save(Product.builder()
@@ -293,6 +296,142 @@ public class DataInitializer implements CommandLineRunner {
                 .mainImage("/images/ls2_helmet.jpg")
                 .color("Carbon Bóng")
                 .brand("LS2")
+                .rating(5.0)
+                .build());
+
+        // --- SIÊU XE Ô TÔ & XE SANG THỂ THAO ---
+        productRepository.save(Product.builder()
+                .store(showroomQ1)
+                .category(catOto)
+                .name("Lamborghini Huracán EVO 5.2L V10 2023")
+                .slug("lamborghini-huracan-evo-v10-2023")
+                .description("Siêu xe thể thao biểu tượng nước Ý động cơ V10 hút khí tự nhiên 640 mã lực, tăng tốc 0-100 km/h chỉ 2.9 giây, pô titan thể thao.")
+                .price(BigDecimal.valueOf(17500000000L))
+                .promotionalPrice(BigDecimal.valueOf(16800000000L))
+                .quantity(2)
+                .sold(14)
+                .isActive(true)
+                .isSelling(true)
+                .mainImage("/images/lamborghini_huracan.jpg")
+                .engineCapacity("5.2L V10")
+                .color("Đỏ Corsa Racing")
+                .brand("Lamborghini")
+                .rating(5.0)
+                .build());
+
+        productRepository.save(Product.builder()
+                .store(showroomQ1)
+                .category(catOto)
+                .name("Porsche 911 GT3 RS Weissach Package 2024")
+                .slug("porsche-911-gt3-rs-weissach-2024")
+                .description("Vua đường đua thương mại mạnh nhất thế giới với gói nâng cấp thể thao Weissach Package, cánh gió DRS khí động học chủ động.")
+                .price(BigDecimal.valueOf(19200000000L))
+                .promotionalPrice(BigDecimal.valueOf(18500000000L))
+                .quantity(1)
+                .sold(11)
+                .isActive(true)
+                .isSelling(true)
+                .mainImage("/images/porsche_911_gt3rs.jpg")
+                .engineCapacity("4.0L Boxer 6")
+                .color("Bạc GT Silver Carbon")
+                .brand("Porsche")
+                .rating(5.0)
+                .build());
+
+        productRepository.save(Product.builder()
+                .store(showroomHN)
+                .category(catOto)
+                .name("Mercedes-AMG G63 V8 Biturbo Edition 1 2023")
+                .slug("mercedes-amg-g63-v8-biturbo-2023")
+                .description("Vua địa hình SUV hạng sang Mercedes-AMG G63 với ống xả thể thao đặt bên sườn xe uy lực trứ danh, 3 khóa vi sai độc lập.")
+                .price(BigDecimal.valueOf(11800000000L))
+                .promotionalPrice(BigDecimal.valueOf(11200000000L))
+                .quantity(3)
+                .sold(16)
+                .isActive(true)
+                .isSelling(true)
+                .mainImage("/images/mercedes_g63.jpg")
+                .engineCapacity("4.0L V8 Biturbo")
+                .color("Đen Nhám Magno Night Black")
+                .brand("Mercedes")
+                .rating(4.98)
+                .build());
+
+        productRepository.save(Product.builder()
+                .store(showroomQ1)
+                .category(catOto)
+                .name("Ferrari 488 Pista V8 Twin-Turbo 2022")
+                .slug("ferrari-488-pista-v8-twin-turbo-2022")
+                .description("Siêu ngựa Ý 710 mã lực thừa hưởng công nghệ xe đua 488 Challenge, hốc hút gió S-Duct khí động học phía trước, khung xe carbon siêu nhẹ.")
+                .price(BigDecimal.valueOf(21800000000L))
+                .promotionalPrice(BigDecimal.valueOf(21000000000L))
+                .quantity(1)
+                .sold(9)
+                .isActive(true)
+                .isSelling(true)
+                .mainImage("/images/ferrari_488_pista.jpg")
+                .engineCapacity("3.9L V8 Twin-Turbo")
+                .color("Vàng Giallo Modena")
+                .brand("Ferrari")
+                .rating(5.0)
+                .build());
+
+        // --- XE NHỎ & TAY GA SƯU TẦM CAO CẤP ---
+        productRepository.save(Product.builder()
+                .store(showroomQ1)
+                .category(catXeNho)
+                .name("Honda Monkey 125cc Limited Edition 2024")
+                .slug("honda-monkey-125cc-limited-2024")
+                .description("Mẫu xe khỉ Honda Monkey 125cc biểu tượng phong cách đường phố thế giới, bình xăng xi mạ chrome bóng loáng, phuộc USD thể thao.")
+                .price(BigDecimal.valueOf(145000000L))
+                .promotionalPrice(BigDecimal.valueOf(135000000L))
+                .quantity(5)
+                .sold(21)
+                .isActive(true)
+                .isSelling(true)
+                .mainImage("/images/honda_monkey_125.jpg")
+                .engineCapacity("124.9 cc")
+                .color("Vàng Chrome")
+                .brand("Honda")
+                .rating(5.0)
+                .build());
+
+        productRepository.save(Product.builder()
+                .store(showroomQ1)
+                .category(catXeNho)
+                .name("Piaggio Vespa 946 Christian Dior Limited Edition")
+                .slug("piaggio-vespa-946-christian-dior")
+                .description("Kiệt tác tay ga thời trang cao cấp hợp tác cùng nhà mốt Christian Dior Paris danh giá, từng đường kim mũi chỉ thủ công tại Ý.")
+                .price(BigDecimal.valueOf(750000000L))
+                .promotionalPrice(BigDecimal.valueOf(680000000L))
+                .quantity(1)
+                .sold(12)
+                .isActive(true)
+                .isSelling(true)
+                .mainImage("/images/vespa_946.jpg")
+                .engineCapacity("155 cc")
+                .color("Trắng Sữa Viền Vàng Gold Dior")
+                .brand("Vespa")
+                .rating(5.0)
+                .build());
+
+        // --- XE CÀO CÀO ĐỊA HÌNH ---
+        productRepository.save(Product.builder()
+                .store(showroomQ1)
+                .category(catDirtbike)
+                .name("KTM 300 EXC TPI Factory Edition 2024")
+                .slug("ktm-300-exc-tpi-factory-2024")
+                .description("Vua cào cào Enduro 2 thì số 1 thế giới với công nghệ phun xăng điện tử TPI độc quyền, phuộc WP XPLOR 48mm điều chỉnh độc lập.")
+                .price(BigDecimal.valueOf(385000000L))
+                .promotionalPrice(BigDecimal.valueOf(368000000L))
+                .quantity(4)
+                .sold(17)
+                .isActive(true)
+                .isSelling(true)
+                .mainImage("/images/ktm_300_exc.jpg")
+                .engineCapacity("293.2 cc TPI")
+                .color("Cam Đen Factory Racing")
+                .brand("KTM")
                 .rating(5.0)
                 .build());
 

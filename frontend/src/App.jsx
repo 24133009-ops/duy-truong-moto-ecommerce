@@ -3,6 +3,7 @@ import confetti from 'canvas-confetti';
 import { 
   SHOWROOMS, 
   CATEGORIES, 
+  MEGA_MENU_DATA,
   INITIAL_PRODUCTS, 
   INITIAL_REVIEWS, 
   DEMO_USERS 
@@ -15,9 +16,10 @@ export default function App() {
   const [currentTab, setCurrentTab] = useState('home'); // home, products, showrooms, orders, vendor, admin, shipper
   const [selectedShowroomFilter, setSelectedShowroomFilter] = useState('all');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedMegaKey, setSelectedMegaKey] = useState('oto'); // 'motor', 'oto', 'xenho', 'phukien'
   const [searchQuery, setSearchQuery] = useState('');
   const [brandFilter, setBrandFilter] = useState('all');
-  const [priceRange, setPriceRange] = useState({ min: 0, max: 2000000000 });
+  const [priceRange, setPriceRange] = useState({ min: 0, max: 30000000000 });
 
   // Data Collections
   const [products, setProducts] = useState(INITIAL_PRODUCTS);
@@ -110,8 +112,12 @@ export default function App() {
   const filteredProducts = useMemo(() => {
     return products.filter(p => {
       const matchStore = selectedShowroomFilter === 'all' || p.storeId === parseInt(selectedShowroomFilter);
-      const matchCategory = selectedCategory === 'all' || p.category === selectedCategory;
-      const matchBrand = brandFilter === 'all' || p.brand.toLowerCase() === brandFilter.toLowerCase();
+      const matchCategory = selectedCategory === 'all' || 
+                            (selectedCategory === 'all-motor' ? (p.category !== 'oto' && p.category !== 'xenho' && p.category !== 'gear-parts') : p.category === selectedCategory);
+      const matchBrand = brandFilter === 'all' || 
+                         p.brand.toLowerCase() === brandFilter.toLowerCase() ||
+                         p.brand.toLowerCase().includes(brandFilter.toLowerCase()) ||
+                         brandFilter.toLowerCase().includes(p.brand.toLowerCase());
       const matchPrice = (p.promotionalPrice || p.price) >= priceRange.min && (p.promotionalPrice || p.price) <= priceRange.max;
       const matchSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           p.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -309,22 +315,30 @@ export default function App() {
             <i className="fa-solid fa-motorcycle"></i>
           </div>
           <div>
-            <div className="brand-title" style={{ fontSize: '1.55rem', lineHeight: 1.1 }}>
+            <div className="brand-title" style={{ fontSize: '1.45rem', lineHeight: 1.1 }}>
               <span className="text-gradient-gold">DUY TRƯƠNG</span> <span style={{ color: '#fff' }}>MOTOR</span>
             </div>
-            <div style={{ fontSize: '0.65rem', color: 'var(--gold-primary)', letterSpacing: '2px', fontWeight: 800 }}>
-              SIÊU THỊ MÔ TÔ PKL & XE CÀO CÀO UY TÍN
+            <div style={{ fontSize: '0.62rem', color: 'var(--gold-primary)', letterSpacing: '2px', fontWeight: 800 }}>
+              SIÊU THỊ MÔ TÔ PKL & SIÊU XE UY TÍN
             </div>
           </div>
         </div>
 
+        {/* Center Golden Shield Logo (Chuẩn phong cách Vương Khang Motor) */}
+        <div className="shield-logo-center" onClick={() => setCurrentTab('home')}>
+          <div className="shield-badge-box">
+            <div className="shield-badge-title">DUY TRƯƠNG</div>
+            <div className="shield-badge-sub">- MOTOR -</div>
+          </div>
+        </div>
+
         {/* Navigation Tabs */}
-        <nav style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+        <nav style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <button className={`btn-subtle ${currentTab === 'home' ? 'active' : ''}`} onClick={() => setCurrentTab('home')}>
             <i className="fa-solid fa-house"></i> Trang Chủ
           </button>
-          <button className={`btn-subtle ${currentTab === 'products' ? 'active' : ''}`} onClick={() => setCurrentTab('products')}>
-            <i className="fa-solid fa-motorcycle"></i> Kho Xe & Cào Cào ({products.length})
+          <button className={`btn-subtle ${currentTab === 'products' ? 'active' : ''}`} onClick={() => { setSelectedCategory('all'); setBrandFilter('all'); setCurrentTab('products'); }}>
+            <i className="fa-solid fa-motorcycle"></i> Kho Xe ({products.length})
           </button>
           <button className={`btn-subtle ${currentTab === 'showrooms' ? 'active' : ''}`} onClick={() => setCurrentTab('showrooms')}>
             <i className="fa-solid fa-store"></i> Chuỗi Showroom
@@ -351,17 +365,24 @@ export default function App() {
           )}
         </nav>
 
-        {/* Right Actions: Cart & User status */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <button className="btn-outline-gold" style={{ padding: '8px 20px' }} onClick={() => setIsCartOpen(true)}>
-            <i className="fa-solid fa-cart-shopping"></i> Giỏ Hàng ({cart.length})
+        {/* Right Actions: Search Pill, Cart & User status */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          {/* Vuong Khang Style Search Pill */}
+          <div className="search-pill-btn" onClick={() => { setSelectedCategory('all'); setBrandFilter('all'); setCurrentTab('products'); }}>
+            <i className="fa-solid fa-magnifying-glass text-gold"></i>
+            <span>Các dòng xe khác...</span>
+            <i className="fa-solid fa-chevron-right text-gold" style={{ fontSize: '0.72rem' }}></i>
+          </div>
+
+          <button className="btn-outline-gold" style={{ padding: '8px 16px' }} onClick={() => setIsCartOpen(true)}>
+            <i className="fa-solid fa-cart-shopping"></i> Giỏ ({cart.length})
           </button>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <img src={currentUser.avatar} alt="Avatar" style={{ width: '38px', height: '38px', borderRadius: '50%', border: '2px solid var(--gold-primary)', objectFit: 'cover' }} />
-            <div style={{ fontSize: '0.85rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <img src={currentUser.avatar} alt="Avatar" style={{ width: '36px', height: '36px', borderRadius: '50%', border: '2px solid var(--gold-primary)', objectFit: 'cover' }} />
+            <div style={{ fontSize: '0.82rem' }}>
               <div style={{ fontWeight: 700, color: '#fff' }}>{currentUser.name}</div>
-              <span style={{ color: 'var(--gold-primary)', fontSize: '0.7rem', fontWeight: 800 }}>[{currentUser.role}]</span>
+              <span style={{ color: 'var(--gold-primary)', fontSize: '0.68rem', fontWeight: 800 }}>[{currentUser.role}]</span>
             </div>
           </div>
         </div>
@@ -414,6 +435,122 @@ export default function App() {
         {/* ================= TAB: HOME ================= */}
         {currentTab === 'home' && (
           <div>
+            {/* VƯƠNG KHANG MOTOR MEGA HERO & SELECTION INTERFACE */}
+            <section className="vk-mega-hero">
+              {/* Giant Watermark Text & Tag */}
+              <div className="vk-watermark-text">MÊ XE MÀ CHÊ XE</div>
+              <div className="vk-channel-tag"><i className="fa-brands fa-youtube me-1"></i> DT CHANNEL</div>
+
+              {/* Left Sidebar Menu */}
+              <div className="vk-sidebar-menu">
+                <div className="vk-menu-header">
+                  <span>MENU</span>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', width: '20px' }}>
+                    <div style={{ height: '3px', background: '#ffd700', borderRadius: '2px' }}></div>
+                    <div style={{ height: '3px', background: '#ffd700', borderRadius: '2px' }}></div>
+                    <div style={{ height: '3px', background: '#ffd700', borderRadius: '2px' }}></div>
+                  </div>
+                </div>
+
+                <button 
+                  className={`vk-menu-item ${selectedMegaKey === 'motor' ? 'active' : ''}`}
+                  onMouseEnter={() => setSelectedMegaKey('motor')}
+                  onClick={() => { setSelectedMegaKey('motor'); setSelectedCategory('all-motor'); setBrandFilter('all'); setCurrentTab('products'); }}
+                >
+                  {selectedMegaKey === 'motor' && <span style={{ color: '#ffd700' }}>–</span>} MOTOR
+                </button>
+
+                <button 
+                  className={`vk-menu-item ${selectedMegaKey === 'oto' ? 'active' : ''}`}
+                  onMouseEnter={() => setSelectedMegaKey('oto')}
+                  onClick={() => { setSelectedMegaKey('oto'); setSelectedCategory('oto'); setBrandFilter('all'); setCurrentTab('products'); }}
+                >
+                  {selectedMegaKey === 'oto' && <span style={{ color: '#ffd700' }}>–</span>} Ô TÔ
+                </button>
+
+                <button 
+                  className={`vk-menu-item ${selectedMegaKey === 'xenho' ? 'active' : ''}`}
+                  onMouseEnter={() => setSelectedMegaKey('xenho')}
+                  onClick={() => { setSelectedMegaKey('xenho'); setSelectedCategory('xenho'); setBrandFilter('all'); setCurrentTab('products'); }}
+                >
+                  {selectedMegaKey === 'xenho' && <span style={{ color: '#ffd700' }}>–</span>} XE NHỎ
+                </button>
+
+                <button 
+                  className={`vk-menu-item ${selectedMegaKey === 'phukien' ? 'active' : ''}`}
+                  onMouseEnter={() => setSelectedMegaKey('phukien')}
+                  onClick={() => { setSelectedMegaKey('phukien'); setSelectedCategory('gear-parts'); setBrandFilter('all'); setCurrentTab('products'); }}
+                >
+                  {selectedMegaKey === 'phukien' && <span style={{ color: '#ffd700' }}>–</span>} PHỤ KIỆN
+                </button>
+
+                <button className="vk-menu-item" onClick={() => alert("Chức năng BOOKING: Quý khách vui lòng gọi Hotline 0903.456.789 để đặt lịch lái thử siêu xe và thẩm định xe tại nhà!")}>
+                  BOOKING
+                </button>
+
+                <button className="vk-menu-item" onClick={() => alert("DỊCH VỤ DUY TRƯƠNG MOTOR:\n1. Cứu hộ giao xe sàn trượt VIP 24/7\n2. Căn chỉnh Dynojet & Bảo dưỡng siêu xe\n3. Hỗ trợ rút hồ sơ gốc sang tên HQCN trong 24h")}>
+                  DỊCH VỤ
+                </button>
+
+                <button className="vk-menu-item" onClick={() => alert("BLOG DUY TRƯƠNG MOTOR:\nCập nhật tin tức thị trường siêu xe PKL, xe cào cào và siêu xe thể thao mới nhất tại Việt Nam.")}>
+                  BLOG
+                </button>
+
+                <button className="vk-menu-item" onClick={() => setCurrentTab('showrooms')}>
+                  LIÊN HỆ
+                </button>
+              </div>
+
+              {/* Frosted Glass Floating Panel displaying Brands */}
+              <div className="vk-frosted-panel">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px', borderBottom: '1px solid rgba(0,0,0,0.08)', paddingBottom: '12px' }}>
+                  <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#0f172a', fontFamily: 'var(--font-brand)' }}>
+                    <i className="fa-solid fa-gem text-gold me-2"></i> BỘ SƯU TẬP {MEGA_MENU_DATA[selectedMegaKey]?.title || "XE"}
+                  </div>
+                  <button 
+                    className="btn-gold" 
+                    style={{ padding: '6px 16px', fontSize: '0.85rem' }}
+                    onClick={() => {
+                      setSelectedCategory(MEGA_MENU_DATA[selectedMegaKey]?.categoryKey || 'all');
+                      setBrandFilter('all');
+                      setCurrentTab('products');
+                    }}
+                  >
+                    Xem Toàn Bộ Kho Xe <i className="fa-solid fa-arrow-right ms-1"></i>
+                  </button>
+                </div>
+
+                <div className={`vk-brands-grid ${selectedMegaKey === 'oto' ? 'cols-4' : selectedMegaKey === 'xenho' ? 'cols-3' : 'cols-2'}`}>
+                  {MEGA_MENU_DATA[selectedMegaKey]?.columns.map((col, colIdx) => (
+                    <div key={colIdx} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      {col.map((bName, bIdx) => (
+                        <div 
+                          key={bIdx} 
+                          className="vk-brand-link"
+                          onClick={() => {
+                            setBrandFilter(bName);
+                            if (selectedMegaKey === 'oto') setSelectedCategory('oto');
+                            else if (selectedMegaKey === 'xenho') setSelectedCategory('xenho');
+                            else if (selectedMegaKey === 'motor') setSelectedCategory('all-motor');
+                            else if (selectedMegaKey === 'phukien') setSelectedCategory('gear-parts');
+                            setCurrentTab('products');
+                          }}
+                        >
+                          {bName}
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Bottom Center Social Pill */}
+              <div className="vk-social-pill">
+                <a href="https://youtube.com" target="_blank" rel="noreferrer" className="vk-social-icon" title="YouTube"><i className="fa-brands fa-youtube"></i></a>
+                <a href="https://tiktok.com" target="_blank" rel="noreferrer" className="vk-social-icon" title="TikTok"><i className="fa-brands fa-tiktok"></i></a>
+                <a href="https://facebook.com" target="_blank" rel="noreferrer" className="vk-social-icon" title="Facebook"><i className="fa-brands fa-facebook-f"></i></a>
+              </div>
+            </section>
             {/* Hero Section */}
             <section style={{ padding: '70px 30px', position: 'relative', overflow: 'hidden' }}>
               <div style={{ maxWidth: '1240px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '50px', alignItems: 'center' }}>
@@ -1637,6 +1774,30 @@ export default function App() {
           © 2026 DUY TRƯƠNG MOTOR - Hệ Thống Siêu Thị Mô Tô PKL &amp; Xe Cào Cào Uy Tín Số 1 Việt Nam. Bảo lưu mọi quyền.
         </div>
       </footer>
+
+      {/* 13. RIGHT FLOATING QUICK ACTION DOCK (VƯƠNG KHANG MOTOR STYLE) */}
+      <div className="vk-floating-dock">
+        <button className="vk-dock-btn" onClick={() => setIsChatOpen(true)} title="Định giá thu mua xe cũ">
+          <i className="fa-solid fa-handshake"></i>
+          <span className="dock-tooltip">Định Giá Thu Mua Xe</span>
+        </button>
+        <button className="vk-dock-btn" onClick={() => alert("CAM KẾT PHÁP LÝ DUY TRƯƠNG MOTOR:\n• 100% Xe Hải Quan Chính Ngạch (HQCN)\n• Bao sang tên bấm biển số toàn quốc\n• Bao rút hồ sơ gốc trong 24 giờ\n• Hoàn tiền 100% nếu phát hiện xe tranh chấp pháp lý!")} title="Hồ sơ pháp lý HQCN">
+          <i className="fa-solid fa-shield-halved"></i>
+          <span className="dock-tooltip">Hồ Sơ Pháp Lý HQCN</span>
+        </button>
+        <button className="vk-dock-btn" onClick={() => { setSelectedCategory('all'); setBrandFilter('all'); setCurrentTab('products'); }} title="Kho hình ảnh thực tế">
+          <i className="fa-solid fa-images"></i>
+          <span className="dock-tooltip">Kho Ảnh Xe Thực Tế</span>
+        </button>
+        <a href="tel:0903456789" className="vk-dock-btn" title="Hotline gọi ngay">
+          <i className="fa-solid fa-phone"></i>
+          <span className="dock-tooltip">Hotline: 0903.456.789</span>
+        </a>
+        <a href="https://zalo.me/0903456789" target="_blank" rel="noreferrer" className="vk-dock-btn" style={{ background: '#0068ff', color: '#fff' }} title="Zalo tư vấn">
+          <i className="fa-solid fa-comment-dots"></i>
+          <span className="dock-tooltip">Zalo: 0903.456.789</span>
+        </a>
+      </div>
 
     </div>
   );

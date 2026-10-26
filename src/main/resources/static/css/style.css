@@ -491,3 +491,214 @@ h1, h2, h3, h4, .brand-font {
     color: #451a03;
 }
 
+/* ==========================================================================
+   VƯƠNG KHANG MOTOR STYLE MEGA MENU & SELECTION INTERFACE (BACKEND)
+   ========================================================================== */
+
+.shield-badge-box {
+    background: linear-gradient(145deg, #181d29, #0a0d14);
+    border: 2px solid #ffd700;
+    border-radius: 12px 12px 28px 28px;
+    padding: 6px 20px;
+    box-shadow: 0 4px 18px rgba(255, 215, 0, 0.35);
+    text-align: center;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.shield-badge-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(255, 215, 0, 0.55);
+}
+
+.shield-badge-title {
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: #ffd700;
+    letter-spacing: 2px;
+    line-height: 1.1;
+    text-transform: uppercase;
+}
+
+.shield-badge-sub {
+    font-size: 0.65rem;
+    color: #f8fafc;
+    font-weight: 800;
+    letter-spacing: 3px;
+}
+
+.search-pill-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.85);
+    border: 1.5px solid #ffd700;
+    border-radius: 9999px;
+    padding: 8px 18px;
+    color: #f8fafc;
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+}
+
+.search-pill-btn:hover {
+    background: rgba(255, 215, 0, 0.15);
+    border-color: #ffe066;
+    color: #ffd700;
+    transform: scale(1.02);
+}
+
+.vk-mega-hero {
+    position: relative;
+    min-height: 580px;
+    background: #080a10;
+    background-image: 
+        linear-gradient(to right, rgba(8, 10, 16, 0.95) 0%, rgba(8, 10, 16, 0.4) 45%, rgba(8, 10, 16, 0.85) 100%),
+        url('/images/lamborghini_huracan.jpg');
+    background-size: cover;
+    background-position: center right;
+    border-bottom: 2px solid rgba(212, 175, 55, 0.25);
+    padding: 40px 30px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.vk-watermark-text {
+    position: absolute;
+    top: 50%;
+    left: 45%;
+    transform: translate(-50%, -50%);
+    font-size: clamp(3rem, 7vw, 6.5rem);
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.08);
+    letter-spacing: 4px;
+    text-align: center;
+    line-height: 1.1;
+    pointer-events: none;
+    user-select: none;
+    white-space: nowrap;
+}
+
+.vk-channel-tag {
+    position: absolute;
+    bottom: 50px;
+    left: 45%;
+    transform: translateX(-50%);
+    background: #dc2626;
+    color: #fff;
+    padding: 4px 16px;
+    border-radius: 8px;
+    font-weight: 800;
+    font-size: 0.85rem;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.5);
+}
+
+.vk-sidebar-menu {
+    width: 170px;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.vk-menu-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: #ffd700;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.vk-menu-item {
+    background: transparent;
+    border: none;
+    color: #cbd5e1;
+    font-size: 1.15rem;
+    font-weight: 800;
+    text-align: left;
+    cursor: pointer;
+    padding: 6px 0;
+    transition: all 0.2s ease;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+}
+
+.vk-menu-item:hover,
+.vk-menu-item.active {
+    color: #ffd700;
+    transform: translateX(4px);
+    font-weight: 900;
+}
+
+.vk-frosted-panel {
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border-radius: 24px;
+    padding: 32px 36px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.4) inset;
+    z-index: 25;
+    margin-left: 20px;
+    max-width: 820px;
+    width: 100%;
+}
+
+.vk-brand-link {
+    color: #0f172a;
+    font-weight: 800;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    cursor: pointer;
+    display: block;
+    padding: 6px 8px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.vk-brand-link:hover {
+    color: #b45309;
+    background: rgba(245, 158, 11, 0.12);
+    transform: translateX(4px);
+}
+
+.vk-social-pill {
+    position: absolute;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #000;
+    border: 2px solid #ffd700;
+    border-radius: 9999px;
+    padding: 6px 20px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    z-index: 20;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.8);
+}
+
+.vk-social-icon {
+    color: #ffd700;
+    font-size: 1.2rem;
+    transition: transform 0.2s ease, color 0.2s ease;
+    text-decoration: none;
+}
+
+.vk-social-icon:hover {
+    color: #fff;
+    transform: scale(1.25);
+}
+
+

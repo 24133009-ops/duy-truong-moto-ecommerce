@@ -25,6 +25,187 @@
         </div>
     </div>
 
+    <!-- VƯƠNG KHANG MOTOR STYLE MEGA HERO & BRAND SELECTOR -->
+    <section class="vk-mega-hero">
+        <div class="vk-watermark-text">MÊ XE MÀ CHÊ XE</div>
+        <div class="vk-channel-tag"><i class="fa-brands fa-youtube me-1"></i> DT CHANNEL</div>
+
+        <!-- Left Vertical Menu -->
+        <div class="vk-sidebar-menu">
+            <div class="vk-menu-header">
+                <span>MENU</span>
+                <div style="display: flex; flex-direction: column; gap: 3px; width: 20px;">
+                    <div style="height: 3px; background: #ffd700; border-radius: 2px;"></div>
+                    <div style="height: 3px; background: #ffd700; border-radius: 2px;"></div>
+                    <div style="height: 3px; background: #ffd700; border-radius: 2px;"></div>
+                </div>
+            </div>
+
+            <button type="button" class="vk-menu-item" id="btnTabMotor" onclick="switchMegaTab('motor')">
+                <span class="tab-dash d-none" style="color: #ffd700;">–</span> MOTOR
+            </button>
+            <button type="button" class="vk-menu-item active" id="btnTabOto" onclick="switchMegaTab('oto')">
+                <span class="tab-dash" style="color: #ffd700;">–</span> Ô TÔ
+            </button>
+            <button type="button" class="vk-menu-item" id="btnTabXeNho" onclick="switchMegaTab('xenho')">
+                <span class="tab-dash d-none" style="color: #ffd700;">–</span> XE NHỎ
+            </button>
+            <button type="button" class="vk-menu-item" id="btnTabPhuKien" onclick="switchMegaTab('phukien')">
+                <span class="tab-dash d-none" style="color: #ffd700;">–</span> PHỤ KIỆN
+            </button>
+            <button type="button" class="vk-menu-item" onclick="alert('Hotline Đặt Lịch Lái Thử VIP: 0903.456.789')">
+                BOOKING
+            </button>
+            <button type="button" class="vk-menu-item" onclick="alert('Dịch Vụ: Cứu hộ sàn trượt VIP 24/7, Giao xe tận nhà, Sang tên HQCN!')">
+                DỊCH VỤ
+            </button>
+            <button type="button" class="vk-menu-item" onclick="alert('Blog: Cập nhật tin tức mô tô PKL & siêu xe mới nhất!')">
+                BLOG
+            </button>
+            <a th:href="@{/products}" class="vk-menu-item">
+                LIÊN HỆ
+            </a>
+        </div>
+
+        <!-- Frosted Glass Brands Panel -->
+        <div class="vk-frosted-panel" id="megaFrostedPanel">
+            <!-- Ô TÔ Brands (Default Active) -->
+            <div id="contentOto" class="mega-content-box">
+                <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary border-opacity-25">
+                    <div class="fw-bold fs-5 text-dark"><i class="fa-solid fa-car-side text-gold me-2"></i> BỘ SƯU TẬP SIÊU XE Ô TÔ &amp; XE SANG</div>
+                    <a th:href="@{/products}" class="btn btn-warning btn-sm fw-bold px-3 text-dark rounded-pill">Xem Tất Cả Xe <i class="fa-solid fa-arrow-right ms-1"></i></a>
+                </div>
+                <div class="vk-brands-grid cols-4">
+                    <div class="d-flex flex-column gap-2">
+                        <a th:href="@{/products(brand='Lamborghini')}" class="vk-brand-link">LAMBORGHINI</a>
+                        <a th:href="@{/products(brand='Chevrolet')}" class="vk-brand-link">CHEVROLET</a>
+                        <a th:href="@{/products(brand='VinFast')}" class="vk-brand-link">VINFAST</a>
+                        <a th:href="@{/products(brand='Mazda')}" class="vk-brand-link">MAZDA</a>
+                        <a th:href="@{/products(brand='Ford')}" class="vk-brand-link">FORD</a>
+                        <a th:href="@{/products(brand='BMW')}" class="vk-brand-link">BMW</a>
+                    </div>
+                    <div class="d-flex flex-column gap-2">
+                        <a th:href="@{/products(brand='Mercedes')}" class="vk-brand-link">MERCEDES BENZ</a>
+                        <a th:href="@{/products(brand='Porsche')}" class="vk-brand-link">PORSCHE</a>
+                        <a th:href="@{/products(brand='Toyota')}" class="vk-brand-link">TOYOTA</a>
+                        <a th:href="@{/products(brand='Honda')}" class="vk-brand-link">HONDA</a>
+                        <a th:href="@{/products(brand='Jeep')}" class="vk-brand-link">JEEP</a>
+                        <a th:href="@{/products(brand='Kia')}" class="vk-brand-link">KIA</a>
+                    </div>
+                    <div class="d-flex flex-column gap-2">
+                        <a th:href="@{/products(brand='Volkswagen')}" class="vk-brand-link">VOLKSWAGEN</a>
+                        <a th:href="@{/products(brand='Hyundai')}" class="vk-brand-link">HYUNDAI</a>
+                        <a th:href="@{/products(brand='Jaguar')}" class="vk-brand-link">JAGUAR</a>
+                        <a th:href="@{/products(brand='Volvo')}" class="vk-brand-link">VOLVO</a>
+                        <a th:href="@{/products(brand='Mini')}" class="vk-brand-link">MINI</a>
+                    </div>
+                    <div class="d-flex flex-column gap-2">
+                        <a th:href="@{/products(brand='Land Rover')}" class="vk-brand-link">LAND ROVER</a>
+                        <a th:href="@{/products(brand='Peugeot')}" class="vk-brand-link">PEUGEOT</a>
+                        <a th:href="@{/products(brand='Nissan')}" class="vk-brand-link">NISSAN</a>
+                        <a th:href="@{/products(brand='Isuzu')}" class="vk-brand-link">ISUZU</a>
+                        <a th:href="@{/products(brand='Audi')}" class="vk-brand-link">AUDI</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MOTOR Brands -->
+            <div id="contentMotor" class="mega-content-box d-none">
+                <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary border-opacity-25">
+                    <div class="fw-bold fs-5 text-dark"><i class="fa-solid fa-motorcycle text-gold me-2"></i> BỘ SƯU TẬP MÔ TÔ PKL &amp; XE CÀO CÀO</div>
+                    <a th:href="@{/products}" class="btn btn-warning btn-sm fw-bold px-3 text-dark rounded-pill">Xem Tất Cả Xe <i class="fa-solid fa-arrow-right ms-1"></i></a>
+                </div>
+                <div class="vk-brands-grid cols-2">
+                    <div class="d-flex flex-column gap-2">
+                        <a th:href="@{/products(brand='Harley')}" class="vk-brand-link">HARLEY DAVIDSON</a>
+                        <a th:href="@{/products(brand='Royal Enfield')}" class="vk-brand-link">ROYAL ENFIELD</a>
+                        <a th:href="@{/products(brand='Kawasaki')}" class="vk-brand-link">KAWASAKI</a>
+                        <a th:href="@{/products(brand='Yamaha')}" class="vk-brand-link">YAMAHA</a>
+                        <a th:href="@{/products(brand='Ducati')}" class="vk-brand-link">DUCATI</a>
+                        <a th:href="@{/products(brand='Suzuki')}" class="vk-brand-link">SUZUKI</a>
+                    </div>
+                    <div class="d-flex flex-column gap-2">
+                        <a th:href="@{/products(brand='BMW')}" class="vk-brand-link">BMW MOTORRAD</a>
+                        <a th:href="@{/products(brand='MV Agusta')}" class="vk-brand-link">MV AGUSTA</a>
+                        <a th:href="@{/products(brand='Triumph')}" class="vk-brand-link">TRIUMPH</a>
+                        <a th:href="@{/products(brand='Aprilia')}" class="vk-brand-link">APRILIA</a>
+                        <a th:href="@{/products(brand='Honda')}" class="vk-brand-link">HONDA</a>
+                        <a th:href="@{/products(brand='KTM')}" class="vk-brand-link">KTM ENDURO</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- XE NHỎ Brands -->
+            <div id="contentXeNho" class="mega-content-box d-none">
+                <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary border-opacity-25">
+                    <div class="fw-bold fs-5 text-dark"><i class="fa-solid fa-gem text-gold me-2"></i> BỘ SƯU TẬP XE NHỎ &amp; TAY GA ĐỘC LẠ</div>
+                    <a th:href="@{/products}" class="btn btn-warning btn-sm fw-bold px-3 text-dark rounded-pill">Xem Tất Cả Xe <i class="fa-solid fa-arrow-right ms-1"></i></a>
+                </div>
+                <div class="vk-brands-grid cols-3">
+                    <div class="d-flex flex-column gap-2">
+                        <a th:href="@{/products(brand='Honda')}" class="vk-brand-link">HONDA (Monkey, Cub C125, SH350i)</a>
+                    </div>
+                    <div class="d-flex flex-column gap-2">
+                        <a th:href="@{/products(brand='Vespa')}" class="vk-brand-link">PIAGGIO VESPA (946 Dior, Sprint)</a>
+                    </div>
+                    <div class="d-flex flex-column gap-2">
+                        <a th:href="@{/products(brand='BMW')}" class="vk-brand-link">BMW (CE 04 Electric)</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PHỤ KIỆN Brands -->
+            <div id="contentPhuKien" class="mega-content-box d-none">
+                <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary border-opacity-25">
+                    <div class="fw-bold fs-5 text-dark"><i class="fa-solid fa-helmet-safety text-gold me-2"></i> BỘ SƯU TẬP PHỤ KIỆN &amp; PÔ ĐỘ</div>
+                    <a th:href="@{/products}" class="btn btn-warning btn-sm fw-bold px-3 text-dark rounded-pill">Xem Tất Cả Phụ Kiện <i class="fa-solid fa-arrow-right ms-1"></i></a>
+                </div>
+                <div class="vk-brands-grid cols-2">
+                    <div class="d-flex flex-column gap-2">
+                        <span class="vk-brand-link">MŨ BẢO HIỂM AGV, SHOEI, ARAI</span>
+                        <span class="vk-brand-link">GIÁP BẢO HỘ DAINESE, ALPINESTARS</span>
+                    </div>
+                    <div class="d-flex flex-column gap-2">
+                        <span class="vk-brand-link">PÔ ĐỘ AKRAPOVIC, AUSTIN RACING</span>
+                        <span class="vk-brand-link">PHUỘC OHLINS, HEO DẦU BREMBO</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Center Social Pill -->
+        <div class="vk-social-pill">
+            <a href="https://youtube.com" target="_blank" class="vk-social-icon"><i class="fa-brands fa-youtube"></i></a>
+            <a href="https://tiktok.com" target="_blank" class="vk-social-icon"><i class="fa-brands fa-tiktok"></i></a>
+            <a href="https://facebook.com" target="_blank" class="vk-social-icon"><i class="fa-brands fa-facebook-f"></i></a>
+        </div>
+    </section>
+
+    <script>
+        function switchMegaTab(tabKey) {
+            const tabs = ['motor', 'oto', 'xenho', 'phukien'];
+            tabs.forEach(t => {
+                const btn = document.getElementById('btnTab' + t.charAt(0).toUpperCase() + t.slice(1));
+                const content = document.getElementById('content' + t.charAt(0).toUpperCase() + t.slice(1));
+                if (btn) {
+                    if (t === tabKey) {
+                        btn.classList.add('active');
+                        const dash = btn.querySelector('.tab-dash');
+                        if (dash) dash.classList.remove('d-none');
+                    } else {
+                        btn.classList.remove('active');
+                        const dash = btn.querySelector('.tab-dash');
+                        if (dash) dash.classList.add('d-none');
+                    }
+                }
+                if (content) {
+                    if (t === tabKey) content.classList.remove('d-none');
+                    else content.classList.add('d-none');
+                }
+            });
+        }
+    </script>
+
     <!-- HERO SECTION -->
     <section class="hero-section">
         <div class="container">
