@@ -44,21 +44,22 @@ public class StoreService {
         return storeRepository.findAll();
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Store getOrCreateVendorStore(User user) {
-        if (user == null) return null;
+        if (user == null) {
+            List<Store> all = storeRepository.findAll();
+            return all.isEmpty() ? null : all.get(0);
+        }
         Optional<Store> storeOpt = storeRepository.findByOwnerId(user.getId());
         if (storeOpt.isPresent()) {
             return storeOpt.get();
         }
         List<Store> allStores = storeRepository.findAll();
         if (!allStores.isEmpty()) {
-            Store primary = allStores.get(0);
-            primary.setOwner(user);
-            return storeRepository.save(primary);
+            return allStores.get(0);
         }
         Commission comm = commissionRepository.findAll().stream().findFirst().orElse(null);
-        return storeRepository.save(Store.builder()
+        return Store.builder()
                 .name("Duy Truong Motor - Chi nhánh Phú Nhuận TP.HCM (Trụ Sở Chính)")
                 .slug("duy-truong-motor-phu-nhuan")
                 .owner(user)
@@ -68,7 +69,7 @@ public class StoreService {
                 .avatar("https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=300&q=80")
                 .cover("https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=1200&q=80")
                 .isActive(true).isOpen(true).commission(comm).point(1200L).rating(4.9)
-                .eWallet(BigDecimal.valueOf(120000000)).build());
+                .eWallet(BigDecimal.valueOf(120000000)).build();
     }
 
     @Transactional
