@@ -65,7 +65,24 @@ public class SecurityConfig {
                 .loginProcessingUrl("/auth/login-process")
                 .usernameParameter("email")
                 .passwordParameter("password")
-                .defaultSuccessUrl("/home", false)
+                .successHandler((request, response, authentication) -> {
+                    for (org.springframework.security.core.GrantedAuthority auth : authentication.getAuthorities()) {
+                        String role = auth.getAuthority();
+                        if ("ROLE_ADMIN".equals(role) || "ROLE_MANAGER".equals(role)) {
+                            response.sendRedirect("/admin/dashboard");
+                            return;
+                        }
+                        if ("ROLE_VENDOR".equals(role)) {
+                            response.sendRedirect("/vendor/dashboard");
+                            return;
+                        }
+                        if ("ROLE_SHIPPER".equals(role)) {
+                            response.sendRedirect("/shipper/dashboard");
+                            return;
+                        }
+                    }
+                    response.sendRedirect("/home");
+                })
                 .failureUrl("/auth/login?error=true")
                 .permitAll()
             )

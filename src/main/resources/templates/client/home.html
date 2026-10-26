@@ -30,21 +30,26 @@
         <div class="container">
             <div class="row align-items-center g-5">
                 <div class="col-lg-7">
-                    <span class="hero-badge"><i class="fa-solid fa-crown text-gold me-2"></i> THƯƠNG HIỆU SHOWROOM SỐ 1 VIỆT NAM</span>
-                    <h1 class="hero-title">
-                        CHINH PHỤC ĐỈNH CAO <br>
-                        <span class="text-gradient-gold">SIÊU MÔ TÔ LUXURY</span>
+                    <span class="hero-badge" style="background: rgba(212,175,55,0.15); border: 1px solid var(--dt-gold); color: #fef08a; padding: 6px 18px; border-radius: 20px; font-weight: 700; font-size: 0.85rem; letter-spacing: 1px; display: inline-block; margin-bottom: 20px;">
+                        <i class="fa-solid fa-crown text-gold me-2"></i> SIÊU THỊ MÔ TÔ PHÂN KHỐI LỚN &amp; XE CÀO CÀO UY TÍN
+                    </span>
+                    <h1 class="hero-title" style="font-size: clamp(2.2rem, 3.8vw, 3.2rem); font-weight: 800; line-height: 1.25; margin-bottom: 22px;">
+                        DUY TRƯƠNG MOTOR <br>
+                        <span class="text-gradient-gold" style="display: inline-block; white-space: nowrap;">MÔ TÔ PKL &amp; XE CÀO CÀO</span>
                     </h1>
-                    <p class="text-secondary fs-5 mb-4 pe-lg-4">
-                        Hệ thống chuỗi showroom Duy Truong Motor chuyên cung cấp các dòng Superbike, Hyper Naked, Cruiser đẳng cấp quốc tế: Ducati, Kawasaki Ninja H2, BMW Motorrad, Harley-Davidson với chính sách cọc online an toàn qua VNPAY và giao xe sàn trượt VIP tận nơi.
+                    <p class="text-secondary fs-5 mb-4 pe-lg-4" style="line-height: 1.7;">
+                        Hệ thống chuỗi showroom <strong>Duy Trương Motor</strong> chuyên kinh doanh, thu mua trao đổi siêu môtô PKL và các dòng xe cào cào địa hình đỉnh cao: KTM 300 EXC, Husqvarna FE 350, Honda CRF450R, Kawasaki KLX300, Ducati Panigale, Ninja H2, BMW S1000RR. Hải quan chính ngạch (HQCN), bao test hãng, bao quay đầu, giao xe sàn trượt VIP toàn quốc.
                     </p>
                     <div class="d-flex flex-wrap gap-3">
                         <a th:href="@{/products}" class="btn btn-gold btn-lg px-4 shadow">
-                            <i class="fa-solid fa-motorcycle me-2"></i> Khám Phá Kho Xe
+                            <i class="fa-solid fa-motorcycle me-2"></i> Khám Phá Kho Xe (25)
                         </a>
-                        <a th:href="@{/products(brand='Ducati')}" class="btn btn-outline-gold btn-lg px-4">
-                            <i class="fa-solid fa-bolt me-2"></i> Ducati Panigale V4
+                        <a th:href="@{/products(brand='KTM')}" class="btn btn-danger btn-lg px-4 shadow" style="background: linear-gradient(135deg, #ff6600, #cc4400); border: none;">
+                            <i class="fa-solid fa-mountain me-2"></i> Xe Cào Cào Địa Hình
                         </a>
+                        <button type="button" class="btn btn-outline-gold btn-lg px-4" data-bs-toggle="modal" data-bs-target="#liveChatModal">
+                            <i class="fa-solid fa-phone me-2"></i> Định Giá Thu Mua Xe Cũ
+                        </button>
                     </div>
 
                     <!-- Trust Stats -->
@@ -66,12 +71,12 @@
 
                 <div class="col-lg-5 text-center">
                     <div class="position-relative">
-                        <div style="position: absolute; width: 320px; height: 320px; background: radial-gradient(circle, rgba(212,175,55,0.25) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 50%;"></div>
-                        <img src="https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=800&q=80" alt="Ducati Panigale V4" class="img-fluid rounded-5 shadow-lg border border-gold" style="max-height: 480px; object-fit: cover;">
-                        <div class="glass-panel p-3 text-start position-absolute bottom-0 start-0 m-3 d-none d-sm-block" style="border-radius: 16px;">
-                            <div class="small text-gold fw-bold">SIÊU PHẨM NỔI BẬT</div>
-                            <div class="fw-bold fs-6">Ducati Panigale V4 S 2024</div>
-                            <div class="text-white small">950.000.000 VNĐ • 1.103cc</div>
+                        <div style="position: absolute; width: 320px; height: 320px; background: radial-gradient(circle, rgba(255,102,0,0.25) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 50%;"></div>
+                        <img th:src="@{/images/ktm_300_exc.jpg}" alt="KTM 300 EXC TPI 2024" class="img-fluid rounded-5 shadow-lg border border-gold" style="max-height: 480px; width: 100%; object-fit: cover;" onerror="this.src='/images/ducati_panigale_v4s.jpg'">
+                        <div class="glass-panel p-3 text-start position-absolute bottom-0 start-0 m-3 d-none d-sm-block" style="border-radius: 16px; background: rgba(14, 17, 26, 0.92); border: 1px solid var(--dt-gold);">
+                            <div class="small fw-bold" style="color: #ff6600;"><i class="fa-solid fa-fire me-1"></i> VUA CÀO CÀO ENDURO 2 THÌ</div>
+                            <div class="fw-bold fs-6 text-white">KTM 300 EXC TPI Champion 2024</div>
+                            <div class="text-gold-light small">385.000.000 VNĐ • HQCN Sang Tên 24h</div>
                         </div>
                     </div>
                 </div>
@@ -118,7 +123,7 @@
                 <div class="col-md-6 col-lg-3" th:each="product : ${topOver10Sold}">
                     <div class="bike-card">
                         <div class="bike-image-wrapper">
-                            <img th:src="${product.mainImage}" th:alt="${product.name}">
+                            <img th:src="@{${product.mainImage}}" th:alt="${product.name}" onerror="this.onerror=null; this.src='/images/ducati_panigale_v4s.jpg'">
                             <div class="badge-sold-count">
                                 <i class="fa-solid fa-fire text-danger me-1"></i> Đã bán: <strong th:text="${product.sold}"></strong>
                             </div>
@@ -165,7 +170,7 @@
                 <div class="col-md-6 col-lg-3" th:each="product : ${newest20}">
                     <div class="bike-card">
                         <div class="bike-image-wrapper">
-                            <img th:src="${product.mainImage}" th:alt="${product.name}">
+                            <img th:src="@{${product.mainImage}}" th:alt="${product.name}" onerror="this.onerror=null; this.src='/images/ducati_panigale_v4s.jpg'">
                             <div class="badge-store-tag">
                                 <i class="fa-solid fa-location-dot text-gold me-1"></i> <span th:text="${product.store.name}"></span>
                             </div>
@@ -195,9 +200,9 @@
 
             <div class="row g-4">
                 <div class="col-md-6 col-lg-4" th:each="store : ${stores}">
-                    <div class="showroom-card h-100 d-flex flex-direction-column">
+                    <div class="showroom-card h-100 d-flex flex-column">
                         <div class="d-flex align-items-center gap-3 mb-3">
-                            <img th:src="${store.avatar}" class="rounded-circle border border-gold" style="width: 60px; height: 60px; object-fit: cover;">
+                            <img th:src="@{${store.avatar}}" class="rounded-circle border border-gold" style="width: 60px; height: 60px; object-fit: cover;" onerror="this.src='/images/ducati_panigale_v4s.jpg'">
                             <div>
                                 <h5 class="fw-bold mb-1 text-white" th:text="${store.name}"></h5>
                                 <div class="text-gold small"><i class="fa-solid fa-star"></i> <span th:text="${store.rating}"></span> / 5.0 Đánh giá</div>

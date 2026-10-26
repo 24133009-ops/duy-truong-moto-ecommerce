@@ -29,7 +29,7 @@
             <!-- Left: Media & Gallery -->
             <div class="col-lg-6">
                 <div class="glass-panel p-3 rounded-4 mb-3 text-center overflow-hidden">
-                    <img th:src="${product.mainImage}" th:alt="${product.name}" class="img-fluid rounded-4 shadow" style="max-height: 450px; width: 100%; object-fit: cover;">
+                    <img th:src="@{${product.mainImage}}" th:alt="${product.name}" class="img-fluid rounded-4 shadow" style="max-height: 450px; width: 100%; object-fit: cover;" onerror="this.onerror=null; this.src='/images/ducati_panigale_v4s.jpg'">
                 </div>
                 <!-- Badges -->
                 <div class="d-flex gap-3 justify-content-center">

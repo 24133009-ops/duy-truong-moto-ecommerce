@@ -93,7 +93,7 @@
                     <div class="col-md-6 col-xl-4" th:each="product : ${productPage.content}">
                         <div class="bike-card">
                             <div class="bike-image-wrapper">
-                                <img th:src="${product.mainImage}" th:alt="${product.name}">
+                                <img th:src="@{${product.mainImage}}" th:alt="${product.name}" onerror="this.onerror=null; this.src='/images/ducati_panigale_v4s.jpg'">
                                 <div class="badge-store-tag">
                                     <i class="fa-solid fa-store text-gold me-1"></i> <span th:text="${product.store.name}"></span>
                                 </div>

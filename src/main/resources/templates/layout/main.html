@@ -13,21 +13,38 @@
 </head>
 <body>
 
-    <!-- Topbar Banner -->
+    <!-- 1. Top Announcement Bar -->
     <div class="py-2 bg-black border-bottom border-secondary text-center small text-secondary">
-        <div class="container d-flex justify-content-between align-items-center">
+        <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
             <div>
-                <i class="fa-solid fa-gem text-gold me-2"></i>
-                <span>DUY TRUONG MOTOR - HỆ THỐNG CHUỖI SIÊU SHOWROOM XE MÔ TÔ CAO CẤP VIỆT NAM</span>
+                <i class="fa-solid fa-quote-left text-gold me-1"></i>
+                <span class="text-gold-light fw-semibold">Ở đây, chúng tôi MUA CỦA NGƯỜI CHÁN - &amp; BÁN CHO NGƯỜI CẦN. Uy tín tạo nên thương hiệu.</span>
             </div>
-            <div class="d-none d-md-flex gap-4">
-                <span><i class="fa-solid fa-phone text-gold me-1"></i> Hotline: <strong>0901.234.567</strong></span>
-                <span><i class="fa-solid fa-location-dot text-gold me-1"></i> Chi nhánh: TP.HCM | Hà Nội | Đà Nẵng</span>
+            <div class="d-none d-md-flex gap-3 align-items-center">
+                <span><i class="fa-solid fa-phone text-gold me-1"></i> Hotline: <strong>0903.456.789 - 0933.333.382</strong></span>
+                <span><i class="fa-solid fa-clock text-gold me-1"></i> Mở cửa: <strong>08:30 - 21:00 (Cả T7 &amp; CN)</strong></span>
             </div>
         </div>
     </div>
 
-    <!-- Main Navigation Bar -->
+    <!-- 2. Role Switcher HUD -->
+    <div class="py-2 bg-dark border-bottom border-secondary" style="background: rgba(18, 22, 34, 0.95) !important;">
+        <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                <span class="badge bg-gold text-dark fw-bold small"><i class="fa-solid fa-sliders me-1"></i> ROLE SWITCHER HUD:</span>
+                <a th:href="@{/home}" class="badge bg-secondary text-decoration-none px-2 py-1"><i class="fa-solid fa-user me-1"></i> 1. Guest (Khách)</a>
+                <a th:href="@{/user/profile}" class="badge bg-dark border border-secondary text-light text-decoration-none px-2 py-1"><i class="fa-solid fa-motorcycle me-1"></i> 2. User (Biker)</a>
+                <a th:href="@{/vendor/dashboard}" class="badge bg-warning text-dark text-decoration-none px-2 py-1"><i class="fa-solid fa-store me-1"></i> 3. Vendor (Showroom Phú Nhuận)</a>
+                <a th:href="@{/admin/dashboard}" class="badge bg-danger text-light text-decoration-none px-2 py-1"><i class="fa-solid fa-shield-halved me-1"></i> 4. Admin (Duy Trương)</a>
+                <a th:href="@{/shipper/dashboard}" class="badge bg-info text-dark text-decoration-none px-2 py-1"><i class="fa-solid fa-truck-fast me-1"></i> 5. Shipper (Tài Xế Sàn Trượt)</a>
+            </div>
+            <div class="text-secondary small d-none d-lg-block">
+                <i class="fa-solid fa-location-dot text-gold me-1"></i> Hệ thống 3 Showroom: TP.HCM • Hà Nội • Đà Nẵng
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Main Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-luxury">
         <div class="container">
             <a class="navbar-brand-logo" th:href="@{/home}">
@@ -35,9 +52,9 @@
                     <i class="fa-solid fa-motorcycle"></i>
                 </div>
                 <div>
-                    <span class="brand-text text-gradient-gold">DUY TRUONG</span>
-                    <span class="brand-text text-white">MOTO</span>
-                    <div style="font-size: 0.65rem; color: var(--dt-gold); letter-spacing: 2px;" class="fw-bold">LUXURY SUPERBIKES</div>
+                    <span class="brand-text text-gradient-gold fw-bold fs-4">DUY TRUONG</span>
+                    <span class="brand-text text-white fw-bold fs-4">MOTOR</span>
+                    <div style="font-size: 0.65rem; color: var(--dt-gold); letter-spacing: 2px;" class="fw-bold">SIÊU THỊ MÔ TÔ PKL &amp; XE CÀO CÀO UY TÍN</div>
                 </div>
             </a>
 
@@ -51,19 +68,19 @@
                         <a class="nav-link text-light" th:href="@{/home}"><i class="fa-solid fa-house text-gold me-1"></i> Trang Chủ</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-light" th:href="@{/products}"><i class="fa-solid fa-motorcycle text-gold me-1"></i> Siêu Mô Tô</a>
+                        <a class="nav-link text-light" th:href="@{/products}"><i class="fa-solid fa-motorcycle text-gold me-1"></i> Kho Xe &amp; Cào Cào (25)</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-light" th:href="@{/products(brand='Ducati')}">Ducati</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" th:href="@{/products(brand='KTM')}">KTM Enduro</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-light" th:href="@{/products(brand='Kawasaki')}">Kawasaki</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-light" th:href="@{/products(brand='BMW')}">BMW Motorrad</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-light" th:href="@{/products(categoryId=4)}">Pô Độ & Phụ Tùng</a>
                     </li>
                 </ul>
 
@@ -79,6 +96,23 @@
                         <i class="fa-solid fa-cart-shopping me-1"></i> Giỏ Hàng
                     </a>
 
+                    <!-- Role Direct Portal Badges -->
+                    <div sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+                        <a th:href="@{/admin/dashboard}" class="btn btn-danger btn-sm rounded-pill fw-bold px-3 text-white shadow">
+                            <i class="fa-solid fa-shield-halved me-1"></i> Quản Trị Sàn
+                        </a>
+                    </div>
+                    <div sec:authorize="hasRole('VENDOR')">
+                        <a th:href="@{/vendor/dashboard}" class="btn btn-warning btn-sm rounded-pill fw-bold px-3 text-dark shadow">
+                            <i class="fa-solid fa-store me-1"></i> Quản Lý Showroom
+                        </a>
+                    </div>
+                    <div sec:authorize="hasRole('SHIPPER')">
+                        <a th:href="@{/shipper/dashboard}" class="btn btn-info btn-sm rounded-pill fw-bold px-3 text-dark shadow">
+                            <i class="fa-solid fa-truck-fast me-1"></i> Giao Xe Sàn Trượt
+                        </a>
+                    </div>
+
                     <!-- User Account Dropdown -->
                     <div class="dropdown" sec:authorize="isAuthenticated()">
                         <button class="btn btn-dark border-secondary dropdown-toggle rounded-pill px-3 py-2 text-gold d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown">
@@ -86,19 +120,19 @@
                             <span sec:authentication="name" class="d-none d-sm-inline small">Tài khoản</span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow-lg border-secondary p-2">
-                            <li><a class="dropdown-item py-2" th:href="@{/user/profile}"><i class="fa-solid fa-user-gear me-2 text-gold"></i> Hồ sơ & Sổ địa chỉ</a></li>
+                            <li><a class="dropdown-item py-2" th:href="@{/user/profile}"><i class="fa-solid fa-user-gear me-2 text-gold"></i> Hồ sơ &amp; Sổ địa chỉ</a></li>
                             <li><a class="dropdown-item py-2" th:href="@{/orders}"><i class="fa-solid fa-clock-rotate-left me-2 text-gold"></i> Lịch sử đơn mua</a></li>
                             
                             <li sec:authorize="hasAnyRole('VENDOR', 'ADMIN')" class="dropdown-divider border-secondary"></li>
                             <li sec:authorize="hasAnyRole('VENDOR', 'ADMIN')">
-                                <a class="dropdown-item py-2 text-warning" th:href="@{/vendor/dashboard}"><i class="fa-solid fa-store me-2"></i> Kênh Showroom Chi Nhánh</a>
+                                <a class="dropdown-item py-2 text-warning fw-bold" th:href="@{/vendor/dashboard}"><i class="fa-solid fa-store me-2"></i> Kênh Showroom Chi Nhánh</a>
                             </li>
                             <li sec:authorize="hasRole('SHIPPER')">
-                                <a class="dropdown-item py-2 text-info" th:href="@{/shipper/dashboard}"><i class="fa-solid fa-truck-fast me-2"></i> Phân Hệ Shipper Giao Xe</a>
+                                <a class="dropdown-item py-2 text-info fw-bold" th:href="@{/shipper/dashboard}"><i class="fa-solid fa-truck-fast me-2"></i> Phân Hệ Shipper Giao Xe</a>
                             </li>
                             <li sec:authorize="hasAnyRole('ADMIN', 'MANAGER')" class="dropdown-divider border-secondary"></li>
                             <li sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
-                                <a class="dropdown-item py-2 text-danger" th:href="@{/admin/dashboard}"><i class="fa-solid fa-shield-halved me-2"></i> Admin Quản Trị Hệ Thống</a>
+                                <a class="dropdown-item py-2 text-danger fw-bold" th:href="@{/admin/dashboard}"><i class="fa-solid fa-shield-halved me-2"></i> Admin Quản Trị Hệ Thống</a>
                             </li>
                             
                             <li class="dropdown-divider border-secondary"></li>
@@ -121,6 +155,59 @@
             </div>
         </div>
     </nav>
+
+    <!-- 4. Five Golden Commitments Banner -->
+    <div class="py-3 border-bottom border-secondary" style="background: rgba(10, 12, 18, 0.95); font-size: 0.82rem;">
+        <div class="container">
+            <div class="row g-3 text-center text-md-start align-items-center">
+                <div class="col-6 col-md">
+                    <div class="d-flex align-items-center gap-2 justify-content-center justify-content-md-start">
+                        <i class="fa-solid fa-shield-halved fs-5 text-gold"></i>
+                        <div>
+                            <div class="fw-bold text-white">HẢI QUAN CHÍNH NGẠCH</div>
+                            <div class="text-secondary small">100% Bao sang tên toàn quốc</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md">
+                    <div class="d-flex align-items-center gap-2 justify-content-center justify-content-md-start">
+                        <i class="fa-solid fa-repeat fs-5 text-gold"></i>
+                        <div>
+                            <div class="fw-bold text-white">BAO QUAY ĐẦU - ĐỔI XE</div>
+                            <div class="text-secondary small">Khấu hao thấp nhất thị trường</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md">
+                    <div class="d-flex align-items-center gap-2 justify-content-center justify-content-md-start">
+                        <i class="fa-solid fa-credit-card fs-5 text-gold"></i>
+                        <div>
+                            <div class="fw-bold text-white">HỖ TRỢ TRẢ GÓP 70%</div>
+                            <div class="text-secondary small">Trả trước 20-30%, duyệt 30p</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md">
+                    <div class="d-flex align-items-center gap-2 justify-content-center justify-content-md-start">
+                        <i class="fa-solid fa-certificate fs-5 text-gold"></i>
+                        <div>
+                            <div class="fw-bold text-white">BAO TEST HÃNG TOÀN QUỐC</div>
+                            <div class="text-secondary small">Cam kết máy zin, không đâm đụng</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md">
+                    <div class="d-flex align-items-center gap-2 justify-content-center justify-content-md-start">
+                        <i class="fa-solid fa-truck-fast fs-5 text-gold"></i>
+                        <div>
+                            <div class="fw-bold text-white">GIAO XE SÀN TRƯỢT VIP</div>
+                            <div class="text-secondary small">Bàn giao tận nhà an toàn 63 tỉnh</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Global Alert Messages -->
     <div class="container mt-3">
