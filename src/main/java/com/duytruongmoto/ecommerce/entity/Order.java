@@ -74,4 +74,8 @@ public class Order {
 
     private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime updatedAt = LocalDateTime.now();
+
+    public BigDecimal getTotalAmount() {
+        return amountFromUser;
+    }
 }
