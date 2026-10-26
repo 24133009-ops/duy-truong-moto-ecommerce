@@ -991,5 +991,168 @@ h1, h2, h3, h4, .brand-font {
     color: #ffd700;
 }
 
+/* ==========================================================================
+   BRIGHT HIGH-CONTRAST FORM CONTROLS & BACKEND (BE) STYLES
+   Chữ trong ô input/select/textarea sáng rõ, placeholder sáng tương phản cao,
+   toàn bộ nhãn, tiêu đề bảng, thông số trong BE (Admin, Vendor, Shipper) sáng đẹp.
+   ========================================================================== */
+
+/* 1. Global Inputs, Textarea, Selects (Trừ trang login dạng thẻ trắng .auth-card-bright) */
+:not(.auth-card-bright) > .form-control,
+:not(.auth-card-bright) .form-control,
+:not(.auth-card-bright) .form-control-luxury,
+:not(.auth-card-bright) .form-select,
+:not(.auth-card-bright) .form-select-luxury,
+.glass-panel input,
+.glass-panel textarea,
+.glass-panel select,
+input.form-control,
+input.form-control-luxury,
+textarea.form-control,
+textarea.form-control-luxury,
+select.form-select,
+select.form-select-luxury {
+    background-color: #121520 !important;
+    color: #ffffff !important;
+    border: 1.5px solid rgba(212, 175, 55, 0.45) !important;
+    border-radius: 10px !important;
+    font-size: 0.95rem !important;
+    font-weight: 500 !important;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* 2. Focus State */
+:not(.auth-card-bright) .form-control:focus,
+:not(.auth-card-bright) .form-control-luxury:focus,
+:not(.auth-card-bright) .form-select:focus,
+:not(.auth-card-bright) .form-select-luxury:focus,
+.glass-panel input:focus,
+.glass-panel textarea:focus,
+.glass-panel select:focus {
+    background-color: #171b28 !important;
+    color: #ffffff !important;
+    border-color: #ffd700 !important;
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.45), inset 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+    outline: none !important;
+}
+
+/* 3. Placeholder Color: Sáng rõ, dễ đọc, độ tương phản cao */
+.form-control::placeholder,
+.form-control-luxury::placeholder,
+input::placeholder,
+textarea::placeholder,
+.glass-panel input::placeholder,
+.glass-panel textarea::placeholder {
+    color: #cbd5e1 !important; /* Màu bạc sáng, cực kỳ nổi bật trên nền tối */
+    opacity: 0.85 !important;
+    font-weight: 400 !important;
+}
+
+/* Browser Specific Placeholders */
+::-webkit-input-placeholder {
+    color: #cbd5e1 !important;
+    opacity: 0.85 !important;
+}
+:-moz-placeholder {
+    color: #cbd5e1 !important;
+    opacity: 0.85 !important;
+}
+::-moz-placeholder {
+    color: #cbd5e1 !important;
+    opacity: 0.85 !important;
+}
+:-ms-input-placeholder {
+    color: #cbd5e1 !important;
+    opacity: 0.85 !important;
+}
+
+/* 4. Dropdown Select Options */
+select.form-select,
+select.form-select-luxury {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffd700' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") !important;
+}
+select.form-select option,
+select.form-select-luxury option {
+    background-color: #121520 !important;
+    color: #ffffff !important;
+    padding: 10px !important;
+}
+
+/* 5. Custom File Input (Choose file button & text) */
+input[type="file"]::file-selector-button,
+.form-control[type="file"]::file-selector-button {
+    background: linear-gradient(135deg, #ffd700, #d4af37) !important;
+    color: #0b0c10 !important;
+    font-weight: 700 !important;
+    border: none !important;
+    border-radius: 6px !important;
+    padding: 6px 14px !important;
+    margin-right: 12px !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+}
+input[type="file"]::file-selector-button:hover,
+.form-control[type="file"]::file-selector-button:hover {
+    background: #ffffff !important;
+    color: #000000 !important;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5) !important;
+}
+
+/* 6. Form Labels in BE: Chữ nhãn sáng rõ, không bị xám xịt */
+.form-label,
+label,
+.form-label.text-secondary {
+    color: #f1f5f9 !important; /* Trắng sáng */
+    font-weight: 600 !important;
+    letter-spacing: 0.2px !important;
+    margin-bottom: 6px !important;
+    font-size: 0.88rem !important;
+}
+
+/* 7. Backend Tables (Admin, Vendor, Shipper) */
+.table-dark {
+    --bs-table-bg: transparent !important;
+    --bs-table-color: #f8fafc !important;
+}
+
+.table-dark th,
+.table thead th,
+.table-dark thead tr th {
+    color: #ffd700 !important; /* Tiêu đề bảng vàng kim sang trọng, sáng rực rỡ */
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    font-size: 0.82rem !important;
+    letter-spacing: 0.5px !important;
+    border-bottom: 1.5px solid rgba(212, 175, 55, 0.35) !important;
+    background-color: rgba(18, 20, 28, 0.75) !important;
+}
+
+.table-dark td,
+.table tbody td {
+    color: #f8fafc !important; /* Dữ liệu bảng màu sáng rõ nét */
+    vertical-align: middle !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.table-dark td .text-secondary,
+.table-dark td span.text-secondary,
+.table-dark td div.text-secondary {
+    color: #cbd5e1 !important; /* Số điện thoại, địa chỉ, mã ID sáng bạc rõ ràng */
+}
+
+/* 8. Metric Cards & Secondary texts in Backend panels */
+.glass-panel .text-secondary,
+.glass-panel p.text-secondary,
+.glass-panel div.text-secondary,
+.glass-panel span.text-secondary {
+    color: #cbd5e1 !important; /* Chuyển màu chữ xám tối thành màu xám bạc sáng */
+}
+
+.glass-panel h3.text-white {
+    color: #ffffff !important;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+
 
 

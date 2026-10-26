@@ -33,7 +33,7 @@
                     <div class="table-responsive">
                         <table class="table table-dark table-borderless align-middle mb-0">
                             <thead>
-                                <tr class="border-bottom border-secondary text-secondary small">
+                                <tr class="border-bottom border-secondary text-gold small">
                                     <th>ID</th>
                                     <th>TÊN DANH MỤC</th>
                                     <th>ĐƯỜNG DẪN (SLUG)</th>
@@ -58,11 +58,11 @@
                     <h5 class="fw-bold text-gold mb-3"><i class="fa-solid fa-plus me-1"></i> THÊM DANH MỤC MỚI</h5>
                     <form th:action="@{/admin/categories/new}" method="post">
                         <div class="mb-3">
-                            <label class="form-label text-secondary small fw-bold">Tên Danh Mục</label>
+                            <label class="form-label text-light small fw-bold">Tên Danh Mục</label>
                             <input type="text" name="name" class="form-control form-control-luxury" placeholder="Ví dụ: Xe Đua Track-Only" required>
                         </div>
                         <div class="mb-4">
-                            <label class="form-label text-secondary small fw-bold">Đường dẫn Slug</label>
+                            <label class="form-label text-light small fw-bold">Đường dẫn Slug</label>
                             <input type="text" name="slug" class="form-control form-control-luxury" placeholder="xe-dua-track-only" required>
                         </div>
                         <button type="submit" class="btn btn-gold w-100 py-2 fw-bold">TẠO DANH MỤC</button>

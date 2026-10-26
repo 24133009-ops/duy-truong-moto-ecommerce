@@ -25,17 +25,17 @@
         <div class="glass-panel p-4 p-md-5 rounded-4">
             <form th:action="@{/vendor/products/new}" method="post" enctype="multipart/form-data">
                 <div class="mb-3">
-                    <label class="form-label text-secondary small fw-bold">Tên Siêu Xe / Phụ Tùng</label>
+                    <label class="form-label text-light small fw-bold">Tên Siêu Xe / Phụ Tùng</label>
                     <input type="text" name="name" class="form-control form-control-luxury" placeholder="Ví dụ: Ducati Panigale V4 R 2026" required>
                 </div>
 
                 <div class="row g-3 mb-3">
                     <div class="col-sm-6">
-                        <label class="form-label text-secondary small fw-bold">Đường Dẫn URL (Slug)</label>
+                        <label class="form-label text-light small fw-bold">Đường Dẫn URL (Slug)</label>
                         <input type="text" name="slug" class="form-control form-control-luxury" placeholder="ducati-panigale-v4-r-2026" required>
                     </div>
                     <div class="col-sm-6">
-                        <label class="form-label text-secondary small fw-bold">Danh Mục</label>
+                        <label class="form-label text-light small fw-bold">Danh Mục</label>
                         <select name="categoryId" class="form-select form-select-luxury" required>
                             <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
                         </select>
@@ -44,43 +44,43 @@
 
                 <div class="row g-3 mb-3">
                     <div class="col-sm-4">
-                        <label class="form-label text-secondary small fw-bold">Hãng Xe / Thương Hiệu</label>
+                        <label class="form-label text-light small fw-bold">Hãng Xe / Thương Hiệu</label>
                         <input type="text" name="brand" class="form-control form-control-luxury" placeholder="Ducati, Kawasaki..." required>
                     </div>
                     <div class="col-sm-4">
-                        <label class="form-label text-secondary small fw-bold">Dung Tích Động Cơ</label>
+                        <label class="form-label text-light small fw-bold">Dung Tích Động Cơ</label>
                         <input type="text" name="engineCapacity" class="form-control form-control-luxury" placeholder="Ví dụ: 1.103 cc">
                     </div>
                     <div class="col-sm-4">
-                        <label class="form-label text-secondary small fw-bold">Màu Sơn / Ngoại Thất</label>
+                        <label class="form-label text-light small fw-bold">Màu Sơn / Ngoại Thất</label>
                         <input type="text" name="color" class="form-control form-control-luxury" placeholder="Đỏ Corse, Đen Carbon" required>
                     </div>
                 </div>
 
                 <div class="row g-3 mb-3">
                     <div class="col-sm-6">
-                        <label class="form-label text-secondary small fw-bold">Giá Bán Niêm Yết (VNĐ)</label>
+                        <label class="form-label text-light small fw-bold">Giá Bán Niêm Yết (VNĐ)</label>
                         <input type="number" name="price" class="form-control form-control-luxury fw-bold text-gold" placeholder="Ví dụ: 950000000" required>
                     </div>
                     <div class="col-sm-6">
-                        <label class="form-label text-secondary small fw-bold">Giá Khuyến Mãi (Nếu có)</label>
+                        <label class="form-label text-light small fw-bold">Giá Khuyến Mãi (Nếu có)</label>
                         <input type="number" name="promotionalPrice" class="form-control form-control-luxury" placeholder="Ví dụ: 920000000">
                     </div>
                 </div>
 
                 <div class="row g-3 mb-3">
                     <div class="col-sm-6">
-                        <label class="form-label text-secondary small fw-bold">Số Lượng Tồn Kho Showroom</label>
+                        <label class="form-label text-light small fw-bold">Số Lượng Tồn Kho Showroom</label>
                         <input type="number" name="quantity" value="1" min="1" class="form-control form-control-luxury" required>
                     </div>
                     <div class="col-sm-6">
-                        <label class="form-label text-secondary small fw-bold">Hình Ảnh Xe (Tải Lên Cloudinary)</label>
+                        <label class="form-label text-light small fw-bold">Hình Ảnh Xe (Tải Lên Cloudinary)</label>
                         <input type="file" name="imageFile" class="form-control form-control-luxury" accept="image/*">
                     </div>
                 </div>
 
                 <div class="mb-4">
-                    <label class="form-label text-secondary small fw-bold">Mô Tả & Cấu Hình Chi Tiết</label>
+                    <label class="form-label text-light small fw-bold">Mô Tả & Cấu Hình Chi Tiết</label>
                     <textarea name="description" rows="5" class="form-control form-control-luxury" placeholder="Mô tả công suất mã lực, hệ thống phuộc, phanh ABS, công nghệ hỗ trợ lái điện tử..." required></textarea>
                 </div>
 

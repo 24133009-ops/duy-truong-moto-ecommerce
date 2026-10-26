@@ -30,33 +30,33 @@
         <div class="row g-4 mb-5">
             <div class="col-md-3">
                 <div class="glass-panel p-4 rounded-4">
-                    <div class="text-secondary small fw-bold mb-1">TỔNG GMV GIAO DỊCH</div>
+                    <div class="text-gold-light small fw-bold mb-1">TỔNG GMV GIAO DỊCH</div>
                     <h3 class="fw-black text-gradient-gold mb-0" th:text="${#numbers.formatDecimal(totalGmv, 0, 'COMMA', 0, 'POINT')} + ' đ'"></h3>
-                    <div class="small text-secondary mt-1">Toàn chuỗi showroom</div>
+                    <div class="small text-light mt-1">Toàn chuỗi showroom</div>
                 </div>
             </div>
 
             <div class="col-md-3">
                 <div class="glass-panel p-4 rounded-4">
-                    <div class="text-secondary small fw-bold mb-1">HOA HỒNG SÀN THU VỀ</div>
+                    <div class="text-gold-light small fw-bold mb-1">HOA HỒNG SÀN THU VỀ</div>
                     <h3 class="fw-black text-success mb-0" th:text="${#numbers.formatDecimal(totalPlatformRevenue, 0, 'COMMA', 0, 'POINT')} + ' đ'"></h3>
-                    <div class="small text-secondary mt-1">Lợi nhuận ròng chiết khấu</div>
+                    <div class="small text-light mt-1">Lợi nhuận ròng chiết khấu</div>
                 </div>
             </div>
 
             <div class="col-md-3">
                 <div class="glass-panel p-4 rounded-4">
-                    <div class="text-secondary small fw-bold mb-1">TỔNG SHOWROOM CHI NHÁNH</div>
+                    <div class="text-gold-light small fw-bold mb-1">TỔNG SHOWROOM CHI NHÁNH</div>
                     <h3 class="fw-black text-warning mb-0" th:text="${totalStores} + ' Điểm Bán'"></h3>
-                    <div class="small text-secondary mt-1">Hà Nội, HCM, Đà Nẵng</div>
+                    <div class="small text-light mt-1">Hà Nội, HCM, Đà Nẵng</div>
                 </div>
             </div>
 
             <div class="col-md-3">
                 <div class="glass-panel p-4 rounded-4">
-                    <div class="text-secondary small fw-bold mb-1">TỔNG THÀNH VIÊN ĐĂNG KÝ</div>
+                    <div class="text-gold-light small fw-bold mb-1">TỔNG THÀNH VIÊN ĐĂNG KÝ</div>
                     <h3 class="fw-black text-info mb-0" th:text="${totalUsers} + ' Tài Khoản'"></h3>
-                    <div class="small text-secondary mt-1">Đã kích hoạt mã OTP</div>
+                    <div class="small text-light mt-1">Đã kích hoạt mã OTP</div>
                 </div>
             </div>
         </div>
@@ -67,7 +67,7 @@
             <div class="table-responsive">
                 <table class="table table-dark table-borderless align-middle mb-0">
                     <thead>
-                        <tr class="border-bottom border-secondary text-secondary small">
+                        <tr class="border-bottom border-secondary text-gold small">
                             <th>MÃ ĐƠN</th>
                             <th>SHOWROOM PHỤ TRÁCH</th>
                             <th>KHÁCH HÀNG</th>

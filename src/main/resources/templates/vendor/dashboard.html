@@ -35,33 +35,33 @@
             <div class="col-md-4">
                 <div class="glass-panel p-4 rounded-4">
                     <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="text-secondary small fw-bold">DOANH THU ĐÃ BÀN GIAO</span>
+                        <span class="text-gold-light small fw-bold">DOANH THU ĐÃ BÀN GIAO</span>
                         <div class="logo-icon bg-success text-white" style="width: 40px; height: 40px; font-size: 18px;"><i class="fa-solid fa-money-bill-trend-up"></i></div>
                     </div>
                     <h3 class="fw-black text-gradient-gold mb-0" th:text="${totalRevenue != null ? #numbers.formatDecimal(totalRevenue, 0, 'COMMA', 0, 'POINT') + ' đ' : '0 đ'}"></h3>
-                    <div class="small text-secondary mt-1">Sau khi trích khấu hoa hồng hệ thống</div>
+                    <div class="small text-light mt-1">Sau khi trích khấu hoa hồng hệ thống</div>
                 </div>
             </div>
 
             <div class="col-md-4">
                 <div class="glass-panel p-4 rounded-4">
                     <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="text-secondary small fw-bold">KHO XE SHOWROOM</span>
+                        <span class="text-gold-light small fw-bold">KHO XE SHOWROOM</span>
                         <div class="logo-icon bg-warning text-dark" style="width: 40px; height: 40px; font-size: 18px;"><i class="fa-solid fa-motorcycle"></i></div>
                     </div>
                     <h3 class="fw-black text-white mb-0" th:text="(${totalProducts != null ? totalProducts : 0}) + ' Dòng Xe'"></h3>
-                    <div class="small text-secondary mt-1">Đang mở bán hoặc trưng bày</div>
+                    <div class="small text-light mt-1">Đang mở bán hoặc trưng bày</div>
                 </div>
             </div>
 
             <div class="col-md-4">
                 <div class="glass-panel p-4 rounded-4">
                     <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="text-secondary small fw-bold">ĐƠN ĐẶT HÀNG</span>
+                        <span class="text-gold-light small fw-bold">ĐƠN ĐẶT HÀNG</span>
                         <div class="logo-icon bg-info text-dark" style="width: 40px; height: 40px; font-size: 18px;"><i class="fa-solid fa-receipt"></i></div>
                     </div>
                     <h3 class="fw-black text-white mb-0" th:text="(${totalOrders != null ? totalOrders : 0}) + ' Đơn Hàng'"></h3>
-                    <div class="small text-secondary mt-1">Khách đặt cọc hoặc thanh toán</div>
+                    <div class="small text-light mt-1">Khách đặt cọc hoặc thanh toán</div>
                 </div>
             </div>
         </div>
@@ -76,7 +76,7 @@
             <div class="table-responsive">
                 <table class="table table-dark table-borderless align-middle mb-0">
                     <thead>
-                        <tr class="border-bottom border-secondary text-secondary small">
+                        <tr class="border-bottom border-secondary text-gold small">
                             <th>MÃ ĐƠN</th>
                             <th>NGƯỜI NHẬN</th>
                             <th>SỐ ĐIỆN THOẠI</th>

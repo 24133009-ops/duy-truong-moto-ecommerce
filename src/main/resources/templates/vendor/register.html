@@ -24,22 +24,22 @@
         <div class="glass-panel p-4 p-md-5 rounded-4">
             <form th:action="@{/vendor/register}" method="post">
                 <div class="mb-3">
-                    <label class="form-label text-secondary small fw-bold">Tên Chi Nhánh Showroom</label>
+                    <label class="form-label text-light small fw-bold">Tên Chi Nhánh Showroom</label>
                     <input type="text" name="name" class="form-control form-control-luxury" placeholder="Ví dụ: Duy Truong Motor Showroom Hải Phòng" required>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label text-secondary small fw-bold">Đường dẫn Showroom (Slug)</label>
+                    <label class="form-label text-light small fw-bold">Đường dẫn Showroom (Slug)</label>
                     <input type="text" name="slug" class="form-control form-control-luxury" placeholder="duy-truong-moto-hai-phong" required>
                 </div>
 
                 <div class="row g-3 mb-3">
                     <div class="col-sm-6">
-                        <label class="form-label text-secondary small fw-bold">Hotline Showroom</label>
+                        <label class="form-label text-light small fw-bold">Hotline Showroom</label>
                         <input type="tel" name="phone" class="form-control form-control-luxury" placeholder="0901234567" required>
                     </div>
                     <div class="col-sm-6">
-                        <label class="form-label text-secondary small fw-bold">Gói Chiết Khấu Sàn (Commission)</label>
+                        <label class="form-label text-light small fw-bold">Gói Chiết Khấu Sàn (Commission)</label>
                         <select name="commissionId" class="form-select form-select-luxury" required>
                             <option th:each="c : ${commissions}" th:value="${c.id}" th:text="${c.name} + ' (' + ${c.cost} + '%)'"></option>
                         </select>
@@ -47,12 +47,12 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label text-secondary small fw-bold">Địa Chỉ Mặt Bằng Showroom</label>
+                    <label class="form-label text-light small fw-bold">Địa Chỉ Mặt Bằng Showroom</label>
                     <input type="text" name="address" class="form-control form-control-luxury" placeholder="Số nhà, phố, quận/huyện, thành phố..." required>
                 </div>
 
                 <div class="mb-4">
-                    <label class="form-label text-secondary small fw-bold">Giới Thiệu Showroom & Năng Lực Trưng Bày</label>
+                    <label class="form-label text-light small fw-bold">Giới Thiệu Showroom & Năng Lực Trưng Bày</label>
                     <textarea name="bio" rows="3" class="form-control form-control-luxury" placeholder="Mô tả cơ sở vật chất, phòng trưng bày, xưởng dịch vụ kỹ thuật..." required></textarea>
                 </div>
 
