@@ -970,11 +970,11 @@ body {
   transform: translateX(4px);
 }
 
-/* Right Floating Action Dock */
+/* Right Floating Action Dock (Nâng lên cao hơn nút Chat tư vấn 25px, không che nút Zalo) */
 .vk-floating-dock {
   position: fixed;
-  right: 18px;
-  bottom: 24px;
+  right: 29px;
+  bottom: 105px;
   z-index: 1000;
   display: flex;
   flex-direction: column;
@@ -1077,7 +1077,8 @@ body {
     grid-template-columns: repeat(2, 1fr);
   }
   .vk-floating-dock {
-    right: 8px;
+    right: 14px;
+    bottom: 90px;
   }
   .vk-dock-btn {
     width: 40px;
