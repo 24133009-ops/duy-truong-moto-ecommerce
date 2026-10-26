@@ -442,50 +442,45 @@ export default function App() {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
 
-      {/* 1. TOP SLOGAN & HOTLINE BAR (Chuẩn phong cách Vương Khang Motor) */}
-      <div className="top-slogan-bar">
-        <div className="slogan-highlight">
-          <i className="fa-solid fa-quote-left text-gold"></i>
-          <span>Ở đây, chúng tôi <strong>MUA CỦA NGƯỜI CHÁN</strong> - & <strong>BÁN CHO NGƯỜI CẦN</strong>. Uy tín tạo nên thương hiệu.</span>
-        </div>
-        <div className="top-contact-info">
-          <span><i className="fa-solid fa-phone text-gold me-1"></i> Hotline: <a href="tel:0903456789">0903.456.789</a> - <a href="tel:0933333382">0933.333.382</a></span>
-          <span><i className="fa-solid fa-clock text-gold me-1"></i> Giờ mở cửa: 08:30 - 21:00 (Cả T7 & CN)</span>
-        </div>
-      </div>
-
-      {/* 2. TOP ROLE SWITCHER HUD (Cho Giảng viên & Nhóm 3 thành viên kiểm thử) */}
-      <div className="role-hud">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-          <span style={{ color: 'var(--gold-primary)', fontWeight: 800 }}>
-            <i className="fa-solid fa-code-compare me-1"></i> ROLE SWITCHER HUD:
+      {/* 1. TOP UTILITY BAR: ROLE SWITCHER HUD + SLOGAN & HOTLINE (Tích hợp 1 thanh tinh gọn, sang trọng) */}
+      <div className="top-slogan-bar" style={{ padding: '8px 48px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#07090e', borderBottom: '1px solid rgba(212,175,55,0.2)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <span style={{ color: 'var(--gold-primary)', fontWeight: 800, fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <i className="fa-solid fa-code-compare text-gold"></i> PHÂN HỆ:
           </span>
-          <div className="role-chips">
+          <div className="role-chips" style={{ display: 'flex', gap: '8px' }}>
             <button className={`role-chip ${currentRoleKey === 'guest' ? 'active' : ''}`} onClick={() => { setCurrentRoleKey('guest'); setCurrentTab('home'); }}>
-              <i className="fa-solid fa-user-secret me-1"></i> 1. Guest (Khách)
+              1. Khách
             </button>
             <button className={`role-chip ${currentRoleKey === 'customer' ? 'active' : ''}`} onClick={() => { setCurrentRoleKey('customer'); setCurrentTab('home'); }}>
-              <i className="fa-solid fa-user me-1"></i> 2. User (Hoàng Biker)
+              2. Hoàng Biker
             </button>
             <button className={`role-chip ${currentRoleKey === 'vendor' ? 'active' : ''}`} onClick={() => { setCurrentRoleKey('vendor'); setCurrentTab('vendor'); }}>
-              <i className="fa-solid fa-store me-1"></i> 3. Vendor (Showroom Phú Nhuận)
+              3. Showroom PN
             </button>
             <button className={`role-chip ${currentRoleKey === 'admin' ? 'active' : ''}`} onClick={() => { setCurrentRoleKey('admin'); setCurrentTab('admin'); }}>
-              <i className="fa-solid fa-shield-halved me-1"></i> 4. Admin (Duy Trương)
+              4. Admin
             </button>
             <button className={`role-chip ${currentRoleKey === 'shipper' ? 'active' : ''}`} onClick={() => { setCurrentRoleKey('shipper'); setCurrentTab('shipper'); }}>
-              <i className="fa-solid fa-truck-ramp-box me-1"></i> 5. Shipper (Tài Xế Sàn Trượt)
+              5. Shipper
             </button>
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '20px', color: 'var(--text-sub)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '24px', fontSize: '0.82rem', color: 'var(--text-sub)' }}>
+          <div className="slogan-highlight d-none d-xl-flex" style={{ color: 'var(--gold-light)', fontSize: '0.82rem' }}>
+            <i className="fa-solid fa-quote-left text-gold me-1"></i>
+            <span>MUA CỦA NGƯỜI CHÁN - &amp; BÁN CHO NGƯỜI CẦN</span>
+          </div>
+          <div>
+            <i className="fa-solid fa-phone text-gold me-1"></i> Hotline: <a href="tel:0903456789" style={{ color: 'var(--gold-primary)', textDecoration: 'none', fontWeight: 700 }}>0903.456.789</a>
+          </div>
           <div>
             <i className="fa-solid fa-location-dot text-gold me-1"></i> Khu vực:
             <select 
               value={selectedShowroomFilter} 
               onChange={(e) => setSelectedShowroomFilter(e.target.value)}
-              style={{ background: 'transparent', color: '#fff', border: 'none', marginLeft: '5px', fontWeight: 'bold', cursor: 'pointer' }}
+              style={{ background: 'transparent', color: '#fff', border: 'none', marginLeft: '4px', fontWeight: 'bold', cursor: 'pointer', fontSize: '0.82rem' }}
             >
               <option value="all" style={{ background: '#0e111a' }}>Toàn Quốc (3 Showroom)</option>
               {SHOWROOMS.map(s => (
@@ -493,14 +488,10 @@ export default function App() {
               ))}
             </select>
           </div>
-          {currentUser.points && (
-            <span style={{ color: 'var(--gold-light)' }}><i className="fa-solid fa-gem me-1"></i> {currentUser.points} pts</span>
-          )}
-
         </div>
       </div>
 
-      {/* 3. MAIN APP HEADER */}
+      {/* 2. MAIN APP HEADER (Thoáng đãng, rộng rãi, đẳng cấp showroom) */}
       <header className="app-header">
         <div className="logo-badge" onClick={() => setCurrentTab('home')}>
           <div className="logo-icon-box">
@@ -572,48 +563,7 @@ export default function App() {
         </div>
       </header>
 
-      {/* 4. COMMITMENT BAR: 5 CAM KẾT VÀNG NHƯ VƯƠNG KHANG MOTOR */}
-      <div className="commitment-bar">
-        <div className="commitment-grid">
-          <div className="commitment-item">
-            <div className="commitment-icon"><i className="fa-solid fa-shield-halved"></i></div>
-            <div className="commitment-text">
-              <h4>HẢI QUAN CHÍNH NGẠCH</h4>
-              <p>100% Bao sang tên toàn quốc, bao rút gốc 24h</p>
-            </div>
-          </div>
-          <div className="commitment-item">
-            <div className="commitment-icon"><i className="fa-solid fa-rotate"></i></div>
-            <div className="commitment-text">
-              <h4>BAO QUAY ĐẦU - ĐỔI XE</h4>
-              <p>Thu mua lại xe với mức khấu hao thấp nhất</p>
-            </div>
-          </div>
-          <div className="commitment-item">
-            <div className="commitment-icon"><i className="fa-solid fa-credit-card"></i></div>
-            <div className="commitment-text">
-              <h4>HỖ TRỢ TRẢ GÓP 70%</h4>
-              <p>Trả trước từ 20-30%, duyệt hồ sơ nhận xe ngay</p>
-            </div>
-          </div>
-          <div className="commitment-item">
-            <div className="commitment-icon"><i className="fa-solid fa-certificate"></i></div>
-            <div className="commitment-text">
-              <h4>BAO TEST HÃNG TOÀN QUỐC</h4>
-              <p>Cam kết máy zin, không tai nạn đâm đụng</p>
-            </div>
-          </div>
-          <div className="commitment-item">
-            <div className="commitment-icon"><i className="fa-solid fa-truck-fast"></i></div>
-            <div className="commitment-text">
-              <h4>GIAO XE SÀN TRƯỢT VIP</h4>
-              <p>Bàn giao tận nhà an toàn 63 tỉnh thành</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 5. MAIN BODY */}
+      {/* 3. MAIN BODY */}
       <main style={{ flexGrow: 1 }}>
 
         {/* ================= TAB: HOME ================= */}
@@ -621,10 +571,6 @@ export default function App() {
           <div>
             {/* VƯƠNG KHANG MOTOR MEGA HERO & SELECTION INTERFACE */}
             <section className="vk-mega-hero">
-              {/* Giant Watermark Text & Tag */}
-              <div className="vk-watermark-text">MÊ XE MÀ CHÊ XE</div>
-              <div className="vk-channel-tag"><i className="fa-brands fa-youtube me-1"></i> DT CHANNEL</div>
-
               {/* Left Sidebar Menu */}
               <div className="vk-sidebar-menu">
                 <div className="vk-menu-header">
@@ -764,13 +710,48 @@ export default function App() {
                 </div>
               )}
 
-              {/* Bottom Center Social Pill */}
-              <div className="vk-social-pill">
-                <a href="https://youtube.com" target="_blank" rel="noreferrer" className="vk-social-icon" title="YouTube"><i className="fa-brands fa-youtube"></i></a>
-                <a href="https://tiktok.com" target="_blank" rel="noreferrer" className="vk-social-icon" title="TikTok"><i className="fa-brands fa-tiktok"></i></a>
-                <a href="https://facebook.com" target="_blank" rel="noreferrer" className="vk-social-icon" title="Facebook"><i className="fa-brands fa-facebook-f"></i></a>
-              </div>
             </section>
+
+            {/* FIVE GOLDEN COMMITMENTS BANNER (Đặt tinh tế ngay dưới Hero Banner) */}
+            <div style={{ background: 'rgba(10, 12, 18, 0.95)', borderBottom: '1px solid rgba(255,255,255,0.1)', padding: '16px 30px', fontSize: '0.82rem' }}>
+              <div style={{ maxWidth: '1240px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <i className="fa-solid fa-shield-halved text-gold" style={{ fontSize: '1.4rem' }}></i>
+                  <div>
+                    <div style={{ fontWeight: 800, color: '#fff' }}>HẢI QUAN CHÍNH NGẠCH</div>
+                    <div style={{ color: 'var(--text-sub)', fontSize: '0.75rem' }}>100% Bao sang tên toàn quốc</div>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <i className="fa-solid fa-repeat text-gold" style={{ fontSize: '1.4rem' }}></i>
+                  <div>
+                    <div style={{ fontWeight: 800, color: '#fff' }}>BAO QUAY ĐẦU - ĐỔI XE</div>
+                    <div style={{ color: 'var(--text-sub)', fontSize: '0.75rem' }}>Khấu hao thấp nhất thị trường</div>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <i className="fa-solid fa-credit-card text-gold" style={{ fontSize: '1.4rem' }}></i>
+                  <div>
+                    <div style={{ fontWeight: 800, color: '#fff' }}>HỖ TRỢ TRẢ GÓP 70%</div>
+                    <div style={{ color: 'var(--text-sub)', fontSize: '0.75rem' }}>Trả trước 20-30%, duyệt 30p</div>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <i className="fa-solid fa-certificate text-gold" style={{ fontSize: '1.4rem' }}></i>
+                  <div>
+                    <div style={{ fontWeight: 800, color: '#fff' }}>BAO TEST HÃNG TOÀN QUỐC</div>
+                    <div style={{ color: 'var(--text-sub)', fontSize: '0.75rem' }}>Cam kết máy zin, không đâm đụng</div>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <i className="fa-solid fa-truck-fast text-gold" style={{ fontSize: '1.4rem' }}></i>
+                  <div>
+                    <div style={{ fontWeight: 800, color: '#fff' }}>GIAO XE SÀN TRƯỢT VIP</div>
+                    <div style={{ color: 'var(--text-sub)', fontSize: '0.75rem' }}>Bàn giao tận nhà an toàn 63 tỉnh</div>
+                  </div>
+                </div>
+              </div>
+            </div>
             {/* Hero Section */}
             <section style={{ padding: '70px 30px', position: 'relative', overflow: 'hidden' }}>
               <div style={{ maxWidth: '1240px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '50px', alignItems: 'center' }}>

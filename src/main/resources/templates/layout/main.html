@@ -13,36 +13,25 @@
 </head>
 <body>
 
-    <!-- 1. Top Announcement Bar -->
-    <div class="py-2 bg-black border-bottom border-secondary text-center small text-secondary">
-        <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
-            <div>
-                <i class="fa-solid fa-quote-left text-gold me-1"></i>
-                <span class="text-gold-light fw-semibold">Ở đây, chúng tôi MUA CỦA NGƯỜI CHÁN - &amp; BÁN CHO NGƯỜI CẦN. Uy tín tạo nên thương hiệu.</span>
+    <!-- 1. TOP UTILITY BAR: ROLE SWITCHER HUD + HOTLINE & SLOGAN (Tích hợp 1 thanh tinh gọn, sang trọng) -->
+    <div class="py-2 border-bottom border-secondary" style="background: #07090e; font-size: 0.8rem;">
+        <div class="container-fluid px-4 d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                <span class="badge bg-gold text-dark fw-bold small"><i class="fa-solid fa-sliders me-1"></i> PHÂN HỆ:</span>
+                <a th:href="@{/home}" class="badge bg-secondary text-decoration-none px-2 py-1"><i class="fa-solid fa-user me-1"></i> 1. Khách</a>
+                <a th:href="@{/user/profile}" class="badge bg-dark border border-secondary text-light text-decoration-none px-2 py-1"><i class="fa-solid fa-motorcycle me-1"></i> 2. Hoàng Biker</a>
+                <a th:href="@{/vendor/dashboard}" class="badge bg-warning text-dark text-decoration-none px-2 py-1"><i class="fa-solid fa-store me-1"></i> 3. Showroom PN</a>
+                <a th:href="@{/admin/dashboard}" class="badge bg-danger text-light text-decoration-none px-2 py-1"><i class="fa-solid fa-shield-halved me-1"></i> 4. Admin</a>
+                <a th:href="@{/shipper/dashboard}" class="badge bg-info text-dark text-decoration-none px-2 py-1"><i class="fa-solid fa-truck-fast me-1"></i> 5. Shipper</a>
             </div>
-            <div class="d-none d-md-flex gap-3 align-items-center">
-                <span><i class="fa-solid fa-phone text-gold me-1"></i> Hotline: <strong>0903.456.789 - 0933.333.382</strong></span>
-                <span><i class="fa-solid fa-clock text-gold me-1"></i> Mở cửa: <strong>08:30 - 21:00 (Cả T7 &amp; CN)</strong></span>
+            <div class="d-none d-lg-flex align-items-center gap-3 text-secondary small">
+                <span class="text-gold-light"><i class="fa-solid fa-quote-left text-gold me-1"></i> MUA CỦA NGƯỜI CHÁN - &amp; BÁN CHO NGƯỜI CẦN</span>
+                <span><i class="fa-solid fa-phone text-gold me-1"></i> Hotline: <strong class="text-gold">0903.456.789</strong></span>
+                <span><i class="fa-solid fa-location-dot text-gold me-1"></i> Toàn Quốc (3 Showroom)</span>
             </div>
         </div>
     </div>
 
-    <!-- 2. Role Switcher HUD -->
-    <div class="py-2 bg-dark border-bottom border-secondary" style="background: rgba(18, 22, 34, 0.95) !important;">
-        <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
-            <div class="d-flex align-items-center gap-2 flex-wrap">
-                <span class="badge bg-gold text-dark fw-bold small"><i class="fa-solid fa-sliders me-1"></i> ROLE SWITCHER HUD:</span>
-                <a th:href="@{/home}" class="badge bg-secondary text-decoration-none px-2 py-1"><i class="fa-solid fa-user me-1"></i> 1. Guest (Khách)</a>
-                <a th:href="@{/user/profile}" class="badge bg-dark border border-secondary text-light text-decoration-none px-2 py-1"><i class="fa-solid fa-motorcycle me-1"></i> 2. User (Biker)</a>
-                <a th:href="@{/vendor/dashboard}" class="badge bg-warning text-dark text-decoration-none px-2 py-1"><i class="fa-solid fa-store me-1"></i> 3. Vendor (Showroom Phú Nhuận)</a>
-                <a th:href="@{/admin/dashboard}" class="badge bg-danger text-light text-decoration-none px-2 py-1"><i class="fa-solid fa-shield-halved me-1"></i> 4. Admin (Duy Trương)</a>
-                <a th:href="@{/shipper/dashboard}" class="badge bg-info text-dark text-decoration-none px-2 py-1"><i class="fa-solid fa-truck-fast me-1"></i> 5. Shipper (Tài Xế Sàn Trượt)</a>
-            </div>
-            <div class="text-secondary small d-none d-lg-block">
-                <i class="fa-solid fa-location-dot text-gold me-1"></i> Hệ thống 3 Showroom: TP.HCM • Hà Nội • Đà Nẵng
-            </div>
-        </div>
-    </div>
 
     <!-- 3. Main Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-luxury">
@@ -164,58 +153,6 @@
         </div>
     </nav>
 
-    <!-- 4. Five Golden Commitments Banner -->
-    <div class="py-3 border-bottom border-secondary" style="background: rgba(10, 12, 18, 0.95); font-size: 0.82rem;">
-        <div class="container">
-            <div class="row g-3 text-center text-md-start align-items-center">
-                <div class="col-6 col-md">
-                    <div class="d-flex align-items-center gap-2 justify-content-center justify-content-md-start">
-                        <i class="fa-solid fa-shield-halved fs-5 text-gold"></i>
-                        <div>
-                            <div class="fw-bold text-white">HẢI QUAN CHÍNH NGẠCH</div>
-                            <div class="text-secondary small">100% Bao sang tên toàn quốc</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6 col-md">
-                    <div class="d-flex align-items-center gap-2 justify-content-center justify-content-md-start">
-                        <i class="fa-solid fa-repeat fs-5 text-gold"></i>
-                        <div>
-                            <div class="fw-bold text-white">BAO QUAY ĐẦU - ĐỔI XE</div>
-                            <div class="text-secondary small">Khấu hao thấp nhất thị trường</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6 col-md">
-                    <div class="d-flex align-items-center gap-2 justify-content-center justify-content-md-start">
-                        <i class="fa-solid fa-credit-card fs-5 text-gold"></i>
-                        <div>
-                            <div class="fw-bold text-white">HỖ TRỢ TRẢ GÓP 70%</div>
-                            <div class="text-secondary small">Trả trước 20-30%, duyệt 30p</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6 col-md">
-                    <div class="d-flex align-items-center gap-2 justify-content-center justify-content-md-start">
-                        <i class="fa-solid fa-certificate fs-5 text-gold"></i>
-                        <div>
-                            <div class="fw-bold text-white">BAO TEST HÃNG TOÀN QUỐC</div>
-                            <div class="text-secondary small">Cam kết máy zin, không đâm đụng</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md">
-                    <div class="d-flex align-items-center gap-2 justify-content-center justify-content-md-start">
-                        <i class="fa-solid fa-truck-fast fs-5 text-gold"></i>
-                        <div>
-                            <div class="fw-bold text-white">GIAO XE SÀN TRƯỢT VIP</div>
-                            <div class="text-secondary small">Bàn giao tận nhà an toàn 63 tỉnh</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Global Alert Messages -->
     <div class="container mt-3">
@@ -322,7 +259,7 @@
     </footer>
 
     <!-- 13. RIGHT FLOATING QUICK ACTION DOCK (VƯƠNG KHANG MOTOR STYLE) -->
-    <div class="position-fixed end-0 top-50 translate-middle-y z-3 d-flex flex-column gap-2 me-3" style="z-index: 1050;">
+    <div class="position-fixed end-0 bottom-0 mb-4 z-3 d-flex flex-column gap-2 me-3" style="z-index: 1050;">
         <button type="button" class="btn btn-warning rounded-3 shadow d-flex align-items-center justify-content-center p-0" style="width: 48px; height: 48px;" data-bs-toggle="modal" data-bs-target="#liveChatModal" title="Định giá thu mua xe cũ">
             <i class="fa-solid fa-handshake text-dark fs-5"></i>
         </button>
