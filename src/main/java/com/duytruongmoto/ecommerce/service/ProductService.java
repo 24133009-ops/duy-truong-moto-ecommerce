@@ -43,6 +43,10 @@ public class ProductService {
         return productRepository.findTop20ByIsActiveTrueAndIsSellingTrueOrderByRatingDesc();
     }
 
+    public List<String> getAllDistinctBrands() {
+        return productRepository.findDistinctBrands();
+    }
+
     public Page<Product> filterProducts(String keyword, Long categoryId, BigDecimal minPrice, BigDecimal maxPrice, String brand, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         return productRepository.filterProducts(keyword, categoryId, minPrice, maxPrice, brand, pageable);

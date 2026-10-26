@@ -3,39 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Danh Sách Siêu Mô Tô & Phụ Kiện - Duy Truong Motor</title>
+    <title>Kho Siêu Mô Tô & Xe Sang Luxury - Duy Trương Motor</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,700;0,800;0,900;1,800&family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <!-- Bootstrap & FontAwesome -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-<body>
+<body style="background-color: #080a10; color: #f8fafc; font-family: 'Montserrat', sans-serif;">
 
-    <!-- Header / Navbar Include -->
+    <!-- 1. Header / Navbar Include -->
     <div th:replace="~{layout/main :: nav}"></div>
 
-    <div class="container py-5">
-        <!-- Breadcrumb & Header -->
-        <div class="mb-4">
-            <h2 class="fw-bold text-white mb-1">KHO SIÊU MÔ TÔ & PHỤ KIỆN LUXURY</h2>
-            <p class="text-secondary small">Tìm kiếm và tinh chỉnh bộ lọc dòng xe theo nhu cầu và ngân sách của bạn</p>
-        </div>
+    <!-- 2. Super Luxury Catalog Hero Banner -->
+    <section class="catalog-hero-box">
+        <div class="container text-center">
+            <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill mb-2" style="background: rgba(212, 175, 55, 0.15); border: 1px solid rgba(212, 175, 55, 0.4); color: #ffd700; font-size: 0.8rem; font-weight: 800; letter-spacing: 1px;">
+                <i class="fa-solid fa-crown text-gold"></i> BỘ SƯU TẬP SIÊU XE & MÔ TÔ PKL CAO CẤP
+            </div>
+            <h1 class="fw-black text-white text-uppercase mb-2" style="font-size: 2.3rem; letter-spacing: -0.5px; text-shadow: 0 4px 20px rgba(0,0,0,0.8);">
+                KHO SIÊU MÔ TÔ & BỘ SƯU TẬP XE SANG
+            </h1>
+            <p class="text-secondary mx-auto mb-4" style="max-width: 820px; font-size: 0.95rem; line-height: 1.6;">
+                Hệ thống Showroom Duy Trương Motor cung cấp đầy đủ các mẫu xe cào cào địa hình KTM, Husqvarna, Honda CRF, Kawasaki KLX và siêu môtô phân khối lớn, siêu xe thể thao có bộ lọc chi tiết.
+            </p>
 
+            <!-- 4 Trust Badges -->
+            <div class="d-flex flex-wrap justify-content-center gap-3">
+                <div class="trust-badge-item">
+                    <i class="fa-solid fa-shield-halved text-gold"></i>
+                    <span>100% HQCN SANG TÊN 24H</span>
+                </div>
+                <div class="trust-badge-item">
+                    <i class="fa-solid fa-rotate text-gold"></i>
+                    <span>BAO QUAY ĐẦU - ĐỔI XE</span>
+                </div>
+                <div class="trust-badge-item">
+                    <i class="fa-solid fa-credit-card text-gold"></i>
+                    <span>HỖ TRỢ TRẢ GÓP 70%</span>
+                </div>
+                <div class="trust-badge-item">
+                    <i class="fa-solid fa-truck-fast text-gold"></i>
+                    <span>GIAO XE SÀN TRƯỢT VIP TẬN NHÀ</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Quick Category Filter Tabs -->
+    <div class="container mb-4">
+        <div class="d-flex align-items-center gap-2 overflow-auto pb-2" style="scrollbar-width: thin;">
+            <a th:href="@{/products}" class="category-tab-pill" th:classappend="${categoryId == null && (keyword == null || keyword == '') && (brand == null || brand == '') ? 'active' : ''}">
+                <i class="fa-solid fa-border-all"></i> Tất Cả Kho Xe
+            </a>
+            <a th:href="@{/products(brand='oto')}" class="category-tab-pill" th:classappend="${brand == 'oto'} ? 'active' : ''">
+                <i class="fa-solid fa-car-side text-gold"></i> Siêu Xe Ô Tô & Xe Sang
+            </a>
+            <a th:href="@{/products(keyword='cào cào')}" class="category-tab-pill" th:classappend="${keyword == 'cào cào'} ? 'active' : ''">
+                <i class="fa-solid fa-mountain text-gold"></i> Xe Cào Cào Địa Hình
+            </a>
+            <a th:href="@{/products(keyword='superbike')}" class="category-tab-pill" th:classappend="${keyword == 'superbike'} ? 'active' : ''">
+                <i class="fa-solid fa-gauge-high text-gold"></i> Superbike Thể Thao
+            </a>
+            <a th:href="@{/products(keyword='xe nhỏ')}" class="category-tab-pill" th:classappend="${keyword == 'xe nhỏ'} ? 'active' : ''">
+                <i class="fa-solid fa-motorcycle text-gold"></i> Xe Nhỏ / Tay Ga Sưu Tầm
+            </a>
+            <a th:href="@{/products(keyword='naked')}" class="category-tab-pill" th:classappend="${keyword == 'naked'} ? 'active' : ''">
+                <i class="fa-solid fa-bolt text-gold"></i> Hyper Naked
+            </a>
+            <a th:href="@{/products(keyword='cruiser')}" class="category-tab-pill" th:classappend="${keyword == 'cruiser'} ? 'active' : ''">
+                <i class="fa-solid fa-road text-gold"></i> Cruiser Cơ Bắp Mỹ
+            </a>
+            <a th:href="@{/products(keyword='akrapovic')}" class="category-tab-pill" th:classappend="${keyword == 'akrapovic'} ? 'active' : ''">
+                <i class="fa-solid fa-fire text-gold"></i> Pô Độ & Đồ Chơi PKL
+            </a>
+        </div>
+    </div>
+
+    <!-- 4. Main Catalog Content -->
+    <div class="container pb-5">
         <div class="row g-4">
-            <!-- Sidebar Filter -->
+
+            <!-- Left Sidebar Filter -->
             <div class="col-lg-3">
-                <div class="glass-panel p-4 rounded-4 sticky-top" style="top: 100px;">
-                    <h5 class="fw-bold text-gold mb-3"><i class="fa-solid fa-filter me-2"></i> BỘ LỌC TÌM KIẾM</h5>
+                <div class="glass-panel p-4 rounded-4 sticky-top shadow-lg" style="top: 90px; background: rgba(18, 22, 34, 0.9); border: 1px solid rgba(212, 175, 55, 0.35);">
+                    <h5 class="fw-bold text-gold mb-3 d-flex align-items-center gap-2" style="letter-spacing: 0.5px;">
+                        <i class="fa-solid fa-filter"></i> BỘ LỌC TÌM KIẾM
+                    </h5>
 
                     <form th:action="@{/products}" method="get">
                         <!-- Search Keyword -->
                         <div class="mb-3">
-                            <label class="form-label text-secondary small fw-bold">Từ khóa</label>
-                            <input type="text" name="keyword" th:value="${keyword}" class="form-control form-control-luxury" placeholder="Tên xe, pô, nón...">
+                            <label class="form-label text-secondary small fw-bold">Từ khóa tìm kiếm:</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-dark border-secondary text-gold"><i class="fa-solid fa-magnifying-glass"></i></span>
+                                <input type="text" name="keyword" th:value="${keyword}" class="form-control form-control-luxury" placeholder="KTM cào cào, VF9, Huracán...">
+                            </div>
                         </div>
 
                         <!-- Category -->
                         <div class="mb-3">
-                            <label class="form-label text-secondary small fw-bold">Danh mục</label>
+                            <label class="form-label text-secondary small fw-bold">Phân loại danh mục:</label>
                             <select name="categoryId" class="form-select form-select-luxury">
                                 <option value="">-- Tất cả danh mục --</option>
                                 <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}" th:selected="${categoryId != null && categoryId == cat.id}"></option>
@@ -44,70 +115,119 @@
 
                         <!-- Brand -->
                         <div class="mb-3">
-                            <label class="form-label text-secondary small fw-bold">Hãng xe</label>
+                            <label class="form-label text-secondary small fw-bold">Hãng sản xuất:</label>
                             <select name="brand" class="form-select form-select-luxury">
                                 <option value="">-- Tất cả thương hiệu --</option>
-                                <option value="Ducati" th:selected="${brand == 'Ducati'}">Ducati</option>
-                                <option value="Kawasaki" th:selected="${brand == 'Kawasaki'}">Kawasaki</option>
-                                <option value="BMW" th:selected="${brand == 'BMW'}">BMW Motorrad</option>
-                                <option value="Harley-Davidson" th:selected="${brand == 'Harley-Davidson'}">Harley-Davidson</option>
-                                <option value="Akrapovic" th:selected="${brand == 'Akrapovic'}">Akrapovic</option>
-                                <option value="AGV" th:selected="${brand == 'AGV'}">AGV Helmets</option>
+                                <option th:each="b : ${brands}" th:value="${b}" th:text="${b}" th:selected="${brand != null && (brand == b || #strings.equalsIgnoreCase(brand, b))}"></option>
                             </select>
                         </div>
 
-                        <!-- Price Range -->
+                        <!-- Price Presets -->
+                        <div class="mb-3">
+                            <label class="form-label text-secondary small fw-bold">Khoảng giá nhanh:</label>
+                            <div class="d-flex flex-wrap gap-2">
+                                <a th:href="@{/products(maxPrice=300000000)}" class="quick-price-chip">&lt; 300 Tr</a>
+                                <a th:href="@{/products(minPrice=300000000, maxPrice=1000000000)}" class="quick-price-chip">300Tr - 1 Tỷ</a>
+                                <a th:href="@{/products(minPrice=1000000000, maxPrice=5000000000)}" class="quick-price-chip">1 - 5 Tỷ</a>
+                                <a th:href="@{/products(minPrice=5000000000)}" class="quick-price-chip">&gt; 5 Tỷ (Siêu Xe)</a>
+                            </div>
+                        </div>
+
+                        <!-- Exact Price Range -->
                         <div class="mb-4">
-                            <label class="form-label text-secondary small fw-bold">Khoảng giá (VNĐ)</label>
+                            <label class="form-label text-secondary small fw-bold">Tùy chỉnh khoảng giá (VNĐ):</label>
                             <div class="row g-2">
                                 <div class="col-6">
-                                    <input type="number" name="minPrice" th:value="${minPrice}" class="form-control form-control-luxury small" placeholder="Từ">
+                                    <input type="number" name="minPrice" th:value="${minPrice}" class="form-control form-control-luxury small" placeholder="Giá từ">
                                 </div>
                                 <div class="col-6">
-                                    <input type="number" name="maxPrice" th:value="${maxPrice}" class="form-control form-control-luxury small" placeholder="Đến">
+                                    <input type="number" name="maxPrice" th:value="${maxPrice}" class="form-control form-control-luxury small" placeholder="Đến giá">
                                 </div>
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-gold w-100 py-2 fw-bold mb-2">ÁP DỤNG BỘ LỌC</button>
-                        <a th:href="@{/products}" class="btn btn-outline-light w-100 py-2 btn-sm">Đặt Lại Bộ Lọc</a>
+                        <!-- Action Buttons -->
+                        <button type="submit" class="btn btn-gold w-100 py-2 fw-bold mb-2 shadow">
+                            <i class="fa-solid fa-check me-1"></i> ÁP DỤNG BỘ LỌC
+                        </button>
+                        <a th:href="@{/products}" class="btn btn-outline-light w-100 py-2 btn-sm">
+                            <i class="fa-solid fa-rotate-left me-1"></i> Đặt Lại Tất Cả
+                        </a>
                     </form>
                 </div>
             </div>
 
-            <!-- Product Grid -->
+            <!-- Right Product Grid -->
             <div class="col-lg-9">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div class="text-secondary small">
-                        Hiển thị <strong class="text-gold" th:text="${productPage.totalElements}"></strong> sản phẩm phù hợp
+                <!-- Result Counter -->
+                <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-secondary border-opacity-25">
+                    <div class="text-secondary">
+                        Tìm thấy <strong class="text-gold fs-5" th:text="${productPage.totalElements}"></strong> mẫu xe &amp; phụ kiện phù hợp
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="text-secondary small d-none d-sm-inline">Hiển thị chuẩn:</span>
+                        <span class="badge bg-dark border border-secondary text-gold px-3 py-2 rounded-pill small">
+                            <i class="fa-solid fa-gem text-gold me-1"></i> Showroom Duy Trương Motor
+                        </span>
                     </div>
                 </div>
 
-                <div th:if="${productPage.totalElements == 0}" class="glass-panel p-5 text-center rounded-4">
-                    <i class="fa-solid fa-motorcycle text-secondary fs-1 mb-3"></i>
-                    <h5 class="text-white">Không tìm thấy sản phẩm nào phù hợp!</h5>
-                    <p class="text-secondary small">Vui lòng thử tìm kiếm với từ khóa hoặc mức giá khác</p>
+                <!-- Empty State (No Vehicles Found) -->
+                <div th:if="${productPage.totalElements == 0}" class="glass-panel p-5 text-center rounded-4 shadow-lg my-4" style="background: rgba(18, 22, 34, 0.7); border: 2px dashed rgba(212, 175, 55, 0.4);">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style="width: 80px; height: 80px; background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.3);">
+                        <i class="fa-solid fa-motorcycle text-gold fs-2"></i>
+                    </div>
+                    <h4 class="text-white fw-bold mb-2">Không tìm thấy mẫu xe nào phù hợp!</h4>
+                    <p class="text-secondary small mx-auto mb-4" style="max-width: 480px;">
+                        Vui lòng thay đổi từ khóa tìm kiếm, mở rộng khoảng giá hoặc chọn tất cả thương hiệu để khám phá kho xe đầy đủ.
+                    </p>
+                    <div>
+                        <a th:href="@{/products}" class="btn btn-gold px-4 py-2 rounded-pill fw-bold shadow">
+                            <i class="fa-solid fa-rotate-left me-2"></i> Xem Toàn Bộ Kho Xe
+                        </a>
+                    </div>
                 </div>
 
+                <!-- Products Grid -->
                 <div class="row g-4" th:if="${productPage.totalElements > 0}">
                     <div class="col-md-6 col-xl-4" th:each="product : ${productPage.content}">
-                        <div class="bike-card">
-                            <div class="bike-image-wrapper">
-                                <img th:src="@{${product.mainImage}}" th:alt="${product.name}" onerror="this.onerror=null; this.src='/images/ducati_panigale_v4s.jpg'">
-                                <div class="badge-store-tag">
+                        <div class="luxury-bike-card">
+                            <!-- Card Image -->
+                            <div class="card-img-container">
+                                <img th:src="@{${product.mainImage}}" th:alt="${product.name}" onerror="this.onerror=null; this.src='/images/lamborghini_huracan.jpg'">
+                                <div class="luxury-badge-hqcn">
+                                    <i class="fa-solid fa-certificate me-1"></i> HQCN
+                                </div>
+                                <div class="luxury-badge-showroom">
                                     <i class="fa-solid fa-store text-gold me-1"></i> <span th:text="${product.store.name}"></span>
                                 </div>
                             </div>
-                            <div class="bike-details">
-                                <span class="bike-brand" th:text="${product.brand}"></span>
-                                <h4 class="bike-name" th:text="${product.name}"></h4>
-                                <div class="text-secondary small mb-3">
-                                    <span th:if="${product.engineCapacity}" th:text="${product.engineCapacity} + ' • '"></span>
-                                    <span th:text="${product.color}"></span>
+
+                            <!-- Card Body -->
+                            <div class="luxury-card-body">
+                                <div class="luxury-card-brand" th:text="${product.brand}"></div>
+                                <h3 class="luxury-card-title">
+                                    <a th:href="@{/products/{slug}(slug=${product.slug})}" class="text-white text-decoration-none" th:text="${product.name}"></a>
+                                </h3>
+
+                                <!-- Specs Preview -->
+                                <div class="d-flex flex-wrap gap-1 mb-3">
+                                    <span class="luxury-spec-pill" th:if="${product.engineCapacity}">
+                                        <i class="fa-solid fa-gauge-high text-gold me-1"></i> <span th:text="${product.engineCapacity}"></span>
+                                    </span>
+                                    <span class="luxury-spec-pill" th:if="${product.color}">
+                                        <i class="fa-solid fa-palette text-gold me-1"></i> <span th:text="${product.color}"></span>
+                                    </span>
                                 </div>
-                                <div class="mt-auto d-flex justify-content-between align-items-center">
-                                    <div class="bike-price" th:text="${#numbers.formatDecimal(product.getEffectivePrice(), 0, 'COMMA', 0, 'POINT')} + ' đ'"></div>
-                                    <a th:href="@{/products/{slug}(slug=${product.slug})}" class="btn btn-gold btn-sm px-3 rounded-pill">Xem Xe</a>
+
+                                <!-- Price & Action Footer -->
+                                <div class="mt-auto d-flex justify-content-between align-items-center pt-2 border-top border-secondary border-opacity-25">
+                                    <div>
+                                        <div class="price-racing-tag" th:text="${#numbers.formatDecimal(product.getEffectivePrice(), 0, 'COMMA', 0, 'POINT')} + ' đ'"></div>
+                                    </div>
+                                    <a th:href="@{/products/{slug}(slug=${product.slug})}" class="btn btn-gold btn-sm px-3 rounded-pill fw-bold shadow-sm">
+                                        <i class="fa-solid fa-eye me-1"></i> Xem Xe
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -118,28 +238,54 @@
                 <div class="mt-5 d-flex justify-content-center" th:if="${productPage.totalPages > 1}">
                     <ul class="pagination pagination-dark gap-2">
                         <li class="page-item" th:classappend="${productPage.first ? 'disabled' : ''}">
-                            <a class="page-link bg-dark text-gold border-secondary rounded-3" th:href="@{/products(page=${productPage.number - 1}, keyword=${keyword}, categoryId=${categoryId}, brand=${brand})}">Trước</a>
+                            <a class="page-link bg-dark text-gold border-secondary rounded-3" th:href="@{/products(page=${productPage.number - 1}, keyword=${keyword}, categoryId=${categoryId}, brand=${brand}, minPrice=${minPrice}, maxPrice=${maxPrice})}">
+                                <i class="fa-solid fa-chevron-left me-1"></i> Trước
+                            </a>
                         </li>
                         <li class="page-item" th:each="i : ${#numbers.sequence(0, productPage.totalPages - 1)}" th:classappend="${productPage.number == i ? 'active' : ''}">
-                            <a class="page-link border-secondary rounded-3" th:classappend="${productPage.number == i ? 'bg-gold text-dark fw-bold' : 'bg-dark text-white'}" th:href="@{/products(page=${i}, keyword=${keyword}, categoryId=${categoryId}, brand=${brand})}" th:text="${i + 1}"></a>
+                            <a class="page-link border-secondary rounded-3" th:classappend="${productPage.number == i ? 'bg-gold text-dark fw-bold' : 'bg-dark text-white'}" th:href="@{/products(page=${i}, keyword=${keyword}, categoryId=${categoryId}, brand=${brand}, minPrice=${minPrice}, maxPrice=${maxPrice})}" th:text="${i + 1}"></a>
                         </li>
                         <li class="page-item" th:classappend="${productPage.last ? 'disabled' : ''}">
-                            <a class="page-link bg-dark text-gold border-secondary rounded-3" th:href="@{/products(page=${productPage.number + 1}, keyword=${keyword}, categoryId=${categoryId}, brand=${brand})}">Sau</a>
+                            <a class="page-link bg-dark text-gold border-secondary rounded-3" th:href="@{/products(page=${productPage.number + 1}, keyword=${keyword}, categoryId=${categoryId}, brand=${brand}, minPrice=${minPrice}, maxPrice=${maxPrice})}">
+                                Sau <i class="fa-solid fa-chevron-right ms-1"></i>
+                            </a>
                         </li>
                     </ul>
                 </div>
+
             </div>
         </div>
     </div>
 
-    <!-- Footer & Chat Include -->
+    <!-- 5. Right Floating Action Dock (Vương Khang Motor Style) -->
+    <div class="vk-floating-dock d-none d-md-flex">
+        <a href="tel:0903456789" class="vk-dock-btn" title="Thu Mua Xe Cũ Giá Cao">
+            <span class="vk-dock-icon">🤝</span>
+            <span class="vk-dock-label">Thu mua xe</span>
+        </a>
+        <a href="#legal" class="vk-dock-btn" title="Pháp Lý Rút Hồ Sơ HQCN">
+            <span class="vk-dock-icon">🛡️</span>
+            <span class="vk-dock-label">Pháp lý HQCN</span>
+        </a>
+        <a th:href="@{/products}" class="vk-dock-btn" title="Kho Hình Ảnh Xe Thực Tế">
+            <span class="vk-dock-icon">📸</span>
+            <span class="vk-dock-label">Kho ảnh</span>
+        </a>
+        <a href="tel:0903456789" class="vk-dock-btn" title="Hotline 24/7">
+            <span class="vk-dock-icon">📞</span>
+            <span class="vk-dock-label">Hotline</span>
+        </a>
+        <a href="https://zalo.me" target="_blank" class="vk-dock-btn" title="Tư Vấn Zalo 24/7">
+            <span class="vk-dock-icon">💬</span>
+            <span class="vk-dock-label">Zalo</span>
+        </a>
+    </div>
+
+    <!-- 6. Footer & Live Chat Include -->
     <div th:replace="~{layout/main :: footer}"></div>
     <div th:replace="~{layout/main :: div.floating-chat-btn}"></div>
     <div th:replace="~{layout/main :: div#liveChatModal}"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-    <script th:src="@{/js/app.js}"></script>
 </body>
 </html>

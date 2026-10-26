@@ -35,7 +35,7 @@ public class ProductController {
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(required = false) String brand,
-            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "12") int size,
             @AuthenticationPrincipal CustomUserDetails userDetails,
             Model model) {
@@ -44,15 +44,30 @@ public class ProductController {
             model.addAttribute("currentUser", userDetails.getUser());
         }
 
-        Page<Product> productPage = productService.filterProducts(keyword, categoryId, minPrice, maxPrice, brand, page, size);
+        // Clean up empty string query parameters
+        String cleanKeyword = (keyword != null && !keyword.trim().isEmpty()) ? keyword.trim() : null;
+        String cleanBrand = (brand != null && !brand.trim().isEmpty()) ? brand.trim() : null;
+        
+        // Prevent negative page numbers
+        int pageIndex = (page == null || page < 0) ? 0 : page;
+
+        Page<Product> productPage = productService.filterProducts(cleanKeyword, categoryId, minPrice, maxPrice, cleanBrand, pageIndex, size);
+
+        // Fallback: If requested page is out of bounds (e.g. user requested page=1 when only page 0 has items)
+        if (productPage.getContent().isEmpty() && productPage.getTotalElements() > 0 && pageIndex > 0) {
+            pageIndex = 0;
+            productPage = productService.filterProducts(cleanKeyword, categoryId, minPrice, maxPrice, cleanBrand, pageIndex, size);
+        }
 
         model.addAttribute("productPage", productPage);
         model.addAttribute("categories", categoryRepository.findByIsDeletedFalse());
-        model.addAttribute("keyword", keyword);
+        model.addAttribute("brands", productService.getAllDistinctBrands());
+        model.addAttribute("keyword", cleanKeyword);
         model.addAttribute("categoryId", categoryId);
         model.addAttribute("minPrice", minPrice);
         model.addAttribute("maxPrice", maxPrice);
-        model.addAttribute("brand", brand);
+        model.addAttribute("brand", cleanBrand);
+        model.addAttribute("currentPage", pageIndex);
 
         return "client/products";
     }

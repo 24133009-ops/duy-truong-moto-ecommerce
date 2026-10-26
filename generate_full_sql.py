@@ -378,7 +378,9 @@ BEGIN
     (4, N'Cruiser & Chopper Mỹ', 'cruiser', 'https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=800&q=80', 0),
     (5, N'Adventure Phượt Bụi', 'adventure', 'https://images.unsplash.com/photo-1609630875171-b1321377ee65?auto=format&fit=crop&w=800&q=80', 0),
     (6, N'Xe Tay Ga Độc Lạ Ý', 'scooter', 'https://images.unsplash.com/photo-1558981285-6f0c94958bb6?auto=format&fit=crop&w=800&q=80', 0),
-    (7, N'Pô Độ & Đồ Bảo Hộ Cào Cào', 'gear-parts', 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=800&q=80', 0);
+    (7, N'Pô Độ & Đồ Bảo Hộ Cào Cào', 'gear-parts', 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=800&q=80', 0),
+(8, N'Siêu Xe Ô Tô & Xe Sang', 'oto', '/images/lamborghini_huracan.jpg', 0),
+(9, N'Xe Nhỏ & Tay Ga Sưu Tầm', 'xenho', '/images/honda_monkey_125.jpg', 0);
 END
 SET IDENTITY_INSERT [dbo].[categories] OFF;
 GO

@@ -701,4 +701,211 @@ h1, h2, h3, h4, .brand-font {
     transform: scale(1.25);
 }
 
+/* ==========================================================================
+   SUPER LUXURY CATALOG & PRODUCT GRID STYLING
+   ========================================================================== */
+.catalog-hero-box {
+    background: radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.18) 0%, rgba(15, 19, 29, 0.95) 70%, #0a0d14 100%);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+    padding: 45px 0 35px;
+    margin-bottom: 35px;
+    position: relative;
+    overflow: hidden;
+}
+
+.catalog-hero-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #d4af37, #fff, #d4af37, transparent);
+}
+
+.trust-badge-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(18, 22, 34, 0.75);
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    border-radius: 50px;
+    padding: 8px 18px;
+    color: #e2e8f0;
+    font-size: 0.82rem;
+    font-weight: 700;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.trust-badge-item:hover {
+    border-color: #d4af37;
+    color: #ffd700;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25);
+}
+
+.category-tab-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #121622;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #94a3b8;
+    padding: 8px 18px;
+    border-radius: 9999px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+}
+
+.category-tab-pill:hover,
+.category-tab-pill.active {
+    background: linear-gradient(135deg, #d4af37, #fef08a, #b8860b);
+    color: #000;
+    font-weight: 800;
+    border-color: #ffd700;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.35);
+    transform: translateY(-2px);
+}
+
+.luxury-bike-card {
+    background: linear-gradient(180deg, #161b2a 0%, #0e121d 100%);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+.luxury-bike-card:hover {
+    transform: translateY(-8px);
+    border-color: #d4af37;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.7), 0 0 25px rgba(212, 175, 55, 0.25);
+}
+
+.luxury-bike-card .card-img-container {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    background: #000;
+}
+
+.luxury-bike-card .card-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.luxury-bike-card:hover .card-img-container img {
+    transform: scale(1.08);
+}
+
+.luxury-badge-hqcn {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: linear-gradient(135deg, #059669, #10b981);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 800;
+    padding: 3px 10px;
+    border-radius: 6px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    letter-spacing: 0.5px;
+    z-index: 5;
+}
+
+.luxury-badge-showroom {
+    position: absolute;
+    bottom: 10px;
+    left: 12px;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    color: #fef08a;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 50px;
+    z-index: 5;
+}
+
+.luxury-card-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.luxury-card-brand {
+    color: #d4af37;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.luxury-card-title {
+    color: #fff;
+    font-size: 1.05rem;
+    font-weight: 800;
+    line-height: 1.4;
+    margin-bottom: 10px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 48px;
+    font-family: var(--dt-font-title, sans-serif);
+}
+
+.luxury-spec-pill {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #94a3b8;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 6px;
+}
+
+.price-racing-tag {
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: #ffd700;
+    letter-spacing: -0.5px;
+    font-family: 'Roboto', sans-serif;
+    text-shadow: 0 0 12px rgba(255, 215, 0, 0.35);
+}
+
+.quick-price-chip {
+    background: #161b2a;
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    color: #cbd5e1;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.quick-price-chip:hover {
+    border-color: #ffd700;
+    color: #ffd700;
+    background: rgba(212, 175, 55, 0.1);
+}
+
 
