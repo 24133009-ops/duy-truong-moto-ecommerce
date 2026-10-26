@@ -22,7 +22,7 @@ export default function App() {
   const [currentTab, setCurrentTab] = useState('home'); // home, products, showrooms, orders, vendor, admin, shipper
   const [selectedShowroomFilter, setSelectedShowroomFilter] = useState('all');
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedMegaKey, setSelectedMegaKey] = useState('oto'); // 'motor', 'oto', 'xenho', 'phukien'
+  const [selectedMegaKey, setSelectedMegaKey] = useState(null); // null = đóng mặc định, chỉ mở khi người dùng click vào mục
   const [searchQuery, setSearchQuery] = useState('');
   const [brandFilter, setBrandFilter] = useState('all');
   const [priceRange, setPriceRange] = useState({ min: 0, max: 30000000000 });
@@ -516,14 +516,6 @@ export default function App() {
           </div>
         </div>
 
-        {/* Center Golden Shield Logo (Chuẩn phong cách Vương Khang Motor) */}
-        <div className="shield-logo-center" onClick={() => setCurrentTab('home')}>
-          <div className="shield-badge-box">
-            <div className="shield-badge-title">DUY TRƯƠNG</div>
-            <div className="shield-badge-sub">- MOTOR -</div>
-          </div>
-        </div>
-
         {/* Navigation Tabs */}
         <nav style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <button className={`btn-subtle ${currentTab === 'home' ? 'active' : ''}`} onClick={() => setCurrentTab('home')}>
@@ -645,33 +637,33 @@ export default function App() {
                 </div>
 
                 <button 
+                  type="button"
                   className={`vk-menu-item ${selectedMegaKey === 'motor' ? 'active' : ''}`}
-                  onMouseEnter={() => setSelectedMegaKey('motor')}
-                  onClick={() => { setSelectedMegaKey('motor'); setSelectedCategory('all-motor'); setBrandFilter('all'); setCurrentTab('products'); }}
+                  onClick={() => setSelectedMegaKey(selectedMegaKey === 'motor' ? null : 'motor')}
                 >
                   {selectedMegaKey === 'motor' && <span style={{ color: '#ffd700' }}>–</span>} MOTOR
                 </button>
 
                 <button 
+                  type="button"
                   className={`vk-menu-item ${selectedMegaKey === 'oto' ? 'active' : ''}`}
-                  onMouseEnter={() => setSelectedMegaKey('oto')}
-                  onClick={() => { setSelectedMegaKey('oto'); setSelectedCategory('oto'); setBrandFilter('all'); setCurrentTab('products'); }}
+                  onClick={() => setSelectedMegaKey(selectedMegaKey === 'oto' ? null : 'oto')}
                 >
                   {selectedMegaKey === 'oto' && <span style={{ color: '#ffd700' }}>–</span>} Ô TÔ
                 </button>
 
                 <button 
+                  type="button"
                   className={`vk-menu-item ${selectedMegaKey === 'xenho' ? 'active' : ''}`}
-                  onMouseEnter={() => setSelectedMegaKey('xenho')}
-                  onClick={() => { setSelectedMegaKey('xenho'); setSelectedCategory('xenho'); setBrandFilter('all'); setCurrentTab('products'); }}
+                  onClick={() => setSelectedMegaKey(selectedMegaKey === 'xenho' ? null : 'xenho')}
                 >
                   {selectedMegaKey === 'xenho' && <span style={{ color: '#ffd700' }}>–</span>} XE NHỎ
                 </button>
 
                 <button 
+                  type="button"
                   className={`vk-menu-item ${selectedMegaKey === 'phukien' ? 'active' : ''}`}
-                  onMouseEnter={() => setSelectedMegaKey('phukien')}
-                  onClick={() => { setSelectedMegaKey('phukien'); setSelectedCategory('gear-parts'); setBrandFilter('all'); setCurrentTab('products'); }}
+                  onClick={() => setSelectedMegaKey(selectedMegaKey === 'phukien' ? null : 'phukien')}
                 >
                   {selectedMegaKey === 'phukien' && <span style={{ color: '#ffd700' }}>–</span>} PHỤ KIỆN
                 </button>
@@ -688,76 +680,89 @@ export default function App() {
                   BLOG
                 </button>
 
-                <button className="vk-menu-item" onClick={() => setCurrentTab('showrooms')}>
+                <button className="vk-menu-item" onClick={() => { setCurrentTab('showrooms'); setSelectedMegaKey(null); }}>
                   LIÊN HỆ
                 </button>
               </div>
 
-              {/* Frosted Glass Floating Panel displaying Brands */}
-              <div className="vk-frosted-panel">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px', borderBottom: '1px solid rgba(0,0,0,0.08)', paddingBottom: '12px' }}>
-                  <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#0f172a', fontFamily: 'var(--font-brand)' }}>
-                    <i className="fa-solid fa-gem text-gold me-2"></i> BỘ SƯU TẬP {MEGA_MENU_DATA[selectedMegaKey]?.title || "XE"}
-                  </div>
-                  <button 
-                    className="btn-gold" 
-                    style={{ padding: '6px 16px', fontSize: '0.85rem' }}
-                    onClick={() => {
-                      setSelectedCategory(MEGA_MENU_DATA[selectedMegaKey]?.categoryKey || 'all');
-                      setBrandFilter('all');
-                      setCurrentTab('products');
-                    }}
-                  >
-                    Xem Toàn Bộ Kho Xe <i className="fa-solid fa-arrow-right ms-1"></i>
-                  </button>
-                </div>
-
-                <div className={`vk-brands-grid ${selectedMegaKey === 'oto' ? 'cols-4' : selectedMegaKey === 'xenho' ? 'cols-3' : 'cols-2'}`}>
-                  {MEGA_MENU_DATA[selectedMegaKey]?.columns.map((col, colIdx) => (
-                    <div key={colIdx} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                      {col.map((bName, bIdx) => (
-                        <div 
-                          key={bIdx} 
-                          className="vk-brand-link"
-                          onClick={() => {
-                            let targetBrand = bName;
-                            if (selectedMegaKey === 'oto') {
-                              setSelectedCategory('oto');
-                              targetBrand = bName;
-                            } else if (selectedMegaKey === 'xenho') {
-                              setSelectedCategory('xenho');
-                              if (bName.includes('HONDA')) targetBrand = 'HONDA';
-                              else if (bName.includes('VESPA')) targetBrand = 'VESPA';
-                              else if (bName.includes('BMW')) targetBrand = 'BMW';
-                            } else if (selectedMegaKey === 'motor') {
-                              setSelectedCategory('all-motor');
-                              if (bName.includes('HARLEY')) targetBrand = 'HARLEY';
-                              else if (bName.includes('ROYAL')) targetBrand = 'ROYAL ENFIELD';
-                              else if (bName.includes('BMW')) targetBrand = 'BMW';
-                              else if (bName.includes('KTM')) targetBrand = 'KTM';
-                            } else if (selectedMegaKey === 'phukien') {
-                              setSelectedCategory('gear-parts');
-                              const upper = bName.toUpperCase();
-                              if (upper.includes('AGV')) targetBrand = 'AGV';
-                              else if (upper.includes('DAINESE')) targetBrand = 'DAINESE';
-                              else if (upper.includes('ALPINESTARS')) targetBrand = 'ALPINESTARS';
-                              else if (upper.includes('AKRAPOVIC')) targetBrand = 'AKRAPOVIC';
-                              else if (upper.includes('SC PROJECT') || upper.includes('SC-PROJECT')) targetBrand = 'SC PROJECT';
-                              else if (upper.includes('OHLINS')) targetBrand = 'OHLINS';
-                              else targetBrand = bName;
-                            }
-                            setBrandFilter(targetBrand);
-                            setSearchQuery('');
-                            setCurrentTab('products');
-                          }}
-                        >
-                          {bName}
-                        </div>
-                      ))}
+              {/* Frosted Glass Floating Panel displaying Brands - Chỉ hiển thị khi người dùng ấn vào danh mục */}
+              {selectedMegaKey && MEGA_MENU_DATA[selectedMegaKey] && (
+                <div className="vk-frosted-panel" onClick={(e) => e.stopPropagation()}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px', borderBottom: '1px solid rgba(0,0,0,0.08)', paddingBottom: '12px' }}>
+                    <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#0f172a', fontFamily: 'var(--font-brand)' }}>
+                      <i className="fa-solid fa-gem text-gold me-2"></i> BỘ SƯU TẬP {MEGA_MENU_DATA[selectedMegaKey]?.title || "XE"}
                     </div>
-                  ))}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <button 
+                        className="btn-gold" 
+                        style={{ padding: '6px 16px', fontSize: '0.85rem' }}
+                        onClick={() => {
+                          setSelectedCategory(MEGA_MENU_DATA[selectedMegaKey]?.categoryKey || 'all');
+                          setBrandFilter('all');
+                          setCurrentTab('products');
+                          setSelectedMegaKey(null);
+                        }}
+                      >
+                        Xem Toàn Bộ Kho Xe <i className="fa-solid fa-arrow-right ms-1"></i>
+                      </button>
+                      <button 
+                        onClick={() => setSelectedMegaKey(null)}
+                        style={{ background: '#f1f5f9', border: '1px solid #cbd5e1', borderRadius: '50%', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontWeight: 800, color: '#475569', fontSize: '14px' }}
+                        title="Đóng menu"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className={`vk-brands-grid ${selectedMegaKey === 'oto' ? 'cols-4' : selectedMegaKey === 'xenho' ? 'cols-3' : 'cols-2'}`}>
+                    {MEGA_MENU_DATA[selectedMegaKey]?.columns.map((col, colIdx) => (
+                      <div key={colIdx} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        {col.map((bName, bIdx) => (
+                          <div 
+                            key={bIdx} 
+                            className="vk-brand-link"
+                            onClick={() => {
+                              let targetBrand = bName;
+                              if (selectedMegaKey === 'oto') {
+                                setSelectedCategory('oto');
+                                targetBrand = bName;
+                              } else if (selectedMegaKey === 'xenho') {
+                                setSelectedCategory('xenho');
+                                if (bName.includes('HONDA')) targetBrand = 'HONDA';
+                                else if (bName.includes('VESPA')) targetBrand = 'VESPA';
+                                else if (bName.includes('BMW')) targetBrand = 'BMW';
+                              } else if (selectedMegaKey === 'motor') {
+                                setSelectedCategory('all-motor');
+                                if (bName.includes('HARLEY')) targetBrand = 'HARLEY';
+                                else if (bName.includes('ROYAL')) targetBrand = 'ROYAL ENFIELD';
+                                else if (bName.includes('BMW')) targetBrand = 'BMW';
+                                else if (bName.includes('KTM')) targetBrand = 'KTM';
+                              } else if (selectedMegaKey === 'phukien') {
+                                setSelectedCategory('gear-parts');
+                                const upper = bName.toUpperCase();
+                                if (upper.includes('AGV')) targetBrand = 'AGV';
+                                else if (upper.includes('DAINESE')) targetBrand = 'DAINESE';
+                                else if (upper.includes('ALPINESTARS')) targetBrand = 'ALPINESTARS';
+                                else if (upper.includes('AKRAPOVIC')) targetBrand = 'AKRAPOVIC';
+                                else if (upper.includes('SC PROJECT') || upper.includes('SC-PROJECT')) targetBrand = 'SC PROJECT';
+                                else if (upper.includes('OHLINS')) targetBrand = 'OHLINS';
+                                else targetBrand = bName;
+                              }
+                              setBrandFilter(targetBrand);
+                              setSearchQuery('');
+                              setCurrentTab('products');
+                              setSelectedMegaKey(null);
+                            }}
+                          >
+                            {bName}
+                          </div>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Bottom Center Social Pill */}
               <div className="vk-social-pill">

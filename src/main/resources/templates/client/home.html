@@ -44,8 +44,8 @@
             <button type="button" class="vk-menu-item" id="btnTabMotor" onclick="switchMegaTab('motor')">
                 <span class="tab-dash d-none" style="color: #ffd700;">–</span> MOTOR
             </button>
-            <button type="button" class="vk-menu-item active" id="btnTabOto" onclick="switchMegaTab('oto')">
-                <span class="tab-dash" style="color: #ffd700;">–</span> Ô TÔ
+            <button type="button" class="vk-menu-item" id="btnTabOto" onclick="switchMegaTab('oto')">
+                <span class="tab-dash d-none" style="color: #ffd700;">–</span> Ô TÔ
             </button>
             <button type="button" class="vk-menu-item" id="btnTabXeNho" onclick="switchMegaTab('xenho')">
                 <span class="tab-dash d-none" style="color: #ffd700;">–</span> XE NHỎ
@@ -67,10 +67,13 @@
             </a>
         </div>
 
-        <!-- Frosted Glass Brands Panel -->
-        <div class="vk-frosted-panel" id="megaFrostedPanel">
-            <!-- Ô TÔ Brands (Default Active) -->
-            <div id="contentOto" class="mega-content-box">
+        <!-- Frosted Glass Brands Panel (Chỉ hiển thị khi click vào mục) -->
+        <div class="vk-frosted-panel d-none" id="megaFrostedPanel">
+            <div class="text-end mb-2">
+                <button type="button" class="btn btn-sm btn-light rounded-circle shadow-sm fw-bold px-2 py-1" onclick="closeMegaPanel()" title="Đóng menu">✕</button>
+            </div>
+            <!-- Ô TÔ Brands -->
+            <div id="contentOto" class="mega-content-box d-none">
                 <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary border-opacity-25">
                     <div class="fw-bold fs-5 text-dark"><i class="fa-solid fa-car-side text-gold me-2"></i> BỘ SƯU TẬP SIÊU XE Ô TÔ &amp; XE SANG</div>
                     <a th:href="@{/products}" class="btn btn-warning btn-sm fw-bold px-3 text-dark rounded-pill">Xem Tất Cả Xe <i class="fa-solid fa-arrow-right ms-1"></i></a>
@@ -184,7 +187,18 @@
     </section>
 
     <script>
+        let currentActiveMegaTab = null;
+
         function switchMegaTab(tabKey) {
+            const panel = document.getElementById('megaFrostedPanel');
+            if (currentActiveMegaTab === tabKey) {
+                closeMegaPanel();
+                return;
+            }
+
+            currentActiveMegaTab = tabKey;
+            if (panel) panel.classList.remove('d-none');
+
             const tabs = ['motor', 'oto', 'xenho', 'phukien'];
             tabs.forEach(t => {
                 const btn = document.getElementById('btnTab' + t.charAt(0).toUpperCase() + t.slice(1));
@@ -204,6 +218,23 @@
                     if (t === tabKey) content.classList.remove('d-none');
                     else content.classList.add('d-none');
                 }
+            });
+        }
+
+        function closeMegaPanel() {
+            currentActiveMegaTab = null;
+            const panel = document.getElementById('megaFrostedPanel');
+            if (panel) panel.classList.add('d-none');
+            const tabs = ['motor', 'oto', 'xenho', 'phukien'];
+            tabs.forEach(t => {
+                const btn = document.getElementById('btnTab' + t.charAt(0).toUpperCase() + t.slice(1));
+                if (btn) {
+                    btn.classList.remove('active');
+                    const dash = btn.querySelector('.tab-dash');
+                    if (dash) dash.classList.add('d-none');
+                }
+                const content = document.getElementById('content' + t.charAt(0).toUpperCase() + t.slice(1));
+                if (content) content.classList.add('d-none');
             });
         }
     </script>
