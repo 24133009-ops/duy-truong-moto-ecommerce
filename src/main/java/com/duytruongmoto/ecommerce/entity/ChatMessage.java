@@ -26,8 +26,7 @@ public class ChatMessage {
 
     private Long storeId;
 
-    @Lob
-    @Column(nullable = false, columnDefinition = "NVARCHAR(MAX)")
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String message;
 
     private LocalDateTime timestamp = LocalDateTime.now();

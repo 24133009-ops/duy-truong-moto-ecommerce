@@ -33,8 +33,7 @@ public class Product {
     @Column(nullable = false, unique = true, length = 200)
     private String slug;
 
-    @Lob
-    @Column(columnDefinition = "NVARCHAR(MAX)")
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @Column(nullable = false, precision = 18, scale = 2)
@@ -62,8 +61,7 @@ public class Product {
     @Column(length = 500)
     private String mainImage;
 
-    @Lob
-    @Column(columnDefinition = "NVARCHAR(MAX)")
+    @Column(columnDefinition = "TEXT")
     private String listImages; // Danh sach URL anh JSON
 
     @Column(length = 500)

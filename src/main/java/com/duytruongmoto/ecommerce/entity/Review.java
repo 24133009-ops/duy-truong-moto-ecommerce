@@ -32,8 +32,7 @@ public class Review {
     @Column(nullable = false)
     private Integer stars = 5; // 1 to 5 stars
 
-    @Lob
-    @Column(nullable = false, columnDefinition = "NVARCHAR(MAX)")
+    @Column(nullable = false, columnDefinition = "TEXT")
     @Size(min = 50, message = "Nội dung đánh giá xe phải có tối thiểu 50 ký tự để chia sẻ trải nghiệm thực tế!")
     private String content;
 
