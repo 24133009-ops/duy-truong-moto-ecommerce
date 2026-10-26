@@ -61,6 +61,13 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- H2 In-Memory Database (Chống crash khi cloud database mất mạng / sai mật khẩu) -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
         <!-- Spring Security & Validation -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
