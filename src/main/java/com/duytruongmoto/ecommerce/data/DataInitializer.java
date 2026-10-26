@@ -29,19 +29,33 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        log.info(">>> Duy Truong Motor DataInitializer: Đang đồng bộ toàn bộ dữ liệu 60 sản phẩm...");
+        log.info(">>> Duy Truong Motor DataInitializer: Đang khởi tạo hệ thống...");
 
-        // 1. User Levels & Demo Accounts (Luôn đồng bộ chính xác mật khẩu demo trên mọi môi trường)
-        syncDemoAccounts();
+        try {
+            syncDemoAccounts();
+        } catch (Exception e) {
+            log.error("Lỗi syncDemoAccounts: {}", e.getMessage());
+        }
 
-        // 2. Categories
-        Map<String, Category> catMap = initCategories();
+        Map<String, Category> catMap = new HashMap<>();
+        try {
+            catMap = initCategories();
+        } catch (Exception e) {
+            log.error("Lỗi initCategories: {}", e.getMessage());
+        }
 
-        // 3. Stores
-        Map<Integer, Store> storeMap = initStores();
+        Map<Integer, Store> storeMap = new HashMap<>();
+        try {
+            storeMap = initStores();
+        } catch (Exception e) {
+            log.error("Lỗi initStores: {}", e.getMessage());
+        }
 
-        // 4. Products: Đảm bảo toàn bộ 60 sản phẩm luôn có mặt trong hệ thống
-        initAll60Products(catMap, storeMap);
+        try {
+            initAll60Products(catMap, storeMap);
+        } catch (Exception e) {
+            log.error("Lỗi initAll60Products: {}", e.getMessage());
+        }
 
         log.info(">>> Đã đồng bộ thành công {} sản phẩm trong kho Duy Truong Motor!", productRepository.count());
     }
@@ -76,15 +90,15 @@ public class DataInitializer implements CommandLineRunner {
 
         // 1. Admin Toàn Sàn (pass: admin123)
         upsertUser("Duy", "Trường", "duy-truong-admin", "admin@duytruongmoto.com", "0901234567", "admin123", Role.ROLE_ADMIN, diamond, 9999L, BigDecimal.valueOf(500000000));
-        upsertUser("Duy", "Trường", "duy-truong-admin-motor", "admin@duytruongmotor.com", "0901234567", "admin123", Role.ROLE_ADMIN, diamond, 9999L, BigDecimal.valueOf(500000000));
+        upsertUser("Duy", "Trường", "duy-truong-admin-motor", "admin@duytruongmotor.com", "0901234568", "admin123", Role.ROLE_ADMIN, diamond, 9999L, BigDecimal.valueOf(500000000));
 
         // 2. Vendor Showroom (pass: vendor123)
         upsertUser("Minh", "Showroom Q1", "minh-showroom-q1", "vendor@duytruongmoto.com", "0903456789", "vendor123", Role.ROLE_VENDOR, gold, 2000L, BigDecimal.valueOf(150000000));
-        upsertUser("Minh", "Showroom Q1", "minh-showroom-motor", "vendor@duytruongmotor.com", "0903456789", "vendor123", Role.ROLE_VENDOR, gold, 2000L, BigDecimal.valueOf(150000000));
+        upsertUser("Minh", "Showroom Q1", "minh-showroom-motor", "vendor@duytruongmotor.com", "0903456780", "vendor123", Role.ROLE_VENDOR, gold, 2000L, BigDecimal.valueOf(150000000));
 
         // 3. Shipper Sàn Trượt (pass: shipper123)
         upsertUser("Tuấn", "Vận Chuyển", "tuan-shipper", "shipper@duytruongmoto.com", "0904567890", "shipper123", Role.ROLE_SHIPPER, silver, 100L, BigDecimal.ZERO);
-        upsertUser("Tuấn", "Vận Chuyển", "tuan-shipper-motor", "shipper@duytruongmotor.com", "0904567890", "shipper123", Role.ROLE_SHIPPER, silver, 100L, BigDecimal.ZERO);
+        upsertUser("Tuấn", "Vận Chuyển", "tuan-shipper-motor", "shipper@duytruongmotor.com", "0904567891", "shipper123", Role.ROLE_SHIPPER, silver, 100L, BigDecimal.ZERO);
 
         // 4. Khách Hàng VIP (pass: user123)
         upsertUser("Hoàng", "Biker VIP", "hoang-biker-vip", "customer@gmail.com", "0905678901", "user123", Role.ROLE_USER, diamond, 5500L, BigDecimal.valueOf(75000000));
@@ -92,27 +106,35 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     private void upsertUser(String firstname, String lastname, String slug, String email, String phone, String plainPassword, Role role, UserLevel userLevel, Long point, BigDecimal eWallet) {
-        User user = userRepository.findByEmail(email).orElse(null);
-        if (user == null) {
-            user = User.builder()
-                    .firstname(firstname).lastname(lastname).slug(slug)
-                    .email(email).phone(phone)
-                    .password(passwordEncoder.encode(plainPassword))
-                    .role(role).userLevel(userLevel)
-                    .point(point).eWallet(eWallet)
-                    .isEmailActive(true).isPhoneActive(true)
-                    .avatar("https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80")
-                    .build();
-        } else {
-            user.setPassword(passwordEncoder.encode(plainPassword));
-            user.setRole(role);
-            user.setIsEmailActive(true);
-            user.setIsPhoneActive(true);
-            user.setUserLevel(userLevel);
-            if (user.getPoint() == null || user.getPoint() == 0) user.setPoint(point);
-            if (user.getEWallet() == null) user.setEWallet(eWallet);
+        try {
+            User user = userRepository.findByEmail(email).orElse(null);
+            if (user == null) {
+                // Đảm bảo số điện thoại không bị trùng lặp với người dùng khác
+                if (phone != null && userRepository.existsByPhone(phone)) {
+                    phone = "09" + String.valueOf(System.currentTimeMillis()).substring(5);
+                }
+                user = User.builder()
+                        .firstname(firstname).lastname(lastname).slug(slug)
+                        .email(email).phone(phone)
+                        .password(passwordEncoder.encode(plainPassword))
+                        .role(role).userLevel(userLevel)
+                        .point(point).eWallet(eWallet)
+                        .isEmailActive(true).isPhoneActive(true)
+                        .avatar("https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80")
+                        .build();
+            } else {
+                user.setPassword(passwordEncoder.encode(plainPassword));
+                user.setRole(role);
+                user.setIsEmailActive(true);
+                user.setIsPhoneActive(true);
+                user.setUserLevel(userLevel);
+                if (user.getPoint() == null || user.getPoint() == 0) user.setPoint(point);
+                if (user.getEWallet() == null) user.setEWallet(eWallet);
+            }
+            userRepository.save(user);
+        } catch (Exception ex) {
+            log.warn("Không thể upsert user {}: {}", email, ex.getMessage());
         }
-        userRepository.save(user);
     }
 
     private Map<String, Category> initCategories() {
