@@ -35,7 +35,6 @@ export default function App() {
     source: 'MOCK_DATA',
     message: 'Đang kết nối backend Spring Boot...'
   });
-  const [isApiInfoModalOpen, setIsApiInfoModalOpen] = useState(false);
 
   // Live Backend API Synchronization
   useEffect(() => {
@@ -471,28 +470,6 @@ export default function App() {
             <span style={{ color: 'var(--gold-light)' }}><i className="fa-solid fa-gem me-1"></i> {currentUser.points} pts</span>
           )}
 
-          {/* Live Spring Boot REST API Indicator Pill */}
-          <button 
-            onClick={() => setIsApiInfoModalOpen(true)}
-            style={{
-              background: apiStatus.connected ? 'rgba(34, 197, 94, 0.15)' : 'rgba(234, 179, 8, 0.15)',
-              border: `1px solid ${apiStatus.connected ? '#22c55e' : '#eab308'}`,
-              color: apiStatus.connected ? '#4ade80' : '#fde047',
-              borderRadius: '20px',
-              padding: '4px 12px',
-              fontSize: '0.75rem',
-              fontWeight: 800,
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              cursor: 'pointer'
-            }}
-            title="Nhấp để xem chi tiết tích hợp RESTful API & Backend Spring Boot 3"
-          >
-            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: apiStatus.connected ? '#22c55e' : '#eab308', display: 'inline-block' }}></span>
-            {apiStatus.connected ? 'LIVE API: CONNECTED (PORT 8080)' : 'API: MOCK RESILIENCE'}
-            <i className="fa-solid fa-circle-info ms-1"></i>
-          </button>
         </div>
       </div>
 
@@ -2185,106 +2162,7 @@ export default function App() {
         </a>
       </div>
 
-      {/* 14. MODAL: FULLSTACK ARCHITECTURE & REST API INTEGRATION INFO */}
-      {isApiInfoModalOpen && (
-        <div className="modal-overlay" onClick={() => setIsApiInfoModalOpen(false)}>
-          <div className="modal-content" style={{ maxWidth: '720px' }} onClick={(e) => e.stopPropagation()}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '14px' }}>
-              <div>
-                <span style={{ background: apiStatus.connected ? 'rgba(34, 197, 94, 0.2)' : 'rgba(234, 179, 8, 0.2)', color: apiStatus.connected ? '#4ade80' : '#fde047', padding: '3px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 800 }}>
-                  {apiStatus.connected ? '🟢 KẾT NỐI API TRỰC TIẾP' : '🟠 CHẾ ĐỘ DỰ PHÒNG TĨNH'}
-                </span>
-                <h3 className="brand-title" style={{ fontSize: '1.4rem', color: '#fff', marginTop: '6px' }}>
-                  <i className="fa-solid fa-network-wired text-gold me-2"></i> KIẾN TRÚC KẾT NỐI RESTFUL API FULLSTACK
-                </h3>
-              </div>
-              <button onClick={() => setIsApiInfoModalOpen(false)} className="modal-close-btn">✕</button>
-            </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', fontSize: '0.9rem' }}>
-              <div style={{ background: 'rgba(0,0,0,0.4)', padding: '16px', borderRadius: '12px', border: '1px solid rgba(212,175,55,0.25)' }}>
-                <div style={{ color: 'var(--gold-primary)', fontWeight: 800, marginBottom: '6px' }}>
-                  <i className="fa-solid fa-server me-1"></i> Backend Spring Boot 3 Engine:
-                </div>
-                <div style={{ color: 'var(--text-sub)', fontSize: '0.85rem', lineHeight: 1.6 }}>
-                  • <strong>REST API Base:</strong> <code style={{ color: '#00f2fe', background: '#111', padding: '2px 6px', borderRadius: '4px' }}>{API_BASE_URL}</code> <br />
-                  • <strong>Kho dữ liệu CSDL:</strong> Đồng bộ {products.length} sản phẩm xe cào cào, superbike, siêu xe ô tô &amp; phụ tùng pô độ. <br />
-                  • <strong>Cơ chế đồng bộ kép (Dual-Engine Resilience):</strong> React SPA tự động kết nối live API nếu backend online; khi chạy offline hoặc lúc backend khởi động sẽ fallback mượt mà vào Local Mock Data, đảm bảo 100% không bao giờ bị gián đoạn trải nghiệm người dùng!
-                </div>
-              </div>
-
-              <div>
-                <div style={{ color: '#fff', fontWeight: 700, marginBottom: '8px' }}>
-                  <i className="fa-solid fa-list-check text-gold me-1"></i> Danh Sách Endpoint REST API Hoàn Chỉnh:
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', fontSize: '0.8rem' }}>
-                  <div style={{ background: '#121622', padding: '10px 14px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.06)' }}>
-                    <span style={{ color: '#22c55e', fontWeight: 800 }}>GET</span> <code style={{ color: '#fff' }}>/api/products</code>
-                    <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>Lấy danh sách xe &amp; bộ lọc nâng cao</div>
-                  </div>
-                  <div style={{ background: '#121622', padding: '10px 14px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.06)' }}>
-                    <span style={{ color: '#22c55e', fontWeight: 800 }}>GET</span> <code style={{ color: '#fff' }}>/api/products/top-sold</code>
-                    <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>Yêu cầu Guest (&gt; 10 xe bán chạy)</div>
-                  </div>
-                  <div style={{ background: '#121622', padding: '10px 14px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.06)' }}>
-                    <span style={{ color: '#3b82f6', fontWeight: 800 }}>POST</span> <code style={{ color: '#fff' }}>/api/products</code>
-                    <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>Kênh Vendor nhập xe vào kho CSDL</div>
-                  </div>
-                  <div style={{ background: '#121622', padding: '10px 14px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.06)' }}>
-                    <span style={{ color: '#3b82f6', fontWeight: 800 }}>POST</span> <code style={{ color: '#fff' }}>/api/orders</code>
-                    <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>Đặt mua xe &amp; giao sàn trượt VIP</div>
-                  </div>
-                  <div style={{ background: '#121622', padding: '10px 14px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.06)' }}>
-                    <span style={{ color: '#eab308', fontWeight: 800 }}>PUT</span> <code style={{ color: '#fff' }}>/api/orders/{'{code}'}/status</code>
-                    <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>Shipper cập nhật biên bản bàn giao</div>
-                  </div>
-                  <div style={{ background: '#121622', padding: '10px 14px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.06)' }}>
-                    <span style={{ color: '#3b82f6', fontWeight: 800 }}>POST</span> <code style={{ color: '#fff' }}>/api/reviews</code>
-                    <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>Đánh giá xe (kiểm duyệt &gt;= 50 ký tự)</div>
-                  </div>
-                  <div style={{ background: '#121622', padding: '10px 14px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.06)' }}>
-                    <span style={{ color: '#22c55e', fontWeight: 800 }}>GET</span> <code style={{ color: '#fff' }}>/api/stores</code>
-                    <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>3 Showroom Phú Nhuận, Cầu Giấy, ĐN</div>
-                  </div>
-                  <div style={{ background: '#121622', padding: '10px 14px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.06)' }}>
-                    <span style={{ color: '#22c55e', fontWeight: 800 }}>GET</span> <code style={{ color: '#fff' }}>/api/status</code>
-                    <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>Healthcheck &amp; Thống kê toàn chuỗi</div>
-                  </div>
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', gap: '12px', marginTop: '10px' }}>
-                <button 
-                  className="btn-gold" 
-                  style={{ flex: 1, padding: '12px' }}
-                  onClick={async () => {
-                    try {
-                      const res = await fetch(`${API_BASE_URL}/status`);
-                      if (res.ok) {
-                        const info = await res.json();
-                        alert(`KẾT NỐI SPRING BOOT THÀNH CÔNG!\n• Hệ thống: ${info.appName}\n• Trạng thái: ${info.status}\n• Động cơ: ${info.backendEngine}\n• CSDL: ${info.database}\n• Số xe trong CSDL: ${info.productCount}`);
-                      } else {
-                        alert(`API phản hồi mã lỗi: ${res.status}`);
-                      }
-                    } catch (err) {
-                      alert(`Không thể kết nối đến ${API_BASE_URL}.\nỨng dụng vẫn chạy mượt mà 100% nhờ kiến trúc Offline Resilience của Duy Trương Motor!`);
-                    }
-                  }}
-                >
-                  <i className="fa-solid fa-heart-pulse me-1"></i> Kiểm Tra Kết Nối (/api/status)
-                </button>
-                <button 
-                  className="btn-subtle" 
-                  style={{ padding: '12px 24px' }}
-                  onClick={() => setIsApiInfoModalOpen(false)}
-                >
-                  Đóng
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
     
       {/* 9.1 MODAL THƯƠNG LƯỢNG GIÁ & BỚT LỘC SHOWROOM */}
