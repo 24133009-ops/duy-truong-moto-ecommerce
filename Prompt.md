@@ -8,7 +8,7 @@
 ## 📌 THÔNG TIN NHÓM THỰC HIỆN
 | STT | Họ và Tên | MSSV | Vai Trò & Nhiệm Vụ |
 | :---: | :--- | :---: | :--- |
-| **1** | **Trương Quốc Duy** | **24133009** | **Nhóm trưởng (Leader)** – Thiết kế kiến trúc Prompt, Fullstack Spring Boot 3 + React 18 SPA, CSDL, Bảo mật Spring Security 6 & JWT, VNPAY, WebSocket |
+| **1** | **Trương Quốc Duy** | **24133009** | **Nhóm trưởng (Leader)** – Thiết kế kiến trúc Prompt, Phát triển Spring Boot 3 & Giao diện Thymeleaf, CSDL SQL Server, Bảo mật Spring Security, VNPAY, WebSocket |
 | **2** | **Đỗ Trọng Khôi** | **20133056** | **Thành viên** – Phân tích mô hình ERD, Kiểm thử QA Prompt, Dữ liệu xe cào cào/mô tô, Kịch bản test luồng |
 | **3** | **Lê Nghĩa Tình** | **20133096** | **Thành viên** – Đặc tả nghiệp vụ SRS, Quy trình vận chuyển Shipper 6 chặng, Báo cáo Word & Kịch bản Video Demo |
 

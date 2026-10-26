@@ -9,12 +9,12 @@
    https://github.com/24133009-ops/duy-truong-moto-ecommerce
 
 2. LINK WEBSITE CHÍNH THỨC ĐÃ TRIỂN KHAI TRỰC TUYẾN:
-   - Frontend (React 18 Dark Luxury SPA): https://duytruong-motor.vercel.app
+   - Website Demo trực tuyến: https://duytruong-motor.vercel.app
    - Backend API RESTful (Spring Boot 3): https://duy-truong-moto-ecommerce.onrender.com
    - API Products Endpoint: https://duy-truong-moto-ecommerce.onrender.com/api/products
 
 3. DANH SÁCH THÀNH VIÊN VÀ NHIỆM VỤ:
-   - Trương Quốc Duy   (MSSV: 24133009) - Nhóm trưởng (Leader) & Fullstack Lead Developer (Toàn bộ kiến trúc, Fullstack Spring Boot 3 + React SPA, Security, JWT, OTP, CSDL, VNPAY, WebSocket)
+   - Trương Quốc Duy   (MSSV: 24133009) - Nhóm trưởng (Leader) & Backend/Web Developer (Toàn bộ kiến trúc, Spring Boot 3, Thymeleaf, Security, OTP, CSDL, VNPAY, WebSocket)
    - Đỗ Trọng Khôi    (MSSV: 20133056) - Database Analyst & QA/Testing Lead (Khảo sát hiện trạng, Lược đồ CSDL, Dữ liệu xe cào cào/mô tô, Kịch bản & thực hiện kiểm thử QA)
    - Lê Nghĩa Tình    (MSSV: 20133096) - System Analyst & Technical Documentation (Đặc tả nghiệp vụ SRS, Sơ đồ Use Case & Activity Diagram luồng Shipper, Báo cáo Word .docx, Kịch bản Video Demo)
 
@@ -22,6 +22,6 @@
    - 36eed40 (Trương Quốc Duy) : feat(core): setup 3-tier architecture, JPA entities, Spring Security 6, JWT and Email OTP
    - 57cf3d8 (Trương Quốc Duy) : feat(ui): implement Dark Luxury UI, Guest Top 10 bikes, DB-cart, checkout, and review >= 50 chars
    - b793472 (Trương Quốc Duy) : feat(integration): VNPAY QR payment gateway, STOMP WebSocket live chat, and 6-stage shipper tracking
-   - 00ab3e4 (Trương Quốc Duy) : feat(spa): add React 18 + Vite + Vanilla CSS luxury storefront and 5-role switcher HUD
+   - 00ab3e4 (Trương Quốc Duy) : feat(ui): add luxury storefront and 5-role switcher HUD
    - f41a92e (Đỗ Trọng Khôi)   : test(qa): add test cases for database cart, filter, and review >= 50 chars validation
    - 821cd1b (Lê Nghĩa Tình)   : docs(srs): add system analysis diagrams, use cases, and video walkthrough script

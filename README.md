@@ -1,6 +1,6 @@
 # DUY TRUONG MOTO - HỆ THỐNG TMĐT CHUỖI SHOWROOM SIÊU XE PHÂN KHỐI LỚN & XE LUXURY
 
-> **Dự án cuối kỳ Chuyên ngành Kỹ thuật Phần mềm / Công nghệ Web**  
+> **Dự án môn học Lập trình Web**  
 > **Mô hình chuỗi cửa hàng:** Chuỗi Showroom xe Luxury **Duy Truong Moto** (Chi nhánh TP.HCM, Hà Nội, Đà Nẵng)  
 > **Quy mô nhóm:** Đúng **3 thành viên**
 
@@ -12,31 +12,18 @@
 - **Đề tài:** 02 - Hệ thống TMĐT Chuỗi Showroom Siêu Mô Tô PKL & Xe Luxury "Duy Trương Motor" (Chuỗi 3 chi nhánh: TP.HCM, Hà Nội, Đà Nẵng)
 
 ### Danh sách thành viên nhóm:
-1. **Trương Quốc Duy** (MSSV: **24133009** - Lớp 24133A) - **Nhóm trưởng (Leader)**: Thiết kế kiến trúc Prompt, Fullstack Spring Boot 3 + React 18 SPA, CSDL, Bảo mật Spring Security 6 & JWT, VNPAY, WebSocket.
-2. **Đỗ Trọng Khôi** (MSSV: **20133056** - Lớp 201331A) - **Thành viên**: Phân tích lược đồ CSDL, Test Prompts QA, Dữ liệu 60 mẫu xe & phụ kiện.
-3. **Lê Nghĩa Tình** (MSSV: **20133096** - Lớp 201331A) - **Thành viên**: Đặc tả nghiệp vụ SRS, Quy trình vận chuyển Shipper 6 chặng, Báo cáo Word.
+1. **Trương Quốc Duy** (MSSV: **24133009** - Lớp 24133A) - **Nhóm trưởng (Leader)**: Xây dựng Backend Spring Boot 3, Giao diện Web Thymeleaf & HTML/CSS/JS, CSDL SQL Server, Bảo mật Spring Security, VNPAY, WebSocket Live Chat.
+2. **Đỗ Trọng Khôi** (MSSV: **20133056** - Lớp 201331A) - **Thành viên**: Phân tích lược đồ CSDL, Kiểm thử chức năng hệ thống, Dữ liệu 60 mẫu xe & phụ kiện.
+3. **Lê Nghĩa Tình** (MSSV: **20133096** - Lớp 201331A) - **Thành viên**: Đặc tả yêu cầu nghiệp vụ SRS, Quy trình vận chuyển Shipper 6 chặng, Báo cáo Word & Kịch bản Video Demo.
 
-### 🌐 Liên kết trực tuyến chính thức:
-- **Frontend SPA (React 18 Dark Luxury):** [https://duytruong-motor.vercel.app](https://duytruong-motor.vercel.app)
-- **Backend API & Thymeleaf (Spring Boot 3):** [https://duy-truong-moto-ecommerce.onrender.com](https://duy-truong-moto-ecommerce.onrender.com)
-- **Báo cáo Prompts AI Senior Vibe-Coding:** [BAO_CAO_PROMPTS_AI_SENIOR_VIBECODER.md](./BAO_CAO_PROMPTS_AI_SENIOR_VIBECODER.md) | File Word: [`Nhom_17/01_BaoCao_Word_Docx/BaoCao_AI_Prompts_Senior_VibeCoder_Nhom17.docx`](./Nhom_17/01_BaoCao_Word_Docx/BaoCao_AI_Prompts_Senior_VibeCoder_Nhom17.docx)
-- **Gói nộp bài hoàn chỉnh:** Thư mục [`Nhom_17/`](./Nhom_17/) gồm đầy đủ Báo cáo Word, CSDL SQL, Source code zip, Kịch bản Video Demo, Hướng dẫn chấm Rubric.
-
----
-
-## 2. CÔNG NGHỆ ÁP DỤNG TRONG ĐỒ ÁN
-- **Backend Core:** Java 17 LTS + Spring Boot 3.2.5 (Kiến trúc 3 tầng chuẩn `Controller` - `Service` - `Repository`).
-- **Database:** Microsoft SQL Server 2022 (`DuyTruongMotoDB`), PostgreSQL 15 (Supabase), Spring Data JPA, Hibernate ORM.
-- **Frontend & Giao diện:** React 18 + Vite + 100% Vanilla CSS Dark Luxury (Titanium Gold & Racing Carbon) + Thymeleaf SSR.
-- **Bảo mật & Phân quyền:** Spring Security 6 + BCrypt Password Encoder + JWT Stateless cho REST/WebSocket (5 vai trò: Guest, User, Vendor, Shipper, Admin).
-- **Xác thực OTP thật:** JavaMailSender gửi mã OTP 6 số qua Gmail SMTP thật (`duytq4906@gmail.com`) với TTL 5 phút.
-- **Thanh toán trực tuyến:** Cổng thanh toán **VNPAY Sandbox** (HMAC-SHA512 checksum, QR Code động timer 15 phút, IPN callback).
-- **Lưu trữ đám mây:** **Cloudinary API** phục vụ upload ảnh xe chất lượng cao và video review pô xe.
-- **Thời gian thực:** **WebSocket STOMP** qua SockJS phục vụ Live Chat tư vấn Showroom.
+### 🌐 Liên kết đồ án:
+- **Website Demo trực tuyến:** [https://duytruong-motor.vercel.app](https://duytruong-motor.vercel.app)
+- **File Prompt:** [Prompt.md](./Prompt.md)
+- **Thư mục tài liệu đồ án:** Thư mục [`Nhom_17/`](./Nhom_17/) gồm đầy đủ Báo cáo Word, CSDL SQL, Source code zip, Kịch bản Video Demo, Hướng dẫn chấm Rubric.
 
 ---
 
-## 3. TÀI KHOẢN MẪU DÙNG THỬ (DEMO ACCOUNTS)
+## 2. TÀI KHOẢN MẪU DÙNG THỬ (DEMO ACCOUNTS)
 
 | Vai trò | Email đăng nhập | Mật khẩu | Chức năng truy cập |
 | :--- | :--- | :--- | :--- |
@@ -47,7 +34,7 @@
 
 ---
 
-## 4. HƯỚNG DẪN CHẠY DỰ ÁN TRÊN MÁY TÍNH
+## 3. HƯỚNG DẪN CÀI ĐẶT & CHẠY DỰ ÁN TRÊN MÁY TÍNH
 
 ### Bước 1: Khởi động cơ sở dữ liệu SQL Server
 Đảm bảo SQL Server đang chạy và database `DuyTruongMotoDB` đã tồn tại:
