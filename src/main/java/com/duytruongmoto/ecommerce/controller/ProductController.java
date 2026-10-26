@@ -52,22 +52,52 @@ public class ProductController {
 
         // Support category slug (e.g. ?category=oto, ?category=dirtbike, ?category=gear-parts)
         if (categoryId == null && category != null && !category.trim().isEmpty()) {
-            String cleanCat = category.trim();
-            categoryId = categoryRepository.findBySlug(cleanCat)
-                    .map(Category::getId)
-                    .orElse(null);
+            String cleanCat = category.trim().toLowerCase();
+            Category foundCat = categoryRepository.findBySlug(cleanCat).orElse(null);
+            if (foundCat == null) {
+                // Flexible matching for hyphenated or alias slugs
+                foundCat = categoryRepository.findAll().stream()
+                        .filter(c -> c.getIsDeleted() == null || !c.getIsDeleted())
+                        .filter(c -> {
+                            String s = c.getSlug() != null ? c.getSlug().toLowerCase() : "";
+                            String n = c.getName() != null ? c.getName().toLowerCase() : "";
+                            return s.equals(cleanCat) ||
+                                   (cleanCat.equals("gear-parts") && (s.contains("gear") || s.contains("po-do") || s.contains("bao-ho") || n.contains("pô") || n.contains("bảo hộ"))) ||
+                                   (cleanCat.equals("cruiser") && (s.contains("cruiser") || n.contains("cruiser"))) ||
+                                   (cleanCat.equals("oto") && (s.contains("oto") || n.contains("ô tô") || n.contains("siêu xe"))) ||
+                                   (cleanCat.equals("xenho") && (s.contains("xenho") || n.contains("xe nhỏ") || n.contains("tay ga"))) ||
+                                   s.contains(cleanCat) || cleanCat.contains(s);
+                        })
+                        .findFirst()
+                        .orElse(null);
+            }
+            String brandFilter = cleanBrand;
+            if (foundCat != null) {
+                categoryId = foundCat.getId();
+            } else if (brandFilter == null) {
+                brandFilter = cleanCat;
+            }
             model.addAttribute("selectedCategorySlug", cleanCat);
+        } else if (categoryId != null && (category == null || category.trim().isEmpty())) {
+            categoryRepository.findById(categoryId).ifPresent(c -> {
+                model.addAttribute("selectedCategorySlug", c.getSlug());
+            });
         }
         
         // Prevent negative page numbers
         int pageIndex = (page == null || page < 0) ? 0 : page;
 
-        Page<Product> productPage = productService.filterProducts(cleanKeyword, categoryId, minPrice, maxPrice, cleanBrand, pageIndex, size);
+        String queryBrand = (cleanBrand != null) ? cleanBrand : null;
+        if (categoryId == null && category != null && !category.trim().isEmpty() && queryBrand == null) {
+            queryBrand = category.trim().toLowerCase();
+        }
+
+        Page<Product> productPage = productService.filterProducts(cleanKeyword, categoryId, minPrice, maxPrice, queryBrand, pageIndex, size);
 
         // Fallback: If requested page is out of bounds (e.g. user requested page=1 when only page 0 has items)
         if (productPage.getContent().isEmpty() && productPage.getTotalElements() > 0 && pageIndex > 0) {
             pageIndex = 0;
-            productPage = productService.filterProducts(cleanKeyword, categoryId, minPrice, maxPrice, cleanBrand, pageIndex, size);
+            productPage = productService.filterProducts(cleanKeyword, categoryId, minPrice, maxPrice, queryBrand, pageIndex, size);
         }
 
         model.addAttribute("productPage", productPage);

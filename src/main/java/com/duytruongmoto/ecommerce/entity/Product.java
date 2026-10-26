@@ -71,13 +71,13 @@ public class Product {
     @Column(nullable = false)
     private Double rating = 5.0;
 
-    @Column(length = 50)
+    @Column(length = 255)
     private String engineCapacity; // e.g., 1103cc, 998cc, 1868cc
 
-    @Column(length = 50)
+    @Column(length = 255)
     private String color;
 
-    @Column(length = 50)
+    @Column(length = 100)
     private String brand; // Ducati, Kawasaki, BMW, Harley-Davidson, Honda
 
     @Builder.Default

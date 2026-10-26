@@ -42,10 +42,10 @@
                                 <tr class="border-bottom border-secondary" th:each="item : ${cart.items}">
                                     <td>
                                         <div class="d-flex align-items-center gap-3 py-2">
-                                            <img th:src="${item.product.mainImage}" class="rounded-3 shadow" style="width: 70px; height: 50px; object-fit: cover;">
+                                            <img th:src="${item.product.mainImage}" onerror="if (this.src.indexOf('unsplash') === -1) { this.src='https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=800&q=80'; }" class="rounded-3 shadow" style="width: 70px; height: 50px; object-fit: cover;">
                                             <div>
                                                 <a th:href="@{/products/{slug}(slug=${item.product.slug})}" class="fw-bold text-white text-decoration-none small d-block" th:text="${item.product.name}"></a>
-                                                <span class="badge bg-dark border border-secondary text-gold" style="font-size: 0.65rem;" th:text="${item.product.store.name}"></span>
+                                                <span class="badge bg-dark border border-secondary text-gold" style="font-size: 0.65rem;" th:text="${item.product.store?.name ?: 'Showroom Duy Trương Motor'}"></span>
                                             </div>
                                         </div>
                                     </td>

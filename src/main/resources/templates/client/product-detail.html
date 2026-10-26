@@ -29,7 +29,7 @@
             <!-- Left: Media & Gallery -->
             <div class="col-lg-6">
                 <div class="glass-panel p-3 rounded-4 mb-3 text-center overflow-hidden">
-                    <img th:src="@{${product.mainImage}}" th:alt="${product.name}" class="img-fluid rounded-4 shadow" style="max-height: 450px; width: 100%; object-fit: cover;" onerror="this.onerror=null; this.src='/images/ducati_panigale_v4s.jpg'">
+                    <img th:src="@{${product.mainImage}}" th:alt="${product.name}" class="img-fluid rounded-4 shadow" style="max-height: 450px; width: 100%; object-fit: cover;" onerror="if (this.src.indexOf('unsplash') === -1) { this.src='https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=800&q=80'; }">
                 </div>
                 <!-- Badges -->
                 <div class="d-flex gap-3 justify-content-center">
@@ -52,7 +52,7 @@
             <div class="col-lg-6">
                 <div class="d-flex align-items-center gap-2 mb-2">
                     <span class="badge bg-gold text-dark fw-bold" th:text="${product.brand}"></span>
-                    <span class="badge bg-dark border border-secondary text-secondary" th:text="${product.category.name}"></span>
+                    <span class="badge bg-dark border border-secondary text-secondary" th:text="${product.category?.name ?: 'Siêu Môtô'}"></span>
                     <div class="text-warning small ms-auto">
                         <i class="fa-solid fa-star text-gold"></i> <strong th:text="${product.rating}"></strong> / 5.0 (Đánh giá)
                     </div>
@@ -65,8 +65,8 @@
                     <i class="fa-solid fa-store fs-3 text-gold"></i>
                     <div>
                         <div class="small text-secondary">Đang trưng bày tại:</div>
-                        <strong class="text-white" th:text="${product.store.name}"></strong>
-                        <div class="small text-gold" th:text="${product.store.address}"></div>
+                        <strong class="text-white" th:text="${product.store?.name ?: 'Showroom Duy Trương Motor'}"></strong>
+                        <div class="small text-gold" th:text="${product.store?.address ?: 'Hệ thống Showroom Toàn Quốc'}"></div>
                     </div>
                 </div>
 

@@ -55,7 +55,7 @@
 
     <!-- 3. Quick Category Filter Tabs -->
     <div class="container mb-4">
-        <div class="d-flex align-items-center gap-2 overflow-auto pb-2" style="scrollbar-width: thin;">
+        <div class="d-flex align-items-center gap-2 category-tabs-scroll pb-2">
             <a th:href="@{/products}" class="category-tab-pill" th:classappend="${categoryId == null && (keyword == null || keyword == '') && (brand == null || brand == '') ? 'active' : ''}">
                 <i class="fa-solid fa-border-all"></i> Tất Cả Kho Xe
             </a>
@@ -197,12 +197,12 @@
                         <div class="luxury-bike-card">
                             <!-- Card Image -->
                             <div class="card-img-container">
-                                <img th:src="@{${product.mainImage}}" th:alt="${product.name}" onerror="this.onerror=null; this.src='/images/lamborghini_huracan.jpg'">
+                                <img th:src="@{${product.mainImage}}" th:alt="${product.name}" onerror="if (this.src.indexOf('unsplash') === -1) { this.src='https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=800&q=80'; }">
                                 <div class="luxury-badge-hqcn">
                                     <i class="fa-solid fa-certificate me-1"></i> HQCN
                                 </div>
                                 <div class="luxury-badge-showroom">
-                                    <i class="fa-solid fa-store text-gold me-1"></i> <span th:text="${product.store.name}"></span>
+                                    <i class="fa-solid fa-store text-gold me-1"></i> <span th:text="${product.store?.name ?: 'Showroom Duy Trương Motor'}"></span>
                                 </div>
                             </div>
 
@@ -260,29 +260,6 @@
         </div>
     </div>
 
-    <!-- 5. Right Floating Action Dock (Vương Khang Motor Style) -->
-    <div class="vk-floating-dock d-none d-md-flex">
-        <a href="tel:0903456789" class="vk-dock-btn" title="Thu Mua Xe Cũ Giá Cao">
-            <span class="vk-dock-icon">🤝</span>
-            <span class="vk-dock-label">Thu mua xe</span>
-        </a>
-        <a href="#legal" class="vk-dock-btn" title="Pháp Lý Rút Hồ Sơ HQCN">
-            <span class="vk-dock-icon">🛡️</span>
-            <span class="vk-dock-label">Pháp lý HQCN</span>
-        </a>
-        <a th:href="@{/products}" class="vk-dock-btn" title="Kho Hình Ảnh Xe Thực Tế">
-            <span class="vk-dock-icon">📸</span>
-            <span class="vk-dock-label">Kho ảnh</span>
-        </a>
-        <a href="tel:0903456789" class="vk-dock-btn" title="Hotline 24/7">
-            <span class="vk-dock-icon">📞</span>
-            <span class="vk-dock-label">Hotline</span>
-        </a>
-        <a href="https://zalo.me" target="_blank" class="vk-dock-btn" title="Tư Vấn Zalo 24/7">
-            <span class="vk-dock-icon">💬</span>
-            <span class="vk-dock-label">Zalo</span>
-        </a>
-    </div>
 
     <!-- 6. Footer & Live Chat Include -->
     <div th:replace="~{layout/main :: footer}"></div>

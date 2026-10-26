@@ -306,12 +306,12 @@
                 <div class="col-md-6 col-lg-3" th:each="product : ${topOver10Sold}">
                     <div class="bike-card">
                         <div class="bike-image-wrapper">
-                            <img th:src="@{${product.mainImage}}" th:alt="${product.name}" onerror="this.onerror=null; this.src='/images/ducati_panigale_v4s.jpg'">
+                            <img th:src="@{${product.mainImage}}" th:alt="${product.name}" onerror="if (this.src.indexOf('unsplash') === -1) { this.src='https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=800&q=80'; }">
                             <div class="badge-sold-count">
                                 <i class="fa-solid fa-fire text-danger me-1"></i> Đã bán: <strong th:text="${product.sold}"></strong>
                             </div>
                             <div class="badge-store-tag">
-                                <i class="fa-solid fa-store text-gold me-1"></i> <span th:text="${product.store.name}"></span>
+                                <i class="fa-solid fa-store text-gold me-1"></i> <span th:text="${product.store?.name ?: 'Showroom Duy Trương Motor'}"></span>
                             </div>
                         </div>
                         <div class="bike-details">
@@ -353,9 +353,9 @@
                 <div class="col-md-6 col-lg-3" th:each="product : ${newest20}">
                     <div class="bike-card">
                         <div class="bike-image-wrapper">
-                            <img th:src="@{${product.mainImage}}" th:alt="${product.name}" onerror="this.onerror=null; this.src='/images/ducati_panigale_v4s.jpg'">
+                            <img th:src="@{${product.mainImage}}" th:alt="${product.name}" onerror="if (this.src.indexOf('unsplash') === -1) { this.src='https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=800&q=80'; }">
                             <div class="badge-store-tag">
-                                <i class="fa-solid fa-location-dot text-gold me-1"></i> <span th:text="${product.store.name}"></span>
+                                <i class="fa-solid fa-location-dot text-gold me-1"></i> <span th:text="${product.store?.name ?: 'Showroom Duy Trương Motor'}"></span>
                             </div>
                         </div>
                         <div class="bike-details">
