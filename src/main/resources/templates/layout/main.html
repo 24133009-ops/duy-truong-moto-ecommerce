@@ -42,8 +42,8 @@
                 </div>
                 <div>
                     <span class="brand-text text-gradient-gold fw-bold fs-4">DUY TRUONG</span>
-                    <span class="brand-text text-white fw-bold fs-4">MOTOR</span>
-                    <div style="font-size: 0.65rem; color: var(--dt-gold); letter-spacing: 2px;" class="fw-bold">SIÊU THỊ MÔ TÔ PKL &amp; XE CÀO CÀO UY TÍN</div>
+                    <span class="brand-text text-white fw-bold fs-4">MOTO</span>
+                    <div style="font-size: 0.65rem; color: var(--dt-gold); letter-spacing: 2px;" class="fw-bold">CHUỖI ĐỒ BẢO HỘ &amp; PHỤ TÙNG MÔ TÔ PKL</div>
                 </div>
             </a>
 
@@ -57,7 +57,13 @@
                         <a class="nav-link text-light" th:href="@{/home}"><i class="fa-solid fa-house text-gold me-1"></i> Trang Chủ</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-light" th:href="@{/products}"><i class="fa-solid fa-motorcycle text-gold me-1"></i> Kho Xe (60)</a>
+                        <a class="nav-link text-light" th:href="@{/products(category='do-bao-ho')}"><i class="fa-solid fa-helmet-safety text-gold me-1"></i> Đồ Bảo Hộ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" th:href="@{/products(category='gear-parts')}"><i class="fa-solid fa-gears text-gold me-1"></i> Phụ Tùng</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" th:href="@{/products}"><i class="fa-solid fa-motorcycle text-gold me-1"></i> Tất Cả Sản Phẩm</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown">
@@ -69,7 +75,7 @@
                             <li><a class="dropdown-item py-2" th:href="@{/products(brand='Kawasaki')}">Kawasaki</a></li>
                             <li><a class="dropdown-item py-2" th:href="@{/products(brand='BMW')}">BMW Motorrad</a></li>
                             <li><hr class="dropdown-divider border-secondary"></li>
-                            <li><a class="dropdown-item py-2 text-gold fw-bold" th:href="@{/products}">Xem Toàn Bộ 60 Xe</a></li>
+                            <li><a class="dropdown-item py-2 text-gold fw-bold" th:href="@{/products}">Xem Toàn Bộ Sản Phẩm</a></li>
                         </ul>
                     </li>
                 </ul>
