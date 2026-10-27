@@ -1,5 +1,5 @@
 # BÁO CÁO PHƯƠNG PHÁP & TẬP PROMPTS AI SENIOR VIBE-CODING TOÀN DIỆN
-### HỆ THỐNG WEBSITE CHUỖI CỬA HÀNG SIÊU MÔ TÔ PKL & XE LUXURY "DUY TRƯƠNG MOTOR"
+### HỆ THỐNG THƯƠNG MẠI ĐIỆN TỬ TÍCH HỢP QUẢN LÝ KHO ĐA CHI NHÁNH CHO CHUỖI CỬA HÀNG ĐỒ BẢO HỘ & PHỤ TÙNG MÔ TÔ PKL "DUY TRƯƠNG MOTO"
 **Khoa Công Nghệ Thông Tin – Trường Đại Học Sư Phạm Kỹ Thuật TP. Hồ Chí Minh (HCMUTE)**  
 **Môn học:** Lập trình Web – HK1 Năm học 2026-2027 | **Đề tài:** 02 (Nhóm 17)
 
@@ -190,6 +190,9 @@ Analyze and resolve the following synchronization gaps between Frontend and Back
 | **5. Tư vấn Chat Real-time** | Chat thời gian thực giữa khách hàng và showroom tư vấn qua WebSocket. | **Prompt 3** | `WebSocketConfig.java`, `ChatController.java`, STOMP `/topic`, `/queue` |
 | **6. Phân hệ Vận chuyển Shipper** | Quy trình giao xe sàn trượt VIP 6 chặng, cập nhật trạng thái đơn hàng. | **Prompt 2 & 4** | `ShipperController.java`, `shipper-portal`, 6 stage tracker |
 | **7. Giao diện Dark Luxury SPA** | Giao diện đẳng cấp Vương Khang Motor, Mega Menu, không dùng Tailwind, Role HUD. | **Prompt 4 & 5** | `frontend/src/App.jsx`, `index.css`, Mega Menu Frosted Glass |
+| **8. Quản lý kho đa chi nhánh** | Tra cứu tồn kho 3 Showroom (Phú Nhuận, Cầu Giấy, Hải Châu), chọn xuất kho theo chi nhánh. | **Prompt 1 & 5** | `ProductDto.java` (`branchStocks`), `DataInitializer.java`, `App.jsx` (`BranchStock`) |
+| **9. Bộ lọc thông minh Biker & Xe** | Phân tách tức thời Đồ cho Biker (Mũ AGV, Giáp Dainese) và Đồ cho Xe (Pô Akrapovic, Phuộc Ohlins). | **Prompt 4 & 5** | `CATEGORY_GROUPS`, `filteredProducts` đa tầng trong `App.jsx` |
+| **10. Phân quyền Admin đa cấp** | Super Admin (Toàn sàn) vs Store Manager (Chỉ kho chi nhánh) vs Staff (Vận tải). | **Prompt 2 & 4** | `Role.java` (`ROLE_ADMIN`, `ROLE_VENDOR`), `DEMO_USERS` RBAC Matrix |
 
 ---
 

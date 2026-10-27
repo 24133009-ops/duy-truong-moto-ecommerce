@@ -3,6 +3,8 @@ import confetti from 'canvas-confetti';
 import { 
   SHOWROOMS, 
   CATEGORIES, 
+  CATEGORY_GROUPS,
+  getProductBranchStocks,
   MEGA_MENU_DATA,
   INITIAL_PRODUCTS, 
   INITIAL_REVIEWS, 
@@ -21,7 +23,9 @@ export default function App() {
   const [currentRoleKey, setCurrentRoleKey] = useState('guest');
   const [currentTab, setCurrentTab] = useState('home'); // home, products, showrooms, orders, vendor, admin, shipper
   const [selectedShowroomFilter, setSelectedShowroomFilter] = useState('all');
+  const [selectedCategoryGroup, setSelectedCategoryGroup] = useState('all'); // all, rider-gear, bike-parts, motor
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedPickupBranch, setSelectedPickupBranch] = useState(1); // 1 = PN TP.HCM, 2 = CG HN, 3 = HC ĐN
   const [selectedMegaKey, setSelectedMegaKey] = useState(null); // null = đóng mặc định, chỉ mở khi người dùng click vào mục
   const [searchQuery, setSearchQuery] = useState('');
   const [brandFilter, setBrandFilter] = useState('all');
@@ -249,8 +253,24 @@ export default function App() {
 
     return products.filter(p => {
       const matchStore = selectedShowroomFilter === 'all' || p.storeId === parseInt(selectedShowroomFilter);
+      
+      // Smart Group Filter (Rider Gear vs Bike Parts vs Motor Showroom)
+      const pBrandUpper = (p.brand || '').toUpperCase();
+      let matchGroup = true;
+      if (selectedCategoryGroup === 'rider-gear') {
+        matchGroup = p.category === 'do-bao-ho' || 
+                     ['AGV', 'DAINESE', 'ALPINESTARS', 'LS2'].some(b => pBrandUpper.includes(b));
+      } else if (selectedCategoryGroup === 'bike-parts') {
+        matchGroup = p.category === 'gear-parts' || 
+                     ['AKRAPOVIC', 'SC PROJECT', 'OHLINS', 'BREMBO', 'MOTUL'].some(b => pBrandUpper.includes(b));
+      } else if (selectedCategoryGroup === 'motor') {
+        const isGearOrPart = p.category === 'do-bao-ho' || p.category === 'gear-parts' ||
+                             ['AGV', 'DAINESE', 'ALPINESTARS', 'LS2', 'AKRAPOVIC', 'SC PROJECT', 'OHLINS', 'BREMBO', 'MOTUL'].some(b => pBrandUpper.includes(b));
+        matchGroup = !isGearOrPart;
+      }
+
       const matchCategory = selectedCategory === 'all' || 
-                            (selectedCategory === 'all-motor' ? (p.category !== 'oto' && p.category !== 'xenho' && p.category !== 'gear-parts') : p.category === selectedCategory);
+                            (selectedCategory === 'all-motor' ? (p.category !== 'oto' && p.category !== 'xenho' && p.category !== 'gear-parts' && p.category !== 'do-bao-ho') : p.category === selectedCategory);
       
       const pNorm = normalize(p.brand);
       const bNorm = normalize(brandFilter);
@@ -264,10 +284,10 @@ export default function App() {
       const matchPrice = (p.promotionalPrice || p.price) >= priceRange.min && (p.promotionalPrice || p.price) <= priceRange.max;
       const matchSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           p.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          p.engine.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchStore && matchCategory && matchBrand && matchPrice && matchSearch;
+                          (p.engine && p.engine.toLowerCase().includes(searchQuery.toLowerCase()));
+      return matchStore && matchGroup && matchCategory && matchBrand && matchPrice && matchSearch;
     });
-  }, [products, selectedShowroomFilter, selectedCategory, brandFilter, priceRange, searchQuery]);
+  }, [products, selectedShowroomFilter, selectedCategoryGroup, selectedCategory, brandFilter, priceRange, searchQuery]);
 
   // Cart Total Calculation
   const cartSubtotal = useMemo(() => {
@@ -278,16 +298,18 @@ export default function App() {
   }, [cart]);
 
   // --- ACTIONS ---
-  const handleAddToCart = (product, count = 1, chosenColor = null, customPrice = null) => {
+  const handleAddToCart = (product, count = 1, chosenColor = null, customPrice = null, chosenBranch = null) => {
     const colorToUse = chosenColor || selectedDetailColor || (product.colors && product.colors[0]) || product.color || 'Nguyên Bản Showroom';
+    const branchToUse = chosenBranch || selectedPickupBranch || product.storeId || 1;
+    const branchName = SHOWROOMS.find(s => s.id === branchToUse)?.name || product.storeName || "Showroom Phú Nhuận TP.HCM";
     setCart(prev => {
-      const existingIndex = prev.findIndex(item => item.product.id === product.id && item.selectedColor === colorToUse && (!customPrice || item.negotiatedPrice === customPrice));
+      const existingIndex = prev.findIndex(item => item.product.id === product.id && item.selectedColor === colorToUse && item.pickupBranchId === branchToUse && (!customPrice || item.negotiatedPrice === customPrice));
       if (existingIndex > -1) {
         const copy = [...prev];
         copy[existingIndex].count += count;
         return copy;
       }
-      return [...prev, { product, count, selectedColor: colorToUse, negotiatedPrice: customPrice }];
+      return [...prev, { product, count, selectedColor: colorToUse, negotiatedPrice: customPrice, pickupBranchId: branchToUse, pickupBranchName: branchName }];
     });
     setIsCartOpen(true);
   };
@@ -442,29 +464,36 @@ export default function App() {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
 
-      {/* 1. TOP UTILITY BAR: ROLE SWITCHER HUD + SLOGAN & HOTLINE (Tích hợp 1 thanh tinh gọn, sang trọng) */}
+      {/* 1. TOP UTILITY BAR: MULTI-TIER RBAC ROLE SWITCHER HUD + SLOGAN & HOTLINE */}
       <div className="top-slogan-bar" style={{ padding: '8px 48px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#07090e', borderBottom: '1px solid rgba(212,175,55,0.2)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
           <span style={{ color: 'var(--gold-primary)', fontWeight: 800, fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <i className="fa-solid fa-code-compare text-gold"></i> PHÂN HỆ:
+            <i className="fa-solid fa-user-shield text-gold"></i> PHÂN QUYỀN RBAC:
           </span>
-          <div className="role-chips" style={{ display: 'flex', gap: '8px' }}>
+          <div className="role-chips" style={{ display: 'flex', gap: '6px' }}>
             <button className={`role-chip ${currentRoleKey === 'guest' ? 'active' : ''}`} onClick={() => { setCurrentRoleKey('guest'); setCurrentTab('home'); }}>
-              1. Khách
+              1. Khách Vãng Lai
             </button>
             <button className={`role-chip ${currentRoleKey === 'customer' ? 'active' : ''}`} onClick={() => { setCurrentRoleKey('customer'); setCurrentTab('home'); }}>
-              2. Hoàng Biker
+              2. Khách Mua (Biker)
             </button>
             <button className={`role-chip ${currentRoleKey === 'vendor' ? 'active' : ''}`} onClick={() => { setCurrentRoleKey('vendor'); setCurrentTab('vendor'); }}>
-              3. Showroom PN
+              3. Khôi (Kho Cầu Giấy HN)
+            </button>
+            <button className={`role-chip ${currentRoleKey === 'vendor_tinh' ? 'active' : ''}`} onClick={() => { setCurrentRoleKey('vendor_tinh'); setCurrentTab('vendor'); }}>
+              4. Tình (Kho Hải Châu ĐN)
             </button>
             <button className={`role-chip ${currentRoleKey === 'admin' ? 'active' : ''}`} onClick={() => { setCurrentRoleKey('admin'); setCurrentTab('admin'); }}>
-              4. Admin
+              5. Duy (Tổng Sàn Admin)
             </button>
             <button className={`role-chip ${currentRoleKey === 'shipper' ? 'active' : ''}`} onClick={() => { setCurrentRoleKey('shipper'); setCurrentTab('shipper'); }}>
-              5. Shipper
+              6. Tuấn (Shipper)
             </button>
           </div>
+          <span className="badge-hqcn" style={{ fontSize: '0.72rem', padding: '3px 8px' }}>
+            <i className="fa-solid fa-shield-halved me-1 text-gold"></i>
+            {currentUser.levelTitle || currentUser.name}
+          </span>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '24px', fontSize: '0.82rem', color: 'var(--text-sub)' }}>
@@ -476,7 +505,7 @@ export default function App() {
             <i className="fa-solid fa-phone text-gold me-1"></i> Hotline: <a href="tel:0903456789" style={{ color: 'var(--gold-primary)', textDecoration: 'none', fontWeight: 700 }}>0903.456.789</a>
           </div>
           <div>
-            <i className="fa-solid fa-location-dot text-gold me-1"></i> Khu vực:
+            <i className="fa-solid fa-location-dot text-gold me-1"></i> Kho Chi Nhánh:
             <select 
               value={selectedShowroomFilter} 
               onChange={(e) => setSelectedShowroomFilter(e.target.value)}
@@ -495,14 +524,14 @@ export default function App() {
       <header className="app-header">
         <div className="logo-badge" onClick={() => setCurrentTab('home')}>
           <div className="logo-icon-box">
-            <i className="fa-solid fa-motorcycle"></i>
+            <i className="fa-solid fa-helmet-safety"></i>
           </div>
           <div>
             <div className="brand-title" style={{ fontSize: '1.45rem', lineHeight: 1.1 }}>
-              <span className="text-gradient-gold">DUY TRƯƠNG</span> <span style={{ color: '#fff' }}>MOTOR</span>
+              <span className="text-gradient-gold">DUY TRƯƠNG</span> <span style={{ color: '#fff' }}>MOTO</span>
             </div>
-            <div style={{ fontSize: '0.62rem', color: 'var(--gold-primary)', letterSpacing: '2px', fontWeight: 800 }}>
-              SIÊU THỊ MÔ TÔ PKL & SIÊU XE UY TÍN
+            <div style={{ fontSize: '0.62rem', color: 'var(--gold-primary)', letterSpacing: '1.5px', fontWeight: 800 }}>
+              CHUỖI ĐỒ BẢO HỘ &amp; PHỤ TÙNG MÔ TÔ PKL
             </div>
           </div>
         </div>
@@ -523,9 +552,9 @@ export default function App() {
           </button>
 
           {/* Conditional Role Portals */}
-          {currentRoleKey === 'vendor' && (
+          {(currentRoleKey === 'vendor' || currentRoleKey === 'vendor_tinh') && (
             <button className={`btn-subtle ${currentTab === 'vendor' ? 'active' : ''}`} style={{ borderColor: 'var(--gold-primary)', color: 'var(--gold-primary)' }} onClick={() => setCurrentTab('vendor')}>
-              <i className="fa-solid fa-chart-line"></i> Quản Lý Showroom
+              <i className="fa-solid fa-chart-line"></i> Quản Lý Kho ({currentRoleKey === 'vendor' ? 'Khôi - HN' : 'Tình - ĐN'})
             </button>
           )}
           {currentRoleKey === 'admin' && (
@@ -818,17 +847,50 @@ export default function App() {
               </div>
             </section>
 
-            {/* Quick Category Selector */}
+            {/* Quick Smart Category Selector */}
             <section style={{ padding: '24px 30px', background: '#0a0c12', borderTop: '1px solid var(--border-subtle)', borderBottom: '1px solid var(--border-subtle)' }}>
-              <div style={{ maxWidth: '1240px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
-                <span style={{ fontWeight: 800, color: '#fff', fontSize: '1.05rem', fontFamily: 'var(--font-brand)' }}>
-                  <i className="fa-solid fa-list me-2 text-gold"></i> DANH MỤC XE &amp; ĐỒ CHƠI:
-                </span>
-                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                  {CATEGORIES.map(cat => (
+              <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
+                {/* Primary Group Tabs */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '14px', marginBottom: '14px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontWeight: 800, color: '#fff', fontSize: '1.05rem', fontFamily: 'var(--font-brand)' }}>
+                      <i className="fa-solid fa-layer-group me-2 text-gold"></i> BỘ LỌC PHÂN LOẠI THÔNG MINH:
+                    </span>
+                    <span className="badge-hqcn" style={{ fontSize: '0.7rem' }}>CHUỖI CỬA HÀNG MULTI-BRANCH</span>
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    {CATEGORY_GROUPS.map(grp => (
+                      <button
+                        key={grp.id}
+                        type="button"
+                        className={`btn-subtle ${selectedCategoryGroup === grp.id ? 'active' : ''}`}
+                        style={{ 
+                          fontWeight: 800, 
+                          fontSize: '0.82rem',
+                          borderColor: selectedCategoryGroup === grp.id ? 'var(--gold-primary)' : 'rgba(255,255,255,0.12)',
+                          background: selectedCategoryGroup === grp.id ? 'rgba(212,175,55,0.18)' : 'rgba(255,255,255,0.03)'
+                        }}
+                        onClick={() => {
+                          setSelectedCategoryGroup(grp.id);
+                          setSelectedCategory('all');
+                        }}
+                      >
+                        <i className={`fa-solid ${grp.icon} me-1 text-gold`}></i> {grp.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Subcategory Pills */}
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center', paddingTop: '10px', borderTop: '1px dashed rgba(255,255,255,0.08)' }}>
+                  <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontWeight: 700 }}>
+                    <i className="fa-solid fa-filter me-1"></i> Danh mục con:
+                  </span>
+                  {CATEGORIES.filter(cat => selectedCategoryGroup === 'all' || cat.group === selectedCategoryGroup || cat.id === 'all').map(cat => (
                     <button 
                       key={cat.id} 
                       className={`btn-subtle ${selectedCategory === cat.id ? 'active' : ''}`}
+                      style={{ fontSize: '0.8rem', padding: '5px 12px' }}
                       onClick={() => { setSelectedCategory(cat.id); setCurrentTab('products'); }}
                     >
                       <i className={`fa-solid ${cat.icon}`}></i> {cat.name}
@@ -935,10 +997,37 @@ export default function App() {
 
                 <div style={{ marginBottom: '20px' }}>
                   <label style={{ fontSize: '0.85rem', color: 'var(--text-sub)', fontWeight: 700, display: 'block', marginBottom: '8px' }}>
-                    Phân loại xe:
+                    <i className="fa-solid fa-layer-group text-gold me-1"></i> Nhóm danh mục nghiệp vụ:
+                  </label>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    {CATEGORY_GROUPS.map(g => (
+                      <button
+                        key={g.id}
+                        type="button"
+                        className={`btn-subtle ${selectedCategoryGroup === g.id ? 'active' : ''}`}
+                        style={{ 
+                          padding: '7px 12px', 
+                          fontSize: '0.8rem', 
+                          justifyContent: 'flex-start',
+                          background: selectedCategoryGroup === g.id ? 'rgba(212,175,55,0.18)' : 'rgba(255,255,255,0.02)'
+                        }}
+                        onClick={() => { setSelectedCategoryGroup(g.id); setSelectedCategory('all'); }}
+                      >
+                        <i className={`fa-solid ${g.icon} text-gold me-2`} style={{ width: '16px' }}></i>
+                        {g.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div style={{ marginBottom: '20px' }}>
+                  <label style={{ fontSize: '0.85rem', color: 'var(--text-sub)', fontWeight: 700, display: 'block', marginBottom: '8px' }}>
+                    Chi tiết danh mục:
                   </label>
                   <select className="luxury-select" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
-                    {CATEGORIES.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                    {CATEGORIES.filter(c => selectedCategoryGroup === 'all' || c.group === selectedCategoryGroup || c.id === 'all').map(c => (
+                      <option key={c.id} value={c.id}>{c.name}</option>
+                    ))}
                   </select>
                 </div>
 
@@ -1160,49 +1249,52 @@ export default function App() {
           </div>
         )}
 
-        {/* ================= TAB: VENDOR (SHOWROOM MANAGER) ================= */}
+        {/* ================= TAB: VENDOR (STORE MANAGER - KHÔI / TÌNH) ================= */}
         {currentTab === 'vendor' && (
           <div style={{ maxWidth: '1240px', margin: '0 auto', padding: '50px 30px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
               <div>
-                <span style={{ background: 'var(--gold-primary)', color: '#000', padding: '4px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 800 }}>KÊNH VENDOR</span>
+                <span style={{ background: 'var(--gold-primary)', color: '#000', padding: '4px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 800 }}>KÊNH STORE MANAGER</span>
                 <h2 className="brand-title" style={{ fontSize: '2.2rem', color: '#fff', marginTop: '6px' }}>
-                  QUẢN TRỊ SHOWROOM PHÚ NHUẬN (TP.HCM)
+                  {currentUser.storeName ? currentUser.storeName.toUpperCase() : "QUẢN TRỊ KHO CHI NHÁNH"}
                 </h2>
+                <div style={{ color: 'var(--text-sub)', fontSize: '0.88rem', marginTop: '4px' }}>
+                  👤 Quản lý chi nhánh: <strong style={{ color: '#fff' }}>{currentUser.name}</strong> • 📧 Email tài khoản: <strong style={{ color: 'var(--gold-primary)' }}>{currentUser.email}</strong>
+                </div>
               </div>
               <button className="btn-gold" onClick={() => setIsAddBikeModalOpen(true)}>
-                <i className="fa-solid fa-plus-circle"></i> Nhập Thêm Xe / Cào Cào Mới
+                <i className="fa-solid fa-plus-circle"></i> Nhập Phụ Tùng &amp; Đồ Bảo Hộ Mới
               </button>
             </div>
 
             {/* Metrics */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px', marginBottom: '36px' }}>
               <div className="glass-box" style={{ padding: '24px' }}>
-                <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 700 }}>DOANH THU ĐÃ BÀN GIAO</div>
-                <div className="price-racing text-gradient-gold" style={{ fontSize: '2.2rem', margin: '8px 0' }}>{formatMoney(2450000000)}</div>
-                <div style={{ color: '#28a745', fontSize: '0.8rem' }}><i className="fa-solid fa-arrow-up"></i> +22.5% so với tháng trước</div>
+                <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 700 }}>DOANH THU CHI NHÁNH</div>
+                <div className="price-racing text-gradient-gold" style={{ fontSize: '2.2rem', margin: '8px 0' }}>{formatMoney(currentUser.storeId === 2 ? 1850000000 : (currentUser.storeId === 3 ? 1240000000 : 2450000000))}</div>
+                <div style={{ color: '#28a745', fontSize: '0.8rem' }}><i className="fa-solid fa-arrow-up"></i> +18.5% so với tháng trước</div>
               </div>
               <div className="glass-box" style={{ padding: '24px' }}>
-                <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 700 }}>XE TRƯNG BÀY TẠI KHO</div>
-                <div style={{ fontSize: '2rem', fontWeight: 900, color: '#fff', margin: '8px 0', fontFamily: 'var(--font-brand)' }}>{products.filter(p => p.storeId === 1).length} Dòng Xe</div>
-                <div style={{ color: 'var(--gold-light)', fontSize: '0.8rem' }}>Đầy đủ xe cào cào KTM &amp; môtô Superbike</div>
+                <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 700 }}>MẶT HÀNG TRONG KHO</div>
+                <div style={{ fontSize: '2rem', fontWeight: 900, color: '#fff', margin: '8px 0', fontFamily: 'var(--font-brand)' }}>{products.filter(p => p.storeId === (currentUser.storeId || 1)).length} Mặt Hàng</div>
+                <div style={{ color: 'var(--gold-light)', fontSize: '0.8rem' }}>Đồ bảo hộ AGV, Dainese &amp; phụ tùng xe</div>
               </div>
               <div className="glass-box" style={{ padding: '24px' }}>
-                <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 700 }}>VÍ TIỀN SHOWROOM</div>
-                <div className="price-racing" style={{ fontSize: '2.2rem', color: '#fff', margin: '8px 0' }}>{formatMoney(currentUser.wallet || 280000000)}</div>
-                <div style={{ color: 'var(--text-sub)', fontSize: '0.8rem' }}>Sẵn sàng rút về tài khoản ngân hàng</div>
+                <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 700 }}>VÍ TIỀN CHI NHÁNH</div>
+                <div className="price-racing" style={{ fontSize: '2.2rem', color: '#fff', margin: '8px 0' }}>{formatMoney(currentUser.storeId === 2 ? 180000000 : (currentUser.storeId === 3 ? 140000000 : 280000000))}</div>
+                <div style={{ color: 'var(--text-sub)', fontSize: '0.8rem' }}>Sẵn sàng rút về tài khoản chi nhánh</div>
               </div>
             </div>
 
             {/* Inventory table */}
             <div className="glass-box" style={{ padding: '28px' }}>
-              <h4 style={{ color: 'var(--gold-primary)', fontWeight: 800, marginBottom: '20px', fontFamily: 'var(--font-brand)' }}>DANH SÁCH XE CỦA SHOWROOM</h4>
+              <h4 style={{ color: 'var(--gold-primary)', fontWeight: 800, marginBottom: '20px', fontFamily: 'var(--font-brand)' }}>DANH SÁCH MẶT HÀNG TẠI CHI NHÁNH NÀY</h4>
               <div style={{ overflowX: 'auto' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.9rem' }}>
                   <thead>
                     <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.15)', color: 'var(--text-muted)' }}>
                       <th style={{ padding: '12px' }}>HÌNH ẢNH</th>
-                      <th style={{ padding: '12px' }}>TÊN DÒNG XE</th>
+                      <th style={{ padding: '12px' }}>TÊN SẢN PHẨM / PHỤ TÙNG</th>
                       <th style={{ padding: '12px' }}>GIÁ NIÊM YẾT</th>
                       <th style={{ padding: '12px' }}>TỒN KHO</th>
                       <th style={{ padding: '12px' }}>ĐÃ BÁN</th>
@@ -1210,7 +1302,7 @@ export default function App() {
                     </tr>
                   </thead>
                   <tbody>
-                    {products.filter(p => p.storeId === 1).map(p => (
+                    {products.filter(p => p.storeId === (currentUser.storeId || 1)).map(p => (
                       <tr key={p.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
                         <td style={{ padding: '12px' }}>
                           <img src={p.image} alt={p.name} style={{ width: '60px', height: '42px', objectFit: 'cover', borderRadius: '6px' }} />
@@ -1218,7 +1310,7 @@ export default function App() {
                         <td style={{ padding: '12px', fontWeight: 700, color: '#fff' }}>{p.name}</td>
                         <td style={{ padding: '12px', color: 'var(--gold-primary)', fontWeight: 700 }}>{formatMoney(p.price)}</td>
                         <td style={{ padding: '12px' }}>{p.quantity} chiếc</td>
-                        <td style={{ padding: '12px', color: 'var(--red-racing)', fontWeight: 700 }}>{p.sold} xe</td>
+                        <td style={{ padding: '12px', color: 'var(--red-racing)', fontWeight: 700 }}>{p.sold} đã bán</td>
                         <td style={{ padding: '12px' }}>
                           <span style={{ background: '#28a745', color: '#fff', padding: '3px 10px', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 700 }}>
                             Đang mở bán
@@ -1427,6 +1519,11 @@ export default function App() {
                       {item.selectedColor && (
                         <div style={{ fontSize: '0.75rem', color: '#ffb080', marginTop: '2px' }}>
                           🎨 Màu: <strong>{item.selectedColor}</strong>
+                        </div>
+                      )}
+                      {item.pickupBranchName && (
+                        <div style={{ fontSize: '0.72rem', color: 'var(--gold-light)', marginTop: '2px' }}>
+                          <i className="fa-solid fa-store me-1 text-gold"></i> Xuất kho: <strong>{item.pickupBranchName}</strong>
                         </div>
                       )}
                       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '6px' }}>
@@ -1926,9 +2023,82 @@ export default function App() {
                   </div>
                 </div>
 
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '16px', lineHeight: 1.5 }}>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '14px', lineHeight: 1.5 }}>
                   {activeProductDetail.description}
                 </p>
+
+                {/* BRANCH INVENTORY LOOKUP (TÍNH NĂNG CHUỖI CỬA HÀNG ĐA CHI NHÁNH THEO ĐỀ TÀI) */}
+                <div style={{ 
+                  background: 'rgba(212, 175, 55, 0.06)', 
+                  border: '1px solid rgba(212, 175, 55, 0.35)', 
+                  borderRadius: '12px', 
+                  padding: '12px 14px', 
+                  marginBottom: '16px' 
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <span style={{ color: 'var(--gold-primary)', fontWeight: 800, fontSize: '0.84rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <i className="fa-solid fa-boxes-stacked text-gold"></i> KIỂM TRA TỒN KHO 3 CHI NHÁNH:
+                    </span>
+                    <span className="badge-tag-orange" style={{ fontSize: '0.68rem', padding: '2px 6px' }}>
+                      TRA CỨU REAL-TIME
+                    </span>
+                  </div>
+                  
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    {(activeProductDetail.branchStocks || getProductBranchStocks(activeProductDetail)).map((branch) => {
+                      const isSelectedBranch = (selectedPickupBranch === branch.storeId);
+                      const isAvailable = branch.quantity > 0;
+                      return (
+                        <div 
+                          key={branch.storeId}
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            background: isSelectedBranch ? 'rgba(212, 175, 55, 0.16)' : 'rgba(255, 255, 255, 0.02)',
+                            border: isSelectedBranch ? '1px solid var(--gold-primary)' : '1px solid rgba(255, 255, 255, 0.08)',
+                            padding: '7px 10px',
+                            borderRadius: '8px',
+                            gap: '8px'
+                          }}
+                        >
+                          <div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              <span style={{ 
+                                width: '7px', 
+                                height: '7px', 
+                                borderRadius: '50%', 
+                                background: isAvailable ? '#28a745' : '#e11d48', 
+                                display: 'inline-block' 
+                              }}></span>
+                              <strong style={{ color: '#fff', fontSize: '0.82rem' }}>{branch.storeName}</strong>
+                            </div>
+                            <div style={{ fontSize: '0.72rem', color: isAvailable ? '#28a745' : '#ffc107', marginTop: '2px', fontWeight: 600 }}>
+                              {branch.statusText || (isAvailable ? `Còn ${branch.quantity} sản phẩm • ${branch.deliveryTime}` : `Tạm hết hàng • ${branch.deliveryTime}`)}
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setSelectedPickupBranch(branch.storeId)}
+                            style={{
+                              background: isSelectedBranch ? 'var(--gold-primary)' : 'transparent',
+                              color: isSelectedBranch ? '#000' : 'var(--gold-primary)',
+                              border: '1px solid var(--gold-primary)',
+                              borderRadius: '6px',
+                              padding: '4px 8px',
+                              fontSize: '0.72rem',
+                              fontWeight: 700,
+                              cursor: 'pointer',
+                              whiteSpace: 'nowrap'
+                            }}
+                          >
+                            {isSelectedBranch ? '✓ Đã chọn' : 'Chọn kho này'}
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
 
                 {/* ACTION BUTTONS WITH PRICE NEGOTIATION */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '10px', marginBottom: '10px' }}>
@@ -1936,7 +2106,7 @@ export default function App() {
                     className="btn-gold" 
                     style={{ padding: '12px', fontSize: '0.9rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }} 
                     onClick={() => { 
-                      handleAddToCart(activeProductDetail, 1, selectedDetailColor); 
+                      handleAddToCart(activeProductDetail, 1, selectedDetailColor, null, selectedPickupBranch); 
                       setActiveProductDetail(null); 
                     }}
                   >

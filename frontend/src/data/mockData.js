@@ -122,18 +122,67 @@ export const MEGA_MENU_DATA = {
   }
 };
 
-export const CATEGORIES = [
-  { id: 'all', name: 'Tất Cả Xe & Đồ Chơi', icon: 'fa-border-all' },
-  { id: 'oto', name: 'Siêu Xe Ô Tô & Xe Sang', icon: 'fa-car-side' },
-  { id: 'xenho', name: 'Xe Nhỏ / Tay Ga Sưu Tầm', icon: 'fa-motorcycle' },
-  { id: 'dirtbike', name: 'Xe Cào Cào - Địa Hình', icon: 'fa-mountain' },
-  { id: 'superbike', name: 'Superbike / Thể Thao', icon: 'fa-gauge-high' },
-  { id: 'hyper-naked', name: 'Hyper Naked Đường Phố', icon: 'fa-bolt' },
-  { id: 'cruiser', name: 'Cruiser & Chopper Mỹ', icon: 'fa-road' },
-  { id: 'adventure', name: 'Adventure Phượt Bụi', icon: 'fa-compass' },
-  { id: 'scooter', name: 'Tay Ga Độc Lạ Ý', icon: 'fa-gem' },
-  { id: 'gear-parts', name: 'Pô Độ & Đồ Cào Cào', icon: 'fa-helmet-safety' }
+export const CATEGORY_GROUPS = [
+  { id: 'all', name: 'TẤT CẢ SẢN PHẨM', icon: 'fa-border-all', desc: 'Toàn bộ xe & phụ kiện' },
+  { id: 'rider-gear', name: '🛡️ ĐỒ CHO BIKER (BẢO HỘ)', icon: 'fa-shield-halved', desc: 'Mũ AGV, Áo giáp Dainese, Găng Alpinestars' },
+  { id: 'bike-parts', name: '⚙️ ĐỒ CHO XE (PHỤ TÙNG)', icon: 'fa-gears', desc: 'Pô Akrapovic, Phuộc Ohlins, Đồ chơi xe' },
+  { id: 'motor', name: '🏍️ XE MÔ TÔ & CÀO CÀO', icon: 'fa-motorcycle', desc: 'Showroom Siêu xe PKL & Cào cào địa hình' }
 ];
+
+export const CATEGORIES = [
+  { id: 'all', name: 'Tất Cả Danh Mục', group: 'all', icon: 'fa-border-all' },
+  { id: 'do-bao-ho', name: 'Mũ & Đồ Bảo Hộ Biker', group: 'rider-gear', icon: 'fa-helmet-safety' },
+  { id: 'gear-parts', name: 'Pô Độ & Phụ Tùng Xe', group: 'bike-parts', icon: 'fa-wrench' },
+  { id: 'dirtbike', name: 'Xe Cào Cào - Địa Hình', group: 'motor', icon: 'fa-mountain' },
+  { id: 'superbike', name: 'Superbike / Thể Thao', group: 'motor', icon: 'fa-gauge-high' },
+  { id: 'hyper-naked', name: 'Hyper Naked Đường Phố', group: 'motor', icon: 'fa-bolt' },
+  { id: 'cruiser', name: 'Cruiser & Chopper Mỹ', group: 'motor', icon: 'fa-road' },
+  { id: 'adventure', name: 'Adventure Phượt Bụi', group: 'motor', icon: 'fa-compass' },
+  { id: 'scooter', name: 'Tay Ga Độc Lạ Ý', group: 'motor', icon: 'fa-gem' },
+  { id: 'xenho', name: 'Xe Nhỏ Sưu Tầm', group: 'motor', icon: 'fa-motorcycle' },
+  { id: 'oto', name: 'Siêu Xe Ô Tô & Xe Sang', group: 'motor', icon: 'fa-car-side' }
+];
+
+export function getProductBranchStocks(product) {
+  const sId = product.storeId || 1;
+  const baseQty = product.quantity || 3;
+  const s1Qty = sId === 1 ? baseQty : Math.max(1, (baseQty * 7) % 5 + 1);
+  const s2Qty = sId === 2 ? baseQty : Math.max(0, (baseQty * 3) % 4);
+  const s3Qty = sId === 3 ? baseQty : Math.max(0, (baseQty * 2) % 3);
+
+  return [
+    {
+      storeId: 1,
+      storeName: "Showroom Phú Nhuận TP.HCM (Trụ Sở Chính)",
+      city: "TP. Hồ Chí Minh",
+      address: "123 Đường Hoàng Văn Thụ, P. 8, Q. Phú Nhuận",
+      phone: "0903.456.789",
+      quantity: s1Qty,
+      status: s1Qty > 0 ? "in_stock" : "out_of_stock",
+      deliveryTime: "Giao hỏa tốc 2h hoặc Nhận xe/hàng tại Showroom"
+    },
+    {
+      storeId: 2,
+      storeName: "Showroom Cầu Giấy Hà Nội (Chi Nhánh Miền Bắc)",
+      city: "Hà Nội",
+      address: "168 Đường Trần Duy Hưng, P. Trung Hòa, Q. Cầu Giấy",
+      phone: "0901.234.567",
+      quantity: s2Qty,
+      status: s2Qty > 0 ? "in_stock" : "out_of_stock",
+      deliveryTime: s2Qty > 0 ? "Giao trong ngày hoặc Nhận tại Showroom" : "Điều chuyển kho từ TP.HCM (24h - 48h)"
+    },
+    {
+      storeId: 3,
+      storeName: "Showroom Hải Châu Đà Nẵng (Chi Nhánh Miền Trung)",
+      city: "Đà Nẵng",
+      address: "52 Đường Nguyễn Văn Linh, P. Nam Dương, Q. Hải Châu",
+      phone: "0902.999.888",
+      quantity: s3Qty,
+      status: s3Qty > 0 ? "in_stock" : "out_of_stock",
+      deliveryTime: s3Qty > 0 ? "Giao trong ngày hoặc Nhận tại Showroom" : "Điều chuyển kho từ TP.HCM (24h - 48h)"
+    }
+  ];
+}
 
 export const INITIAL_PRODUCTS = [
   // --- NHÓM XE CÀO CÀO - XE ĐỊA HÌNH (DIRT BIKE / ENDURO / MOTOCROSS) ---
@@ -465,7 +514,7 @@ export const INITIAL_PRODUCTS = [
     id: 8,
     name: "Mũ Bảo Hiểm Cào Cào LS2 MX703 X-Force Carbon Full Face",
     brand: "LS2",
-    category: "gear-parts",
+    category: "do-bao-ho",
     storeId: 1,
     storeName: "Showroom Phú Nhuận TP.HCM",
     price: 8900000,
@@ -513,7 +562,7 @@ export const INITIAL_PRODUCTS = [
     id: 401,
     name: "Mũ Bảo Hiểm AGV Pista GP RR Carbon Italia Limited Edition",
     brand: "AGV",
-    category: "gear-parts",
+    category: "do-bao-ho",
     storeId: 1,
     storeName: "Showroom Phú Nhuận TP.HCM",
     price: 39500000,
@@ -537,7 +586,7 @@ export const INITIAL_PRODUCTS = [
     id: 402,
     name: "Bộ Giáp Da Liền Dainese Mugello 3 D-Air Đua Chuyên Nghiệp",
     brand: "DAINESE",
-    category: "gear-parts",
+    category: "do-bao-ho",
     storeId: 1,
     storeName: "Showroom Phú Nhuận TP.HCM",
     price: 105000000,
@@ -561,7 +610,7 @@ export const INITIAL_PRODUCTS = [
     id: 403,
     name: "Găng Tay Đua Alpinestars Supertech GP Carbon Pro",
     brand: "ALPINESTARS",
-    category: "gear-parts",
+    category: "do-bao-ho",
     storeId: 2,
     storeName: "Showroom Cầu Giấy Hà Nội",
     price: 10900000,
@@ -1636,13 +1685,17 @@ export const DEMO_USERS = {
   guest: {
     role: "GUEST",
     name: "Khách Tham Quan",
+    levelTitle: "Cấp 0: Khách Vãng Lai",
+    permissions: "Xem kho hàng, xem top bán chạy > 10, tra cứu tồn kho 3 chi nhánh",
     avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80",
-    email: "guest@duytruongmotor.com",
+    email: "guest@duytruongmoto.com",
     canBuy: false
   },
   customer: {
     role: "CUSTOMER",
     name: "Hoàng Biker (Khách VIP)",
+    levelTitle: "Cấp 1: Thành Viên Biker VIP",
+    permissions: "Giỏ hàng DB, đặt cọc VNPAY, gửi đánh giá >= 50 ký tự, chat tư vấn",
     avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80",
     email: "customer@gmail.com",
     points: 1250,
@@ -1650,25 +1703,42 @@ export const DEMO_USERS = {
   },
   vendor: {
     role: "VENDOR",
-    name: "Chủ Showroom Phú Nhuận",
+    name: "Đỗ Trọng Khôi (QL Kho Cầu Giấy)",
+    levelTitle: "Cấp 2: Quản Lý Chi Nhánh Cầu Giấy (Hà Nội)",
+    permissions: "Chỉ quản lý kho hàng, nhập phụ tùng, duyệt đơn chi nhánh Cầu Giấy",
     avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80",
-    email: "vendor@duytruongmotor.com",
-    storeId: 1,
-    storeName: "Chi nhánh Phú Nhuận TP.HCM",
+    email: "dotrongkhoi2002@gmail.com",
+    storeId: 2,
+    storeName: "Chi nhánh & Kho Phụ Tùng Cầu Giấy Hà Nội",
+    canBuy: true
+  },
+  vendor_tinh: {
+    role: "VENDOR",
+    name: "Lê Nghĩa Tình (QL Kho Đà Nẵng)",
+    levelTitle: "Cấp 2: Quản Lý Chi Nhánh Hải Châu (Đà Nẵng)",
+    permissions: "Chỉ quản lý kho hàng, nhập phụ tùng, duyệt đơn chi nhánh Hải Châu",
+    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80",
+    email: "nghiatinh2002@gmail.com",
+    storeId: 3,
+    storeName: "Chi nhánh & Kho Phụ Tùng Hải Châu Đà Nẵng",
     canBuy: true
   },
   admin: {
     role: "ADMIN",
-    name: "Duy Trương (Tổng Quản Trị)",
+    name: "Trương Quốc Duy (Tổng Quản Trị)",
+    levelTitle: "Cấp 3: Tổng Quản Trị Hệ Thống (Super Admin)",
+    permissions: "Toàn quyền quản trị 3 chi nhánh, xem báo cáo doanh thu chuỗi, cấp phép tài khoản",
     avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=150&q=80",
-    email: "admin@duytruongmotor.com",
+    email: "admin@duytruongmoto.com",
     canBuy: true
   },
   shipper: {
     role: "SHIPPER",
     name: "Tài Xế Tuấn (Xe Sàn Trượt VIP)",
+    levelTitle: "Cấp 2: Nhân Viên Giao Nhận (Staff Shipper)",
+    permissions: "Tiếp nhận đơn điều phối, cập nhật trạng thái bàn giao phụ tùng/xe qua 6 chặng",
     avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=150&q=80",
-    email: "shipper@duytruongmotor.com",
+    email: "shipper@duytruongmoto.com",
     canBuy: false
   }
 };

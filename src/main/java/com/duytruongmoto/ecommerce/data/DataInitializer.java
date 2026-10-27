@@ -88,19 +88,24 @@ public class DataInitializer implements CommandLineRunner {
             deliveryRepository.save(Delivery.builder().name("Giao hàng tiêu chuẩn (Phụ tùng, đồ bảo hộ)").description("Giao nhanh trong 2-3 ngày").price(BigDecimal.valueOf(50000)).isDeleted(false).build());
         }
 
-        // 1. Admin Toàn Sàn (pass: admin123)
-        upsertUser("Duy", "Trường", "duy-truong-admin", "admin@duytruongmoto.com", "0901234567", "admin123", Role.ROLE_ADMIN, diamond, 9999L, BigDecimal.valueOf(500000000));
-        upsertUser("Duy", "Trường", "duy-truong-admin-motor", "admin@duytruongmotor.com", "0901234568", "admin123", Role.ROLE_ADMIN, diamond, 9999L, BigDecimal.valueOf(500000000));
+        // 1. Admin Toàn Sàn - Trương Quốc Duy (pass: admin123)
+        upsertUser("Duy", "Trương Quốc", "duy-truong-admin", "admin@duytruongmoto.com", "0901234567", "admin123", Role.ROLE_ADMIN, diamond, 9999L, BigDecimal.valueOf(500000000));
+        upsertUser("Duy", "Trương Quốc", "duy-truong-leader", "duytq4906@gmail.com", "0901234568", "admin123", Role.ROLE_ADMIN, diamond, 9999L, BigDecimal.valueOf(500000000));
 
-        // 2. Vendor Showroom (pass: vendor123)
+        // 2. Vendor Showroom Cầu Giấy Hà Nội - Đỗ Trọng Khôi (pass: vendor123)
+        upsertUser("Khôi", "Đỗ Trọng", "do-trong-khoi", "dotrongkhoi2002@gmail.com", "0903112002", "vendor123", Role.ROLE_VENDOR, gold, 3000L, BigDecimal.valueOf(180000000));
+
+        // 3. Vendor Showroom Hải Châu Đà Nẵng - Lê Nghĩa Tình (pass: vendor123)
+        upsertUser("Tình", "Lê Nghĩa", "le-nghia-tinh", "nghiatinh2002@gmail.com", "0905112002", "vendor123", Role.ROLE_VENDOR, gold, 2500L, BigDecimal.valueOf(140000000));
+
+        // 4. Vendor Showroom Phú Nhuận TP.HCM - Minh Quản Lý (pass: vendor123)
         upsertUser("Minh", "Showroom Q1", "minh-showroom-q1", "vendor@duytruongmoto.com", "0903456789", "vendor123", Role.ROLE_VENDOR, gold, 2000L, BigDecimal.valueOf(150000000));
-        upsertUser("Minh", "Showroom Q1", "minh-showroom-motor", "vendor@duytruongmotor.com", "0903456780", "vendor123", Role.ROLE_VENDOR, gold, 2000L, BigDecimal.valueOf(150000000));
 
-        // 3. Shipper Sàn Trượt (pass: shipper123)
+        // 5. Shipper Sàn Trượt (pass: shipper123)
         upsertUser("Tuấn", "Vận Chuyển", "tuan-shipper", "shipper@duytruongmoto.com", "0904567890", "shipper123", Role.ROLE_SHIPPER, silver, 100L, BigDecimal.ZERO);
         upsertUser("Tuấn", "Vận Chuyển", "tuan-shipper-motor", "shipper@duytruongmotor.com", "0904567891", "shipper123", Role.ROLE_SHIPPER, silver, 100L, BigDecimal.ZERO);
 
-        // 4. Khách Hàng VIP (pass: user123)
+        // 6. Khách Hàng VIP (pass: user123)
         upsertUser("Hoàng", "Biker VIP", "hoang-biker-vip", "customer@gmail.com", "0905678901", "user123", Role.ROLE_USER, diamond, 5500L, BigDecimal.valueOf(75000000));
         upsertUser("Hùng", "Biker VIP", "hung-biker-vip", "customer@duytruongmoto.com", "0905678902", "user123", Role.ROLE_USER, diamond, 5500L, BigDecimal.valueOf(75000000));
     }
@@ -168,16 +173,17 @@ public class DataInitializer implements CommandLineRunner {
 
     private Map<Integer, Store> initStores() {
         Map<Integer, Store> storeMap = new HashMap<>();
-        User vendor = userRepository.findByEmail("vendor@duytruongmoto.com").orElse(null);
-        User admin = userRepository.findByEmail("admin@duytruongmoto.com").orElse(vendor);
+        User adminHCM = userRepository.findByEmail("admin@duytruongmoto.com").orElse(null);
+        User vendorKhoi = userRepository.findByEmail("dotrongkhoi2002@gmail.com").orElse(adminHCM);
+        User vendorTinh = userRepository.findByEmail("nghiatinh2002@gmail.com").orElse(adminHCM);
         Commission comm = commissionRepository.findAll().stream().findFirst().orElse(null);
 
         Store s1 = storeRepository.findBySlug("duy-truong-moto-showroom-quan-1").orElseGet(() ->
             storeRepository.save(Store.builder()
-                .name("Duy Truong Motor - Flagship Showroom Quận 1")
+                .name("Duy Truong Moto - Trụ Sở & Kho Phụ Tùng Phú Nhuận TP.HCM")
                 .slug("duy-truong-moto-showroom-quan-1")
-                .owner(vendor)
-                .bio("Showroom trưng bày các dòng siêu môtô đỉnh cao hàng đầu Việt Nam: Ducati, BMW, Kawasaki...")
+                .owner(adminHCM)
+                .bio("Trụ sở chính & kho tổng phụ tùng đồ bảo hộ mô tô lớn nhất miền Nam. Quản lý bởi Trương Quốc Duy.")
                 .address("Số 88 Đường Nguyễn Hữu Cảnh, Phường 22, Quận 1, TP. Hồ Chí Minh")
                 .phone("0903456789")
                 .avatar("https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=300&q=80")
@@ -189,10 +195,10 @@ public class DataInitializer implements CommandLineRunner {
 
         Store s2 = storeRepository.findBySlug("duy-truong-moto-showroom-cau-giay").orElseGet(() ->
             storeRepository.save(Store.builder()
-                .name("Duy Truong Motor - Showroom Cầu Giấy Hà Nội")
+                .name("Duy Truong Moto - Chi Nhánh & Kho Phụ Tùng Cầu Giấy Hà Nội")
                 .slug("duy-truong-moto-showroom-cau-giay")
-                .owner(admin)
-                .bio("Chi nhánh miền Bắc chính hãng của hệ thống chuỗi Duy Truong Motor.")
+                .owner(vendorKhoi)
+                .bio("Chi nhánh miền Bắc phân phối đồ bảo hộ và phụ tùng xe mô tô. Quản lý bởi Đỗ Trọng Khôi.")
                 .address("Số 168 Đường Trần Duy Hưng, Cầu Giấy, Hà Nội")
                 .phone("0901234567")
                 .avatar("https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=300&q=80")
@@ -204,10 +210,10 @@ public class DataInitializer implements CommandLineRunner {
 
         Store s3 = storeRepository.findBySlug("duy-truong-moto-showroom-da-nang").orElseGet(() ->
             storeRepository.save(Store.builder()
-                .name("Duy Truong Motor - Showroom Hải Châu Đà Nẵng")
+                .name("Duy Truong Moto - Chi Nhánh & Kho Phụ Tùng Hải Châu Đà Nẵng")
                 .slug("duy-truong-moto-showroom-da-nang")
-                .owner(vendor)
-                .bio("Chi nhánh miền Trung uy tín chuyên siêu môtô PKL & xe cào cào.")
+                .owner(vendorTinh)
+                .bio("Chi nhánh miền Trung phân phối đồ bảo hộ và phụ tùng xe mô tô. Quản lý bởi Lê Nghĩa Tình.")
                 .address("Số 234 Đường Nguyễn Văn Linh, Hải Châu, Đà Nẵng")
                 .phone("0905678901")
                 .avatar("https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=300&q=80")
@@ -964,5 +970,91 @@ public class DataInitializer implements CommandLineRunner {
             "Bạc Xám Đỏ Nurburgring Edition Kèm Mâm Carbon",
             "/images/mv_agusta_brutale.jpg",
             "Kiệt tác Hyper Naked siêu hiếm từ hãng xe nghệ thuật Ý MV Agusta, động cơ 4 xylanh van titan thừa hưởng từ xe đua WorldSBK, pô độ Arrow titan full system và mâm carbon siêu nhẹ.");
+
+        // ================= NHÓM TRANG THIẾT BỊ BẢO HỘ CHO BIKER (RIDER GEAR) =================
+        seedProduct(storeMap.get(1), catMap.get("do-bao-ho"),
+            "Mũ Bảo Hiểm AGV Pista GP RR Carbon Italia Limited Edition",
+            "agv-pista-gp-rr-carbon-italia-401",
+            "AGV",
+            new BigDecimal("39500000"),
+            new BigDecimal("36800000"),
+            12, 31, 5.0,
+            "Vỏ 100% Sợi Carbon 3K Siêu Nhẹ 1.450g",
+            "Carbon Italia 3 Màu Cờ Ý",
+            "/images/agv_helmet.jpg",
+            "Mũ bảo hiểm đường đua đỉnh cao nhất thế giới do AGV sản xuất cho các tay đua MotoGP huyền thoại như Valentino Rossi. Kính quang học Class 1 chống đọng sương Pinlock MaxVision 120, hệ thống thông gió kim loại và cánh gió Pro Spoiler tối ưu khí động học ở tốc độ trên 300 km/h.");
+
+        seedProduct(storeMap.get(1), catMap.get("do-bao-ho"),
+            "Mũ Bảo Hiểm Cào Cào LS2 MX703 X-Force Carbon Full Face",
+            "ls2-mx703-x-force-carbon-8",
+            "LS2",
+            new BigDecimal("8900000"),
+            new BigDecimal("8200000"),
+            15, 58, 4.95,
+            "Vỏ Sợi Carbon 100% Siêu Nhẹ 1.300g",
+            "Vân Carbon Đỏ Racing",
+            "/images/ls2_helmet.jpg",
+            "Mũ bảo hiểm cào cào cao cấp bằng sợi carbon nguyên khối siêu nhẹ chuẩn thi đấu quốc tế, lót kháng khuẩn tháo giặt, khe hút gió làm mát tối đa khi bay nhảy trên sa mạc hoặc cung đường bùn đất.");
+
+        seedProduct(storeMap.get(1), catMap.get("do-bao-ho"),
+            "Bộ Giáp Da Liền Dainese Mugello 3 D-Air Đua Chuyên Nghiệp",
+            "dainese-mugello-3-d-air-402",
+            "DAINESE",
+            new BigDecimal("105000000"),
+            new BigDecimal("96000000"),
+            6, 15, 4.98,
+            "Da Bò Kangaroo Siêu Bền & Túi Khí Điện Tử D-Air",
+            "Đen Trắng Đỏ Fluo Racing",
+            "/images/dainese_suit.jpg",
+            "Bộ áo giáp da đua cao cấp số 1 thế giới tích hợp công nghệ túi khí điện tử thông minh D-Air tự động bung trong 15 mili-giây khi phát hiện va chạm. Gia công hoàn toàn bằng da Kangaroo mềm nhẹ dẻo dai cùng giáp gối, chỏ titan chống mài mòn tuyệt đối.");
+
+        seedProduct(storeMap.get(2), catMap.get("do-bao-ho"),
+            "Găng Tay Đua Alpinestars Supertech GP Carbon Pro",
+            "alpinestars-supertech-gp-carbon-403",
+            "ALPINESTARS",
+            new BigDecimal("10900000"),
+            new BigDecimal("9800000"),
+            20, 63, 4.96,
+            "Da Dê Siêu Bền Kèm Gù Carbon Kép DFS",
+            "Đen Trắng Gù Carbon",
+            "/images/alpinestars_gloves.jpg",
+            "Dòng găng tay đua đẳng cấp thế giới được các tay đua MotoGP Marc Marquez, Jorge Martin tin dùng. Lòng bàn tay bọc da dê tăng cảm giác tay ga, mu bàn tay gia cố gù carbon tản lực DFS và sợi chịu nhiệt Kevlar cao cấp.");
+
+        // ================= NHÓM PHỤ TÙNG & ĐỒ CHƠI XE MÔ TÔ (BIKE PARTS) =================
+        seedProduct(storeMap.get(1), catMap.get("gear-parts"),
+            "Hệ Thống Pô Akrapovic Full Titanium Racing Cho Môtô & Cào Cào",
+            "akrapovic-full-titanium-racing-9",
+            "AKRAPOVIC",
+            new BigDecimal("62000000"),
+            new BigDecimal("56500000"),
+            8, 42, 4.99,
+            "Hợp Kim Titanium Hàng Không Siêu Bền",
+            "Titanium Ánh Bạc Đầu Carbon",
+            "/images/akrapovic_exhaust.jpg",
+            "Hệ thống ống xả đua danh tiếng số 1 thế giới làm thủ công tại Slovenia. Giúp xe giải nhiệt tức thì, âm thanh uy lực xé gió và được dyno map xăng chuẩn chỉ tại xưởng Duy Trương Motor.");
+
+        seedProduct(storeMap.get(1), catMap.get("gear-parts"),
+            "Hệ Thống Pô SC-Project SC1-R Titanium WorldSBK Edition",
+            "sc-project-sc1-r-titanium-404",
+            "SC PROJECT",
+            new BigDecimal("39500000"),
+            new BigDecimal("36000000"),
+            9, 47, 4.97,
+            "Titanium Cao Cấp Cắt CNC Kèm Đuôi Carbon Chịu Nhiệt",
+            "Titanium Mờ Lưới Tổ Ong",
+            "/images/sc_project_exhaust.jpg",
+            "Ống xả hiệu năng cao đỉnh cao từ SC-Project Italy thiết kế chuyên biệt cho các giải đua WorldSBK. Thân pô titan siêu nhẹ kết hợp nắp chụp carbon chống nhiệt độ cao, mang đến dải âm thanh gầm rú xé gió phấn khích tột độ.");
+
+        seedProduct(storeMap.get(3), catMap.get("gear-parts"),
+            "Bộ Phuộc Trước Sau Ohlins FGR 250 & TTX GP Thụy Điển Cao Cấp",
+            "ohlins-fgr-250-ttx-gp-405",
+            "OHLINS",
+            new BigDecimal("245000000"),
+            new BigDecimal("228000000"),
+            3, 9, 5.0,
+            "Công Nghệ Giảm Chấn Khí Nén TTX Twin Tube Thụy Điển",
+            "Vàng Ohlins Gold Huyền Thoại Ty Mạ DLC",
+            "/images/ohlins_suspension.jpg",
+            "Đỉnh cao của hệ thống giảm xóc xe đua thế giới. Trang bị công nghệ van tiết lưu TTX độc quyền triệt tiêu hoàn toàn hiện tượng bọt khí dầu phuộc, đem lại độ êm ái, bám đường tuyệt đối khi vào cua tốc độ cao trên đường đua cũng như đường phố.");
     }
 }

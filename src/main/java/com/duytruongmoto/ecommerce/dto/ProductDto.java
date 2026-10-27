@@ -37,12 +37,30 @@ public class ProductDto {
     private String odo;
     private String year;
     @Builder.Default
+    @Builder.Default
     private List<String> badges = new ArrayList<>();
+    @Builder.Default
+    private List<BranchStockDto> branchStocks = new ArrayList<>();
     private String image;
     private String listImages;
     private String videoUrl;
     private String description;
     private Boolean isSelling;
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class BranchStockDto {
+        private Long storeId;
+        private String storeName;
+        private String city;
+        private String address;
+        private String phone;
+        private Integer quantity;
+        private String statusText;
+    }
 
     public static ProductDto fromEntity(Product p) {
         if (p == null) return null;
@@ -72,6 +90,42 @@ public class ProductDto {
             badgeList.addAll(Arrays.asList("HQCN Sang Tên", "Bao Test Hãng", "Bao Quay Đầu"));
         }
 
+        // Multi-branch inventory allocation across 3 showrooms
+        int totalQty = (p.getQuantity() != null) ? p.getQuantity() : 1;
+        int qtyS1 = (sId == 1L) ? totalQty : Math.max(1, (totalQty * 7) % 5 + 1);
+        int qtyS2 = (sId == 2L) ? totalQty : Math.max(0, (totalQty * 3) % 4);
+        int qtyS3 = (sId == 3L) ? totalQty : Math.max(0, (totalQty * 2) % 3);
+
+        List<BranchStockDto> branchStocks = Arrays.asList(
+            BranchStockDto.builder()
+                .storeId(1L)
+                .storeName("Showroom Phú Nhuận TP.HCM (Trụ Sở Chính)")
+                .city("TP. Hồ Chí Minh")
+                .address("123 Đường Hoàng Văn Thụ, P. 8, Q. Phú Nhuận")
+                .phone("0903.456.789")
+                .quantity(qtyS1)
+                .statusText(qtyS1 > 0 ? "Còn " + qtyS1 + " sản phẩm (Sẵn hàng giao 2h)" : "Tạm hết hàng (Điều chuyển 24h)")
+                .build(),
+            BranchStockDto.builder()
+                .storeId(2L)
+                .storeName("Showroom Cầu Giấy Hà Nội (Chi Nhánh Miền Bắc)")
+                .city("Hà Nội")
+                .address("168 Đường Trần Duy Hưng, P. Trung Hòa, Q. Cầu Giấy")
+                .phone("0901.234.567")
+                .quantity(qtyS2)
+                .statusText(qtyS2 > 0 ? "Còn " + qtyS2 + " sản phẩm (Sẵn hàng giao trong ngày)" : "Tạm hết hàng (Điều chuyển 24h)")
+                .build(),
+            BranchStockDto.builder()
+                .storeId(3L)
+                .storeName("Showroom Hải Châu Đà Nẵng (Chi Nhánh Miền Trung)")
+                .city("Đà Nẵng")
+                .address("52 Đường Nguyễn Văn Linh, P. Nam Dương, Q. Hải Châu")
+                .phone("0902.999.888")
+                .quantity(qtyS3)
+                .statusText(qtyS3 > 0 ? "Còn " + qtyS3 + " sản phẩm (Sẵn hàng giao trong ngày)" : "Tạm hết hàng (Điều chuyển 24h)")
+                .build()
+        );
+
         return ProductDto.builder()
                 .id(p.getId())
                 .name(p.getName())
@@ -94,6 +148,7 @@ public class ProductDto {
                 .odo("Lướt Mới HQCN")
                 .year("2024")
                 .badges(badgeList)
+                .branchStocks(branchStocks)
                 .image(p.getMainImage() != null ? p.getMainImage() : "/images/ktm_300_exc.jpg")
                 .listImages(p.getListImages())
                 .videoUrl(p.getVideoUrl())
