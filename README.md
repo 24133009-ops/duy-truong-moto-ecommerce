@@ -13,12 +13,13 @@
 - **Nền tảng công nghệ:** Spring Boot 3 (Backend REST API) & React 18 SPA (Frontend Dark Luxury) + SQL Server 2022
 
 ### Danh sách thành viên nhóm:
-1. **Trương Quốc Duy** (MSSV: **24133009** - Lớp 24133A) - **Nhóm trưởng (Leader)**: Xây dựng Backend Spring Boot 3, Giao diện Web Thymeleaf & React 18, CSDL SQL Server, Bảo mật Spring Security 6 RBAC, VNPAY QR, WebSocket Live Chat.
-2. **Đỗ Trọng Khôi** (MSSV: **20133056** - Lớp 201331A) - **Thành viên**: Phân tích lược đồ CSDL 19 bảng, Quản lý kho đa chi nhánh, Dữ liệu đồ bảo hộ (AGV, Dainese, Alpinestars), phụ tùng xe & siêu mô tô.
-3. **Lê Nghĩa Tình** (MSSV: **20133096** - Lớp 201331A) - **Thành viên**: Đặc tả yêu cầu nghiệp vụ SRS, Quy trình vận chuyển Shipper 6 chặng, Báo cáo Word & Kịch bản Video Demo.
+1. **Trương Quốc Duy** (MSSV: **24133009** | GitHub: [@24133009-ops](https://github.com/24133009-ops) | Email: `duytq4906@gmail.com`) - **Nhóm trưởng (Leader)**: Xây dựng Backend Spring Boot 3, Frontend React 18, CSDL SQL Server, Bảo mật Spring Security 6 RBAC, VNPAY QR, WebSocket Live Chat. Quản lý Tổng Sàn & Showroom Phú Nhuận TP.HCM.
+2. **Đỗ Trọng Khôi** (MSSV: **20133056** | GitHub: [@Kdt0701](https://github.com/Kdt0701) | Email: `dotrongkhoi2002@gmail.com`) - **Thành viên**: Phân tích CSDL 19 bảng, Quản trị Store Manager Chi nhánh Cầu Giấy - Hà Nội, Quản lý kho Đồ bảo hộ (AGV, Dainese) & Phụ tùng xe.
+3. **Lê Nghĩa Tình** (MSSV: **20133096** | GitHub: [@20133096-ENTI](https://github.com/20133096-ENTI) | Email: `nghiatinh2002@gmail.com`) - **Thành viên**: Đặc tả yêu cầu nghiệp vụ SRS, Quản trị Store Manager Chi nhánh Hải Châu - Đà Nẵng, Quy trình vận chuyển Shipper 6 chặng, Báo cáo Word & Video Demo.
 
 ### 🌐 Liên kết đồ án:
 - **Website Demo trực tuyến:** [https://duytruong-motor.vercel.app](https://duytruong-motor.vercel.app)
+- **Repository GitHub:** [https://github.com/24133009-ops/duy-truong-moto-ecommerce](https://github.com/24133009-ops/duy-truong-moto-ecommerce)
 - **File Prompt:** [Prompt.md](./Prompt.md)
 - **Thư mục tài liệu đồ án:** Thư mục [`Nhom_17/`](./Nhom_17/) gồm đầy đủ Báo cáo Word, CSDL SQL, Source code zip, Kịch bản Video Demo, Hướng dẫn chấm Rubric.
 
@@ -26,12 +27,13 @@
 
 ## 2. TÀI KHOẢN MẪU DÙNG THỬ (DEMO ACCOUNTS)
 
-| Vai trò | Email đăng nhập | Mật khẩu | Chức năng truy cập |
+| Vai trò | Email đăng nhập | Mật khẩu | Chi nhánh / Chức năng truy cập |
 | :--- | :--- | :--- | :--- |
-| **Admin / Manager** | `admin@duytruongmoto.com` | `admin123` | Quản trị toàn hệ thống, cấp phép showroom, thống kê chuỗi |
-| **Vendor (Showroom Q1)** | `vendor@duytruongmoto.com` | `vendor123` | Quản lý kho xe Showroom Quận 1, đơn hàng, ví tiền showroom |
-| **Shipper (Vận tải)** | `shipper@duytruongmoto.com` | `shipper123` | Đội xe sàn trượt VIP, xác nhận bàn giao xe 6 giai đoạn |
-| **Khách hàng (User)** | `customer@duytruongmoto.com` | `customer123` | Mua xe, giỏ hàng lưu DB, đặt cọc VNPAY, đánh giá xe $\ge$ 50 chars |
+| **Super Admin (Trương Quốc Duy)** | `admin@duytruongmoto.com` / `duytq4906@gmail.com` | `admin123` | Quản trị toàn hệ thống 3 chi nhánh, cấp phép sản phẩm, thống kê doanh thu |
+| **Store Manager Cầu Giấy HN (Đỗ Trọng Khôi)** | `dotrongkhoi2002@gmail.com` | `vendor123` | Quản lý kho hàng & đơn hàng Showroom Cầu Giấy - Hà Nội |
+| **Store Manager Hải Châu ĐN (Lê Nghĩa Tình)** | `nghiatinh2002@gmail.com` | `vendor123` | Quản lý kho hàng & đơn hàng Showroom Hải Châu - Đà Nẵng |
+| **Shipper (Vận tải)** | `shipper@duytruongmoto.com` | `shipper123` | Đội xe sàn trượt VIP, xác nhận bàn giao hàng 6 giai đoạn |
+| **Khách hàng (User)** | `customer@duytruongmoto.com` | `customer123` | Mua đồ bảo hộ / phụ tùng, chọn kho lấy gần nhất, giỏ hàng DB, thanh toán VNPAY |
 
 ---
 
