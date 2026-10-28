@@ -40,7 +40,7 @@
 ## 3. LIÊN KẾT TRUY CẬP HỆ THỐNG & CÁC PHÂN HỆ
 
 ### 🌐 Truy cập trực tiếp hệ thống:
-- **Website chính thức (Online Demo):** [https://duytruong-motor.vercel.app](https://duytruong-motor.vercel.app)
+- **Website chính thức (Online Demo):** [https://duy-truong-moto-ecommerce.onrender.com/](https://duy-truong-moto-ecommerce.onrender.com/)
 - **Môi trường chạy cục bộ (Local):** [http://localhost:5173](http://localhost:5173)
 - **Backend API (Spring Boot 3):** [https://duy-truong-moto-ecommerce.onrender.com/api/products](https://duy-truong-moto-ecommerce.onrender.com/api/products) *(Local API: [http://localhost:8080/api/products](http://localhost:8080/api/products))*
 
