@@ -714,7 +714,7 @@ export default function App() {
               <span className="text-gradient-gold">DUY TRƯƠNG</span> <span style={{ color: '#fff' }}>MOTO</span>
             </div>
             <div style={{ fontSize: '0.62rem', color: 'var(--gold-primary)', letterSpacing: '1.5px', fontWeight: 800 }}>
-              CHUỖI ĐỒ BẢO HỘ &amp; PHỤ TÙNG MÔ TÔ PKL
+              CHUỖI MÔ TÔ PKL, CÀO CÀO &amp; ĐỒ BẢO HỘ
             </div>
           </div>
         </div>
@@ -799,23 +799,15 @@ export default function App() {
                   className={`vk-menu-item ${selectedMegaKey === 'motor' ? 'active' : ''}`}
                   onClick={() => setSelectedMegaKey(selectedMegaKey === 'motor' ? null : 'motor')}
                 >
-                  {selectedMegaKey === 'motor' && <span style={{ color: '#ffd700' }}>–</span>} MOTOR
+                  {selectedMegaKey === 'motor' && <span style={{ color: '#ffd700' }}>–</span>} MÔ TÔ PKL
                 </button>
 
                 <button 
                   type="button"
-                  className={`vk-menu-item ${selectedMegaKey === 'oto' ? 'active' : ''}`}
-                  onClick={() => setSelectedMegaKey(selectedMegaKey === 'oto' ? null : 'oto')}
+                  className={`vk-menu-item ${selectedMegaKey === 'dirtbike' ? 'active' : ''}`}
+                  onClick={() => setSelectedMegaKey(selectedMegaKey === 'dirtbike' ? null : 'dirtbike')}
                 >
-                  {selectedMegaKey === 'oto' && <span style={{ color: '#ffd700' }}>–</span>} Ô TÔ
-                </button>
-
-                <button 
-                  type="button"
-                  className={`vk-menu-item ${selectedMegaKey === 'xenho' ? 'active' : ''}`}
-                  onClick={() => setSelectedMegaKey(selectedMegaKey === 'xenho' ? null : 'xenho')}
-                >
-                  {selectedMegaKey === 'xenho' && <span style={{ color: '#ffd700' }}>–</span>} XE NHỎ
+                  {selectedMegaKey === 'dirtbike' && <span style={{ color: '#ffd700' }}>–</span>} CÀO CÀO &amp; ADVENTURE
                 </button>
 
                 <button 
@@ -823,37 +815,61 @@ export default function App() {
                   className={`vk-menu-item ${selectedMegaKey === 'phukien' ? 'active' : ''}`}
                   onClick={() => setSelectedMegaKey(selectedMegaKey === 'phukien' ? null : 'phukien')}
                 >
-                  {selectedMegaKey === 'phukien' && <span style={{ color: '#ffd700' }}>–</span>} PHỤ KIỆN
+                  {selectedMegaKey === 'phukien' && <span style={{ color: '#ffd700' }}>–</span>} ĐỒ BẢO HỘ CHÍNH HÃNG
                 </button>
 
-                <button className="vk-menu-item" onClick={() => alert("Chức năng BOOKING: Quý khách vui lòng gọi Hotline 0903.456.789 để đặt lịch lái thử siêu xe và thẩm định xe tại nhà!")}>
-                  BOOKING
+                <button 
+                  type="button"
+                  className={`vk-menu-item ${selectedMegaKey === 'podo' ? 'active' : ''}`}
+                  onClick={() => setSelectedMegaKey(selectedMegaKey === 'podo' ? null : 'podo')}
+                >
+                  {selectedMegaKey === 'podo' && <span style={{ color: '#ffd700' }}>–</span>} PÔ ĐỘ &amp; ĐỒ CHƠI XE
                 </button>
 
-                <button className="vk-menu-item" onClick={() => alert("DỊCH VỤ DUY TRƯƠNG MOTOR:\n1. Cứu hộ giao xe sàn trượt VIP 24/7\n2. Căn chỉnh Dynojet & Bảo dưỡng siêu xe\n3. Hỗ trợ rút hồ sơ gốc sang tên HQCN trong 24h")}>
-                  DỊCH VỤ
+                <button 
+                  type="button"
+                  className={`vk-menu-item ${selectedMegaKey === 'dichvu' ? 'active' : ''}`}
+                  onClick={() => setSelectedMegaKey(selectedMegaKey === 'dichvu' ? null : 'dichvu')}
+                >
+                  {selectedMegaKey === 'dichvu' && <span style={{ color: '#ffd700' }}>–</span>} DỊCH VỤ
                 </button>
 
-                <button className="vk-menu-item" onClick={() => alert("BLOG DUY TRƯƠNG MOTOR:\nCập nhật tin tức thị trường siêu xe PKL, xe cào cào và siêu xe thể thao mới nhất tại Việt Nam.")}>
-                  BLOG
+                <button 
+                  type="button"
+                  className={`vk-menu-item ${selectedMegaKey === 'booking' ? 'active' : ''}`}
+                  onClick={() => setSelectedMegaKey(selectedMegaKey === 'booking' ? null : 'booking')}
+                >
+                  {selectedMegaKey === 'booking' && <span style={{ color: '#ffd700' }}>–</span>} BOOKING &amp; LÁI THỬ
                 </button>
 
-                <button className="vk-menu-item" onClick={() => { setCurrentTab('showrooms'); setSelectedMegaKey(null); }}>
-                  LIÊN HỆ
+                <button 
+                  type="button"
+                  className={`vk-menu-item ${selectedMegaKey === 'blog' ? 'active' : ''}`}
+                  onClick={() => setSelectedMegaKey(selectedMegaKey === 'blog' ? null : 'blog')}
+                >
+                  {selectedMegaKey === 'blog' && <span style={{ color: '#ffd700' }}>–</span>} BLOG BIKER
+                </button>
+
+                <button 
+                  type="button"
+                  className={`vk-menu-item ${selectedMegaKey === 'lienhe' ? 'active' : ''}`}
+                  onClick={() => setSelectedMegaKey(selectedMegaKey === 'lienhe' ? null : 'lienhe')}
+                >
+                  {selectedMegaKey === 'lienhe' && <span style={{ color: '#ffd700' }}>–</span>} LIÊN HỆ SHOWROOM
                 </button>
               </div>
 
-              {/* Frosted Glass Floating Panel displaying Brands - Chỉ hiển thị khi người dùng ấn vào danh mục */}
+              {/* Frosted Glass Floating Panel displaying Brands & Interactive Services */}
               {selectedMegaKey && MEGA_MENU_DATA[selectedMegaKey] && (
                 <div className="vk-frosted-panel" onClick={(e) => e.stopPropagation()}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px', borderBottom: '1px solid rgba(0,0,0,0.08)', paddingBottom: '12px' }}>
-                    <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#0f172a', fontFamily: 'var(--font-brand)' }}>
-                      <i className="fa-solid fa-gem text-gold me-2"></i> BỘ SƯU TẬP {MEGA_MENU_DATA[selectedMegaKey]?.title || "XE"}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px', borderBottom: '1px solid rgba(212,175,55,0.2)', paddingBottom: '12px' }}>
+                    <div style={{ fontSize: '1.15rem', fontWeight: 900, color: '#ffd700', fontFamily: 'var(--font-brand)' }}>
+                      <i className="fa-solid fa-gem text-gold me-2"></i> {MEGA_MENU_DATA[selectedMegaKey]?.title}
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                       <button 
                         className="btn-gold" 
-                        style={{ padding: '6px 16px', fontSize: '0.85rem' }}
+                        style={{ padding: '6px 14px', fontSize: '0.82rem' }}
                         onClick={() => {
                           setSelectedCategory(MEGA_MENU_DATA[selectedMegaKey]?.categoryKey || 'all');
                           setBrandFilter('all');
@@ -861,11 +877,11 @@ export default function App() {
                           setSelectedMegaKey(null);
                         }}
                       >
-                        Xem Toàn Bộ Kho Xe <i className="fa-solid fa-arrow-right ms-1"></i>
+                        Xem Kho Xe <i className="fa-solid fa-arrow-right ms-1"></i>
                       </button>
                       <button 
                         onClick={() => setSelectedMegaKey(null)}
-                        style={{ background: '#f1f5f9', border: '1px solid #cbd5e1', borderRadius: '50%', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontWeight: 800, color: '#475569', fontSize: '14px' }}
+                        style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(212,175,55,0.4)', borderRadius: '50%', width: '30px', height: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontWeight: 800, color: '#ffd700', fontSize: '13px' }}
                         title="Đóng menu"
                       >
                         ✕
@@ -873,56 +889,115 @@ export default function App() {
                     </div>
                   </div>
 
-                  <div className={`vk-brands-grid ${selectedMegaKey === 'oto' ? 'cols-4' : selectedMegaKey === 'xenho' ? 'cols-3' : 'cols-2'}`}>
-                    {MEGA_MENU_DATA[selectedMegaKey]?.columns.map((col, colIdx) => (
-                      <div key={colIdx} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                        {col.map((bName, bIdx) => (
-                          <div 
-                            key={bIdx} 
-                            className="vk-brand-link"
-                            onClick={() => {
-                              let targetBrand = bName;
-                              if (selectedMegaKey === 'oto') {
-                                setSelectedCategory('oto');
-                                targetBrand = bName;
-                              } else if (selectedMegaKey === 'xenho') {
-                                setSelectedCategory('xenho');
-                                if (bName.includes('HONDA')) targetBrand = 'HONDA';
-                                else if (bName.includes('VESPA')) targetBrand = 'VESPA';
-                                else if (bName.includes('BMW')) targetBrand = 'BMW';
-                              } else if (selectedMegaKey === 'motor') {
-                                setSelectedCategory('all-motor');
-                                if (bName.includes('HARLEY')) targetBrand = 'HARLEY';
-                                else if (bName.includes('ROYAL')) targetBrand = 'ROYAL ENFIELD';
-                                else if (bName.includes('BMW')) targetBrand = 'BMW';
-                                else if (bName.includes('KTM')) targetBrand = 'KTM';
-                              } else if (selectedMegaKey === 'phukien') {
-                                setSelectedCategory('gear-parts');
+                  {/* 1. Brand Links Grid (for Motor, Dirtbike, Phukien, Podo) */}
+                  {MEGA_MENU_DATA[selectedMegaKey]?.columns && (
+                    <div className="vk-brands-grid cols-2">
+                      {MEGA_MENU_DATA[selectedMegaKey].columns.map((col, colIdx) => (
+                        <div key={colIdx} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          {col.map((bName, bIdx) => (
+                            <div 
+                              key={bIdx} 
+                              className="vk-brand-link"
+                              onClick={() => {
+                                let targetBrand = 'all';
                                 const upper = bName.toUpperCase();
-                                if (upper.includes('AGV')) targetBrand = 'AGV';
-                                else if (upper.includes('DAINESE')) targetBrand = 'DAINESE';
-                                else if (upper.includes('ALPINESTARS')) targetBrand = 'ALPINESTARS';
-                                else if (upper.includes('AKRAPOVIC')) targetBrand = 'AKRAPOVIC';
-                                else if (upper.includes('SC PROJECT') || upper.includes('SC-PROJECT')) targetBrand = 'SC PROJECT';
-                                else if (upper.includes('OHLINS')) targetBrand = 'OHLINS';
+                                if (upper.includes('DUCATI')) targetBrand = 'Ducati';
+                                else if (upper.includes('BMW')) targetBrand = 'BMW';
+                                else if (upper.includes('KAWASAKI')) targetBrand = 'Kawasaki';
+                                else if (upper.includes('KTM')) targetBrand = 'KTM';
+                                else if (upper.includes('YAMAHA')) targetBrand = 'Yamaha';
+                                else if (upper.includes('HONDA')) targetBrand = 'Honda';
+                                else if (upper.includes('HARLEY')) targetBrand = 'Harley';
+                                else if (upper.includes('TRIUMPH')) targetBrand = 'Triumph';
+                                else if (upper.includes('AGV')) targetBrand = 'AGV';
+                                else if (upper.includes('DAINESE')) targetBrand = 'Dainese';
+                                else if (upper.includes('ALPINESTARS')) targetBrand = 'Alpinestars';
+                                else if (upper.includes('AKRAPOVIC')) targetBrand = 'Akrapovic';
+                                else if (upper.includes('SC-PROJECT') || upper.includes('SC PROJECT')) targetBrand = 'SC Project';
+                                else if (upper.includes('OHLINS')) targetBrand = 'Ohlins';
                                 else targetBrand = bName;
-                              }
-                              setBrandFilter(targetBrand);
-                              setSearchQuery('');
-                              setCurrentTab('products');
-                              setSelectedMegaKey(null);
-                            }}
-                          >
-                            {bName}
+
+                                setSelectedCategory(MEGA_MENU_DATA[selectedMegaKey]?.categoryKey || 'all');
+                                setBrandFilter(targetBrand);
+                                setSearchQuery('');
+                                setCurrentTab('products');
+                                setSelectedMegaKey(null);
+                              }}
+                            >
+                              <i className="fa-solid fa-chevron-right text-gold me-2" style={{ fontSize: '0.7rem' }}></i>
+                              {bName}
+                            </div>
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* 2. Interactive Services Panel */}
+                  {MEGA_MENU_DATA[selectedMegaKey]?.isService && (
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '14px' }}>
+                      {MEGA_MENU_DATA[selectedMegaKey].services.map((srv, idx) => (
+                        <div key={idx} style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(212,175,55,0.25)', borderRadius: '12px', padding: '14px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
+                            <i className={`fa-solid ${srv.icon} text-gold fs-5`}></i>
+                            <strong style={{ color: '#fff', fontSize: '0.95rem' }}>{srv.title}</strong>
+                          </div>
+                          <p style={{ color: '#94a3b8', fontSize: '0.8rem', margin: 0, lineHeight: 1.4 }}>{srv.desc}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* 3. Interactive Booking Panel */}
+                  {MEGA_MENU_DATA[selectedMegaKey]?.isBooking && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      <div style={{ color: '#cbd5e1', fontSize: '0.85rem' }}>Quý khách vui lòng chọn Showroom gần nhất để đặt lịch thẩm định xe tại nhà hoặc trải nghiệm lái thử:</div>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
+                        {MEGA_MENU_DATA[selectedMegaKey].hotlines.map((hl, idx) => (
+                          <div key={idx} style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(212,175,55,0.3)', borderRadius: '12px', padding: '12px', textAlign: 'center' }}>
+                            <div style={{ fontWeight: 700, color: '#fff', fontSize: '0.85rem', marginBottom: '4px' }}>{hl.name}</div>
+                            <div style={{ color: '#94a3b8', fontSize: '0.75rem', marginBottom: '8px' }}>{hl.addr}</div>
+                            <a href={`tel:${hl.phone.replace(/\./g, '')}`} className="btn-gold" style={{ display: 'inline-block', width: '100%', padding: '6px 0', fontSize: '0.8rem' }}>
+                              <i className="fa-solid fa-phone me-1"></i> {hl.phone}
+                            </a>
                           </div>
                         ))}
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  )}
+
+                  {/* 4. Interactive Blog Panel */}
+                  {MEGA_MENU_DATA[selectedMegaKey]?.isBlog && (
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
+                      {MEGA_MENU_DATA[selectedMegaKey].articles.map((art, idx) => (
+                        <div key={idx} style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '12px' }}>
+                          <span style={{ background: 'rgba(212,175,55,0.2)', color: '#ffd700', padding: '2px 8px', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 700 }}>{art.tag}</span>
+                          <div style={{ fontWeight: 700, color: '#fff', fontSize: '0.86rem', marginTop: '6px', marginBottom: '4px' }}>{art.title}</div>
+                          <p style={{ color: '#94a3b8', fontSize: '0.78rem', margin: 0, lineHeight: 1.4 }}>{art.desc}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* 5. Interactive Contact & Showroom Panel */}
+                  {MEGA_MENU_DATA[selectedMegaKey]?.isContact && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                      {MEGA_MENU_DATA[selectedMegaKey].stores.map((st, idx) => (
+                        <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(212,175,55,0.25)', borderRadius: '12px', padding: '12px 16px' }}>
+                          <div>
+                            <strong style={{ color: '#fff', fontSize: '0.92rem' }}><i className="fa-solid fa-location-dot text-gold me-2"></i> {st.name}</strong>
+                            <div style={{ color: '#94a3b8', fontSize: '0.8rem', marginTop: '2px' }}>{st.address} • Giờ mở cửa: {st.open}</div>
+                          </div>
+                          <a href={`tel:${st.phone.replace(/\./g, '')}`} className="btn-outline-gold" style={{ padding: '6px 14px', fontSize: '0.82rem', whiteSpace: 'nowrap' }}>
+                            <i className="fa-solid fa-phone me-1"></i> {st.phone}
+                          </a>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
-
-            </section>
+</section>
 
             {/* FIVE GOLDEN COMMITMENTS BANNER (Đặt tinh tế ngay dưới Hero Banner) */}
             <div style={{ background: 'rgba(10, 12, 18, 0.95)', borderBottom: '1px solid rgba(255,255,255,0.1)', padding: '16px 30px', fontSize: '0.82rem' }}>
