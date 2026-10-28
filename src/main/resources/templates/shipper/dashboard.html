@@ -138,6 +138,82 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- DYNAMIC 6-STEP PROGRESS STEPPER ON SHIPPER CARD -->
+                <div class="mt-4 pt-3 border-top border-secondary border-opacity-25" th:if="${stName != 'CANCELLED' and stName != 'REFUNDED'}">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="small text-gold fw-bold">
+                            <i class="fa-solid fa-truck-fast me-1"></i> TIẾN TRÌNH BÀN GIAO ĐƠN HÀNG:
+                        </span>
+                        <span class="small fw-bold" th:classappend="${stepIdx == 6 ? 'text-success' : 'text-gold'}">
+                            <span th:text="${stepIdx == 6 ? 'Chặng 6/6 • Hoàn Tất Bàn Giao & Bảo Hành 3 Năm' : 'Chặng ' + stepIdx + '/6 • ' + order.status.displayName}"></span>
+                        </span>
+                    </div>
+                    <div class="delivery-stepper" style="margin: 0; padding: 10px 0;">
+                        <div class="delivery-stepper-line" style="top: 22px;"></div>
+                        <div class="delivery-stepper-progress" th:style="'top: 22px; width: ' + ${(stepIdx - 1) * 20} + '%;'"></div>
+
+                        <!-- Chặng 1 -->
+                        <div class="stepper-step" th:classappend="${stepIdx > 1 ? 'completed' : (stepIdx == 1 ? 'active' : '')}">
+                            <div class="stepper-icon-circle" style="width: 36px; height: 36px; font-size: 0.85rem;">
+                                <i th:class="${stepIdx > 1 ? 'fa-solid fa-check' : 'fa-solid fa-file-invoice-dollar'}"></i>
+                            </div>
+                            <div class="stepper-step-num">C1</div>
+                            <div class="stepper-title" style="font-size: 0.72rem;">Đặt Cọc</div>
+                            <div class="stepper-desc" style="font-size: 0.62rem;">Đã xác nhận cọc</div>
+                        </div>
+
+                        <!-- Chặng 2 -->
+                        <div class="stepper-step" th:classappend="${stepIdx > 2 ? 'completed' : (stepIdx == 2 ? 'active' : '')}">
+                            <div class="stepper-icon-circle" style="width: 36px; height: 36px; font-size: 0.85rem;">
+                                <i th:class="${stepIdx > 2 ? 'fa-solid fa-check' : 'fa-solid fa-stamp'}"></i>
+                            </div>
+                            <div class="stepper-step-num">C2</div>
+                            <div class="stepper-title" style="font-size: 0.72rem;">Duyệt Hồ Sơ</div>
+                            <div class="stepper-desc" style="font-size: 0.62rem;">Hồ sơ HQCN 100%</div>
+                        </div>
+
+                        <!-- Chặng 3 -->
+                        <div class="stepper-step" th:classappend="${stepIdx > 3 ? 'completed' : (stepIdx == 3 ? 'active' : '')}">
+                            <div class="stepper-icon-circle" style="width: 36px; height: 36px; font-size: 0.85rem;">
+                                <i th:class="${stepIdx > 3 ? 'fa-solid fa-check' : 'fa-solid fa-warehouse'}"></i>
+                            </div>
+                            <div class="stepper-step-num">C3</div>
+                            <div class="stepper-title" style="font-size: 0.72rem;">PDI Test Xe</div>
+                            <div class="stepper-desc" style="font-size: 0.62rem;">Kiểm định & rửa xe</div>
+                        </div>
+
+                        <!-- Chặng 4 -->
+                        <div class="stepper-step" th:classappend="${stepIdx > 4 ? 'completed' : (stepIdx == 4 ? 'active' : '')}">
+                            <div class="stepper-icon-circle" style="width: 36px; height: 36px; font-size: 0.85rem;">
+                                <i th:class="${stepIdx > 4 ? 'fa-solid fa-check' : 'fa-solid fa-truck-ramp-box'}"></i>
+                            </div>
+                            <div class="stepper-step-num">C4</div>
+                            <div class="stepper-title" style="font-size: 0.72rem;">Xe Sàn Trượt</div>
+                            <div class="stepper-desc" style="font-size: 0.62rem;">Điều động xuất bến</div>
+                        </div>
+
+                        <!-- Chặng 5 -->
+                        <div class="stepper-step" th:classappend="${stepIdx > 5 ? 'completed' : (stepIdx == 5 ? 'active' : '')}">
+                            <div class="stepper-icon-circle" style="width: 36px; height: 36px; font-size: 0.85rem;">
+                                <i th:class="${stepIdx > 5 ? 'fa-solid fa-check' : 'fa-solid fa-key'}"></i>
+                            </div>
+                            <div class="stepper-step-num">C5</div>
+                            <div class="stepper-title" style="font-size: 0.72rem;">Bàn Giao Xe</div>
+                            <div class="stepper-desc" style="font-size: 0.62rem;">Ký biên bản nhận xe</div>
+                        </div>
+
+                        <!-- Chặng 6 -->
+                        <div class="stepper-step" th:classappend="${stepIdx >= 6 ? 'completed' : ''}">
+                            <div class="stepper-icon-circle" style="width: 36px; height: 36px; font-size: 0.85rem;">
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </div>
+                            <div class="stepper-step-num">C6</div>
+                            <div class="stepper-title" style="font-size: 0.72rem;">Bảo Hành 3 Năm</div>
+                            <div class="stepper-desc" style="font-size: 0.62rem;">Kích hoạt bảo hành VIP</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

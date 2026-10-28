@@ -182,8 +182,27 @@ public class CheckoutController {
         }
 
         User user = userDetails.getUser();
-        List<Order> orders = orderService.getOrdersByUser(user.getId(), status);
-        List<Order> allUserOrders = orderService.getOrdersByUser(user.getId(), null);
+        List<Order> orders;
+        List<Order> allUserOrders;
+
+        if (user.getRole() == Role.ROLE_SHIPPER) {
+            orders = orderService.getOrdersByShipper(user.getId(), status);
+            allUserOrders = orderService.getOrdersByShipper(user.getId(), null);
+            if (allUserOrders.isEmpty()) {
+                orders = status != null ? orderService.getAllOrders().stream().filter(o -> o.getStatus() == status).toList() : orderService.getAllOrders();
+                allUserOrders = orderService.getAllOrders();
+            }
+        } else if (user.getRole() == Role.ROLE_ADMIN || user.getRole() == Role.ROLE_MANAGER) {
+            orders = orderService.getOrdersByUser(user.getId(), status);
+            allUserOrders = orderService.getOrdersByUser(user.getId(), null);
+            if (allUserOrders.isEmpty()) {
+                orders = status != null ? orderService.getAllOrders().stream().filter(o -> o.getStatus() == status).toList() : orderService.getAllOrders();
+                allUserOrders = orderService.getAllOrders();
+            }
+        } else {
+            orders = orderService.getOrdersByUser(user.getId(), status);
+            allUserOrders = orderService.getOrdersByUser(user.getId(), null);
+        }
 
         // Map đếm số lượng đơn theo từng trạng thái để hiển thị trên Tab
         java.util.Map<String, Long> statusCounts = new java.util.HashMap<>();
