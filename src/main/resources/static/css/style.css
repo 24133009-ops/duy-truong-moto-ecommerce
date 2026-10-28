@@ -1389,3 +1389,12 @@ label,
         min-width: 90px;
     }
 }
+
+/* Top utility bar z-index fix so dropdowns always float above sticky navbar */
+.top-utility-bar {
+    position: relative !important;
+    z-index: 1045 !important;
+}
+.top-utility-bar .dropdown-menu {
+    z-index: 1055 !important;
+}

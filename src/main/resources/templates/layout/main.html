@@ -28,15 +28,17 @@
 <body>
 
     <!-- 1. TOP UTILITY BAR: ROLE SWITCHER HUD + HOTLINE & SLOGAN (Tích hợp 1 thanh tinh gọn, sang trọng) -->
-    <div th:fragment="topbar" class="py-2 border-bottom border-secondary" style="background: #07090e; font-size: 0.8rem;">
+    <div th:fragment="topbar" class="py-2 border-bottom border-secondary top-utility-bar" style="background: #07090e; font-size: 0.8rem; position: relative; z-index: 1045 !important;">
         <div class="container-fluid px-4 d-flex flex-wrap justify-content-between align-items-center gap-2">
             <div class="top-bar-role-switcher d-flex align-items-center gap-2 flex-wrap">
                 <span class="badge bg-gold text-dark fw-bold small"><i class="fa-solid fa-sliders me-1"></i> PHÂN HỆ:</span>
-                <a th:href="@{/home}" class="badge bg-secondary text-decoration-none px-2 py-1"><i class="fa-solid fa-user me-1"></i> 1. Khách</a>
-                <a th:href="@{/user/profile}" class="badge bg-dark border border-secondary text-light text-decoration-none px-2 py-1"><i class="fa-solid fa-motorcycle me-1"></i> 2. Hoàng Biker</a>
-                <a th:href="@{/vendor/dashboard}" class="badge bg-warning text-dark text-decoration-none px-2 py-1"><i class="fa-solid fa-store me-1"></i> 3. Showroom PN</a>
-                <a th:href="@{/admin/dashboard}" class="badge bg-danger text-light text-decoration-none px-2 py-1"><i class="fa-solid fa-shield-halved me-1"></i> 4. Admin</a>
-                <a th:href="@{/shipper/dashboard}" class="badge bg-info text-dark text-decoration-none px-2 py-1"><i class="fa-solid fa-truck-fast me-1"></i> 5. Shipper</a>
+                <a th:href="@{/home}" class="badge bg-secondary text-decoration-none px-2 py-1" title="Khách mua hàng"><i class="fa-solid fa-user me-1"></i> 1. Khách</a>
+                <a th:href="@{/user/profile}" class="badge bg-dark border border-secondary text-light text-decoration-none px-2 py-1" title="Khách VIP"><i class="fa-solid fa-motorcycle me-1"></i> 2. Biker Hoàng</a>
+                <a th:href="@{/vendor/dashboard}" class="badge bg-warning text-dark text-decoration-none px-2 py-1" title="Showroom Phú Nhuận TP.HCM - Minh Quản Lý"><i class="fa-solid fa-store me-1"></i> 3. Showroom PN</a>
+                <a th:href="@{/vendor/dashboard}" class="badge bg-warning text-dark text-decoration-none px-2 py-1" title="Showroom Cầu Giấy HN - Đỗ Trọng Khôi"><i class="fa-solid fa-store me-1"></i> 4. Showroom CG (Khôi)</a>
+                <a th:href="@{/vendor/dashboard}" class="badge bg-warning text-dark text-decoration-none px-2 py-1" title="Showroom Hải Châu ĐN - Lê Nghĩa Tình"><i class="fa-solid fa-store me-1"></i> 5. Showroom ĐN (Tình)</a>
+                <a th:href="@{/shipper/dashboard}" class="badge bg-info text-dark text-decoration-none px-2 py-1" title="Tài xế xe sàn trượt VIP"><i class="fa-solid fa-truck-fast me-1"></i> 6. Tài Xế VIP</a>
+                <a th:href="@{/admin/dashboard}" class="badge bg-danger text-light text-decoration-none px-2 py-1" title="Quản trị toàn sàn"><i class="fa-solid fa-shield-halved me-1"></i> 7. Admin</a>
             </div>
             <div class="d-flex align-items-center gap-3 text-secondary small ms-auto">
                 <span class="d-none d-lg-inline text-gold-light"><i class="fa-solid fa-quote-left text-gold me-1"></i> MUA CỦA NGƯỜI CHÁN - BÁN CHO NGƯỜI CẦN</span>
@@ -45,7 +47,7 @@
                     <button class="btn btn-sm btn-outline-warning dropdown-toggle py-0 px-2 fw-bold" style="font-size:0.75rem;" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fa-solid fa-location-dot me-1"></i> Kho Showroom
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow border border-warning" style="font-size:0.8rem; min-width: 290px;">
+                    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow-lg border border-warning" style="font-size:0.8rem; min-width: 290px; z-index: 1055 !important; margin-top: 8px;">
                         <li><a class="dropdown-item py-2" th:href="@{/products}"><i class="fa-solid fa-globe text-gold me-2"></i> <strong>Toàn Quốc (Tất Cả 3 Showroom)</strong></a></li>
                         <li><hr class="dropdown-divider border-secondary my-1"></li>
                         <li><a class="dropdown-item py-2" th:href="@{/products(storeId=1)}"><i class="fa-solid fa-store text-danger me-2"></i> <strong>Showroom Phú Nhuận TP.HCM</strong><br><small class="text-secondary ps-4">Trụ sở chính - 123 Hoàng Văn Thụ</small></a></li>
