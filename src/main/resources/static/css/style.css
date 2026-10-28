@@ -1071,6 +1071,15 @@ select.form-select-luxury {
     outline: none !important;
 }
 
+select:focus,
+.form-select:focus,
+.form-select-luxury:focus,
+.glass-panel select:focus {
+    background-repeat: no-repeat !important;
+    background-position: right 1rem center !important;
+    background-size: 16px 12px !important;
+}
+
 /* 3. Placeholder Color: Sáng rõ, dễ đọc, độ tương phản cao */
 .form-control::placeholder,
 .form-control-luxury::placeholder,
