@@ -48,15 +48,35 @@ public class VnPayService {
         vnpParams.put("vnp_OrderInfo", orderInfo);
         vnpParams.put("vnp_OrderType", "other");
         vnpParams.put("vnp_Locale", "vn");
-        vnpParams.put("vnp_ReturnUrl", vnpReturnUrl);
+
+        // Dynamic return URL for Render cloud deployment
+        String actualReturnUrl = vnpReturnUrl;
+        if (request != null) {
+            String serverName = request.getServerName();
+            if (serverName != null && (serverName.contains("onrender.com") || (actualReturnUrl != null && actualReturnUrl.contains("localhost")))) {
+                String scheme = request.getHeader("X-Forwarded-Proto");
+                if (scheme == null) scheme = request.getScheme();
+                int serverPort = request.getServerPort();
+                if (serverName.contains("onrender.com")) {
+                    actualReturnUrl = "https://" + serverName + "/checkout/vnpay-return";
+                } else if (!serverName.contains("localhost") && !serverName.contains("127.0.0.1")) {
+                    actualReturnUrl = scheme + "://" + serverName + (serverPort == 80 || serverPort == 443 ? "" : ":" + serverPort) + "/checkout/vnpay-return";
+                }
+            }
+        }
+        vnpParams.put("vnp_ReturnUrl", actualReturnUrl);
         vnpParams.put("vnp_IpAddr", vnpIpAddr);
 
-        Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
+        // Fix: Use Asia/Ho_Chi_Minh on both Calendar and SimpleDateFormat so VNPAY receives exact Vietnam time (GMT+7)
+        TimeZone vnTimeZone = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
+        Calendar cld = Calendar.getInstance(vnTimeZone);
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+        formatter.setTimeZone(vnTimeZone);
+
         String vnpCreateDate = formatter.format(cld.getTime());
         vnpParams.put("vnp_CreateDate", vnpCreateDate);
 
-        cld.add(Calendar.MINUTE, 15);
+        cld.add(Calendar.MINUTE, 30);
         String vnpExpireDate = formatter.format(cld.getTime());
         vnpParams.put("vnp_ExpireDate", vnpExpireDate);
 
