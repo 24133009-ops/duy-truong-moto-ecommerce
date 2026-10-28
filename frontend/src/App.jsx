@@ -2568,7 +2568,7 @@ export default function App() {
                       })}
                     </div>
 
-                    {/* Wrap / Feng-shui Repaint Notice (ch? d�nh cho xe) */}
+                    {/* Wrap / Feng-shui Repaint Notice (chỉ dành cho xe) */}
                     {!isAccessory(activeProductDetail) && (
                     <div style={{ marginTop: '10px', padding: '8px 12px', background: 'rgba(255, 102, 0, 0.08)', border: '1px dashed var(--orange-ktm)', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <span style={{ fontSize: '0.78rem', color: '#ffb080' }}>

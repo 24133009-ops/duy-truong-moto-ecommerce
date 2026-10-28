@@ -351,7 +351,7 @@ h1, h2, h3, h4, .brand-font {
 .badge-status-cancelled { background: rgba(220, 53, 69, 0.15); color: #dc3545; border: 1px solid #dc3545; }
 
 /* Custom Inputs */
-.form-control-luxury, .form-select-luxury {
+.form-control-luxury {
     background: rgba(18, 20, 28, 0.9);
     border: 1px solid rgba(255, 255, 255, 0.15);
     color: #fff;
@@ -360,13 +360,40 @@ h1, h2, h3, h4, .brand-font {
     transition: all 0.3s ease;
 }
 
-.form-control-luxury:focus, .form-select-luxury:focus {
+.form-select-luxury {
+    background-color: #121520 !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffd700' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 1rem center !important;
+    background-size: 16px 12px !important;
+    border: 1.5px solid rgba(212, 175, 55, 0.45) !important;
+    color: #ffffff !important;
+    border-radius: 10px !important;
+    padding: 10px 2.5rem 10px 14px !important;
+    transition: all 0.3s ease;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+}
+
+.form-control-luxury:focus {
     background: #161925;
     border-color: var(--dt-gold);
     color: #fff;
     box-shadow: 0 0 15px rgba(212, 175, 55, 0.25);
 }
 
+.form-select-luxury:focus {
+    background-color: #171b28 !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffd700' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 1rem center !important;
+    background-size: 16px 12px !important;
+    border-color: #ffd700 !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.45) !important;
+    outline: none !important;
+}
 /* Footer */
 .footer-luxury {
     background: #050608;
@@ -1079,6 +1106,7 @@ select.form-select,
 select.form-select-luxury,
 .glass-panel select,
 select {
+    --bs-form-select-bg-img: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffd700' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffd700' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") !important;
     background-repeat: no-repeat !important;
     background-position: right 1rem center !important;

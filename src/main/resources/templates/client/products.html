@@ -81,8 +81,8 @@
             <a th:href="@{/products(category='adventure')}" class="category-tab-pill" th:classappend="${selectedCategorySlug == 'adventure'} ? 'active' : ''">
                 <i class="fa-solid fa-compass text-gold"></i> Adventure Phượt Bụi
             </a>
-            <a th:href="@{/products(category='gear-parts')}" class="category-tab-pill" th:classappend="${selectedCategorySlug == 'gear-parts' || selectedCategorySlug == 'do-bao-ho' || selectedCategorySlug == 'phu-tung-po-do'} ? 'active' : ''">
-                <i class="fa-solid fa-helmet-safety text-gold"></i> Pô Độ & Phụ Kiện
+            <a th:href="@{/products(category='do-bao-ho')}" class="category-tab-pill" th:classappend="${selectedCategorySlug == 'do-bao-ho'} ? 'active' : ''">
+                <i class="fa-solid fa-helmet-safety text-gold"></i> Đồ Bảo Hộ Biker
             </a>
         </div>
     </div>
@@ -104,7 +104,7 @@
                             <label class="form-label text-secondary small fw-bold">Từ khóa tìm kiếm:</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-dark border-secondary text-gold"><i class="fa-solid fa-magnifying-glass"></i></span>
-                                <input type="text" name="keyword" th:value="${keyword}" class="form-control form-control-luxury" placeholder="KTM cào cào, VF9, Huracán...">
+                                <input type="text" name="keyword" th:value="${keyword}" class="form-control form-control-luxury" placeholder="KTM 300 EXC, Panigale, BMW S1000RR, Ninja H2, Mũ AGV, Pô Akrapovic...">
                             </div>
                         </div>
 
@@ -130,10 +130,10 @@
                         <div class="mb-3">
                             <label class="form-label text-secondary small fw-bold">Khoảng giá nhanh:</label>
                             <div class="d-flex flex-wrap gap-2">
-                                <a th:href="@{/products(maxPrice=300000000)}" class="quick-price-chip">&lt; 300 Tr</a>
-                                <a th:href="@{/products(minPrice=300000000, maxPrice=1000000000)}" class="quick-price-chip">300Tr - 1 Tỷ</a>
-                                <a th:href="@{/products(minPrice=1000000000, maxPrice=5000000000)}" class="quick-price-chip">1 - 5 Tỷ</a>
-                                <a th:href="@{/products(minPrice=5000000000)}" class="quick-price-chip">&gt; 5 Tỷ (Siêu Xe)</a>
+                                <a th:href="@{/products(maxPrice=200000000)}" class="quick-price-chip">&lt; 200 Tr</a>
+                                <a th:href="@{/products(minPrice=200000000, maxPrice=500000000)}" class="quick-price-chip">200Tr - 500Tr</a>
+                                <a th:href="@{/products(minPrice=500000000, maxPrice=1000000000)}" class="quick-price-chip">500Tr - 1 Tỷ</a>
+                                <a th:href="@{/products(minPrice=1000000000)}" class="quick-price-chip">&gt; 1 Tỷ (Siêu Mô Tô PKL)</a>
                             </div>
                         </div>
 
