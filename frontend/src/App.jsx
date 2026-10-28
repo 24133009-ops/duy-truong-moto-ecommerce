@@ -720,7 +720,7 @@ export default function App() {
         </div>
 
         {/* Navigation Tabs */}
-        <nav style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+        <nav className="header-nav">
           <button className={`btn-subtle ${currentTab === 'home' ? 'active' : ''}`} onClick={() => setCurrentTab('home')}>
             <i className="fa-solid fa-house"></i> Trang Chủ
           </button>
@@ -728,16 +728,16 @@ export default function App() {
             <i className="fa-solid fa-motorcycle"></i> Kho Xe ({products.length})
           </button>
           <button className={`btn-subtle ${currentTab === 'showrooms' ? 'active' : ''}`} onClick={() => setCurrentTab('showrooms')}>
-            <i className="fa-solid fa-store"></i> Chuỗi Showroom
+            <i className="fa-solid fa-store"></i> Showroom
           </button>
           <button className={`btn-subtle ${currentTab === 'orders' ? 'active' : ''}`} onClick={() => setCurrentTab('orders')}>
-            <i className="fa-solid fa-receipt"></i> Lịch Sử Đơn ({orders.length})
+            <i className="fa-solid fa-receipt"></i> Đơn Hàng ({orders.length})
           </button>
 
           {/* Conditional Role Portals */}
           {(currentRoleKey === 'vendor' || currentRoleKey === 'vendor_tinh') && (
             <button className={`btn-subtle ${currentTab === 'vendor' ? 'active' : ''}`} style={{ borderColor: 'var(--gold-primary)', color: 'var(--gold-primary)' }} onClick={() => setCurrentTab('vendor')}>
-              <i className="fa-solid fa-chart-line"></i> Quản Lý Kho ({currentRoleKey === 'vendor' ? 'Khôi - HN' : 'Tình - ĐN'})
+              <i className="fa-solid fa-warehouse"></i> {currentRoleKey === 'vendor' ? 'Kho HN (Khôi)' : 'Kho ĐN (Tình)'}
             </button>
           )}
           {currentRoleKey === 'admin' && (
@@ -753,7 +753,7 @@ export default function App() {
         </nav>
 
         {/* Right Actions: Search Pill, Cart & User status */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+        <div className="header-right-actions">
           {/* Vuong Khang Style Search Pill */}
           <div className="search-pill-btn" onClick={() => { setSelectedCategory('all'); setBrandFilter('all'); setCurrentTab('products'); }}>
             <i className="fa-solid fa-magnifying-glass text-gold"></i>
@@ -761,15 +761,15 @@ export default function App() {
             <i className="fa-solid fa-chevron-right text-gold" style={{ fontSize: '0.72rem' }}></i>
           </div>
 
-          <button className="btn-outline-gold" style={{ padding: '8px 16px' }} onClick={() => setIsCartOpen(true)}>
+          <button className="btn-outline-gold header-cart-btn" onClick={() => setIsCartOpen(true)}>
             <i className="fa-solid fa-cart-shopping"></i> Giỏ ({cart.length})
           </button>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <img src={currentUser.avatar} alt="Avatar" style={{ width: '36px', height: '36px', borderRadius: '50%', border: '2px solid var(--gold-primary)', objectFit: 'cover' }} />
-            <div style={{ fontSize: '0.82rem' }}>
-              <div style={{ fontWeight: 700, color: '#fff' }}>{currentUser.name}</div>
-              <span style={{ color: 'var(--gold-primary)', fontSize: '0.68rem', fontWeight: 700 }}>{currentUser.levelTitle || currentUser.name}</span>
+          <div className="header-user-badge" onClick={() => setCurrentTab('orders')}>
+            <img src={currentUser.avatar} alt="Avatar" style={{ width: '32px', height: '32px', borderRadius: '50%', border: '2px solid var(--gold-primary)', objectFit: 'cover' }} />
+            <div style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>
+              <div style={{ fontWeight: 700, color: '#fff', maxWidth: '100px', overflow: 'hidden', textOverflow: 'ellipsis' }}>{currentUser.name}</div>
+              <span style={{ color: 'var(--gold-primary)', fontSize: '0.65rem', fontWeight: 700 }}>{currentUser.levelTitle || currentUser.name}</span>
             </div>
           </div>
         </div>
@@ -2225,7 +2225,7 @@ export default function App() {
                   <div style={{ margin: '8px 0', borderTop: '1px solid rgba(255,255,255,0.08)', borderBottom: '1px solid rgba(255,255,255,0.08)', padding: '10px 0' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                       <span style={{ color: '#fff', fontWeight: 700, fontSize: '0.85rem' }}>
-                        <i className="fa-solid fa-palette text-gold me-1"></i> Bảng Màu Xe Sẵn Có:
+                        {(activeProductDetail.category === 'do-bao-ho' || activeProductDetail.category === 'gear-parts') ? <><i className="fa-solid fa-shirt text-gold me-1"></i> Tùy Chọn Màu / Phiên Bản:</> : <><i className="fa-solid fa-palette text-gold me-1"></i> Bảng Màu Xe Sẵn Có:</>}
                       </span>
                       <span style={{ color: 'var(--gold-primary)', fontWeight: 700, fontSize: '0.82rem' }}>
                         {selectedDetailColor || activeProductDetail.color}

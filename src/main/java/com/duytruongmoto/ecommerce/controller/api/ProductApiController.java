@@ -58,7 +58,9 @@ public class ProductApiController {
         } else if (storeId != null) {
             products = productService.getProductsByStore(storeId);
         } else {
-            products = productRepository.findAll();
+            products = productRepository.findAll().stream()
+                .filter(p -> Boolean.TRUE.equals(p.getIsSelling()) && Boolean.TRUE.equals(p.getIsActive()))
+                .collect(Collectors.toList());
         }
 
         List<ProductDto> dtos = products.stream()

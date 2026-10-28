@@ -19,7 +19,7 @@ export const SHOWROOMS = [
     name: "Duy Trương Motor - Chi nhánh Cầu Giấy Hà Nội",
     city: "Hà Nội",
     address: "Số 168 Đường Trần Duy Hưng, Phường Trung Hòa, Quận Cầu Giấy, Hà Nội",
-    phone: "0901.234.567",
+    phone: "024.3999.8888",
     avatar: "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=300&q=80",
     cover: "https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=1200&q=80",
     rating: 4.95,
@@ -31,7 +31,7 @@ export const SHOWROOMS = [
     name: "Duy Trương Motor - Chi nhánh Hải Châu Đà Nẵng",
     city: "Đà Nẵng",
     address: "Số 52 Đường Nguyễn Văn Linh, Phường Nam Dương, Quận Hải Châu, Đà Nẵng",
-    phone: "0902.999.888",
+    phone: "0236.3888.999",
     avatar: "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=300&q=80",
     cover: "https://images.unsplash.com/photo-1609630875171-b1321377ee65?auto=format&fit=crop&w=1200&q=80",
     rating: 4.9,
@@ -181,11 +181,39 @@ export const CATEGORIES = [
 ];
 
 export function getProductBranchStocks(product) {
+  const total = Number(product.quantity) || 0;
   const sId = product.storeId || 1;
-  const baseQty = product.quantity || 3;
-  const s1Qty = sId === 1 ? baseQty : Math.max(1, (baseQty * 7) % 5 + 1);
-  const s2Qty = sId === 2 ? baseQty : Math.max(0, (baseQty * 3) % 4);
-  const s3Qty = sId === 3 ? baseQty : Math.max(0, (baseQty * 2) % 3);
+
+  let s1Qty = 0;
+  let s2Qty = 0;
+  let s3Qty = 0;
+
+  if (total <= 0) {
+    s1Qty = 0; s2Qty = 0; s3Qty = 0;
+  } else if (total === 1) {
+    if (sId === 2) s2Qty = 1;
+    else if (sId === 3) s3Qty = 1;
+    else s1Qty = 1;
+  } else if (total === 2) {
+    if (sId === 2) { s2Qty = 1; s1Qty = 1; }
+    else if (sId === 3) { s3Qty = 1; s1Qty = 1; }
+    else { s1Qty = 1; s2Qty = 1; }
+  } else {
+    // Proportional distribution guaranteeing s1 + s2 + s3 === total exactly
+    if (sId === 1) {
+      s2Qty = Math.floor(total * 0.25);
+      s3Qty = Math.floor(total * 0.20);
+      s1Qty = total - s2Qty - s3Qty;
+    } else if (sId === 2) {
+      s1Qty = Math.floor(total * 0.30);
+      s3Qty = Math.floor(total * 0.15);
+      s2Qty = total - s1Qty - s3Qty;
+    } else {
+      s1Qty = Math.floor(total * 0.30);
+      s2Qty = Math.floor(total * 0.20);
+      s3Qty = total - s1Qty - s2Qty;
+    }
+  }
 
   return [
     {
@@ -203,7 +231,7 @@ export function getProductBranchStocks(product) {
       storeName: "Showroom Cầu Giấy Hà Nội (Chi Nhánh Miền Bắc)",
       city: "Hà Nội",
       address: "168 Đường Trần Duy Hưng, P. Trung Hòa, Q. Cầu Giấy",
-      phone: "0901.234.567",
+      phone: "024.3999.8888",
       quantity: s2Qty,
       status: s2Qty > 0 ? "in_stock" : "out_of_stock",
       deliveryTime: s2Qty > 0 ? "Giao trong ngày hoặc Nhận tại Showroom" : "Điều chuyển kho từ TP.HCM (24h - 48h)"
@@ -213,7 +241,7 @@ export function getProductBranchStocks(product) {
       storeName: "Showroom Hải Châu Đà Nẵng (Chi Nhánh Miền Trung)",
       city: "Đà Nẵng",
       address: "52 Đường Nguyễn Văn Linh, P. Nam Dương, Q. Hải Châu",
-      phone: "0902.999.888",
+      phone: "0236.3888.999",
       quantity: s3Qty,
       status: s3Qty > 0 ? "in_stock" : "out_of_stock",
       deliveryTime: s3Qty > 0 ? "Giao trong ngày hoặc Nhận tại Showroom" : "Điều chuyển kho từ TP.HCM (24h - 48h)"
@@ -521,31 +549,6 @@ export const INITIAL_PRODUCTS = [
   },
 
   // --- NHÓM XE TAY GA ĐỘC LẠ Ý ---
-  {
-    id: 7,
-    name: "Vespa 946 Christian Dior Limited Edition (Hàng Sưu Tầm)",
-    brand: "Vespa",
-    category: "scooter",
-    storeId: 1,
-    storeName: "Showroom Phú Nhuận TP.HCM",
-    price: 790000000,
-    promotionalPrice: 730000000,
-    priceDisplay: "730 Triệu",
-    quantity: 2,
-    sold: 7, // > 10 cho Guest
-    rating: 4.99,
-    engine: "125 cc 3V i-Get Phun Xăng Điện Tử",
-    power: "11.6 HP",
-    color: "Trắng Kem Be Christian Dior",
-    colors: ["Trắng Kem Be Christian Dior", "Xám Bạc Kim Khôi", "Đen Bóng Thêu Chỉ Vàng"],
-    odo: "Odo 350 km (Như Mới Đập Hộp)",
-    year: "2022",
-    badges: ["Siêu Hiếm", "Full Túi Thùng Dior", "HQCN"],
-    image: "/images/vespa_946.jpg",
-    description: "Tuyệt phẩm thời trang giới hạn do Vespa bắt tay cùng nhà mốt Christian Dior Paris thiết kế. Họa tiết Dior Oblique đặc trưng dưới yên xe, đi kèm túi hành lý và mũ bảo hiểm đồng bộ chính hãng.",
-    isSelling: true
-  },
-
   // --- NHÓM PHỤ TÙNG & ĐỒ BẢO HỘ CÀO CÀO / BIKER ---
   {
     id: 8,
@@ -986,7 +989,7 @@ export const INITIAL_PRODUCTS = [
   {
     id: 302,
     name: "Piaggio Vespa 946 Christian Dior Limited Edition",
-    brand: "PIAGGIO VESPA",
+    brand: "Vespa",
     category: "xenho",
     storeId: 1,
     storeName: "Showroom Phú Nhuận TP.HCM",

@@ -322,7 +322,7 @@
                     </p>
                     <div class="d-flex flex-wrap gap-3">
                         <a th:href="@{/products}" class="btn btn-gold btn-lg px-4 shadow">
-                            <i class="fa-solid fa-motorcycle me-2"></i> Khám Phá Kho Xe (60)
+                            <i class="fa-solid fa-motorcycle me-2"></i> Khám Phá Kho Xe (<span th:text="${totalProducts != null ? totalProducts : 36}">36</span>)
                         </a>
                         <a th:href="@{/products(brand='KTM')}" class="btn btn-danger btn-lg px-4 shadow" style="background: linear-gradient(135deg, #ff6600, #cc4400); border: none;">
                             <i class="fa-solid fa-mountain me-2"></i> Xe Cào Cào Địa Hình

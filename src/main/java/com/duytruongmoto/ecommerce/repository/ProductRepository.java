@@ -16,6 +16,7 @@ import java.util.Optional;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
     Optional<Product> findBySlug(String slug);
+    long countByIsActiveTrueAndIsSellingTrue();
 
     // Guest: Hiển thị sản phẩm bán trên 10 sản phẩm của các shop (sắp xếp theo thứ tự từ lớn đến nhỏ)
     @Query("SELECT p FROM Product p WHERE p.isActive = true AND p.isSelling = true AND p.sold > 10 ORDER BY p.sold DESC")

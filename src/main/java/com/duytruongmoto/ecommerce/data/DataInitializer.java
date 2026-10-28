@@ -350,51 +350,75 @@ public class DataInitializer implements CommandLineRunner {
 
     
     private void purgeDeprecatedData() {
-        // Xóa các sản phẩm đồ bảo hộ/pô độ bị seed trùng lặp slug dài
-        List<String> duplicateSlugs = Arrays.asList(
+        // Danh sách các slug bị trùng lặp hoặc phế phẩm cần dọn sạch khỏi Database Render
+        List<String> deprecatedSlugs = Arrays.asList(
+            "vespa-946-christian-dior-limited-edition-hang-suu-tam-7",
             "mu-bao-hiem-cao-cao-ls2-mx703-x-force-carbon-full-face-8",
             "he-thong-po-akrapovic-full-titanium-racing-cho-moto-cao-cao-9",
             "mu-bao-hiem-agv-pista-gp-rr-carbon-italia-limited-edition-401",
             "bo-giap-da-lien-dainese-mugello-3-d-air-ua-chuyen-nghiep-402",
             "gang-tay-ua-alpinestars-supertech-gp-carbon-pro-403",
             "he-thong-po-sc-project-sc1-r-titanium-worldsbk-edition-404",
-            "bo-phuoc-truoc-sau-ohlins-fgr-250-ttx-gp-thuy-ien-cao-cap-405"
+            "bo-phuoc-truoc-sau-ohlins-fgr-250-ttx-gp-thuy-ien-cao-cap-405",
+            // 23 dòng ô tô phế phẩm loại bỏ để tập trung 100% vào Mô tô PKL & Cào cào
+            "lamborghini-huracan-tecnica-v10-201",
+            "porsche-911-gt3-rs-weissach-package-202",
+            "mercedes-amg-g63-manufaktur-v8-biturbo-203",
+            "ferrari-488-pista-spider-v8-twin-turbo-204",
+            "ford-mustang-gt-5-0-v8-dark-horse-205",
+            "chevrolet-corvette-c8-stingray-z51-206",
+            "nissan-gt-r-r35-nismo-special-edition-207",
+            "toyota-land-cruiser-lc300-gr-sport-208",
+            "jeep-wrangler-rubicon-392-v8-hemi-209",
+            "land-rover-defender-110-v8-carpathian-210",
+            "bmw-m4-competition-m-xdrive-2024-211",
+            "audi-r8-v10-performance-quattro-final-212",
+            "jaguar-f-type-r-dynamic-v8-supercharged-213",
+            "mini-cooper-john-cooper-works-gp-214",
+            "honda-civic-type-r-fl5-championship-white-215",
+            "volkswagen-teramont-president-edition-216",
+            "volvo-xc90-recharge-ultimate-t8-217",
+            "hyundai-palisade-calligraphy-h-trac-218",
+            "kia-carnival-royal-4-cho-vip-lounge-219",
+            "peugeot-408-gt-hypersquare-fastback-220",
+            "vinfast-vf-9-plus-6-cho-captain-seats-221",
+            "mazda-mx-5-miata-rf-club-brembo-bbs-222",
+            "isuzu-d-max-type-z-4x4-at-223"
         );
-        for (String s : duplicateSlugs) {
+
+        for (String s : deprecatedSlugs) {
             productRepository.findBySlug(s).ifPresent(p -> {
                 try {
+                    p.setIsSelling(false);
+                    p.setIsActive(false);
+                    productRepository.save(p);
                     productRepository.delete(p);
-                    log.info("Purged duplicate product slug: {}", s);
+                    log.info("Purged deprecated product slug: {}", s);
                 } catch (Exception ex) {
-                    log.warn("Could not delete duplicate product: {}", s);
+                    log.info("Deactivated deprecated product: {}", s);
                 }
             });
         }
 
-        // Xóa danh mục ô tô và các sản phẩm ô tô nếu còn tồn tại trong DB Render
-        categoryRepository.findBySlug("oto").ifPresent(cat -> {
-            try {
-                List<Product> cars = productRepository.findByCategoryId(cat.getId());
-                if (cars != null && !cars.isEmpty()) {
-                    productRepository.deleteAll(cars);
-                    log.info("Purged {} car products from oto category", cars.size());
-                }
-                categoryRepository.delete(cat);
-                log.info("Purged deprecated category 'oto'");
-            } catch (Exception ex) {
-                log.warn("Could not delete oto category: {}", ex.getMessage());
-            }
-        });
-
-        // Xóa các danh mục trùng lặp khác
-        List<String> deprecatedCats = Arrays.asList("cruiser-touring", "scooter", "phu-tung-po-do");
+        // Xóa danh mục ô tô và các danh mục trùng lặp nếu còn tồn tại trong DB Render
+        List<String> deprecatedCats = Arrays.asList("oto", "cruiser-touring", "scooter", "phu-tung-po-do");
         for (String cs : deprecatedCats) {
-            categoryRepository.findBySlug(cs).ifPresent(c -> {
+            categoryRepository.findBySlug(cs).ifPresent(cat -> {
                 try {
-                    categoryRepository.delete(c);
-                    log.info("Purged deprecated category: {}", cs);
+                    List<Product> prods = productRepository.findByCategoryId(cat.getId());
+                    if (prods != null && !prods.isEmpty()) {
+                        for (Product pr : prods) {
+                            pr.setIsSelling(false);
+                            pr.setIsActive(false);
+                            productRepository.save(pr);
+                        }
+                        productRepository.deleteAll(prods);
+                        log.info("Purged {} products from deprecated category '{}'", prods.size(), cs);
+                    }
+                    categoryRepository.delete(cat);
+                    log.info("Purged deprecated category '{}'", cs);
                 } catch (Exception ex) {
-                    log.warn("Could not delete category {}: {}", cs, ex.getMessage());
+                    log.info("Deactivated products in category '{}': {}", cs, ex.getMessage());
                 }
             });
         }
@@ -585,7 +609,7 @@ public class DataInitializer implements CommandLineRunner {
         seedProduct(storeMap.get(1), catMap.get("xenho"),
             "Honda Monkey 125cc Limited Edition 2024",
             "honda-monkey-125cc-limited-edition-2024-301",
-            "HONDA",
+            "Honda",
             new BigDecimal("115000000"),
             new BigDecimal("99000000"),
             6, 51, 4.95,
@@ -597,7 +621,7 @@ public class DataInitializer implements CommandLineRunner {
         seedProduct(storeMap.get(1), catMap.get("xenho"),
             "Piaggio Vespa 946 Christian Dior Limited Edition",
             "piaggio-vespa-946-christian-dior-limited-edition-302",
-            "PIAGGIO VESPA",
+            "Vespa",
             new BigDecimal("650000000"),
             new BigDecimal("590000000"),
             2, 8, 4.98,
@@ -633,7 +657,7 @@ public class DataInitializer implements CommandLineRunner {
         seedProduct(storeMap.get(2), catMap.get("cruiser"),
             "Royal Enfield Continental GT 650 Cafe Racer 2024",
             "royal-enfield-continental-gt-650-cafe-racer-2024-111",
-            "ROYAL ENFIELD",
+            "Royal Enfield",
             new BigDecimal("209000000"),
             new BigDecimal("195000000"),
             5, 30, 4.88,
@@ -645,7 +669,7 @@ public class DataInitializer implements CommandLineRunner {
         seedProduct(storeMap.get(1), catMap.get("superbike"),
             "Suzuki Hayabusa GSX-1300R Thần Gió 2024",
             "suzuki-hayabusa-gsx-1300r-than-gio-2024-112",
-            "SUZUKI",
+            "Suzuki",
             new BigDecimal("799000000"),
             new BigDecimal("760000000"),
             3, 21, 4.96,
@@ -657,7 +681,7 @@ public class DataInitializer implements CommandLineRunner {
         seedProduct(storeMap.get(1), catMap.get("hyper-naked"),
             "MV Agusta Brutale 1000 RR Nurburgring Edition",
             "mv-agusta-brutale-1000-rr-nurburgring-edition-114",
-            "MV AGUSTA",
+            "MV Agusta",
             new BigDecimal("1190000000"),
             new BigDecimal("1140000000"),
             2, 6, 4.97,
@@ -694,7 +718,7 @@ public class DataInitializer implements CommandLineRunner {
         seedProduct(storeMap.get(1), catMap.get("do-bao-ho"),
             "Bộ Giáp Da Liền Dainese Mugello 3 D-Air Đua Chuyên Nghiệp",
             "dainese-mugello-3-d-air-402",
-            "DAINESE",
+            "Dainese",
             new BigDecimal("105000000"),
             new BigDecimal("96000000"),
             6, 15, 4.98,
@@ -706,7 +730,7 @@ public class DataInitializer implements CommandLineRunner {
         seedProduct(storeMap.get(2), catMap.get("do-bao-ho"),
             "Găng Tay Đua Alpinestars Supertech GP Carbon Pro",
             "alpinestars-supertech-gp-carbon-403",
-            "ALPINESTARS",
+            "Alpinestars",
             new BigDecimal("10900000"),
             new BigDecimal("9800000"),
             20, 63, 4.96,
@@ -719,7 +743,7 @@ public class DataInitializer implements CommandLineRunner {
         seedProduct(storeMap.get(1), catMap.get("gear-parts"),
             "Hệ Thống Pô Akrapovic Full Titanium Racing Cho Môtô & Cào Cào",
             "akrapovic-full-titanium-racing-9",
-            "AKRAPOVIC",
+            "Akrapovic",
             new BigDecimal("62000000"),
             new BigDecimal("56500000"),
             8, 42, 4.99,
@@ -731,7 +755,7 @@ public class DataInitializer implements CommandLineRunner {
         seedProduct(storeMap.get(1), catMap.get("gear-parts"),
             "Hệ Thống Pô SC-Project SC1-R Titanium WorldSBK Edition",
             "sc-project-sc1-r-titanium-404",
-            "SC PROJECT",
+            "SC Project",
             new BigDecimal("39500000"),
             new BigDecimal("36000000"),
             9, 47, 4.97,
@@ -743,7 +767,7 @@ public class DataInitializer implements CommandLineRunner {
         seedProduct(storeMap.get(3), catMap.get("gear-parts"),
             "Bộ Phuộc Trước Sau Ohlins FGR 250 & TTX GP Thụy Điển Cao Cấp",
             "ohlins-fgr-250-ttx-gp-405",
-            "OHLINS",
+            "Ohlins",
             new BigDecimal("245000000"),
             new BigDecimal("228000000"),
             3, 9, 5.0,

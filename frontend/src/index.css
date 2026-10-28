@@ -362,11 +362,7 @@ body {
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border-bottom: 1px solid rgba(212, 175, 55, 0.18);
-  padding: 12px 32px; gap: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 84px;
+  padding: 8px 24px; gap: 12px; display: flex; align-items: center; justify-content: space-between; min-height: 72px; width: 100%; box-sizing: border-box;
 }
 
 .logo-badge {
@@ -794,19 +790,24 @@ body {
 
 /* Search Pill Button */
 .search-pill-btn {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
   background: rgba(0, 0, 0, 0.85);
   border: 1.5px solid #ffd700;
-  border-radius: var(--radius-full);
-  padding: 8px 18px;
+  border-radius: 9999px !important;
+  padding: 0 16px !important;
+  height: 38px !important;
   color: #f8fafc;
-  font-size: 0.88rem;
+  font-size: 0.82rem;
   font-weight: 700;
   cursor: pointer;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  min-width: fit-content !important;
   transition: all 0.25s ease;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+  box-sizing: border-box;
 }
 
 .search-pill-btn:hover {
@@ -822,7 +823,7 @@ body {
   background: #080a10;
   background-image: 
     linear-gradient(to right, rgba(8, 10, 16, 0.95) 0%, rgba(8, 10, 16, 0.4) 45%, rgba(8, 10, 16, 0.85) 100%),
-    url('/images/lamborghini_huracan.jpg');
+    url('/images/ducati_panigale_v4s.jpg');
   background-size: cover;
   background-position: center right;
   border-bottom: 2px solid rgba(212, 175, 55, 0.25);
@@ -1461,17 +1462,66 @@ body {
   }
 }
 
-.app-header nav {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: nowrap;
-  flex-shrink: 1;
+
+/* --- Duy Truong Motor Robust Header & Responsive Nav Styles --- */
+.app-header {
+  padding: 8px 20px !important;
+  gap: 12px !important;
 }
 
-.app-header nav button {
+.header-nav {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  flex-shrink: 1 !important;
+  min-width: 0 !important;
+  overflow-x: auto !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+.header-nav::-webkit-scrollbar {
+  display: none !important;
+}
+
+.header-nav button, .header-nav .btn-subtle {
   white-space: nowrap !important;
-  flex-shrink: 0;
-  padding: 7px 12px !important;
-  font-size: 0.84rem !important;
+  flex-shrink: 0 !important;
+  padding: 6px 12px !important;
+  font-size: 0.82rem !important;
+  height: 36px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.header-right-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  flex-shrink: 0 !important;
+  margin-left: auto !important;
+}
+
+.header-cart-btn {
+  height: 38px !important;
+  padding: 0 14px !important;
+  border-radius: 9999px !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-size: 0.82rem !important;
+}
+
+.header-user-badge {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-shrink: 0 !important;
+  padding: 2px 10px 2px 4px !important;
+  border-radius: 9999px !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(212, 175, 55, 0.3) !important;
+  cursor: pointer;
 }

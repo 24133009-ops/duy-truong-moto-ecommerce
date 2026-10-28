@@ -28,6 +28,10 @@ public class ProductService {
     private final CategoryRepository categoryRepository;
     private final StoreRepository storeRepository;
 
+    public long countActiveSellingProducts() {
+        return productRepository.countByIsActiveTrueAndIsSellingTrue();
+    }
+
     public List<Product> getTopOver10Sold() {
         return productRepository.findTopOver10Sold();
     }

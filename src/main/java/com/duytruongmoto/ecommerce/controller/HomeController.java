@@ -44,6 +44,8 @@ public class HomeController {
         // 6. Danh sách chuỗi Showroom Duy Truong Motor
         model.addAttribute("stores", storeService.getAllActiveStores());
 
+        model.addAttribute("totalProducts", productService.countActiveSellingProducts());
+
         return "client/home";
     }
 }
