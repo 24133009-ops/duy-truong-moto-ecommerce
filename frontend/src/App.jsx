@@ -426,6 +426,8 @@ export default function App() {
 
   const getCategoryBadgeTitle = (cat) => {
     switch (cat) {
+      case 'do-bao-ho': return 'Đồ Bảo Hộ Biker';
+      case 'gear-parts': return 'Pô Độ & Phụ Tùng CNC';
       case 'oto': return 'Siêu Xe & Ô Tô Sang';
       case 'dirtbike': return 'Xe Cào Cào Địa Hình';
       case 'xenho': return 'Xe Nhỏ Sưu Tầm';
@@ -434,16 +436,25 @@ export default function App() {
       case 'cruiser': return 'Cruiser & Chopper Mỹ';
       case 'adventure': return 'Adventure Phượt Bụi';
       case 'scooter': return 'Tay Ga Độc Lạ';
-      case 'gear-parts': return 'Pô Độ & Phụ Tùng Cao Cấp';
       default: return 'Mô Tô Phân Khối Lớn';
     }
   };
 
+  const isAccessory = (item) => {
+    if (!item) return false;
+    const cat = item.category || '';
+    const nameUpper = (item.name || '').toUpperCase();
+    const brandUpper = (item.brand || '').toUpperCase();
+    return cat === 'do-bao-ho' || 
+           cat === 'gear-parts' || 
+           ['MŨ BẢO HIỂM', 'GĂNG TAY', 'GIÁP', 'PÔ', 'PHUỘC', 'AKRAPOVIC', 'SC-PROJECT', 'SC PROJECT', 'OHLINS', 'BREMBO', 'AGV', 'DAINESE', 'ALPINESTARS', 'LS2'].some(k => nameUpper.includes(k) || brandUpper.includes(k));
+  };
+
   const renderCategoryTag = (cat) => {
     if (cat === 'dirtbike') return <span className="badge-tag-orange">XE CÀO CÀO</span>;
-    if (cat === 'oto') return <span style={{ background: '#2563eb', color: '#fff', padding: '2px 8px', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 800 }}>Ô TÔ SANG</span>;
+    if (cat === 'do-bao-ho') return <span style={{ background: '#0284c7', color: '#fff', padding: '2px 8px', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 800 }}>ĐỒ BẢO HỘ</span>;
+    if (cat === 'gear-parts') return <span style={{ background: '#059669', color: '#fff', padding: '2px 8px', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 800 }}>PHỤ TÙNG CNC</span>;
     if (cat === 'xenho') return <span style={{ background: '#7c3aed', color: '#fff', padding: '2px 8px', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 800 }}>XE NHỎ</span>;
-    if (cat === 'gear-parts') return <span style={{ background: '#059669', color: '#fff', padding: '2px 8px', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 800 }}>PHỤ TÙNG</span>;
     return null;
   };
 
@@ -1545,8 +1556,16 @@ export default function App() {
                             <i className="fa-solid fa-store text-gold me-1"></i> {bike.storeName}
                           </div>
                           <div className="badge-hqcn-box">
-                            <span className="badge-hqcn">HQCN</span>
-                            {bike.odo && <span className="badge-odo">{bike.odo}</span>}
+                            {isAccessory(bike) ? (
+                              <span className="badge-hqcn" style={{ background: '#0284c7' }}>CHÍNH HÃNG</span>
+                            ) : (
+                              <span className="badge-hqcn">HQCN</span>
+                            )}
+                            {bike.odo ? (
+                              <span className="badge-odo">{isAccessory(bike) ? 'Mới 100%' : bike.odo}</span>
+                            ) : (
+                              isAccessory(bike) && <span className="badge-odo">Mới 100%</span>
+                            )}
                             {renderCategoryTag(bike.category)}
                           </div>
                         </div>
@@ -1558,21 +1577,31 @@ export default function App() {
                             {bike.name}
                           </h3>
                           <div style={{ fontSize: '0.85rem', color: 'var(--text-sub)', marginBottom: '14px' }}>
-                            <i className="fa-solid fa-gauge-high text-gold me-1"></i> {bike.engine}
+                            <i className={`fa-solid ${isAccessory(bike) ? 'fa-shield-halved' : 'fa-gauge-high'} text-gold me-1`}></i> {bike.engine}
                           </div>
                           <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <div>
                               <div className="price-racing">{formatMoney(bike.promotionalPrice || bike.price)}</div>
                               {bike.priceDisplay && <span className="price-text-tag">({bike.priceDisplay})</span>}
                             </div>
-                            <div style={{ display: 'flex', gap: '8px' }}>
-                              <button className="btn-gold" style={{ padding: '8px 14px', fontSize: '0.85rem' }} onClick={() => openProductDetail(bike)}>
-                                Xem Xe
+                            {isAccessory(bike) ? (
+                              <button 
+                                className="btn-gold" 
+                                style={{ padding: '8px 16px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }} 
+                                onClick={() => openProductDetail(bike)}
+                              >
+                                <i className="fa-solid fa-eye"></i> Xem Chi Tiết
                               </button>
-                              <button className="btn-outline-gold" style={{ padding: '8px 12px' }} title="Thêm vào giỏ" onClick={() => handleAddToCart(bike)}>
-                                <i className="fa-solid fa-cart-plus"></i>
-                              </button>
-                            </div>
+                            ) : (
+                              <div style={{ display: 'flex', gap: '8px' }}>
+                                <button className="btn-gold" style={{ padding: '8px 14px', fontSize: '0.85rem' }} onClick={() => openProductDetail(bike)}>
+                                  Xem Xe
+                                </button>
+                                <button className="btn-outline-gold" style={{ padding: '8px 12px' }} title="Thêm vào giỏ" onClick={() => handleAddToCart(bike)}>
+                                  <i className="fa-solid fa-cart-plus"></i>
+                                </button>
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -2539,7 +2568,8 @@ export default function App() {
                       })}
                     </div>
 
-                    {/* Wrap / Feng-shui Repaint Notice */}
+                    {/* Wrap / Feng-shui Repaint Notice (ch? d�nh cho xe) */}
+                    {!isAccessory(activeProductDetail) && (
                     <div style={{ marginTop: '10px', padding: '8px 12px', background: 'rgba(255, 102, 0, 0.08)', border: '1px dashed var(--orange-ktm)', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <span style={{ fontSize: '0.78rem', color: '#ffb080' }}>
                         🎨 <em>Khách muốn đổi màu cavet / Wrap Decal TPU / Sơn phong thủy?</em>
@@ -2555,6 +2585,7 @@ export default function App() {
                         Tư vấn đổi màu 24h &rarr;
                       </button>
                     </div>
+                    )}
                   </div>
                 </div>
 
