@@ -157,7 +157,7 @@ public class ProductDto {
                 .color(p.getColor() != null ? p.getColor() : "Nguyên Bản")
                 .colors(generateColorsForProduct(p))
                 .odo(isGear ? "Mới 100% Chính Hãng" : "Lướt Mới HQCN")
-                .year(isGear ? "Mới 100%" : (p.getYear() != null ? String.valueOf(p.getYear()) : "2024"))
+                .year(isGear ? "Mới 100%" : extractYear(p.getName()))
                 .badges(badgeList)
                 .branchStocks(branchStocks)
                 .image(p.getMainImage() != null ? p.getMainImage() : "/images/ktm_300_exc.jpg")
@@ -179,6 +179,14 @@ public class ProductDto {
             return new DecimalFormat("#,##0.#").format(tr) + " Triệu";
         }
         return new DecimalFormat("#,###").format(val) + " đ";
+    }
+
+    private static String extractYear(String name) {
+        if (name != null) {
+            java.util.regex.Matcher m = java.util.regex.Pattern.compile("(202[0-9]|201[0-9])").matcher(name);
+            if (m.find()) return m.group(1);
+        }
+        return "2024";
     }
 
     private static String extractPower(String desc) {
