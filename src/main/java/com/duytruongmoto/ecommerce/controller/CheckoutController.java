@@ -99,6 +99,15 @@ public class CheckoutController {
         model.addAttribute("orderCode", orderCode);
         model.addAttribute("responseCode", responseCode);
 
+        String envFrontend = System.getenv("FRONTEND_URL");
+        String frontendUrl = (envFrontend != null && !envFrontend.trim().isEmpty())
+                ? envFrontend.trim()
+                : "https://duytruong-motor.vercel.app";
+        if (frontendUrl.endsWith("/")) {
+            frontendUrl = frontendUrl.substring(0, frontendUrl.length() - 1);
+        }
+        model.addAttribute("frontendUrl", frontendUrl);
+
         // Kiểm tra chữ ký bảo mật VNPAY nếu có hash gửi về
         boolean isSignatureValid = (secureHash == null) || vnPayService.validateSignature(allParams);
 

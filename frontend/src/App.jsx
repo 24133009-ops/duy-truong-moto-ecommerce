@@ -12,10 +12,16 @@ import {
 } from './data/mockData';
 import { generateSmartBotReply, SUGGESTION_CHIPS } from './utils/chatbotEngine';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || (
+const API_BASE_URL = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || (
   typeof window !== 'undefined' && window.location.hostname === 'localhost'
     ? 'http://localhost:8080/api'
     : 'https://duy-truong-moto-ecommerce.onrender.com/api'
+);
+
+const WS_BASE_URL = import.meta.env.VITE_WS_URL || (
+  typeof window !== 'undefined' && window.location.hostname === 'localhost'
+    ? 'ws://localhost:8080/ws'
+    : 'wss://duy-truong-moto-ecommerce.onrender.com/ws'
 );
 
 export default function App() {

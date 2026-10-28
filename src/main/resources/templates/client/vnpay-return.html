@@ -34,9 +34,12 @@
                     </div>
                 </div>
 
-                <div class="d-flex gap-3 justify-content-center">
+                <div class="d-flex gap-3 justify-content-center flex-wrap">
                     <a th:href="@{/orders}" class="btn btn-gold px-4">XEM LỊCH SỬ ĐƠN HÀNG</a>
-                    <a th:href="@{/home}" class="btn btn-outline-light px-4">QUAY LẠI TRANG CHỦ</a>
+                    <a th:href="${frontendUrl != null ? frontendUrl : 'https://duytruong-motor.vercel.app'}" class="btn btn-warning px-4 fw-bold shadow">
+                        <i class="fa-solid fa-motorcycle me-1"></i> QUAY VỀ WEB VERCEL
+                    </a>
+                    <a th:href="@{/home}" class="btn btn-outline-light px-4">TRANG CHỦ RENDER</a>
                 </div>
             </div>
 
@@ -46,9 +49,12 @@
                 </div>
                 <h3 class="fw-bold text-white mb-2">GIAO DỊCH THẤT BẠI HOẶC BỊ HỦY</h3>
                 <p class="text-secondary small" th:text="${message}"></p>
-                <div class="d-flex gap-3 justify-content-center mt-4">
+                <div class="d-flex gap-3 justify-content-center flex-wrap mt-4">
                     <a th:href="@{/checkout}" class="btn btn-outline-gold px-4">THỬ LẠI THANH TOÁN</a>
-                    <a th:href="@{/home}" class="btn btn-outline-light px-4">QUAY VỀ TRANG CHỦ</a>
+                    <a th:href="${frontendUrl != null ? frontendUrl : 'https://duytruong-motor.vercel.app'}" class="btn btn-warning px-4 fw-bold shadow">
+                        <i class="fa-solid fa-motorcycle me-1"></i> QUAY VỀ WEB VERCEL
+                    </a>
+                    <a th:href="@{/home}" class="btn btn-outline-light px-4">TRANG CHỦ RENDER</a>
                 </div>
             </div>
         </div>

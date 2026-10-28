@@ -17,6 +17,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -111,7 +112,34 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(List.of("*"));
+
+        List<String> origins = new ArrayList<>(Arrays.asList(
+            "https://duytruong-motor.vercel.app",
+            "https://duy-truong-moto-ecommerce.onrender.com",
+            "http://localhost:5173",
+            "http://localhost:3000"
+        ));
+
+        // 1. Đọc biến môi trường FRONTEND_URL từ Render (tự động loại bỏ dấu / ở cuối)
+        String envFrontend = System.getenv("FRONTEND_URL");
+        if (envFrontend != null && !envFrontend.trim().isEmpty()) {
+            String clean = envFrontend.trim();
+            if (clean.endsWith("/")) {
+                clean = clean.substring(0, clean.length() - 1);
+            }
+            if (!origins.contains(clean)) {
+                origins.add(clean);
+            }
+        }
+
+        configuration.setAllowedOrigins(origins);
+
+        // 2. Cho phép cả các bản Vercel Preview (duytruong-motor-git-*.vercel.app) và localhost mọi port
+        configuration.setAllowedOriginPatterns(Arrays.asList(
+            "https://*.vercel.app",
+            "http://localhost:*"
+        ));
+
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
         configuration.setExposedHeaders(Arrays.asList("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
