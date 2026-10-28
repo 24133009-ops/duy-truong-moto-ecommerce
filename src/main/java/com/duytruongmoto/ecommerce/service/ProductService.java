@@ -53,8 +53,12 @@ public class ProductService {
     }
 
     public Page<Product> filterProducts(String keyword, Long categoryId, BigDecimal minPrice, BigDecimal maxPrice, String brand, int page, int size) {
+        return filterProducts(keyword, categoryId, null, minPrice, maxPrice, brand, page, size);
+    }
+
+    public Page<Product> filterProducts(String keyword, Long categoryId, Long storeId, BigDecimal minPrice, BigDecimal maxPrice, String brand, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-        return productRepository.filterProducts(keyword, categoryId, minPrice, maxPrice, brand, pageable);
+        return productRepository.filterProducts(keyword, categoryId, storeId, minPrice, maxPrice, brand, pageable);
     }
 
     public Page<Product> getProductsByCategory(Long categoryId, int page, int size) {

@@ -41,7 +41,18 @@
             <div class="d-flex align-items-center gap-3 text-secondary small ms-auto">
                 <span class="d-none d-lg-inline text-gold-light"><i class="fa-solid fa-quote-left text-gold me-1"></i> MUA CỦA NGƯỜI CHÁN - BÁN CHO NGƯỜI CẦN</span>
                 <span class="d-none d-xl-inline"><i class="fa-solid fa-phone text-gold me-1"></i> Hotline: <strong class="text-gold">0903.456.789</strong></span>
-                <span class="d-none d-md-inline"><i class="fa-solid fa-location-dot text-gold me-1"></i> Toàn Quốc (3 Showroom)</span>
+                <div class="dropdown d-none d-md-inline">
+                    <button class="btn btn-sm btn-outline-warning dropdown-toggle py-0 px-2 fw-bold" style="font-size:0.75rem;" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-location-dot me-1"></i> Kho Showroom
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow border border-warning" style="font-size:0.8rem; min-width: 290px;">
+                        <li><a class="dropdown-item py-2" th:href="@{/products}"><i class="fa-solid fa-globe text-gold me-2"></i> <strong>Toàn Quốc (Tất Cả 3 Showroom)</strong></a></li>
+                        <li><hr class="dropdown-divider border-secondary my-1"></li>
+                        <li><a class="dropdown-item py-2" th:href="@{/products(storeId=1)}"><i class="fa-solid fa-store text-danger me-2"></i> <strong>Showroom Phú Nhuận TP.HCM</strong><br><small class="text-secondary ps-4">Trụ sở chính - 123 Hoàng Văn Thụ</small></a></li>
+                        <li><a class="dropdown-item py-2" th:href="@{/products(storeId=2)}"><i class="fa-solid fa-store text-warning me-2"></i> <strong>Showroom Cầu Giấy Hà Nội</strong><br><small class="text-secondary ps-4">Chi nhánh Miền Bắc - 168 Trần Duy Hưng</small></a></li>
+                        <li><a class="dropdown-item py-2" th:href="@{/products(storeId=3)}"><i class="fa-solid fa-store text-info me-2"></i> <strong>Showroom Hải Châu Đà Nẵng</strong><br><small class="text-secondary ps-4">Chi nhánh Miền Trung - 52 Nguyễn Văn Linh</small></a></li>
+                    </ul>
+                </div>
                 <span sec:authorize="isAuthenticated()" class="ms-2">
                     <form th:action="@{/auth/logout}" method="post" class="d-inline m-0 p-0">
                         <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-2 fw-bold rounded-pill" style="font-size:0.72rem;"><i class="fa-solid fa-right-from-bracket me-1"></i>Đăng xuất</button>

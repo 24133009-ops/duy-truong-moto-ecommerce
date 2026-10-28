@@ -467,13 +467,25 @@ export default function App() {
     setActiveProductDetail(bike);
   };
 
+  // Current selected showroom object
+  const currentShowroom = useMemo(() => {
+    if (selectedShowroomFilter === 'all') return null;
+    return SHOWROOMS.find(s => s.id === parseInt(selectedShowroomFilter)) || null;
+  }, [selectedShowroomFilter]);
+
   // --- DERIVED / FILTERED PRODUCTS ---
-  // 1. Guest Requirement: Top sản phẩm bán trên 10 sản phẩm (sắp xếp giảm dần theo lượt bán)
+  // 1. Guest Requirement: Top sản phẩm bán trên 10 sản phẩm (sắp xếp giảm dần theo lượt bán), linh hoạt theo Showroom được chọn
   const topOver10Sold = useMemo(() => {
-    return products
-      .filter(p => p.sold > 10 && p.isSelling)
+    let list = products.filter(p => p.isSelling);
+    if (selectedShowroomFilter !== 'all') {
+      const storeIdNum = parseInt(selectedShowroomFilter);
+      list = list.filter(p => p.storeId === storeIdNum);
+      return list.sort((a, b) => (b.sold || 0) - (a.sold || 0));
+    }
+    return list
+      .filter(p => p.sold > 10)
       .sort((a, b) => b.sold - a.sold);
-  }, [products]);
+  }, [products, selectedShowroomFilter]);
 
   // Distinct Brand List for Dynamic Select
   const allBrandList = useMemo(() => {
@@ -731,13 +743,22 @@ export default function App() {
             <span>Kho Showroom:</span>
             <select 
               value={selectedShowroomFilter} 
-              onChange={(e) => setSelectedShowroomFilter(e.target.value)}
-              style={{ background: '#0e111a', color: '#fff', border: '1px solid rgba(212,175,55,0.3)', borderRadius: '6px', padding: '3px 8px', fontWeight: '600', cursor: 'pointer', fontSize: '0.8rem' }}
+              onChange={(e) => {
+                const val = e.target.value;
+                setSelectedShowroomFilter(val);
+                if (val !== 'all') {
+                  navigateTab('products');
+                }
+              }}
+              style={{ background: '#0e111a', color: '#fff', border: '1px solid rgba(212,175,55,0.5)', borderRadius: '6px', padding: '4px 10px', fontWeight: '700', cursor: 'pointer', fontSize: '0.8rem' }}
             >
               <option value="all">Toàn Quốc (3 Showroom)</option>
-              {SHOWROOMS.map(s => (
-                <option key={s.id} value={s.id}>{s.name}</option>
-              ))}
+              {SHOWROOMS.map(s => {
+                const count = products.filter(p => p.storeId === s.id).length;
+                return (
+                  <option key={s.id} value={String(s.id)}>{s.name} ({count} xe)</option>
+                );
+              })}
             </select>
           </div>
           <button
@@ -1254,14 +1275,28 @@ export default function App() {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '32px', borderLeft: '4px solid var(--red-racing)', paddingLeft: '18px' }}>
                 <div>
                   <div style={{ color: 'var(--red-racing)', fontWeight: 800, fontSize: '0.85rem', letterSpacing: '1px' }}>
-                    <i className="fa-solid fa-fire me-1"></i> BẢNG XẾP HẠNG DOANH SỐ SHOWROOM
+                    <i className="fa-solid fa-fire me-1"></i> {currentShowroom ? `KHO XE & TRANG BỊ TẠI ${currentShowroom.name.toUpperCase()}` : 'BẢNG XẾP HẠNG DOANH SỐ TOÀN QUỐC'}
                   </div>
                   <h2 className="brand-title" style={{ fontSize: '2.1rem', color: '#fff', margin: '4px 0' }}>
-                    TOP XE & TRANG BỊ ĐƯỢC SĂN ĐÓN NHẤT (ĐÃ BÁN TRÊN 10 SẢN PHẨM)
+                    {currentShowroom ? `XE & PHỤ TÙNG CÓ SẴN TẠI CHI NHÁNH (${topOver10Sold.length} MẪU)` : 'TOP XE & TRANG BỊ ĐƯỢC SĂN ĐÓN NHẤT (ĐÃ BÁN TRÊN 10 SẢN PHẨM)'}
                   </h2>
                   <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
-                    Tổng hợp từ hệ thống 3 Showroom Duy Trương Motor • Các mẫu xe và đồ bảo hộ có lượt mua kỷ lục trên toàn quốc
+                    {currentShowroom ? `${currentShowroom.address} • Hotline: ${currentShowroom.phone}` : 'Tổng hợp từ hệ thống 3 Showroom Duy Trương Motor • Các mẫu xe và đồ bảo hộ có lượt mua kỷ lục trên toàn quốc'}
                   </p>
+                  {currentShowroom && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '10px' }}>
+                      <span className="badge-gold" style={{ fontSize: '0.78rem', padding: '4px 10px' }}>
+                        <i className="fa-solid fa-location-dot me-1"></i> Đang lọc theo chi nhánh này
+                      </span>
+                      <button 
+                        className="btn-subtle" 
+                        style={{ fontSize: '0.78rem', padding: '4px 12px', background: 'rgba(255,255,255,0.06)' }}
+                        onClick={() => setSelectedShowroomFilter('all')}
+                      >
+                        <i className="fa-solid fa-globe me-1"></i> Xem Toàn Quốc (Tất cả Showroom)
+                      </button>
+                    </div>
+                  )}
                 </div>
                 <div style={{ background: '#121520', border: '1px solid var(--gold-primary)', color: 'var(--gold-light)', padding: '6px 16px', borderRadius: '20px', fontSize: '0.85rem', fontWeight: 700 }}>
                   <i className="fa-solid fa-trophy text-gold me-1"></i> Bán Chạy Kỷ Lục
@@ -1346,6 +1381,25 @@ export default function App() {
 
                 <div style={{ marginBottom: '20px' }}>
                   <label style={{ fontSize: '0.85rem', color: 'var(--text-sub)', fontWeight: 700, display: 'block', marginBottom: '8px' }}>
+                    <i className="fa-solid fa-store text-gold me-1"></i> Kho Showroom Chi Nhánh:
+                  </label>
+                  <select 
+                    className="luxury-select" 
+                    value={selectedShowroomFilter} 
+                    onChange={(e) => setSelectedShowroomFilter(e.target.value)}
+                  >
+                    <option value="all">Toàn Quốc (3 Showroom - {products.length} xe)</option>
+                    {SHOWROOMS.map(s => {
+                      const count = products.filter(p => p.storeId === s.id).length;
+                      return (
+                        <option key={s.id} value={String(s.id)}>{s.name} ({count} xe)</option>
+                      );
+                    })}
+                  </select>
+                </div>
+
+                <div style={{ marginBottom: '20px' }}>
+                  <label style={{ fontSize: '0.85rem', color: 'var(--text-sub)', fontWeight: 700, display: 'block', marginBottom: '8px' }}>
                     <i className="fa-solid fa-layer-group text-gold me-1"></i> Nhóm danh mục nghiệp vụ:
                   </label>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -1419,6 +1473,47 @@ export default function App() {
 
               {/* Product Listing */}
               <div>
+                {currentShowroom && (
+                  <div className="glass-box" style={{ 
+                    padding: '20px 24px', 
+                    marginBottom: '25px', 
+                    border: '1px solid var(--gold-primary)', 
+                    background: 'linear-gradient(135deg, rgba(212,175,55,0.12), rgba(14,17,26,0.92))',
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    alignItems: 'center', 
+                    flexWrap: 'wrap', 
+                    gap: '16px' 
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                      <img src={currentShowroom.avatar} alt={currentShowroom.name} style={{ width: '56px', height: '56px', borderRadius: '50%', border: '2px solid var(--gold-primary)', objectFit: 'cover' }} />
+                      <div>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--gold-primary)', fontWeight: 800, textTransform: 'uppercase' }}>
+                          <i className="fa-solid fa-location-dot me-1"></i> Chi nhánh Showroom đang xem kho xe
+                        </div>
+                        <h4 style={{ margin: '3px 0', fontSize: '1.25rem', color: '#fff', fontWeight: 800, fontFamily: 'var(--font-brand)' }}>
+                          {currentShowroom.name}
+                        </h4>
+                        <div style={{ fontSize: '0.82rem', color: 'var(--text-sub)' }}>
+                          <i className="fa-solid fa-map-pin text-racing me-1"></i> {currentShowroom.address} • Hotline: <strong style={{ color: 'var(--gold-primary)' }}>{currentShowroom.phone}</strong>
+                        </div>
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <span className="badge-gold" style={{ padding: '8px 16px', fontSize: '0.85rem' }}>
+                        <i className="fa-solid fa-motorcycle me-1"></i> {filteredProducts.length} mẫu xe có sẵn
+                      </span>
+                      <button 
+                        className="btn-outline-gold" 
+                        style={{ fontSize: '0.82rem', padding: '8px 14px' }} 
+                        onClick={() => setSelectedShowroomFilter('all')}
+                      >
+                        <i className="fa-solid fa-globe me-1"></i> Xem Toàn Quốc (3 Showroom)
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                   <span style={{ color: 'var(--text-sub)' }}>
                     Tìm thấy <strong style={{ color: 'var(--gold-primary)' }}>{filteredProducts.length}</strong> mẫu xe &amp; phụ kiện phù hợp
@@ -1521,9 +1616,21 @@ export default function App() {
                     <div><i className="fa-solid fa-map-pin text-racing me-2"></i> {store.address}</div>
                     <div style={{ marginTop: '6px' }}><i className="fa-solid fa-phone text-gold me-2"></i> Hotline: <strong style={{ color: '#fff' }}>{store.phone}</strong></div>
                   </div>
-                  <button className="btn-outline-gold" style={{ marginTop: '20px', width: '100%' }} onClick={() => setIsChatOpen(true)}>
-                    <i className="fa-solid fa-comments"></i> Liên Hệ Tư Vấn Trực Tiếp
-                  </button>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '20px' }}>
+                    <button 
+                      className="btn-gold" 
+                      style={{ width: '100%', padding: '10px', fontSize: '0.88rem' }} 
+                      onClick={() => {
+                        setSelectedShowroomFilter(String(store.id));
+                        navigateTab('products');
+                      }}
+                    >
+                      <i className="fa-solid fa-motorcycle me-2"></i> Khám Phá Kho Xe ({products.filter(p => p.storeId === store.id).length} xe có sẵn)
+                    </button>
+                    <button className="btn-outline-gold" style={{ width: '100%', padding: '8px' }} onClick={() => setIsChatOpen(true)}>
+                      <i className="fa-solid fa-comments me-2"></i> Liên Hệ Tư Vấn Trực Tiếp
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>

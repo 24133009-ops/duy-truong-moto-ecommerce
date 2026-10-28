@@ -3,7 +3,9 @@ package com.duytruongmoto.ecommerce.controller;
 import com.duytruongmoto.ecommerce.entity.Category;
 import com.duytruongmoto.ecommerce.entity.Product;
 import com.duytruongmoto.ecommerce.entity.User;
+import com.duytruongmoto.ecommerce.entity.Store;
 import com.duytruongmoto.ecommerce.repository.CategoryRepository;
+import com.duytruongmoto.ecommerce.repository.StoreRepository;
 import com.duytruongmoto.ecommerce.security.CustomUserDetails;
 import com.duytruongmoto.ecommerce.service.CloudinaryService;
 import com.duytruongmoto.ecommerce.service.ProductService;
@@ -26,6 +28,7 @@ public class ProductController {
 
     private final ProductService productService;
     private final CategoryRepository categoryRepository;
+    private final StoreRepository storeRepository;
     private final ReviewService reviewService;
     private final CloudinaryService cloudinaryService;
 
@@ -34,6 +37,7 @@ public class ProductController {
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) String category,
+            @RequestParam(required = false) Long storeId,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(required = false) String brand,
@@ -92,14 +96,19 @@ public class ProductController {
             queryBrand = category.trim().toLowerCase();
         }
 
-        Page<Product> productPage = productService.filterProducts(cleanKeyword, categoryId, minPrice, maxPrice, queryBrand, pageIndex, size);
+        Page<Product> productPage = productService.filterProducts(cleanKeyword, categoryId, storeId, minPrice, maxPrice, queryBrand, pageIndex, size);
 
         // Fallback: If requested page is out of bounds (e.g. user requested page=1 when only page 0 has items)
         if (productPage.getContent().isEmpty() && productPage.getTotalElements() > 0 && pageIndex > 0) {
             pageIndex = 0;
-            productPage = productService.filterProducts(cleanKeyword, categoryId, minPrice, maxPrice, queryBrand, pageIndex, size);
+            productPage = productService.filterProducts(cleanKeyword, categoryId, storeId, minPrice, maxPrice, queryBrand, pageIndex, size);
         }
 
+        if (storeId != null) {
+            storeRepository.findById(storeId).ifPresent(s -> model.addAttribute("selectedStore", s));
+        }
+        model.addAttribute("stores", storeRepository.findAll());
+        model.addAttribute("storeId", storeId);
         model.addAttribute("productPage", productPage);
         model.addAttribute("categories", categoryRepository.findByIsDeletedFalse());
         model.addAttribute("brands", productService.getAllDistinctBrands());

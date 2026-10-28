@@ -42,15 +42,17 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     @Query("SELECT DISTINCT p.brand FROM Product p WHERE p.isActive = true AND p.isSelling = true AND p.brand IS NOT NULL ORDER BY p.brand ASC")
     List<String> findDistinctBrands();
 
-    // Tìm kiếm và lọc nâng cao thông minh
+    // Tìm kiếm và lọc nâng cao thông minh (Hỗ trợ lọc theo Showroom / Store)
     @Query("SELECT p FROM Product p WHERE p.isActive = true AND p.isSelling = true " +
            "AND (:keyword IS NULL OR :keyword = '' OR LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(p.brand) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(p.description) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
            "AND (:categoryId IS NULL OR p.category.id = :categoryId) " +
+           "AND (:storeId IS NULL OR p.store.id = :storeId) " +
            "AND (:minPrice IS NULL OR p.price >= :minPrice) " +
            "AND (:maxPrice IS NULL OR p.price <= :maxPrice) " +
            "AND (:brand IS NULL OR :brand = '' OR LOWER(p.brand) = LOWER(:brand) OR LOWER(p.brand) LIKE LOWER(CONCAT('%', :brand, '%')) OR LOWER(:brand) LIKE LOWER(CONCAT('%', p.brand, '%')) OR LOWER(p.category.slug) = LOWER(:brand) OR LOWER(p.category.name) LIKE LOWER(CONCAT('%', :brand, '%')))")
     Page<Product> filterProducts(@Param("keyword") String keyword,
                                  @Param("categoryId") Long categoryId,
+                                 @Param("storeId") Long storeId,
                                  @Param("minPrice") BigDecimal minPrice,
                                  @Param("maxPrice") BigDecimal maxPrice,
                                  @Param("brand") String brand,
