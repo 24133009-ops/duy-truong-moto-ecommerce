@@ -1,4 +1,4 @@
-package com.duytruongmoto.ecommerce.entity;
+﻿package com.duytruongmoto.ecommerce.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -77,5 +77,15 @@ public class Order {
 
     public BigDecimal getTotalAmount() {
         return amountFromUser;
+    }
+
+    public String getCustomerNote() {
+        if (note == null || note.trim().isEmpty()) {
+            return null;
+        }
+        if (note.contains("Trạng thái") || note.trim().startsWith("[")) {
+            return null;
+        }
+        return note.trim();
     }
 }

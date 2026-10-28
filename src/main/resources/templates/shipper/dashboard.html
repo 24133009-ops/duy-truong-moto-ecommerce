@@ -93,7 +93,7 @@
                             <div><strong class="text-white">Khách nhận bàn giao:</strong> <span class="text-gold fw-bold" th:text="${order.recipientName}"></span></div>
                             <div class="mt-1"><strong class="text-white">Số điện thoại:</strong> <span th:text="${order.phone}"></span></div>
                             <div class="mt-1"><strong class="text-white">Địa chỉ giao xe:</strong> <span class="text-light" th:text="${order.address}"></span></div>
-                            <div class="mt-1" th:if="${order.note != null and !#strings.isEmpty(order.note) and !#strings.contains(order.note, 'Trạng thái:') and !#strings.startsWith(order.note, '[')}"><strong class="text-warning"><i class="fa-solid fa-clipboard-list me-1"></i> Ghi chú nhận xe:</strong> <span class="text-light" th:text="${order.note}"></span></div>
+                            <div class="mt-1" th:if="${order.customerNote != null}"><strong class="text-warning"><i class="fa-solid fa-clipboard-list me-1"></i> Ghi chú nhận xe:</strong> <span class="text-light" th:text="${order.customerNote}"></span></div>
                         </div>
 
                         <!-- Bike list -->
