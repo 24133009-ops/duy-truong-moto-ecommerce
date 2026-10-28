@@ -1,4 +1,4 @@
-﻿package com.duytruongmoto.ecommerce.data;
+package com.duytruongmoto.ecommerce.data;
 
 import com.duytruongmoto.ecommerce.entity.*;
 import com.duytruongmoto.ecommerce.repository.*;
@@ -74,6 +74,24 @@ public class DataInitializer implements CommandLineRunner {
             });
         } catch (Exception ex) {
             log.warn("Lỗi dọn dẹp ghi chú đơn hàng cũ: {}", ex.getMessage());
+        }
+
+        
+        // Đồng bộ giá hợp lý và tên phụ tùng cho phuộc Ohlins trong database
+        try {
+            productRepository.findAll().stream()
+                .filter(p -> (p.getBrand() != null && "Ohlins".equalsIgnoreCase(p.getBrand())) 
+                          || (p.getName() != null && p.getName().toLowerCase().contains("ohlins")))
+                .forEach(p -> {
+                    p.setName("Bộ Phuộc Sau Ohlins TTX GP Cao Cấp (Lò Xo Vàng DLC)");
+                    p.setPrice(new BigDecimal("38500000"));
+                    p.setPromotionalPrice(new BigDecimal("34900000"));
+                    p.setMainImage("/images/ohlins_suspension.jpg");
+                    productRepository.save(p);
+                    log.info(">>> Đã cập nhật giá phuộc Ohlins ID: {} thành 34.900.000 đ hợp lý chuẩn thị trường!", p.getId());
+                });
+        } catch (Exception ex) {
+            log.warn("Lỗi cập nhật giá phuộc Ohlins: {}", ex.getMessage());
         }
 
         log.info(">>> Đã đồng bộ thành công {} sản phẩm trong kho Duy Truong Motor!", productRepository.count());
@@ -816,11 +834,11 @@ public class DataInitializer implements CommandLineRunner {
             "Ống xả hiệu năng cao đỉnh cao từ SC-Project Italy thiết kế chuyên biệt cho các giải đua WorldSBK. Thân pô titan siêu nhẹ kết hợp nắp chụp carbon chống nhiệt độ cao, mang đến dải âm thanh gầm rú xé gió phấn khích tột độ.");
 
         seedProduct(storeMap.get(3), catMap.get("gear-parts"),
-            "Bộ Phuộc Trước Sau Ohlins FGR 250 & TTX GP Thụy Điển Cao Cấp",
+            "Bộ Phuộc Sau Ohlins TTX GP Cao Cấp (Lò Xo Vàng DLC)",
             "ohlins-fgr-250-ttx-gp-405",
             "Ohlins",
-            new BigDecimal("245000000"),
-            new BigDecimal("228000000"),
+            new BigDecimal("38500000"),
+            new BigDecimal("34900000"),
             3, 9, 5.0,
             "Công Nghệ Giảm Chấn Khí Nén TTX Twin Tube Thụy Điển",
             "Vàng Ohlins Gold Huyền Thoại Ty Mạ DLC",
