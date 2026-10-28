@@ -598,8 +598,8 @@ h1, h2, h3, h4, .brand-font {
     min-height: 580px;
     background: #080a10;
     background-image: 
-        linear-gradient(to right, rgba(8, 10, 16, 0.95) 0%, rgba(8, 10, 16, 0.4) 45%, rgba(8, 10, 16, 0.85) 100%),
-        url('/images/bmw_s1000rr.jpg');
+        linear-gradient(to right, rgba(8, 10, 16, 0.95) 0%, rgba(8, 10, 16, 0.45) 45%, rgba(8, 10, 16, 0.85) 100%),
+        url('/images/bmw_s1000rr.jpg?v=20261028_final');
     background-size: cover;
     background-position: center right;
     border-bottom: 2px solid rgba(212, 175, 55, 0.25);
