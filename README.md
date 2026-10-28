@@ -5,7 +5,7 @@
 > **Nền tảng chính nộp đồ án:** Spring Boot 3.2 + Thymeleaf SSR + Spring Security 6 + JPA Hibernate  
 > **Trang web triển khai trực tuyến (Live Render):** [https://duy-truong-moto-ecommerce.onrender.com](https://duy-truong-moto-ecommerce.onrender.com)  
 > **Repository GitHub:** [https://github.com/24133009-ops/duy-truong-moto-ecommerce](https://github.com/24133009-ops/duy-truong-moto-ecommerce)  
-> **Kịch bản Prompt AI:** [Prompt.md](./Prompt.md) | **Tập lệnh cơ sở dữ liệu:** [database.sql](./database.sql)
+> **Kịch bản Prompt AI:** [Prompt_AI_Nhom17.md](./Nhom_17/02_SourceCode_Database/Prompt_AI_Nhom17.md) | **Tập lệnh cơ sở dữ liệu:** [database.sql](./database.sql)
 
 ---
 
@@ -26,7 +26,7 @@
 | Tiêu chí | Trọng số | Yêu cầu của giảng viên | Mức độ tự đánh giá | Minh chứng trong Source Code & Hệ thống |
 | :--- | :---: | :--- | :---: | :--- |
 | **Tiêu chí 1: Độ khó, phân công** | **10%** | Phân công rõ ràng từng người theo đủ 4 nhóm role, bài toán phức tạp | **10/10** | Phân công bao phủ trọn vẹn 4 nhóm vai trò (Duy: Admin; Khôi: User+Guest; Tình: Vendor & Shipper), không trùng lặp vai trò. |
-| **Tiêu chí 2: AI + GitHub** | **20%** | Sử dụng AI thành thạo, làm chủ mã nguồn, commit lịch sử minh bạch | **20/20** | Có file `Prompt.md` lưu lại toàn bộ câu lệnh tương tác, mỗi thành viên hiểu rõ code của mình; lịch sử git commit phân nhánh rõ ràng. |
+| **Tiêu chí 2: AI + GitHub** | **20%** | Sử dụng AI thành thạo, làm chủ mã nguồn, commit lịch sử minh bạch | **20/20** | Có file `Prompt_AI_Nhom17.md` lưu lại toàn bộ câu lệnh tương tác, mỗi thành viên hiểu rõ code của mình; lịch sử git commit phân nhánh rõ ràng. |
 | **Tiêu chí 3: Hình thức & Giao diện** | **20%** | Cấu trúc dữ liệu chuẩn, sơ đồ ERD, giao diện responsive Desktop/Mobile | **20/20** | Thiết kế Dark Luxury tương phản cao, chuẩn UI xe phân khối lớn, responsive mượt mà từ 375px đến 1920px, sơ đồ ERD chi tiết trong báo cáo. |
 | **Tiêu chí 4: Ứng dụng, code, cài đặt** | **35%** | Hệ thống chạy trơn tru, đủ 4 role, file `.sql` chuẩn xác, cài đặt dễ dàng | **35/35** | Deploy hoạt động ổn định trên Render; file `database.sql` chuẩn hóa với mật khẩu BCrypt; toàn bộ luồng nghiệp vụ 4 role hoạt động 100%. |
 | **Tiêu chí 5: Tính năng sáng tạo** | **15%** | Các tính năng mở rộng ngoài chương trình học (Yêu cầu $\ge 7-8$ nội dung để đạt trọn vẹn 15 điểm) | **15/15** *(Đạt trọn vẹn với 8+ tính năng)* | **Nhóm phát triển thành công 8 tính năng nâng cao chuyên sâu** có mã nguồn thực tế và kiểm thử tự động, vượt mức 7-8 tính năng theo yêu cầu thang điểm tối đa (Xem chi tiết tại Mục 5). |
@@ -161,4 +161,4 @@ Khi tiến hành kiểm thử chức năng Đặt cọc trực tuyến qua cổn
 ## 9. DANH SÁCH LIÊN KẾT BÀN GIAO NỘP BÀI
 - **Trang web trực tuyến (Live Render):** [https://duy-truong-moto-ecommerce.onrender.com](https://duy-truong-moto-ecommerce.onrender.com)
 - **Tập lệnh cơ sở dữ liệu (`.sql`):** [database.sql](./database.sql)
-- **Kịch bản Prompt AI minh bạch (`.md`):** [Prompt.md](./Prompt.md)
+- **Kịch bản Prompt AI minh bạch (`.md`):** [Prompt_AI_Nhom17.md](./Nhom_17/02_SourceCode_Database/Prompt_AI_Nhom17.md)
