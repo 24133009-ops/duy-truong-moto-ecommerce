@@ -1,7 +1,7 @@
 ========================================================================================
   ĐẠI HỌC SƯ PHẠM KỸ THUẬT TP. HỒ CHÍ MINH (HCMUTE)
   KHOA CÔNG NGHỆ THÔNG TIN - MÔN HỌC: LẬP TRÌNH WEB (HK1 2026-2027)
-  ĐỀ TÀI 2: WEBSITE CHUỖI CỬA HÀNG MÔ TÔ PHÂN KHỐI LỚN CAO CẤP "DUY TRƯƠNG MOTO"
+  ĐỀ TÀI 2: WEBSITE CHUỖI CỬA HÀNG MÔ TÔ PHÂN KHỐI LỚN CAO CẤP "DUY TRƯƠNG MOTOR"
   NHÓM: 17
 ========================================================================================
 

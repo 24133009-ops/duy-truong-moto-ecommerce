@@ -8,7 +8,7 @@ HƯỚNG DẪN ĐIỀN VÀO SHEET:
 1. Nhấp chuột phải vào tab "Nhóm...(mẫu)" ở góc dưới bên trái Google Sheet -> Chọn "Nhân bản" (Duplicate).
 2. Đổi tên sheet mới thành: "17" (Số thứ tự nhóm là 17).
 3. Điền các thông tin đầu sheet:
-   - Tên đề tài: Đề tài 2 - Xây dựng website chuỗi showroom mô tô phân khối lớn "Duy Trương Moto"
+   - Tên đề tài: Đề tài 2 - Xây dựng website chuỗi showroom mô tô phân khối lớn "Duy Trương Motor"
    - STT Nhóm: 17
    - Danh sách thành viên:
      (1) Trương Quốc Duy - MSSV: 24133009 - Lớp: 24133A (Nhóm trưởng)

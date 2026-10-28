@@ -5,7 +5,7 @@
 TIÊU CHÍ 2: SỬ DỤNG AI HỖ TRỢ VÀ SỰ CỘNG TÁC GITHUB (20/20 ĐIỂM)
 
 [PROMPT 1 - THIẾT KẾ KIẾN TRÚC & ENTITY JPA]
-Đóng vai trò Principal Software Architect. Hãy khảo sát hiện trạng và thiết kế mô hình chuỗi cửa hàng (Multi-Store) cho thương hiệu siêu mô tô Duy Trương Moto với 3 showroom tại TP.HCM, Hà Nội và Đà Nẵng. Tạo 19 JPA Entity với Spring Boot 3.2.5, Java 17, SQL Server 2022.
+Đóng vai trò Principal Software Architect. Hãy khảo sát hiện trạng và thiết kế mô hình chuỗi cửa hàng (Multi-Store) cho thương hiệu siêu mô tô Duy Trương Motor với 3 showroom tại TP.HCM, Hà Nội và Đà Nẵng. Tạo 19 JPA Entity với Spring Boot 3.2.5, Java 17, SQL Server 2022.
 
 [PROMPT 2 - SPRING SECURITY 6 & JWT STATELESS]
 Cấu hình Spring Security 6 chuẩn Stateless Session với JwtAuthenticationFilter, JwtUtils tạo HMAC-SHA256 token và phân quyền 5 cấp: ROLE_GUEST, ROLE_USER, ROLE_VENDOR, ROLE_ADMIN, ROLE_SHIPPER kèm CORS cho cổng 5173.
