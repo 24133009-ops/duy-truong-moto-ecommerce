@@ -85,33 +85,36 @@
                             <td class="text-secondary small" th:text="${u.phone}"></td>
                             <td>
                                 <span class="badge"
-                                    th:classappend="${u.role.name() == 'ROLE_ADMIN' ? 'bg-danger' : (u.role.name() == 'ROLE_VENDOR' ? 'bg-warning text-dark' : (u.role.name() == 'ROLE_SHIPPER' ? 'bg-info text-dark' : 'bg-secondary'))}"
-                                    th:text="${u.role.name()}">
+                                    th:classappend="${u.role != null and u.role.name() == 'ROLE_ADMIN' ? 'bg-danger' : (u.role != null and u.role.name() == 'ROLE_VENDOR' ? 'bg-warning text-dark' : (u.role != null and u.role.name() == 'ROLE_SHIPPER' ? 'bg-info text-dark' : 'bg-secondary'))}"
+                                    th:text="${u.role != null ? u.role.name() : 'ROLE_USER'}">
                                 </span>
                             </td>
                             <td>
-                                <span th:if="${u.isEmailActive}" class="badge bg-success"><i
-                                        class="fa-solid fa-check me-1"></i> Đã Kích Hoạt</span>
-                                <span th:if="${!u.isEmailActive}" class="badge bg-warning text-dark">Chờ Xác Thực
-                                    OTP</span>
+                                <span th:if="${u.isEmailActive == true}" class="badge bg-success">
+                                    <i class="fa-solid fa-check me-1"></i> Đã Kích Hoạt
+                                </span>
+                                <span th:if="${u.isEmailActive != true}" class="badge bg-warning text-dark">
+                                    Chờ Xác Thực OTP
+                                </span>
                             </td>
                             <td>
-                                <span th:if="${!Boolean.TRUE.equals(u.isBlocked)}" class="badge bg-success">Hoạt
-                                    Động</span>
-                                <span th:if="${Boolean.TRUE.equals(u.isBlocked)}" class="badge bg-danger">Đã Bị
-                                    Khóa</span>
+                                <span th:if="${u.isBlocked != true}" class="badge bg-success">
+                                    <i class="fa-solid fa-circle-check me-1"></i> Hoạt Động
+                                </span>
+                                <span th:if="${u.isBlocked == true}" class="badge bg-danger">
+                                    <i class="fa-solid fa-ban me-1"></i> Đã Bị Khóa
+                                </span>
                             </td>
                             <td>
-                                <form th:action="@{'/admin/users/' + ${u.id} + '/toggle-lock'}" method="post"
-                                    class="d-inline"
-                                    th:onsubmit="return confirm('Bạn có chắc chắn muốn thay đổi trạng thái khóa của tài khoản: ' + [[${u.email}]] + '?');">
-                                    <button th:if="${!Boolean.TRUE.equals(u.isBlocked)}" type="submit"
+                                <form th:action="@{'/admin/users/' + ${u.id} + '/toggle-lock'}" method="post" class="d-inline"
+                                    th:onsubmit="|return confirm('Bạn có chắc chắn muốn thay đổi trạng thái tài khoản: ${u.email}?');|">
+                                    <button th:if="${u.isBlocked != true}" type="submit"
                                         class="btn btn-outline-danger btn-sm px-2 py-1"
-                                        th:disabled="${u.role.name() == 'ROLE_ADMIN' and #authentication != null and #authentication.name == u.email}"
+                                        th:disabled="${u.email == 'admin@duytruongmoto.com' or (u.role != null and u.role.name() == 'ROLE_ADMIN' and #authentication != null and #authentication.name == u.email)}"
                                         title="Khóa tài khoản">
                                         <i class="fa-solid fa-lock me-1"></i> Khóa
                                     </button>
-                                    <button th:if="${Boolean.TRUE.equals(u.isBlocked)}" type="submit"
+                                    <button th:if="${u.isBlocked == true}" type="submit"
                                         class="btn btn-outline-success btn-sm px-2 py-1" title="Mở khóa tài khoản">
                                         <i class="fa-solid fa-lock-open me-1"></i> Mở
                                     </button>
