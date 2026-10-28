@@ -43,17 +43,16 @@
             <div class="d-flex align-items-center gap-3 text-secondary small ms-auto">
                 <span class="d-none d-lg-inline text-gold-light"><i class="fa-solid fa-quote-left text-gold me-1"></i> MUA CỦA NGƯỜI CHÁN - BÁN CHO NGƯỜI CẦN</span>
                 <span class="d-none d-xl-inline"><i class="fa-solid fa-phone text-gold me-1"></i> Hotline: <strong class="text-gold">0903.456.789</strong></span>
-                <div class="dropdown d-none d-md-inline">
-                    <button class="btn btn-sm btn-outline-warning dropdown-toggle py-0 px-2 fw-bold" style="font-size:0.75rem;" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa-solid fa-location-dot me-1"></i> Kho Showroom
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow-lg border border-warning" style="font-size:0.8rem; min-width: 290px; z-index: 1055 !important; margin-top: 8px;">
-                        <li><a class="dropdown-item py-2" th:href="@{/products}"><i class="fa-solid fa-globe text-gold me-2"></i> <strong>Toàn Quốc (Tất Cả 3 Showroom)</strong></a></li>
-                        <li><hr class="dropdown-divider border-secondary my-1"></li>
-                        <li><a class="dropdown-item py-2" th:href="@{/products(storeId=1)}"><i class="fa-solid fa-store text-danger me-2"></i> <strong>Showroom Phú Nhuận TP.HCM</strong><br><small class="text-secondary ps-4">Trụ sở chính - 123 Hoàng Văn Thụ</small></a></li>
-                        <li><a class="dropdown-item py-2" th:href="@{/products(storeId=2)}"><i class="fa-solid fa-store text-warning me-2"></i> <strong>Showroom Cầu Giấy Hà Nội</strong><br><small class="text-secondary ps-4">Chi nhánh Miền Bắc - 168 Trần Duy Hưng</small></a></li>
-                        <li><a class="dropdown-item py-2" th:href="@{/products(storeId=3)}"><i class="fa-solid fa-store text-info me-2"></i> <strong>Showroom Hải Châu Đà Nẵng</strong><br><small class="text-secondary ps-4">Chi nhánh Miền Trung - 52 Nguyễn Văn Linh</small></a></li>
-                    </ul>
+                <div class="d-none d-md-inline-flex align-items-center gap-1">
+                    <i class="fa-solid fa-location-dot text-gold" style="font-size: 0.78rem;"></i>
+                    <select class="form-select form-select-sm form-select-luxury py-0 px-2 fw-bold text-gold" 
+                            style="width: auto; font-size: 0.75rem; height: 26px; border-color: rgba(212,175,55,0.6); background-color: #0e111a; background-repeat: no-repeat !important; background-position: right 6px center !important; background-size: 10px 8px !important; padding-right: 20px !important; cursor: pointer;"
+                            onchange="if(this.value) window.location.href=this.value;">
+                        <option value="/products">🏢 Kho Showroom: Toàn Quốc (3 Kho)</option>
+                        <option value="/products?storeId=1">📍 Showroom Phú Nhuận TP.HCM (Trụ Sở)</option>
+                        <option value="/products?storeId=2">📍 Showroom Cầu Giấy Hà Nội (Miền Bắc)</option>
+                        <option value="/products?storeId=3">📍 Showroom Hải Châu Đà Nẵng (Miền Trung)</option>
+                    </select>
                 </div>
                 <span sec:authorize="isAuthenticated()" class="ms-2">
                     <form th:action="@{/auth/logout}" method="post" class="d-inline m-0 p-0">
@@ -110,12 +109,24 @@
                             <li><a class="dropdown-item py-2 text-gold fw-bold" th:href="@{/products}">Xem Toàn Bộ Sản Phẩm</a></li>
                         </ul>
                     </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fa-solid fa-store text-gold me-1"></i> 3 Showroom
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark border-secondary shadow">
+                            <li><a class="dropdown-item py-2" th:href="@{/products}"><i class="fa-solid fa-globe text-gold me-2"></i> Toàn Quốc (Tất Cả Showroom)</a></li>
+                            <li><hr class="dropdown-divider border-secondary"></li>
+                            <li><a class="dropdown-item py-2" th:href="@{/products(storeId=1)}"><i class="fa-solid fa-store text-danger me-2"></i> Showroom Phú Nhuận TP.HCM</a></li>
+                            <li><a class="dropdown-item py-2" th:href="@{/products(storeId=2)}"><i class="fa-solid fa-store text-warning me-2"></i> Showroom Cầu Giấy Hà Nội</a></li>
+                            <li><a class="dropdown-item py-2" th:href="@{/products(storeId=3)}"><i class="fa-solid fa-store text-info me-2"></i> Showroom Hải Châu Đà Nẵng</a></li>
+                        </ul>
+                    </li>
                 </ul>
 
                 <!-- Right Actions -->
                 <div class="d-flex align-items-center gap-2 gap-xl-3 ms-auto flex-shrink-0">
                     <!-- Vuong Khang Style Search Pill -->
-                    <a th:href="@{/products}" class="search-pill-btn d-none d-lg-inline-flex">
+                    <a th:href="@{/products}" class="search-pill-btn d-none d-xxl-inline-flex">
                         <i class="fa-solid fa-magnifying-glass text-gold"></i>
                         <span>Các dòng xe khác...</span>
                         <i class="fa-solid fa-chevron-right text-gold" style="font-size: 0.72rem;"></i>
@@ -149,7 +160,7 @@
                         <div class="dropdown">
                             <button class="btn btn-dark border border-secondary rounded-pill py-2 px-3 text-gold d-flex align-items-center gap-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" title="Menu tài khoản">
                                 <i class="fa-solid fa-circle-user text-gold fs-6"></i>
-                                <span sec:authentication="name" class="fw-bold text-gold small text-truncate d-inline-block" style="max-width: 140px;">Tài khoản</span>
+                                <span sec:authentication="name" class="fw-bold text-gold small text-truncate d-inline-block" style="max-width: 110px;">Tài khoản</span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow-lg border-secondary p-2 mt-2">
                                 <li><a class="dropdown-item py-2" th:href="@{/user/profile}"><i class="fa-solid fa-user-gear me-2 text-gold"></i> Hồ sơ &amp; Sổ địa chỉ</a></li>
@@ -177,11 +188,11 @@
                             </ul>
                         </div>
 
-                        <!-- Prominent Red Logout Button (Nút Đăng Xuất Đỏ Nổi Bật) -->
+                        <!-- Logout Button (Gọn gàng, không tràn mép) -->
                         <form th:action="@{/auth/logout}" method="post" class="d-inline m-0 p-0">
-                            <button type="submit" class="btn btn-danger btn-sm rounded-pill px-3 py-2 fw-bold d-flex align-items-center gap-1 shadow flex-shrink-0" style="white-space: nowrap;" title="Đăng xuất khỏi hệ thống ngay lập tức">
+                            <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-2 py-2 fw-bold d-flex align-items-center gap-1 shadow flex-shrink-0" title="Đăng xuất khỏi hệ thống">
                                 <i class="fa-solid fa-right-from-bracket"></i>
-                                <span>Đăng Xuất</span>
+                                <span class="d-none d-xxl-inline">Đăng Xuất</span>
                             </button>
                         </form>
                     </div>
