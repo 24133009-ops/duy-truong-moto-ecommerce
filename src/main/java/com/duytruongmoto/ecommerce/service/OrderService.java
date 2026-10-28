@@ -157,6 +157,9 @@ public class OrderService {
                 throw new IllegalArgumentException("Quản lý Showroom không có quyền chuyển đơn sang trạng thái: " + newStatus.getDisplayName());
             }
         } else if (role == Role.ROLE_SHIPPER) {
+            if (order.getShipper() == null) {
+                order.setShipper(actor);
+            }
             if (newStatus != OrderStatus.SHIPPING && newStatus != OrderStatus.DELIVERED) {
                 throw new IllegalArgumentException("Tài xế giao nhận chỉ có quyền cập nhật trạng thái Đang giao hoặc Đã bàn giao!");
             }

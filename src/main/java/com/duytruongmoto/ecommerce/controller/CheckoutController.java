@@ -183,9 +183,19 @@ public class CheckoutController {
 
         User user = userDetails.getUser();
         List<Order> orders = orderService.getOrdersByUser(user.getId(), status);
+        List<Order> allUserOrders = orderService.getOrdersByUser(user.getId(), null);
+
+        // Map đếm số lượng đơn theo từng trạng thái để hiển thị trên Tab
+        java.util.Map<String, Long> statusCounts = new java.util.HashMap<>();
+        for (OrderStatus st : OrderStatus.values()) {
+            long count = allUserOrders.stream().filter(o -> o.getStatus() == st).count();
+            statusCounts.put(st.name(), count);
+        }
 
         model.addAttribute("currentUser", user);
         model.addAttribute("orders", orders);
+        model.addAttribute("allOrdersCount", allUserOrders.size());
+        model.addAttribute("statusCounts", statusCounts);
         model.addAttribute("currentStatus", status);
         model.addAttribute("statuses", OrderStatus.values());
 

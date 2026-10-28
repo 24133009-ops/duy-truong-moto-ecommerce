@@ -32,12 +32,21 @@ public class ShipperController {
         if (userDetails == null) return "redirect:/auth/login";
 
         User shipper = userDetails.getUser();
-        List<Order> assignedOrders = orderService.getOrdersByShipper(shipper.getId(), status);
+        List<Order> allOrders = orderService.getAllOrders();
 
-        // Nếu chưa được gán đơn cụ thể, hiển thị thêm các đơn đang chờ giao (PICKED_UP hoặc CONFIRMED)
-        if (assignedOrders.isEmpty()) {
-            assignedOrders = orderService.getAllOrders().stream()
-                    .filter(o -> o.getStatus() == OrderStatus.PICKED_UP || o.getStatus() == OrderStatus.SHIPPING)
+        List<Order> assignedOrders;
+        if (status != null) {
+            assignedOrders = allOrders.stream()
+                    .filter(o -> o.getStatus() == status && (o.getShipper() == null || o.getShipper().getId().equals(shipper.getId())))
+                    .toList();
+        } else {
+            // Mặc định hiển thị toàn bộ các đơn của tài xế HOẶC đơn đang trong quy trình vận chuyển (CONFIRMED, PICKED_UP, SHIPPING, DELIVERED)
+            assignedOrders = allOrders.stream()
+                    .filter(o -> (o.getShipper() != null && o.getShipper().getId().equals(shipper.getId()))
+                            || o.getStatus() == OrderStatus.PICKED_UP
+                            || o.getStatus() == OrderStatus.SHIPPING
+                            || o.getStatus() == OrderStatus.CONFIRMED
+                            || o.getStatus() == OrderStatus.DELIVERED)
                     .toList();
         }
 
@@ -63,6 +72,24 @@ public class ShipperController {
         model.addAttribute("totalCod", totalCod);
 
         return "shipper/dashboard";
+    }
+
+    @PostMapping("/orders/{id}/start-shipping")
+    public String startShipping(
+            @PathVariable Long id,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            RedirectAttributes redirectAttributes) {
+
+        if (userDetails == null) return "redirect:/auth/login";
+
+        try {
+            orderService.updateOrderStatusWithRoleCheck(id, OrderStatus.SHIPPING, userDetails.getUser());
+            redirectAttributes.addFlashAttribute("successMessage", "Xe cứu hộ sàn trượt VIP đã xuất phát vận chuyển siêu môtô đến địa chỉ khách hàng!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+
+        return "redirect:/shipper/dashboard";
     }
 
     @PostMapping("/orders/{id}/deliver")

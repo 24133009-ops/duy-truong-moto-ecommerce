@@ -1202,3 +1202,153 @@ label,
         padding: 8px 0 !important;
     }
 }
+
+
+/* ========================================================
+   6-STEP DELIVERY LIFECYCLE STEPPER (BÀN GIAO SIÊU XE 6 CHẶNG VIP)
+   ======================================================== */
+.delivery-stepper-panel {
+    background: rgba(15, 18, 29, 0.95);
+    border: 1.5px solid rgba(212, 175, 55, 0.35);
+    border-radius: 20px;
+    padding: 24px 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(212, 175, 55, 0.05);
+}
+
+.delivery-stepper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
+    padding: 10px 0;
+    margin: 15px 0 5px 0;
+}
+
+.delivery-stepper-line {
+    position: absolute;
+    top: 32px;
+    left: 8%;
+    right: 8%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 4px;
+    z-index: 1;
+}
+
+.delivery-stepper-progress {
+    position: absolute;
+    top: 32px;
+    left: 8%;
+    height: 4px;
+    background: linear-gradient(90deg, #10b981 0%, #d4af37 100%);
+    border-radius: 4px;
+    z-index: 2;
+    transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.stepper-step {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    flex: 1;
+}
+
+.stepper-icon-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #0f121d;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+}
+
+.stepper-step.completed .stepper-icon-circle {
+    background: #10b981;
+    border-color: #10b981;
+    color: #ffffff;
+    box-shadow: 0 0 14px rgba(16, 185, 129, 0.6);
+}
+
+.stepper-step.active .stepper-icon-circle {
+    background: linear-gradient(135deg, #d4af37, #b8860b);
+    border-color: #ffd700;
+    color: #000000;
+    box-shadow: 0 0 18px rgba(212, 175, 55, 0.9);
+    transform: scale(1.15);
+    animation: pulseGold 2s infinite;
+}
+
+@keyframes pulseGold {
+    0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(212, 175, 55, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+}
+
+.stepper-step-num {
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #64748b;
+    margin-bottom: 2px;
+}
+
+.stepper-step.completed .stepper-step-num {
+    color: #10b981;
+}
+
+.stepper-step.active .stepper-step-num {
+    color: #ffd700;
+}
+
+.stepper-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #94a3b8;
+    margin-bottom: 3px;
+    line-height: 1.2;
+}
+
+.stepper-step.completed .stepper-title {
+    color: #e2e8f0;
+}
+
+.stepper-step.active .stepper-title {
+    color: #ffffff;
+    font-weight: 800;
+}
+
+.stepper-desc {
+    font-size: 0.65rem;
+    color: #64748b;
+    max-width: 105px;
+    line-height: 1.25;
+}
+
+.stepper-step.completed .stepper-desc {
+    color: #94a3b8;
+}
+
+.stepper-step.active .stepper-desc {
+    color: #ffd700;
+}
+
+@media (max-width: 768px) {
+    .delivery-stepper {
+        overflow-x: auto;
+        padding-bottom: 15px;
+    }
+    .stepper-step {
+        min-width: 90px;
+    }
+}

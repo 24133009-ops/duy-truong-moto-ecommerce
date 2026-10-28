@@ -11,6 +11,7 @@
 <body>
 
     <!-- Header / Navbar Include -->
+    <div th:replace="~{layout/main :: topbar}"></div>
     <div th:replace="~{layout/main :: nav}"></div>
 
     <div class="container py-5">
@@ -23,6 +24,88 @@
                   th:classappend="${order.status.name() == 'NOT_PROCESSED' ? 'badge-status-new' : (order.status.name() == 'DELIVERED' ? 'badge-status-delivered' : 'badge-status-confirmed')}"
                   th:text="${order.status.displayName}">
             </span>
+        </div>
+
+        <!-- 6-STEP VIP DELIVERY PROGRESS STEPPER (TIẾN TRÌNH BÀN GIAO SIÊU XE 6 CHẶNG LIÊN KẾT) -->
+        <div class="delivery-stepper-panel" th:with="stName=${order.status.name()}, stepIdx=${stName == 'NOT_PROCESSED' ? 1 : (stName == 'CONFIRMED' ? 2 : (stName == 'PICKED_UP' ? 3 : (stName == 'SHIPPING' ? 4 : (stName == 'DELIVERED' ? 6 : 0))))}">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-2 pb-2 border-bottom border-secondary border-opacity-25">
+                <div>
+                    <span class="badge bg-gold text-dark fw-bold small me-2"><i class="fa-solid fa-truck-fast me-1"></i> DUY TRUONG EXPRESS VIP</span>
+                    <strong class="text-white">TIẾN TRÌNH BÀN GIAO XE 6 CHẶNG CHUYÊN NGHIỆP</strong>
+                </div>
+                <div class="small">
+                    <span th:if="${stName == 'CANCELLED'}" class="badge bg-danger fs-6"><i class="fa-solid fa-ban me-1"></i> ĐƠN HÀNG ĐÃ HỦY</span>
+                    <span th:if="${stName == 'REFUNDED'}" class="badge bg-secondary fs-6"><i class="fa-solid fa-rotate-left me-1"></i> ĐÃ HOÀN TIỀN</span>
+                    <span th:if="${stName != 'CANCELLED' and stName != 'REFUNDED'}" class="text-gold fw-bold">
+                        <i class="fa-solid fa-circle-check text-success me-1"></i> Đang ở Chặng: <span th:text="${stepIdx == 6 ? '6/6 (Hoàn Tất Bàn Giao & Bảo Hành 3 Năm)' : stepIdx + '/6 (' + order.status.displayName + ')'}"></span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="delivery-stepper" th:if="${stName != 'CANCELLED' and stName != 'REFUNDED'}">
+                <div class="delivery-stepper-line"></div>
+                <div class="delivery-stepper-progress" th:style="'width: ' + ${(stepIdx - 1) * 20} + '%;'"></div>
+
+                <!-- Chặng 1 -->
+                <div class="stepper-step" th:classappend="${stepIdx > 1 ? 'completed' : (stepIdx == 1 ? 'active' : '')}">
+                    <div class="stepper-icon-circle">
+                        <i th:class="${stepIdx > 1 ? 'fa-solid fa-check' : 'fa-solid fa-file-invoice-dollar'}"></i>
+                    </div>
+                    <div class="stepper-step-num">Chặng 1</div>
+                    <div class="stepper-title">Đặt Cọc Online</div>
+                    <div class="stepper-desc">Khách đặt cọc VNPay / Chuyển khoản</div>
+                </div>
+
+                <!-- Chặng 2 -->
+                <div class="stepper-step" th:classappend="${stepIdx > 2 ? 'completed' : (stepIdx == 2 ? 'active' : '')}">
+                    <div class="stepper-icon-circle">
+                        <i th:class="${stepIdx > 2 ? 'fa-solid fa-check' : 'fa-solid fa-stamp'}"></i>
+                    </div>
+                    <div class="stepper-step-num">Chặng 2</div>
+                    <div class="stepper-title">Duyệt Hồ Sơ HQCN</div>
+                    <div class="stepper-desc">Showroom kiểm tra số khung, HQCN 100%</div>
+                </div>
+
+                <!-- Chặng 3 -->
+                <div class="stepper-step" th:classappend="${stepIdx > 3 ? 'completed' : (stepIdx == 3 ? 'active' : '')}">
+                    <div class="stepper-icon-circle">
+                        <i th:class="${stepIdx > 3 ? 'fa-solid fa-check' : 'fa-solid fa-warehouse'}"></i>
+                    </div>
+                    <div class="stepper-step-num">Chặng 3</div>
+                    <div class="stepper-title">Rửa Xe &amp; PDI Test</div>
+                    <div class="stepper-desc">Kỹ thuật viên siết ốc, test động cơ</div>
+                </div>
+
+                <!-- Chặng 4 -->
+                <div class="stepper-step" th:classappend="${stepIdx > 4 ? 'completed' : (stepIdx == 4 ? 'active' : '')}">
+                    <div class="stepper-icon-circle">
+                        <i th:class="${stepIdx > 4 ? 'fa-solid fa-check' : 'fa-solid fa-truck-ramp-box'}"></i>
+                    </div>
+                    <div class="stepper-step-num">Chặng 4</div>
+                    <div class="stepper-title">Xe Sàn Trượt Xuất Phát</div>
+                    <div class="stepper-desc">Đội xe chuyên dụng lăn bánh giao tận nơi</div>
+                </div>
+
+                <!-- Chặng 5 -->
+                <div class="stepper-step" th:classappend="${stepIdx > 5 ? 'completed' : (stepIdx == 5 ? 'active' : '')}">
+                    <div class="stepper-icon-circle">
+                        <i th:class="${stepIdx > 5 ? 'fa-solid fa-check' : 'fa-solid fa-key'}"></i>
+                    </div>
+                    <div class="stepper-step-num">Chặng 5</div>
+                    <div class="stepper-title">Bàn Giao &amp; Ký Nghiệm Thu</div>
+                    <div class="stepper-desc">Hạ sàn trượt, khách nhận Smartkey &amp; hồ sơ</div>
+                </div>
+
+                <!-- Chặng 6 -->
+                <div class="stepper-step" th:classappend="${stepIdx >= 6 ? 'completed' : ''}">
+                    <div class="stepper-icon-circle">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div class="stepper-step-num">Chặng 6</div>
+                    <div class="stepper-title">Kích Hoạt Bảo Hành</div>
+                    <div class="stepper-desc">Bảo hành 3 năm + Tặng 3 lần nhớt Motul</div>
+                </div>
+            </div>
         </div>
 
         <div class="row g-4">

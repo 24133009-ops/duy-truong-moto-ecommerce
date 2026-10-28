@@ -1591,6 +1591,59 @@ export default function App() {
                         <div className="price-racing" style={{ color: 'var(--gold-primary)' }}>{formatMoney(order.totalAmount)}</div>
                       </div>
                     </div>
+
+                    {/* 6-STEP VIP DELIVERY STEPPER */}
+                    {(() => {
+                      const getStepIdx = (st) => {
+                        switch (st) {
+                          case 'NOT_PROCESSED': return 1;
+                          case 'CONFIRMED': return 2;
+                          case 'PICKED_UP': return 3;
+                          case 'SHIPPING': return 4;
+                          case 'DELIVERED': return 6;
+                          default: return 2;
+                        }
+                      };
+                      const sIdx = getStepIdx(order.status);
+                      const steps = [
+                        { num: 1, title: 'Đặt Cọc', desc: 'Online VNPay', icon: 'fa-file-invoice-dollar' },
+                        { num: 2, title: 'Duyệt HQCN', desc: 'Showroom kiểm tra', icon: 'fa-stamp' },
+                        { num: 3, title: 'Xuất Kho PDI', desc: 'Siết ốc & Rửa xe', icon: 'fa-warehouse' },
+                        { num: 4, title: 'Sàn Trượt Chạy', desc: 'Vận chuyển VIP', icon: 'fa-truck-ramp-box' },
+                        { num: 5, title: 'Bàn Giao Xe', desc: 'Ký biên bản & Smartkey', icon: 'fa-key' },
+                        { num: 6, title: 'Bảo Hành 3 Năm', desc: 'Kích hoạt chính hãng', icon: 'fa-shield-halved' }
+                      ];
+                      return (
+                        <div style={{ marginTop: '18px', padding: '16px', background: 'rgba(0,0,0,0.3)', borderRadius: '14px', border: '1px solid rgba(212,175,55,0.2)' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                            <span style={{ fontSize: '0.78rem', color: 'var(--gold-light)', fontWeight: 700 }}>
+                              <i className="fa-solid fa-truck-fast me-1"></i> TIẾN TRÌNH BÀN GIAO 6 CHẶNG CHUYÊN NGHIỆP:
+                            </span>
+                            <span style={{ fontSize: '0.78rem', color: sIdx === 6 ? '#28a745' : 'var(--gold-primary)', fontWeight: 800 }}>
+                              {sIdx === 6 ? 'Chặng 6/6 • Hoàn Tất Bàn Giao & Bảo Hành 3 Năm' : `Chặng ${sIdx}/6 • Đang thực hiện`}
+                            </span>
+                          </div>
+                          <div className="delivery-stepper" style={{ margin: 0, padding: 0 }}>
+                            <div className="delivery-stepper-line" style={{ top: '22px' }}></div>
+                            <div className="delivery-stepper-progress" style={{ top: '22px', width: `${(sIdx - 1) * 20}%` }}></div>
+                            {steps.map(s => {
+                              const isCompleted = sIdx > s.num || (sIdx === 6 && s.num === 6);
+                              const isActive = sIdx === s.num && sIdx !== 6;
+                              return (
+                                <div key={s.num} className={`stepper-step ${isCompleted ? 'completed' : (isActive ? 'active' : '')}`}>
+                                  <div className="stepper-icon-circle" style={{ width: '36px', height: '36px', fontSize: '0.85rem' }}>
+                                    <i className={`fa-solid ${isCompleted ? 'fa-check' : s.icon}`}></i>
+                                  </div>
+                                  <div className="stepper-step-num">C{s.num}</div>
+                                  <div className="stepper-title" style={{ fontSize: '0.72rem' }}>{s.title}</div>
+                                  <div className="stepper-desc" style={{ fontSize: '0.62rem' }}>{s.desc}</div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      );
+                    })()}
                   </div>
                 ))}
               </div>

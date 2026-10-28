@@ -33,17 +33,47 @@ public class UserService {
 
     @Transactional
     public User registerUser(String firstname, String lastname, String email, String phone, String rawPassword) {
-        if (userRepository.existsByEmail(email)) {
-            throw new IllegalArgumentException("Email đã tồn tại trong hệ thống Duy Truong Motor!");
+        String cleanEmail = email.trim().toLowerCase();
+        String cleanPhone = (phone != null && !phone.isBlank()) ? phone.trim() : null;
+
+        User existingByEmail = userRepository.findByEmail(cleanEmail).orElse(null);
+        if (existingByEmail != null) {
+            if (Boolean.TRUE.equals(existingByEmail.getIsEmailActive())) {
+                throw new IllegalArgumentException("Email " + cleanEmail + " đã được đăng ký và kích hoạt trong hệ thống Duy Truong Motor! Vui lòng đăng nhập.");
+            }
+            // Tài khoản chưa kích hoạt OTP: cho phép cập nhật thông tin và cấp mã OTP mới
+            if (cleanPhone != null) {
+                User phoneOwner = userRepository.findByPhone(cleanPhone).orElse(null);
+                if (phoneOwner != null && !phoneOwner.getId().equals(existingByEmail.getId())) {
+                    throw new IllegalArgumentException("Số điện thoại " + cleanPhone + " đã được liên kết với một tài khoản khác!");
+                }
+            }
+            String otp = emailOtpService.generateOtp();
+            existingByEmail.setFirstname(firstname);
+            existingByEmail.setLastname(lastname);
+            existingByEmail.setPhone(cleanPhone);
+            existingByEmail.setPassword(passwordEncoder.encode(rawPassword));
+            existingByEmail.setOtpCode(otp);
+            existingByEmail.setOtpExpiry(LocalDateTime.now().plusMinutes(5));
+            User saved = userRepository.save(existingByEmail);
+            emailOtpService.sendOtpEmail(cleanEmail, otp, "Kích hoạt tài khoản thành viên");
+            return saved;
+        }
+
+        // Kiểm tra trùng số điện thoại với tài khoản khác
+        if (cleanPhone != null && userRepository.existsByPhone(cleanPhone)) {
+            throw new IllegalArgumentException("Số điện thoại " + cleanPhone + " đã được đăng ký cho một tài khoản khác trong hệ thống!");
         }
 
         String otp = emailOtpService.generateOtp();
+        String slug = (firstname + "-" + lastname).toLowerCase().replaceAll("[^a-z0-9]+", "-") + "-" + System.currentTimeMillis();
 
         User user = User.builder()
                 .firstname(firstname)
                 .lastname(lastname)
-                .email(email)
-                .phone(phone)
+                .slug(slug)
+                .email(cleanEmail)
+                .phone(cleanPhone)
                 .password(passwordEncoder.encode(rawPassword))
                 .role(Role.ROLE_USER)
                 .isEmailActive(false)
@@ -54,7 +84,7 @@ public class UserService {
                 .build();
 
         User saved = userRepository.save(user);
-        emailOtpService.sendOtpEmail(email, otp, "Kích hoạt tài khoản thành viên");
+        emailOtpService.sendOtpEmail(cleanEmail, otp, "Kích hoạt tài khoản thành viên");
         return saved;
     }
 

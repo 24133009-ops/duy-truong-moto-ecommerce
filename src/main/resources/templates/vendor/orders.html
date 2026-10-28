@@ -11,6 +11,7 @@
 <body>
 
     <!-- Header / Navbar Include -->
+    <div th:replace="~{layout/main :: topbar}"></div>
     <div th:replace="~{layout/main :: nav}"></div>
 
     <div class="container py-5">
@@ -57,11 +58,16 @@
                             </td>
                             <td class="text-secondary small" style="max-width: 200px;" th:text="${order.address}"></td>
                             <td class="fw-bold text-gradient-gold" th:text="${order.amountToStore != null ? #numbers.formatDecimal(order.amountToStore, 0, 'POINT', 0, 'COMMA') + ' đ' : '0 đ'}"></td>
-                            <td>
-                                <span class="badge badge-status"
-                                      th:classappend="${order.status != null and order.status.name() == 'NOT_PROCESSED' ? 'badge-status-new' : (order.status != null and order.status.name() == 'DELIVERED' ? 'badge-status-delivered' : 'badge-status-confirmed')}"
-                                      th:text="${order.status != null ? order.status.displayName : 'Đang xử lý'}">
-                                </span>
+                            <td th:with="stName=${order.status != null ? order.status.name() : ''}, stepIdx=${stName == 'NOT_PROCESSED' ? 1 : (stName == 'CONFIRMED' ? 2 : (stName == 'PICKED_UP' ? 3 : (stName == 'SHIPPING' ? 4 : (stName == 'DELIVERED' ? 6 : 0))))}">
+                                <div class="badge bg-gold text-dark fw-bold small mb-1" th:if="${stName != 'CANCELLED' and stName != 'REFUNDED'}">
+                                    <i class="fa-solid fa-truck-fast me-1"></i> Chặng ${stepIdx}/6
+                                </div>
+                                <div>
+                                    <span class="badge badge-status"
+                                          th:classappend="${order.status != null and order.status.name() == 'NOT_PROCESSED' ? 'badge-status-new' : (order.status != null and order.status.name() == 'DELIVERED' ? 'badge-status-delivered' : 'badge-status-confirmed')}"
+                                          th:text="${order.status != null ? order.status.displayName : 'Đang xử lý'}">
+                                    </span>
+                                </div>
                             </td>
                             <td>
                                 <form th:action="@{/vendor/orders/{id}/status(id=${order.id})}" method="post" class="d-flex align-items-center gap-1">

@@ -64,13 +64,21 @@ public class AuthApiController {
         String lname = request.getLastname() != null ? request.getLastname() : "Hàng";
         String slug = (fname + "-" + lname).toLowerCase().replaceAll("[^a-z0-9]+", "-") + "-" + System.currentTimeMillis();
 
+        String phone = (request.getPhone() != null && !request.getPhone().isBlank()) ? request.getPhone().trim() : null;
+        if (phone != null && userRepository.existsByPhone(phone)) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Số điện thoại " + phone + " đã được đăng ký trong hệ thống!"));
+        }
+        if (phone == null) {
+            phone = "09" + String.valueOf(System.currentTimeMillis()).substring(5);
+        }
+
         User user = User.builder()
                 .email(email)
                 .password(passwordEncoder.encode(request.getPassword()))
                 .firstname(fname)
                 .lastname(lname)
                 .slug(slug)
-                .phone(request.getPhone() != null ? request.getPhone() : "0900000000")
+                .phone(phone)
                 .role(Role.ROLE_USER)
                 .isEmailActive(true)
                 .isPhoneActive(true)
