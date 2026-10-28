@@ -211,18 +211,15 @@ public class ProductDto {
         } else if (brand.contains("KAWASAKI")) {
             if (!primaryColor.contains("Lime Green")) colors.add("Xanh Cốm Lime Green Huyền Thoại");
             if (!primaryColor.contains("Spark Black")) colors.add("Đen Xám Metallic Spark Black");
-        } else if (brand.contains("PORSCHE")) {
-            if (!primaryColor.contains("Shark Blue")) colors.add("Xanh Shark Blue Thể Thao");
-            if (!primaryColor.contains("Arctic Grey")) colors.add("Xám Xi Măng Arctic Grey");
-            if (!primaryColor.contains("Racing Yellow")) colors.add("Vàng Racing Yellow");
-        } else if (brand.contains("LAMBORGHINI")) {
-            if (!primaryColor.contains("Arancio Borealis")) colors.add("Cam Arancio Borealis 4 Lớp");
-            if (!primaryColor.contains("Giallo Inti")) colors.add("Vàng Giallo Inti");
-            if (!primaryColor.contains("Nero Noctis")) colors.add("Đen Nero Noctis Nhám");
-        } else if (brand.contains("FERRARI")) {
-            if (!primaryColor.contains("Giallo Modena")) colors.add("Vàng Giallo Modena");
-            if (!primaryColor.contains("Blu Tour")) colors.add("Xanh Biển Blu Tour de France");
-            if (!primaryColor.contains("Nero Daytona")) colors.add("Đen Bóng Nero Daytona");
+        } else if (brand.contains("APRILIA")) {
+            if (!primaryColor.contains("Racing Black")) colors.add("Đen Nhám Aprilia Racing Black");
+            if (!primaryColor.contains("Speed White")) colors.add("Trắng Đỏ Speed White");
+        } else if (brand.contains("SUZUKI")) {
+            if (!primaryColor.contains("Glass Sparkle")) colors.add("Đen Nhám Glass Sparkle Black");
+            if (!primaryColor.contains("Triton Blue")) colors.add("Xanh Suzuki GP Metallic Triton Blue");
+        } else if (brand.contains("TRIUMPH")) {
+            if (!primaryColor.contains("Carnival Red")) colors.add("Đỏ Đậm Carnival Red");
+            if (!primaryColor.contains("Sapphire Black")) colors.add("Đen Huyền Bí Sapphire Black");
         } else if ("oto".equalsIgnoreCase(cat)) {
             colors.add("Đen Huyền Bí Ánh Kim");
             colors.add("Trắng Ngọc Trai Cao Cấp");
