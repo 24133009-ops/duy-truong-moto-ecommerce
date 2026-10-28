@@ -657,9 +657,9 @@ export default function App() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '18px', fontSize: '0.82rem' }}>
           <div style={{ color: 'var(--gold-light)', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <i className="fa-solid fa-crown text-gold"></i>
-            <strong style={{ color: '#fff', letterSpacing: '0.5px' }}>DUY TRƯƠNG MOTO</strong>
+            <strong style={{ color: '#fff', letterSpacing: '0.5px' }}>DUY TRƯƠNG MOTOR</strong>
             <span style={{ color: 'rgba(255,255,255,0.2)' }}>|</span>
-            <span style={{ color: 'var(--gold-primary)', fontStyle: 'italic', fontWeight: 600 }}>"Mua của người chán - &amp; Bán cho người cần"</span>
+            <span style={{ color: 'var(--gold-primary)', fontStyle: 'italic', fontWeight: 600 }}>"Mua của người chán - Bán cho người cần"</span>
           </div>
           <div className="d-none d-xl-flex" style={{ color: '#10b981', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.78rem' }}>
             <i className="fa-solid fa-circle-check"></i> 100% HQCN • Sang Tên 24h • Giao Xe Sàn Trượt VIP
@@ -717,7 +717,7 @@ export default function App() {
           </div>
           <div>
             <div className="brand-title" style={{ fontSize: '1.45rem', lineHeight: 1.1 }}>
-              <span className="text-gradient-gold">DUY TRƯƠNG</span> <span style={{ color: '#fff' }}>MOTO</span>
+              <span className="text-gradient-gold">DUY TRƯƠNG</span> <span style={{ color: '#fff' }}>MOTOR</span>
             </div>
             <div style={{ fontSize: '0.62rem', color: 'var(--gold-primary)', letterSpacing: '1.5px', fontWeight: 800 }}>
               CHUỖI MÔ TÔ PKL, CÀO CÀO &amp; ĐỒ BẢO HỘ
