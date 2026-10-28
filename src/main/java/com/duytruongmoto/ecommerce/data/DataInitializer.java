@@ -1,4 +1,4 @@
-package com.duytruongmoto.ecommerce.data;
+﻿package com.duytruongmoto.ecommerce.data;
 
 import com.duytruongmoto.ecommerce.entity.*;
 import com.duytruongmoto.ecommerce.repository.*;
@@ -210,6 +210,28 @@ public class DataInitializer implements CommandLineRunner {
             });
 
             log.info(">>> Đã dọn dẹp triệt để các tài khoản trùng tên miền @duytruongmotor.com trên database hiện hữu!");
+
+            // Tự động dọn dẹp các đơn đặt xe bị trùng lặp do bấm đúp submit
+            try {
+                List<Order> allOrders = orderRepository.findAll();
+                Map<String, Order> seenOrders = new HashMap<>();
+                for (Order o : allOrders) {
+                    if (o.getUser() == null || o.getCreatedAt() == null) continue;
+                    String orderKey = o.getUser().getId() + "_" + o.getAmountFromUser() + "_" + o.getCreatedAt().getHour() + "_" + o.getCreatedAt().getMinute();
+                    if (seenOrders.containsKey(orderKey)) {
+                        Order keep = seenOrders.get(orderKey);
+                        if (!keep.getId().equals(o.getId())) {
+                            log.info(">>> [DataInitializer] Xóa đơn hàng bị tạo trùng lặp: {} (giữ đơn gốc {})", o.getOrderCode(), keep.getOrderCode());
+                            orderItemRepository.deleteAll(orderItemRepository.findByOrderId(o.getId()));
+                            orderRepository.delete(o);
+                        }
+                    } else {
+                        seenOrders.put(orderKey, o);
+                    }
+                }
+            } catch (Exception ex) {
+                log.warn("Lưu ý khi dọn dẹp đơn trùng: {}", ex.getMessage());
+            }
         } catch (Exception ex) {
             log.warn("Lưu ý khi dọn dẹp user trùng lặp: {}", ex.getMessage());
         }

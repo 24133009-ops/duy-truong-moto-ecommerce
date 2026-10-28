@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -16,7 +16,7 @@
     <div class="container py-5">
         <h2 class="fw-bold text-white mb-4"><i class="fa-solid fa-file-invoice-dollar text-gold me-2"></i> THANH TOÁN & ĐẶT CỌC GIỮ XE</h2>
 
-        <form th:action="@{/checkout/process}" method="post">
+        <form th:action="@{/checkout/process}" method="post" id="checkoutForm" onsubmit="return handleCheckoutSubmit(this);">
             <div class="row g-5">
                 <!-- Left: Shipping & Payment Info -->
                 <div class="col-lg-7">
@@ -146,7 +146,7 @@
                             <span class="fs-4 fw-black text-gradient-gold" th:text="${#numbers.formatDecimal(cartTotal, 0, 'POINT', 0, 'COMMA')} + ' đ'"></span>
                         </div>
 
-                        <button type="submit" class="btn btn-gold w-100 py-3 fw-bold shadow fs-5">
+                        <button type="submit" id="btnCheckoutSubmit" class="btn btn-gold w-100 py-3 fw-bold shadow fs-5">
                             <i class="fa-solid fa-lock me-2"></i> XÁC NHẬN ĐẶT ĐƠN HÀNG
                         </button>
                     </div>
@@ -157,6 +157,20 @@
 
     <!-- Footer Include -->
     <div th:replace="~{layout/main :: footer}"></div>
+        <script>
+        let isSubmitting = false;
+        function handleCheckoutSubmit(form) {
+            if (isSubmitting) return false;
+            isSubmitting = true;
+            const btn = document.getElementById('btnCheckoutSubmit');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> DANG TAO DON &amp; KET NOI VNPAY...';
+                btn.style.opacity = '0.7';
+            }
+            return true;
+        }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

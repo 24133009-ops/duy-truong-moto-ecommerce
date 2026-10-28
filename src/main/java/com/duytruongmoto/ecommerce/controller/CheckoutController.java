@@ -140,8 +140,8 @@ public class CheckoutController {
                 if (Boolean.TRUE.equals(order.getIsPaidBefore()) && order.getStatus() == OrderStatus.CONFIRMED) {
                     log.info(">>> [VNPAY Return] Đơn hàng {} đã được xác nhận cọc trước đó (Idempotent).", orderCode);
                 } else {
-                    order.setIsPaidBefore(true);
-                    orderService.updateOrderStatus(order.getId(), OrderStatus.CONFIRMED);
+                    String txnNo = allParams.getOrDefault("vnp_TransactionNo", "VNPAY-" + System.currentTimeMillis());
+                    orderService.markOrderPaid(order.getId(), txnNo);
                     log.info(">>> [VNPAY Return] Xác nhận thanh toán cọc thành công cho đơn hàng: {}", orderCode);
                 }
             });
@@ -178,8 +178,8 @@ public class CheckoutController {
         }
 
         if ("00".equals(responseCode)) {
-            order.setIsPaidBefore(true);
-            orderService.updateOrderStatus(order.getId(), OrderStatus.CONFIRMED);
+            String txnNo = allParams.getOrDefault("vnp_TransactionNo", "IPN-" + System.currentTimeMillis());
+            orderService.markOrderPaid(order.getId(), txnNo);
             log.info(">>> [VNPAY IPN] Đã xác nhận đơn hàng {} qua IPN", orderCode);
             return org.springframework.http.ResponseEntity.ok(Map.of("RspCode", "00", "Message", "Confirm Success"));
         } else {

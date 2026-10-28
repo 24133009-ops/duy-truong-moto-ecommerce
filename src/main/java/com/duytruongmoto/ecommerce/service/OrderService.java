@@ -67,6 +67,19 @@ public class OrderService {
         totalAmount = totalAmount.subtract(discountAmount);
         if (totalAmount.compareTo(BigDecimal.ZERO) < 0) totalAmount = BigDecimal.ZERO;
 
+        // Chống tạo đơn trùng lặp khi người dùng bấm liên tiếp hoặc thử lại
+        java.time.LocalDateTime duplicateWindow = java.time.LocalDateTime.now().minusSeconds(30);
+        List<Order> recentUserOrders = orderRepository.findByUserIdOrderByCreatedAtDesc(userId);
+        if (!recentUserOrders.isEmpty()) {
+            Order lastOrder = recentUserOrders.get(0);
+            if (lastOrder.getCreatedAt() != null 
+                    && lastOrder.getCreatedAt().isAfter(duplicateWindow)
+                    && lastOrder.getStatus() == OrderStatus.NOT_PROCESSED
+                    && lastOrder.getAmountFromUser().compareTo(totalAmount) == 0) {
+                return lastOrder;
+            }
+        }
+
         // Hoa hồng sàn (ví dụ 5% hoặc theo cấu hình commission của store)
         BigDecimal commissionRate = (store.getCommission() != null) ? store.getCommission().getCost() : BigDecimal.valueOf(5.0);
         BigDecimal amountToGD = subtotal.multiply(commissionRate).divide(BigDecimal.valueOf(100));
@@ -121,6 +134,18 @@ public class OrderService {
         cartItemRepository.deleteByCartId(cart.getId());
 
         return savedOrder;
+    }
+
+    @Transactional
+    public void markOrderPaid(Long orderId, String transactionNo) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Đơn hàng không tồn tại"));
+        order.setIsPaidBefore(true);
+        order.setStatus(OrderStatus.CONFIRMED);
+        String historyEntry = "\n[" + LocalDateTime.now() + "] Đã thanh toán cọc VNPAY thành công (Mã GD: " + transactionNo + ")";
+        order.setNote((order.getNote() != null ? order.getNote() : "") + historyEntry);
+        order.setUpdatedAt(LocalDateTime.now());
+        orderRepository.save(order);
     }
 
     @Transactional
