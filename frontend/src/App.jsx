@@ -76,25 +76,7 @@ export default function App() {
     }
   };
 
-  // Dynamic document.title & Scroll To Top
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    if (activeProductDetail) {
-      document.title = `${activeProductDetail.name} | Duy Trương Motor`;
-      return;
-    }
-    const titleMap = {
-      home: 'Duy Trương Motor | Siêu Thị Mô Tô PKL & Xe Cào Cào Uy Tín',
-      products: 'Kho Mô Tô PKL & Xe Cào Cào Địa Hình | Duy Trương Motor',
-      showrooms: 'Hệ Thống 3 Showroom Toàn Quốc | Duy Trương Motor',
-      orders: 'Tra Cứu Đơn Hàng & Đặt Cọc | Duy Trương Motor',
-      vendor: 'Kênh Quản Trị Showroom | Duy Trương Motor',
-      admin: 'Trung Tâm Quản Trị Hệ Thống | Duy Trương Motor',
-      shipper: 'Phân Hệ Vận Tải Sàn Trượt | Duy Trương Motor',
-      notfound: '404 Không Tìm Thấy Trang | Duy Trương Motor'
-    };
-    document.title = titleMap[currentTab] || 'Duy Trương Motor | Siêu Thị Mô Tô PKL & Xe Cào Cào Uy Tín';
-  }, [currentTab, activeProductDetail]);
+
 
   const handleImgFallback = (e) => {
     e.currentTarget.onerror = null;
@@ -185,6 +167,26 @@ export default function App() {
   const [isVnPayModalOpen, setIsVnPayModalOpen] = useState(false);
   const [vnPayCountdown, setVnPayCountdown] = useState(899); // 14:59 live countdown timer
   const [activeProductDetail, setActiveProductDetail] = useState(null);
+
+  // Dynamic document.title & Scroll To Top
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (activeProductDetail) {
+      document.title = `${activeProductDetail.name} | Duy Trương Motor`;
+      return;
+    }
+    const titleMap = {
+      home: 'Duy Trương Motor | Siêu Thị Mô Tô PKL & Xe Cào Cào Uy Tín',
+      products: 'Kho Mô Tô PKL & Xe Cào Cào Địa Hình | Duy Trương Motor',
+      showrooms: 'Hệ Thống 3 Showroom Toàn Quốc | Duy Trương Motor',
+      orders: 'Tra Cứu Đơn Hàng & Đặt Cọc | Duy Trương Motor',
+      vendor: 'Kênh Quản Trị Showroom | Duy Trương Motor',
+      admin: 'Trung Tâm Quản Trị Hệ Thống | Duy Trương Motor',
+      shipper: 'Phân Hệ Vận Tải Sàn Trượt | Duy Trương Motor',
+      notfound: '404 Không Tìm Thấy Trang | Duy Trương Motor'
+    };
+    document.title = titleMap[currentTab] || 'Duy Trương Motor | Siêu Thị Mô Tô PKL & Xe Cào Cào Uy Tín';
+  }, [currentTab, activeProductDetail]);
   const [isAddBikeModalOpen, setIsAddBikeModalOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [selectedDetailColor, setSelectedDetailColor] = useState('');
@@ -825,13 +827,42 @@ export default function App() {
             <i className="fa-solid fa-cart-shopping"></i> Giỏ ({cart.length})
           </button>
 
-          <div className="header-user-badge" onClick={() => navigateTab('orders')}>
+          <div className="header-user-badge" onClick={() => navigateTab('orders')} title="Xem đơn hàng & tài khoản">
             <img src={currentUser.avatar} alt="Avatar" style={{ width: '32px', height: '32px', borderRadius: '50%', border: '2px solid var(--gold-primary)', objectFit: 'cover' }} />
             <div style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>
               <div style={{ fontWeight: 700, color: '#fff', maxWidth: '100px', overflow: 'hidden', textOverflow: 'ellipsis' }}>{currentUser.name}</div>
               <span style={{ color: 'var(--gold-primary)', fontSize: '0.65rem', fontWeight: 700 }}>{currentUser.levelTitle || currentUser.name}</span>
             </div>
           </div>
+
+          {/* Prominent Direct Logout Button (Luôn hiển thị rõ ràng, không giấu trong hốc) */}
+          <button 
+            type="button"
+            onClick={handleLogout} 
+            className="btn-logout-header"
+            style={{
+              background: 'rgba(239, 68, 68, 0.2)',
+              border: '1.5px solid #ef4444',
+              color: '#fff',
+              borderRadius: '9999px',
+              padding: '0 16px',
+              height: '38px',
+              fontWeight: 700,
+              fontSize: '0.82rem',
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              flexShrink: 0,
+              whiteSpace: 'nowrap',
+              boxShadow: '0 4px 12px rgba(239,68,68,0.3)',
+              transition: 'all 0.2s'
+            }}
+            title="Đăng xuất khỏi hệ thống"
+          >
+            <i className="fa-solid fa-right-from-bracket text-danger" style={{ color: '#ef4444' }}></i>
+            <span style={{ color: '#fca5a5' }}>Đăng Xuất</span>
+          </button>
         </div>
       </header>
 

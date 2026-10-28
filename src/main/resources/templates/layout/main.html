@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${pageTitle != null ? pageTitle + ' | Duy Trương Motor' : 'Duy Trương Motor | Siêu Thị Mô Tô PKL, Xe Cào Cào &amp; Đồ Bảo Hộ Chính Hãng'}">Duy Trương Motor | Siêu Thị Mô Tô PKL, Xe Cào Cào &amp; Đồ Bảo Hộ Chính Hãng</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23D4AF37'><path d='M19 12h-2V9.5a2.5 2.5 0 0 0-5 0V12H5a3 3 0 0 0-3 3v2h2a3 3 0 0 0 6 0h4a3 3 0 0 0 6 0h2v-2a3 3 0 0 0-3-3zm-12 5a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm10 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2z'/></svg>" />
+    <link rel="icon" type="image/svg+xml" th:href="@{/favicon.svg}" />
     <meta name="description" content="Duy Trương Motor - Hệ thống chuỗi Showroom phân phối mô tô phân khối lớn, xe cào cào địa hình và đồ bảo hộ AGV, Dainese, Alpinestars, pô độ Akrapovic chính hãng tại TP.HCM, Hà Nội, Đà Nẵng. 100% HQCN, giao xe sàn trượt VIP." />
 
     <!-- Open Graph / Zalo / Facebook Share -->
@@ -28,7 +28,7 @@
 <body>
 
     <!-- 1. TOP UTILITY BAR: ROLE SWITCHER HUD + HOTLINE & SLOGAN (Tích hợp 1 thanh tinh gọn, sang trọng) -->
-    <div class="py-2 border-bottom border-secondary" style="background: #07090e; font-size: 0.8rem;">
+    <div th:fragment="topbar" class="py-2 border-bottom border-secondary" style="background: #07090e; font-size: 0.8rem;">
         <div class="container-fluid px-4 d-flex flex-wrap justify-content-between align-items-center gap-2">
             <div class="top-bar-role-switcher d-flex align-items-center gap-2 flex-wrap">
                 <span class="badge bg-gold text-dark fw-bold small"><i class="fa-solid fa-sliders me-1"></i> PHÂN HỆ:</span>
@@ -42,13 +42,18 @@
                 <span class="text-gold-light"><i class="fa-solid fa-quote-left text-gold me-1"></i> MUA CỦA NGƯỜI CHÁN - BÁN CHO NGƯỜI CẦN</span>
                 <span><i class="fa-solid fa-phone text-gold me-1"></i> Hotline: <strong class="text-gold">0903.456.789</strong></span>
                 <span><i class="fa-solid fa-location-dot text-gold me-1"></i> Toàn Quốc (3 Showroom)</span>
+                <span sec:authorize="isAuthenticated()" class="ms-2">
+                    <form th:action="@{/auth/logout}" method="post" class="d-inline m-0 p-0">
+                        <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-2 fw-bold rounded-pill" style="font-size:0.72rem;"><i class="fa-solid fa-right-from-bracket me-1"></i>Đăng xuất</button>
+                    </form>
+                </span>
             </div>
         </div>
     </div>
 
 
     <!-- 3. Main Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-luxury">
+    <nav th:fragment="nav" class="navbar navbar-expand-lg navbar-luxury">
         <div class="container-fluid px-xl-4 px-3">
             <a class="navbar-brand-logo" th:href="@{/home}">
                 <div class="logo-icon">
@@ -125,13 +130,13 @@
                         </a>
                     </div>
 
-                    <!-- User Account & Direct Logout Compact Pill Group (Gọn gàng, nằm chung pill với gmail, không bị tràn màn hình) -->
-                    <div class="d-inline-flex align-items-center bg-dark border border-secondary rounded-pill p-1 shadow-sm flex-nowrap" sec:authorize="isAuthenticated()">
+                    <!-- User Account & Direct Logout (Hiển thị tách biệt, Nút Đăng Xuất Đỏ Nổi Bật) -->
+                    <div class="d-flex align-items-center gap-2 flex-nowrap" sec:authorize="isAuthenticated()">
                         <!-- Dropdown toggle for Account Menu -->
                         <div class="dropdown">
-                            <button class="btn btn-dark btn-sm rounded-pill py-1 px-2 text-gold d-flex align-items-center gap-1 border-0 dropdown-toggle" type="button" data-bs-toggle="dropdown" title="Menu tài khoản">
-                                <i class="fa-solid fa-circle-user text-gold"></i>
-                                <span sec:authentication="name" class="fw-bold text-gold small text-truncate d-inline-block" style="max-width: 140px; vertical-align: middle;">Tài khoản</span>
+                            <button class="btn btn-dark border border-secondary rounded-pill py-2 px-3 text-gold d-flex align-items-center gap-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" title="Menu tài khoản">
+                                <i class="fa-solid fa-circle-user text-gold fs-6"></i>
+                                <span sec:authentication="name" class="fw-bold text-gold small text-truncate d-inline-block" style="max-width: 140px;">Tài khoản</span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow-lg border-secondary p-2 mt-2">
                                 <li><a class="dropdown-item py-2" th:href="@{/user/profile}"><i class="fa-solid fa-user-gear me-2 text-gold"></i> Hồ sơ &amp; Sổ địa chỉ</a></li>
@@ -148,17 +153,22 @@
                                 <li sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
                                     <a class="dropdown-item py-2 text-danger fw-bold" th:href="@{/admin/dashboard}"><i class="fa-solid fa-shield-halved me-2"></i> Admin Quản Trị Hệ Thống</a>
                                 </li>
+                                <li><hr class="dropdown-divider border-secondary"></li>
+                                <li>
+                                    <form th:action="@{/auth/logout}" method="post" class="m-0 p-0">
+                                        <button type="submit" class="dropdown-item py-2 text-danger fw-bold">
+                                            <i class="fa-solid fa-right-from-bracket me-2"></i> Đăng Xuất Khỏi Hệ Thống
+                                        </button>
+                                    </form>
+                                </li>
                             </ul>
                         </div>
 
-                        <!-- Sleek Divider -->
-                        <span class="text-secondary opacity-50 px-1">|</span>
-
-                        <!-- Logout Button right inside the pill next to Gmail -->
+                        <!-- Prominent Red Logout Button (Nút Đăng Xuất Đỏ Nổi Bật) -->
                         <form th:action="@{/auth/logout}" method="post" class="d-inline m-0 p-0">
-                            <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-2 py-1 fw-bold border-0 d-flex align-items-center gap-1 text-danger" title="Đăng xuất khỏi hệ thống">
+                            <button type="submit" class="btn btn-danger btn-sm rounded-pill px-3 py-2 fw-bold d-flex align-items-center gap-1 shadow" title="Đăng xuất khỏi hệ thống ngay lập tức">
                                 <i class="fa-solid fa-right-from-bracket"></i>
-                                <span class="small">Đăng xuất</span>
+                                <span>Đăng Xuất</span>
                             </button>
                         </form>
                     </div>
@@ -230,7 +240,7 @@
     </div>
 
     <!-- Footer -->
-    <footer class="footer-luxury">
+    <footer th:fragment="footer" class="footer-luxury">
         <div class="container">
             <div class="row g-4">
                 <div class="col-lg-4">

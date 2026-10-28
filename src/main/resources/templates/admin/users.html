@@ -13,6 +13,7 @@
 <body>
 
     <!-- Header / Navbar Include -->
+    <div th:replace="~{layout/main :: topbar}"></div>
     <div th:replace="~{layout/main :: nav}"></div>
 
     <div class="container py-5">
@@ -98,19 +99,19 @@
                                 </span>
                             </td>
                             <td>
-                                <span th:if="${u.isBlocked != true}" class="badge bg-success">
-                                    <i class="fa-solid fa-circle-check me-1"></i> Hoạt Động
-                                </span>
                                 <span th:if="${u.isBlocked == true}" class="badge bg-danger">
                                     <i class="fa-solid fa-ban me-1"></i> Đã Bị Khóa
+                                </span>
+                                <span th:unless="${u.isBlocked == true}" class="badge bg-success">
+                                    <i class="fa-solid fa-circle-check me-1"></i> Hoạt Động
                                 </span>
                             </td>
                             <td>
                                 <form th:action="@{'/admin/users/' + ${u.id} + '/toggle-lock'}" method="post" class="d-inline"
-                                    th:onsubmit="|return confirm('Bạn có chắc chắn muốn thay đổi trạng thái tài khoản: ${u.email}?');|">
-                                    <button th:if="${u.isBlocked != true}" type="submit"
+                                    onsubmit="return confirm('Bạn có chắc chắn muốn thay đổi trạng thái tài khoản này?');">
+                                    <button th:unless="${u.isBlocked == true}" type="submit"
                                         class="btn btn-outline-danger btn-sm px-2 py-1"
-                                        th:disabled="${u.email == 'admin@duytruongmoto.com' or (u.role != null and u.role.name() == 'ROLE_ADMIN' and #authentication != null and #authentication.name == u.email)}"
+                                        th:disabled="${u.email == 'admin@duytruongmoto.com' or (u.role != null and u.role.name() == 'ROLE_ADMIN')}"
                                         title="Khóa tài khoản">
                                         <i class="fa-solid fa-lock me-1"></i> Khóa
                                     </button>
