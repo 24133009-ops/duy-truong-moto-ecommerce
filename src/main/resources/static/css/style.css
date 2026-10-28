@@ -1278,8 +1278,8 @@ label,
 .delivery-stepper-line {
     position: absolute;
     top: 32px;
-    left: 8%;
-    right: 8%;
+    left: 8.33%;
+    right: 8.33%;
     height: 4px;
     background: rgba(255, 255, 255, 0.12);
     border-radius: 4px;
@@ -1289,9 +1289,10 @@ label,
 .delivery-stepper-progress {
     position: absolute;
     top: 32px;
-    left: 8%;
+    left: 8.33%;
+    max-width: 83.34% !important;
     height: 4px;
-    background: linear-gradient(90deg, #10b981 0%, #d4af37 100%);
+    background: linear-gradient(90deg, #10b981 0%, #10b981 85%, #d4af37 100%);
     border-radius: 4px;
     z-index: 2;
     transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);

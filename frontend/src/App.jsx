@@ -1982,7 +1982,7 @@ const INITIAL_DEMO_ORDERS = [
                           </div>
                           <div className="delivery-stepper" style={{ margin: 0, padding: 0 }}>
                             <div className="delivery-stepper-line" style={{ top: '22px' }}></div>
-                            <div className="delivery-stepper-progress" style={{ top: '22px', width: `${(sIdx - 1) * 20}%` }}></div>
+                            <div className="delivery-stepper-progress" style={{ top: '22px', width: `${Math.min(83.33, (sIdx - 1) * 16.667)}%` }}></div>
                             {steps.map(s => {
                               const isCompleted = sIdx > s.num || (sIdx === 6 && s.num === 6);
                               const isActive = sIdx === s.num && sIdx !== 6;
@@ -2388,7 +2388,7 @@ const INITIAL_DEMO_ORDERS = [
                           </div>
                           <div className="delivery-stepper" style={{ margin: 0, padding: 0 }}>
                             <div className="delivery-stepper-line" style={{ top: '22px' }}></div>
-                            <div className="delivery-stepper-progress" style={{ top: '22px', width: `${(sIdx - 1) * 20}%` }}></div>
+                            <div className="delivery-stepper-progress" style={{ top: '22px', width: `${Math.min(83.33, (sIdx - 1) * 16.667)}%` }}></div>
                             {steps.map(s => {
                               const isCompleted = sIdx > s.num || (sIdx === 6 && s.num === 6);
                               const isActive = sIdx === s.num && sIdx !== 6;
@@ -2727,7 +2727,7 @@ const INITIAL_DEMO_ORDERS = [
                         </div>
                         <div className="delivery-stepper" style={{ margin: 0, padding: 0 }}>
                           <div className="delivery-stepper-line" style={{ top: '18px' }}></div>
-                          <div className="delivery-stepper-progress" style={{ top: '18px', width: `${(sIdx - 1) * 20}%` }}></div>
+                          <div className="delivery-stepper-progress" style={{ top: '18px', width: `${Math.min(83.33, (sIdx - 1) * 16.667)}%` }}></div>
                           {steps.map(s => {
                             const isCompleted = sIdx > s.num || (sIdx === 6 && s.num === 6);
                             const isActive = sIdx === s.num && sIdx !== 6;

@@ -158,7 +158,7 @@
                     </div>
                     <div class="delivery-stepper" style="margin: 0; padding: 10px 0;">
                         <div class="delivery-stepper-line" style="top: 22px;"></div>
-                        <div class="delivery-stepper-progress" th:style="'top: 22px; width: ' + ${(stepIdx - 1) * 20} + '%;'"></div>
+                        <div class="delivery-stepper-progress" th:style="'top: 22px; width: ' + ${(stepIdx - 1) * 16.667} + '%; max-width: 83.33%;'"></div>
 
                         <!-- Chặng 1 -->
                         <div class="stepper-step" th:classappend="${stepIdx > 1 ? 'completed' : (stepIdx == 1 ? 'active' : '')}">

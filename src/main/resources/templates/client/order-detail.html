@@ -44,7 +44,7 @@
 
             <div class="delivery-stepper" th:if="${stName != 'CANCELLED' and stName != 'REFUNDED'}">
                 <div class="delivery-stepper-line"></div>
-                <div class="delivery-stepper-progress" th:style="'width: ' + ${(stepIdx - 1) * 20} + '%;'"></div>
+                <div class="delivery-stepper-progress" th:style="'width: ' + ${(stepIdx - 1) * 16.667} + '%; max-width: 83.33%;'"></div>
 
                 <!-- Chặng 1 -->
                 <div class="stepper-step" th:classappend="${stepIdx > 1 ? 'completed' : (stepIdx == 1 ? 'active' : '')}">
