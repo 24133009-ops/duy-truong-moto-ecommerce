@@ -153,7 +153,7 @@ public class OrderService {
             if (order.getStore() == null || order.getStore().getOwner() == null || !order.getStore().getOwner().getId().equals(actor.getId())) {
                 throw new org.springframework.security.access.AccessDeniedException("Bạn không có quyền chuyển trạng thái đơn hàng của Showroom khác!");
             }
-            if (newStatus != OrderStatus.CONFIRMED && newStatus != OrderStatus.PREPARING && newStatus != OrderStatus.PICKED_UP && newStatus != OrderStatus.CANCELLED) {
+            if (newStatus != OrderStatus.CONFIRMED && newStatus != OrderStatus.PICKED_UP && newStatus != OrderStatus.CANCELLED) {
                 throw new IllegalArgumentException("Quản lý Showroom không có quyền chuyển đơn sang trạng thái: " + newStatus.getDisplayName());
             }
         } else if (role == Role.ROLE_SHIPPER) {

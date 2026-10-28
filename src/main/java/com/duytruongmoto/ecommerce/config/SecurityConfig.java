@@ -50,13 +50,13 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.ignoringRequestMatchers("/ws/**", "/api/**"))
+            .csrf(csrf -> csrf.ignoringRequestMatchers("/ws/**", "/api/**", "/ping", "/health"))
             .authorizeHttpRequests(auth -> auth
                 // Tài nguyên công khai & REST API
                 .requestMatchers(
                     "/", "/home", "/products/**", "/stores/**", "/auth/**",
                     "/css/**", "/js/**", "/images/**", "/fonts/**", "/webjars/**",
-                    "/ws/**", "/api/**"
+                    "/ws/**", "/api/**", "/ping", "/health"
                 ).permitAll()
 
                 // Phân quyền theo vai trò cho SSR Web
