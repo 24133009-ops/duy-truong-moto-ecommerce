@@ -16,6 +16,7 @@
 <body style="background-color: #080a10; color: #f8fafc; font-family: 'Montserrat', sans-serif;">
 
     <!-- 1. Header / Navbar Include -->
+    <div th:replace="~{layout/main :: topbar}"></div>
     <div th:replace="~{layout/main :: nav}"></div>
 
     <!-- 2. Super Luxury Catalog Hero Banner -->
@@ -197,7 +198,7 @@
                         <div class="luxury-bike-card">
                             <!-- Card Image -->
                             <div class="card-img-container">
-                                <img th:src="@{${product.mainImage}}" loading="lazy" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=800&q=80';" th:alt="${product.name}" onerror="if (this.src.indexOf('unsplash') === -1) { this.src='https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=800&q=80'; }">
+                                <img th:src="@{${product.mainImage}}" loading="lazy" th:alt="${product.name}" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=800&q=80';">
                                 <div class="luxury-badge-hqcn">
                                     <i class="fa-solid fa-certificate me-1"></i> HQCN
                                 </div>
