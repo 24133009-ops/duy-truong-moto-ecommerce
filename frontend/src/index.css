@@ -1759,10 +1759,22 @@ html {
    PERMANENT NAVBAR & HEADER OVERFLOW ELIMINATION (Anti-cramping)
    ========================================================================== */
 
+/* Logo Badge - Guaranteed Fixed Anchor (Không bao giờ bị chèn/đè) */
+.logo-badge {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  cursor: pointer !important;
+  flex-shrink: 0 !important;
+  position: relative !important;
+  z-index: 30 !important;
+  margin-right: 24px !important;
+}
+
 /* Compact Circular Search Icon Button */
 .btn-search-icon {
-  width: 38px !important;
-  height: 38px !important;
+  width: 36px !important;
+  height: 36px !important;
   border-radius: 50% !important;
   background: rgba(0, 0, 0, 0.85) !important;
   border: 1.5px solid #ffd700 !important;
@@ -1782,29 +1794,36 @@ html {
   box-shadow: 0 0 16px rgba(255, 215, 0, 0.3) !important;
 }
 
-/* Ensure header-nav has ample room and never clips into '...m' or '[🎫]' */
+/* Header Navigation - CĂN TRÁI SAU LOGO, KHÔNG DÙNG CENTER TRÁNH DỒN ĐÈ VÀO LOGO */
 .header-nav {
   display: flex !important;
   align-items: center !important;
-  gap: 8px !important;
+  gap: 6px !important;
   flex: 1 1 auto !important;
-  justify-content: center !important;
-  margin: 0 12px !important;
+  justify-content: flex-start !important; /* CĂN TRÁI: Luôn bắt đầu SAU logo, không bao giờ thụt lùi đè vào chữ MOTOR */
+  margin: 0 !important;
   min-width: 0 !important;
-  overflow: visible !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+.header-nav::-webkit-scrollbar {
+  display: none !important;
 }
 
 .header-nav button, .header-nav .btn-subtle {
   white-space: nowrap !important;
   flex-shrink: 0 !important;
-  padding: 6px 12px !important;
-  font-size: 0.82rem !important;
-  height: 36px !important;
+  padding: 5px 11px !important;
+  font-size: 0.8rem !important;
+  height: 34px !important;
   display: inline-flex !important;
   align-items: center !important;
-  gap: 6px !important;
+  gap: 5px !important;
   border-radius: 9999px !important;
   border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 /* Header Right Actions - Compact & Non-wrapping */
@@ -1814,6 +1833,8 @@ html {
   gap: 8px !important;
   flex-shrink: 0 !important;
   margin-left: auto !important;
+  position: relative !important;
+  z-index: 30 !important;
 }
 
 .header-user-badge {

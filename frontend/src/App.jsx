@@ -899,7 +899,7 @@ const INITIAL_DEMO_ORDERS = [
             <div className="brand-title" style={{ fontSize: '1.45rem', lineHeight: 1.1 }}>
               <span className="text-gradient-gold">DUY TRƯƠNG</span> <span style={{ color: '#fff' }}>MOTOR</span>
             </div>
-            <div style={{ fontSize: '0.62rem', color: 'var(--gold-primary)', letterSpacing: '1.5px', fontWeight: 800 }}>
+            <div style={{ fontSize: '0.62rem', color: 'var(--gold-primary)', letterSpacing: '0.5px', fontWeight: 800 }}>
               CHUỖI MÔ TÔ PKL, CÀO CÀO &amp; ĐỒ BẢO HỘ
             </div>
           </div>
@@ -920,13 +920,13 @@ const INITIAL_DEMO_ORDERS = [
             <i className="fa-solid fa-receipt"></i> Đơn Hàng ({orders.length})
           </button>
           <button className={`btn-subtle ${currentTab === 'policy' ? 'active' : ''}`} onClick={() => navigateTab('policy')}>
-            <i className="fa-solid fa-file-shield text-gold"></i> Chính Sách &amp; Pháp Lý
+            <i className="fa-solid fa-file-shield text-gold"></i> Chính Sách HQCN
           </button>
 
           {/* Conditional Role Portals */}
           {(currentRoleKey === 'vendor' || currentRoleKey === 'vendor_tinh') && (
             <button className={`btn-subtle ${currentTab === 'vendor' ? 'active' : ''}`} style={{ borderColor: 'var(--gold-primary)', color: 'var(--gold-primary)' }} onClick={() => navigateTab('vendor')}>
-              <i className="fa-solid fa-warehouse"></i> {currentRoleKey === 'vendor' ? 'Kho HN (Khôi)' : 'Kho ĐN (Tình)'}
+              <i className="fa-solid fa-warehouse"></i> {currentRoleKey === 'vendor' ? 'Kho HN' : 'Kho ĐN'}
             </button>
           )}
           {currentRoleKey === 'admin' && (
@@ -936,7 +936,7 @@ const INITIAL_DEMO_ORDERS = [
           )}
           {currentRoleKey === 'shipper' && (
             <button className={`btn-subtle ${currentTab === 'shipper' ? 'active' : ''}`} style={{ borderColor: 'var(--cyan-neon)', color: 'var(--cyan-neon)' }} onClick={() => navigateTab('shipper')}>
-              <i className="fa-solid fa-truck-fast"></i> Phân Hệ Giao Xe
+              <i className="fa-solid fa-truck-fast"></i> Phân Hệ Shipper
             </button>
           )}
         </nav>
