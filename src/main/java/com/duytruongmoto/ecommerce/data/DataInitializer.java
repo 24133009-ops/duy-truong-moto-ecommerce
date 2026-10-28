@@ -253,44 +253,28 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     private void initVouchers() {
-        if (voucherRepository.count() == 0) {
-            voucherRepository.save(Voucher.builder()
-                .code("BIKERVIP")
-                .name("Ưu đãi khách hàng thân thiết Biker VIP")
-                .description("Giảm 5% tối đa 30.000.000 đ cho các dòng xe phân khối lớn")
-                .discountPercent(5)
-                .maxDiscountAmount(BigDecimal.valueOf(30000000))
-                .minOrderAmount(BigDecimal.valueOf(200000000))
-                .usageLimit(100)
-                .usedCount(5)
-                .isDeleted(false)
-                .build());
+        createVoucherIfAbsent("BIKERVIP", "Ưu đãi khách hàng thân thiết Biker VIP", "Giảm 5% tối đa 30.000.000 đ cho các dòng xe phân khối lớn", 5, BigDecimal.valueOf(30000000), BigDecimal.valueOf(200000000));
+        createVoucherIfAbsent("FREESHIP-VIP", "Miễn phí 100% chi phí xe sàn trượt VIP", "Hỗ trợ chi phí xe sàn trượt thủy lực VIP tận nhà cho khách hàng", 100, BigDecimal.valueOf(2000000), BigDecimal.valueOf(100000000));
+        createVoucherIfAbsent("BAOHO-500K", "Voucher Phụ Kiện Đồ Bảo Hộ", "Giảm ngay 500.000 đ cho nón AGV, giáp Dainese, găng Alpinestars", 10, BigDecimal.valueOf(500000), BigDecimal.valueOf(5000000));
+        createVoucherIfAbsent("VIP-BAODUONG-FREE", "Miễn Phí 100% Bảo Dưỡng & Nhớt Motul 300V", "Đặc quyền tri ân chủ xe: Miễn phí toàn bộ công bảo dưỡng và 4L nhớt Motul 300V Factory Line", 100, BigDecimal.valueOf(2000000), BigDecimal.valueOf(0));
+        createVoucherIfAbsent("LENDOI-MOTO-15TR", "Tri Ân Lên Đời Siêu Môtô - Giảm 15 Triệu", "Đặc quyền chủ xe Duy Trường Motor khi lên đời xe mới hoặc mua thêm xe thứ 2", 5, BigDecimal.valueOf(15000000), BigDecimal.valueOf(200000000));
+        createVoucherIfAbsent("PHUTUNG-GIAM20", "Giảm 20% Pô Độ & Đồ Bảo Hộ Biker", "Giảm 20% cho pô Akrapovic, SC Project, Austin Racing và đồ bảo hộ AGV, Dainese", 20, BigDecimal.valueOf(5000000), BigDecimal.valueOf(2000000));
+    }
 
+    private void createVoucherIfAbsent(String code, String name, String desc, int percent, BigDecimal maxDiscount, BigDecimal minOrder) {
+        if (voucherRepository.findByCodeIgnoreCaseAndIsDeletedFalse(code).isEmpty()) {
             voucherRepository.save(Voucher.builder()
-                .code("FREESHIP-VIP")
-                .name("Miễn phí 100% chi phí xe sàn trượt VIP")
-                .description("Hỗ trợ chi phí xe sàn trượt thủy lực VIP tận nhà cho khách hàng")
-                .discountPercent(100)
-                .maxDiscountAmount(BigDecimal.valueOf(2000000))
-                .minOrderAmount(BigDecimal.valueOf(100000000))
-                .usageLimit(200)
-                .usedCount(12)
-                .isDeleted(false)
-                .build());
-
-            voucherRepository.save(Voucher.builder()
-                .code("BAOHO-500K")
-                .name("Voucher Phụ Kiện Đồ Bảo Hộ")
-                .description("Giảm ngay 500.000 đ cho nón AGV, giáp Dainese, găng Alpinestars")
-                .discountPercent(10)
-                .maxDiscountAmount(BigDecimal.valueOf(500000))
-                .minOrderAmount(BigDecimal.valueOf(5000000))
+                .code(code)
+                .name(name)
+                .description(desc)
+                .discountPercent(percent)
+                .maxDiscountAmount(maxDiscount)
+                .minOrderAmount(minOrder)
                 .usageLimit(500)
-                .usedCount(38)
+                .usedCount(0)
                 .isDeleted(false)
                 .build());
-
-            log.info(">>> Đã khởi tạo thành công 3 mã khuyến mãi Voucher mẫu!");
+            log.info(">>> Đã khởi tạo thành công Voucher: {}", code);
         }
     }
 

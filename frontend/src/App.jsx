@@ -840,6 +840,9 @@ export default function App() {
           <button className={`btn-subtle ${currentTab === 'orders' ? 'active' : ''}`} onClick={() => navigateTab('orders')}>
             <i className="fa-solid fa-receipt"></i> Đơn Hàng ({orders.length})
           </button>
+          <button className={`btn-subtle ${currentTab === 'policy' ? 'active' : ''}`} onClick={() => navigateTab('policy')}>
+            <i className="fa-solid fa-file-shield text-gold"></i> Chính Sách &amp; Pháp Lý
+          </button>
 
           {/* Conditional Role Portals */}
           {(currentRoleKey === 'vendor' || currentRoleKey === 'vendor_tinh') && (
@@ -1686,6 +1689,128 @@ export default function App() {
               <i className="fa-solid fa-clock-rotate-left text-gold me-2"></i> LỊCH SỬ ĐẶT MUA XE &amp; BÀN GIAO
             </h2>
 
+            {/* BANNER CHÍNH SÁCH MUA BÁN & PHÁP LÝ XE CŨ LƯỚT */}
+            <div className="glass-box" style={{ padding: '24px', marginBottom: '24px', border: '1px solid rgba(212,175,55,0.4)', background: 'radial-gradient(circle at top right, rgba(212,175,55,0.1), rgba(13,16,23,0.9))' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+                <div style={{ maxWidth: '680px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                    <span style={{ background: 'var(--gold-primary)', color: '#000', padding: '3px 10px', borderRadius: '20px', fontSize: '0.72rem', fontWeight: 800 }}>
+                      <i className="fa-solid fa-stamp me-1"></i> PHÁP LÝ VÀNG
+                    </span>
+                    <h4 style={{ color: '#fff', fontSize: '1.15rem', fontWeight: 800, margin: 0 }}>
+                      CHÍNH SÁCH MUA BÁN &amp; PHÁP LÝ XE CŨ LƯỚT
+                    </h4>
+                  </div>
+                  <p style={{ color: 'var(--text-sub)', fontSize: '0.85rem', lineHeight: 1.6, margin: '0 0 10px 0' }}>
+                    Cam kết 100% xe Hải Quan Chính Ngạch (HQCN), bao tra cứu phạt nguội Cục CSGT, rút gốc toàn quốc 24h - 48h và hỗ trợ bấm biển số định danh theo CCCD tận nơi. Cam kết quay đầu thu mua lại xe 85% - 90% trong năm đầu!
+                  </p>
+                  <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', fontSize: '0.78rem', color: 'var(--gold-light)' }}>
+                    <span><i className="fa-solid fa-check text-success me-1"></i> Bao phạt nguội trọn đời</span>
+                    <span><i className="fa-solid fa-check text-success me-1"></i> Bấm biển số mới chính chủ</span>
+                    <span><i className="fa-solid fa-check text-success me-1"></i> Bảo hành 3 năm chính hãng</span>
+                  </div>
+                </div>
+                <div>
+                  <button className="btn-gold" style={{ padding: '10px 20px', fontSize: '0.85rem', borderRadius: '30px' }} onClick={() => navigateTab('policy')}>
+                    <i className="fa-solid fa-file-shield me-1"></i> Xem Chi Tiết Pháp Lý &amp; Biển Số
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* KHO VOUCHER TRI ÂN & ĐẶC QUYỀN CHỦ XE (GARAGE VIP) */}
+            <div className="glass-box" style={{ padding: '24px', marginBottom: '24px', border: '1px solid var(--gold-primary)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '14px', marginBottom: '18px' }}>
+                <div>
+                  <span style={{ background: 'var(--gold-primary)', color: '#000', padding: '3px 10px', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 800, marginRight: '8px' }}>
+                    <i className="fa-solid fa-crown me-1"></i> GARAGE VIP
+                  </span>
+                  <strong style={{ color: '#fff', fontSize: '1.15rem' }}>KHO VOUCHER ĐẶC QUYỀN TRI ÂN CHỦ XE</strong>
+                </div>
+                <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
+                  <i className="fa-solid fa-gift text-gold me-1"></i> Tặng tự động cho chủ xe: Giảm phí bảo dưỡng, mua pô độ &amp; lên đời môtô
+                </span>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '14px' }}>
+                {/* Voucher 1 */}
+                <div style={{ background: '#080a0f', border: '1px solid rgba(212,175,55,0.3)', borderRadius: '12px', padding: '16px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'relative' }}>
+                  <span style={{ position: 'absolute', top: '10px', right: '10px', background: '#28a745', color: '#fff', padding: '2px 8px', borderRadius: '10px', fontSize: '0.65rem', fontWeight: 700 }}>FREE 100%</span>
+                  <div>
+                    <div style={{ color: 'var(--gold-primary)', fontSize: '0.8rem', fontWeight: 800, marginBottom: '4px' }}><i className="fa-solid fa-oil-can me-1"></i> BẢO DƯỠNG ĐỊNH KỲ</div>
+                    <div style={{ color: '#fff', fontWeight: 700, fontSize: '0.85rem', marginBottom: '4px' }}>Free Toàn Bộ Công &amp; 4L Nhớt Motul 300V</div>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '0.72rem', lineHeight: 1.4, margin: '0 0 12px 0' }}>Đặc quyền chủ xe bảo dưỡng định kỳ, siết ốc PDI, tiết kiệm 2.000.000 đ.</p>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '10px' }}>
+                    <span style={{ color: 'var(--gold-primary)', fontWeight: 800, fontSize: '0.8rem', background: '#131722', padding: '2px 6px', borderRadius: '4px', border: '1px dashed var(--gold-primary)' }}>VIP-BAODUONG-FREE</span>
+                    <button className="btn-subtle" style={{ padding: '3px 8px', fontSize: '0.72rem', color: 'var(--gold-primary)' }} onClick={() => {
+                      navigator.clipboard.writeText('VIP-BAODUONG-FREE');
+                      alert('Đã chép mã: VIP-BAODUONG-FREE! Dán vào ô Voucher khi thanh toán để được miễn phí bảo dưỡng.');
+                    }}>
+                      <i className="fa-solid fa-copy"></i>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Voucher 2 */}
+                <div style={{ background: '#080a0f', border: '1px solid rgba(212,175,55,0.3)', borderRadius: '12px', padding: '16px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'relative' }}>
+                  <span style={{ position: 'absolute', top: '10px', right: '10px', background: 'var(--gold-primary)', color: '#000', padding: '2px 8px', borderRadius: '10px', fontSize: '0.65rem', fontWeight: 800 }}>-15 TRIỆU</span>
+                  <div>
+                    <div style={{ color: 'var(--gold-primary)', fontSize: '0.8rem', fontWeight: 800, marginBottom: '4px' }}><i className="fa-solid fa-motorcycle me-1"></i> LÊN ĐỜI SIÊU MÔTÔ</div>
+                    <div style={{ color: '#fff', fontWeight: 700, fontSize: '0.85rem', marginBottom: '4px' }}>Trợ Giá 15.000.000 đ Xe Tiếp Theo</div>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '0.72rem', lineHeight: 1.4, margin: '0 0 12px 0' }}>Trừ thẳng 15 triệu khi lên đời phân khối lớn hơn hoặc tậu thêm xe thứ 2.</p>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '10px' }}>
+                    <span style={{ color: 'var(--gold-primary)', fontWeight: 800, fontSize: '0.8rem', background: '#131722', padding: '2px 6px', borderRadius: '4px', border: '1px dashed var(--gold-primary)' }}>LENDOI-MOTO-15TR</span>
+                    <button className="btn-subtle" style={{ padding: '3px 8px', fontSize: '0.72rem', color: 'var(--gold-primary)' }} onClick={() => {
+                      navigator.clipboard.writeText('LENDOI-MOTO-15TR');
+                      alert('Đã chép mã: LENDOI-MOTO-15TR! Trừ thẳng 15 triệu khi tậu xe tiếp theo.');
+                    }}>
+                      <i className="fa-solid fa-copy"></i>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Voucher 3 */}
+                <div style={{ background: '#080a0f', border: '1px solid rgba(212,175,55,0.3)', borderRadius: '12px', padding: '16px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'relative' }}>
+                  <span style={{ position: 'absolute', top: '10px', right: '10px', background: '#e53e3e', color: '#fff', padding: '2px 8px', borderRadius: '10px', fontSize: '0.65rem', fontWeight: 700 }}>GIẢM 20%</span>
+                  <div>
+                    <div style={{ color: 'var(--gold-primary)', fontSize: '0.8rem', fontWeight: 800, marginBottom: '4px' }}><i className="fa-solid fa-helmet-safety me-1"></i> PÔ ĐỘ &amp; BẢO HỘ</div>
+                    <div style={{ color: '#fff', fontWeight: 700, fontSize: '0.85rem', marginBottom: '4px' }}>Giảm 20% Pô Akrapovic &amp; AGV</div>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '0.72rem', lineHeight: 1.4, margin: '0 0 12px 0' }}>Giảm 20% khi độ pô Akrapovic, SC Project hoặc nón AGV Pista, áo giáp.</p>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '10px' }}>
+                    <span style={{ color: 'var(--gold-primary)', fontWeight: 800, fontSize: '0.8rem', background: '#131722', padding: '2px 6px', borderRadius: '4px', border: '1px dashed var(--gold-primary)' }}>PHUTUNG-GIAM20</span>
+                    <button className="btn-subtle" style={{ padding: '3px 8px', fontSize: '0.72rem', color: 'var(--gold-primary)' }} onClick={() => {
+                      navigator.clipboard.writeText('PHUTUNG-GIAM20');
+                      alert('Đã chép mã: PHUTUNG-GIAM20! Giảm 20% phụ tùng pô độ và đồ bảo hộ.');
+                    }}>
+                      <i className="fa-solid fa-copy"></i>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Voucher 4 */}
+                <div style={{ background: '#080a0f', border: '1px solid rgba(212,175,55,0.3)', borderRadius: '12px', padding: '16px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'relative' }}>
+                  <span style={{ position: 'absolute', top: '10px', right: '10px', background: '#00f2fe', color: '#000', padding: '2px 8px', borderRadius: '10px', fontSize: '0.65rem', fontWeight: 800 }}>VIP FREE</span>
+                  <div>
+                    <div style={{ color: 'var(--gold-primary)', fontSize: '0.8rem', fontWeight: 800, marginBottom: '4px' }}><i className="fa-solid fa-truck-ramp-box me-1"></i> XE SÀN TRƯỢT VIP</div>
+                    <div style={{ color: '#fff', fontWeight: 700, fontSize: '0.85rem', marginBottom: '4px' }}>Free 100% Giao Xe &amp; Cứu Hộ</div>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '0.72rem', lineHeight: 1.4, margin: '0 0 12px 0' }}>Tài xế sàn trượt chuyên dụng giao xe tận nhà, kiểm tra nổ máy ưng ý mới nhận.</p>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '10px' }}>
+                    <span style={{ color: 'var(--gold-primary)', fontWeight: 800, fontSize: '0.8rem', background: '#131722', padding: '2px 6px', borderRadius: '4px', border: '1px dashed var(--gold-primary)' }}>FREESHIP-VIP</span>
+                    <button className="btn-subtle" style={{ padding: '3px 8px', fontSize: '0.72rem', color: 'var(--gold-primary)' }} onClick={() => {
+                      navigator.clipboard.writeText('FREESHIP-VIP');
+                      alert('Đã chép mã: FREESHIP-VIP! Miễn phí 100% xe sàn trượt thủy lực VIP.');
+                    }}>
+                      <i className="fa-solid fa-copy"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {orders.length === 0 ? (
               <div className="glass-box" style={{ padding: '60px', textAlign: 'center' }}>
                 <h4>Chưa có đơn hàng nào</h4>
@@ -1794,6 +1919,31 @@ export default function App() {
                         </div>
                       );
                     })()}
+
+                    {/* OWNER PRIVILEGE FOR DELIVERED ORDER */}
+                    {order.status === 'DELIVERED' && (
+                      <div style={{ marginTop: '14px', padding: '14px 18px', background: 'rgba(212,175,55,0.1)', border: '1px solid var(--gold-primary)', borderRadius: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+                        <div>
+                          <div style={{ color: 'var(--gold-light)', fontWeight: 800, fontSize: '0.88rem' }}>
+                            <i className="fa-solid fa-crown me-2"></i> ĐÃ KÍCH HOẠT ĐẶC QUYỀN CHỦ XE (GARAGE VIP)
+                          </div>
+                          <div style={{ color: 'var(--text-sub)', fontSize: '0.78rem' }}>
+                            Sổ bảo hành 3 năm điện tử đã kích hoạt. Bạn được tặng 3 voucher bảo dưỡng free, lên đời môtô và giảm phụ tùng ở phía trên!
+                          </div>
+                        </div>
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                          <button className="btn-subtle" style={{ padding: '6px 12px', fontSize: '0.75rem', borderColor: 'var(--gold-primary)', color: 'var(--gold-primary)' }} onClick={() => navigateTab('policy')}>
+                            <i className="fa-solid fa-file-shield me-1"></i> Pháp Lý &amp; Biển Số
+                          </button>
+                          <button className="btn-gold" style={{ padding: '6px 14px', fontSize: '0.75rem' }} onClick={() => {
+                            navigator.clipboard.writeText('VIP-BAODUONG-FREE');
+                            alert('Đã chép mã bảo dưỡng miễn phí: VIP-BAODUONG-FREE');
+                          }}>
+                            <i className="fa-solid fa-ticket me-1"></i> Lấy Mã Bảo Dưỡng
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -1802,6 +1952,205 @@ export default function App() {
         )}
 
         {/* ================= TAB: VENDOR (STORE MANAGER - KHÔI / TÌNH) ================= */}
+        
+        {/* ================= TAB: POLICY & LEGAL (CHÍNH SÁCH MUA XE & PHÁP LÝ XE CŨ LƯỚT) ================= */}
+        {currentTab === 'policy' && (
+          <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '50px 30px' }}>
+            <div style={{ textAlign: 'center', marginBottom: '45px' }}>
+              <span style={{ background: 'var(--gold-primary)', color: '#000', padding: '4px 14px', borderRadius: '20px', fontSize: '0.78rem', fontWeight: 800 }}>
+                <i className="fa-solid fa-certificate me-1"></i> CAM KẾT VÀNG PHÁP LÝ &amp; CHẤT LƯỢNG
+              </span>
+              <h1 className="brand-title" style={{ fontSize: '2.5rem', color: '#fff', marginTop: '12px', textTransform: 'uppercase' }}>
+                CHÍNH SÁCH MUA XE &amp; <span className="text-gradient-gold">PHÁP LÝ XE CŨ LƯỚT</span>
+              </h1>
+              <p style={{ color: 'var(--text-sub)', fontSize: '0.95rem', maxWidth: '800px', margin: '10px auto 0', lineHeight: 1.7 }}>
+                Duy Trường Motor áp dụng tiêu chuẩn pháp lý khắt khe nhất: <strong style={{ color: '#fff' }}>100% Hải Quan Chính Ngạch (HQCN)</strong>, 
+                bảo hành <strong style={{ color: 'var(--gold-primary)' }}>3 năm chính hãng</strong>, bao <strong style={{ color: '#fff' }}>rút gốc 24h &amp; bấm biển số định danh chính chủ toàn quốc</strong>.
+              </p>
+            </div>
+
+            {/* 4 Trụ Cột Cam Kết Vàng */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px', marginBottom: '40px' }}>
+              <div className="glass-box" style={{ padding: '24px' }}>
+                <div style={{ fontSize: '2rem', color: 'var(--gold-primary)', marginBottom: '12px' }}><i className="fa-solid fa-shield-halved"></i></div>
+                <h4 style={{ color: '#fff', fontSize: '1.1rem', fontWeight: 800, marginBottom: '8px' }}>100% Xe HQCN Chuẩn Chỉ</h4>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: 1.6, margin: 0 }}>
+                  Cam kết 100% xe Hải Quan Chính Ngạch, đầy đủ tờ khai hải quan, số khung số máy trùng khớp cà vẹt gốc. Tuyệt đối nói không với xe tranh chấp, xe lậu.
+                </p>
+              </div>
+
+              <div className="glass-box" style={{ padding: '24px' }}>
+                <div style={{ fontSize: '2rem', color: 'var(--gold-primary)', marginBottom: '12px' }}><i className="fa-solid fa-id-card"></i></div>
+                <h4 style={{ color: '#fff', fontSize: '1.1rem', fontWeight: 800, marginBottom: '8px' }}>Rút Gốc &amp; Bấm Biển Số 24H</h4>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: 1.6, margin: 0 }}>
+                  Showroom đài thọ 100% chi phí rút hồ sơ gốc toàn quốc trong 24h - 48h. Hỗ trợ kê khai thuế và đưa khách bấm biển số định danh theo CCCD tận nơi.
+                </p>
+              </div>
+
+              <div className="glass-box" style={{ padding: '24px' }}>
+                <div style={{ fontSize: '2rem', color: 'var(--gold-primary)', marginBottom: '12px' }}><i className="fa-solid fa-wrench"></i></div>
+                <h4 style={{ color: '#fff', fontSize: '1.1rem', fontWeight: 800, marginBottom: '8px' }}>Bảo Hành 3 Năm / 30.000 Km</h4>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: 1.6, margin: 0 }}>
+                  Bảo hành toàn diện động cơ, hộp số, ECU, phanh ABS và hệ thống điện. Cứu hộ bằng xe chuyên dụng sàn trượt thủy lực VIP 24/7 toàn quốc.
+                </p>
+              </div>
+
+              <div className="glass-box" style={{ padding: '24px' }}>
+                <div style={{ fontSize: '2rem', color: 'var(--gold-primary)', marginBottom: '12px' }}><i className="fa-solid fa-repeat"></i></div>
+                <h4 style={{ color: '#fff', fontSize: '1.1rem', fontWeight: 800, marginBottom: '8px' }}>Cam Kết Quay Đầu 85% - 90%</h4>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: 1.6, margin: 0 }}>
+                  Chính sách "Mua của người chán - Bán cho người cần": Duy Trường Motor cam kết thu mua lại xe đã bán với mức khấu hao thấp nhất (85-90% trong 12 tháng).
+                </p>
+              </div>
+            </div>
+
+            {/* Quy trình pháp lý 4 bước */}
+            <div className="glass-box" style={{ padding: '36px', marginBottom: '40px', border: '1px solid rgba(212,175,55,0.4)' }}>
+              <div style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '16px', marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+                <div>
+                  <span style={{ background: 'var(--gold-primary)', color: '#000', padding: '3px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 800, marginRight: '8px' }}>PHÁP LÝ MINH BẠCH</span>
+                  <h3 style={{ color: '#fff', fontSize: '1.35rem', fontWeight: 800, display: 'inline' }}>QUY TRÌNH SANG TÊN GIẤY TỜ &amp; BẤM BIỂN SỐ XE CŨ LƯỚT</h3>
+                </div>
+                <span style={{ color: 'var(--gold-primary)', fontSize: '0.82rem', fontWeight: 700 }}>
+                  <i className="fa-solid fa-check-double me-1"></i> Trọn gói A - Z bởi pháp lý Duy Trường Motor
+                </span>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '24px' }}>
+                <div style={{ display: 'flex', gap: '14px' }}>
+                  <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--gold-primary)', color: '#000', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: '1.1rem' }}>1</div>
+                  <div>
+                    <h5 style={{ color: '#fff', fontSize: '1rem', fontWeight: 800, marginBottom: '6px' }}>Kiểm Định Số Khung &amp; Phạt Nguội</h5>
+                    <p style={{ color: 'var(--text-sub)', fontSize: '0.82rem', lineHeight: 1.6, margin: 0 }}>
+                      Đối chiếu số khung, số máy thực tế trùng khớp 100% cà vẹt gốc. Kiểm tra hệ thống phạt nguội Cục CSGT, cam kết không nợ phạt nguội.
+                    </p>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '14px' }}>
+                  <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--gold-primary)', color: '#000', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: '1.1rem' }}>2</div>
+                  <div>
+                    <h5 style={{ color: '#fff', fontSize: '1rem', fontWeight: 800, marginBottom: '6px' }}>Công Chứng Mua Bán Trong 30 Phút</h5>
+                    <p style={{ color: 'var(--text-sub)', fontSize: '0.82rem', lineHeight: 1.6, margin: 0 }}>
+                      Ký hợp đồng mua bán hoặc ủy quyền toàn quyền tại phòng công chứng đối tác hoặc ký trực tiếp tại nhà riêng/Showroom theo lịch hẹn.
+                    </p>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '14px' }}>
+                  <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--gold-primary)', color: '#000', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: '1.1rem' }}>3</div>
+                  <div>
+                    <h5 style={{ color: '#fff', fontSize: '1rem', fontWeight: 800, marginBottom: '6px' }}>Rút Hồ Sơ Gốc Toàn Quốc 24H - 48H</h5>
+                    <p style={{ color: 'var(--text-sub)', fontSize: '0.82rem', lineHeight: 1.6, margin: 0 }}>
+                      Nếu xe khác tỉnh, pháp lý showroom trực tiếp nộp hồ sơ thu hồi biển số, rút túi hồ sơ gốc niêm phong tại CSGT tỉnh gốc. Showroom chịu toàn bộ chi phí.
+                    </p>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '14px' }}>
+                  <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--gold-primary)', color: '#000', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: '1.1rem' }}>4</div>
+                  <div>
+                    <h5 style={{ color: '#fff', fontSize: '1rem', fontWeight: 800, marginBottom: '6px' }}>Đóng Thuế &amp; Bấm Biển Số Định Danh</h5>
+                    <p style={{ color: 'var(--text-sub)', fontSize: '0.82rem', lineHeight: 1.6, margin: 0 }}>
+                      Kê khai thuế trước bạ 1% xe cũ. Đưa khách đến Đội CSGT địa phương bấm biển số định danh theo CCCD hoặc bàn giao biển số chính chủ trong ngày.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ marginTop: '24px', padding: '16px', background: 'rgba(0,0,0,0.5)', borderRadius: '10px', border: '1px solid rgba(212,175,55,0.3)', display: 'flex', alignItems: 'center', gap: '14px' }}>
+                <i className="fa-solid fa-shield-virus" style={{ color: 'var(--gold-primary)', fontSize: '1.8rem' }}></i>
+                <div style={{ fontSize: '0.82rem', color: 'var(--text-sub)' }}>
+                  <strong style={{ color: '#fff' }}>BẢO HIỂM PHÁP LÝ TRỌN ĐỜI:</strong> Nếu xe phát sinh bất kỳ tranh chấp số khung, tranh chấp quyền sở hữu hoặc phạt nguội tồn đọng trước ngày mua, Duy Trường Motor cam kết thu hồi xe và bồi hoàn 100% tiền mua + lãi suất ngân hàng.
+                </div>
+              </div>
+            </div>
+
+            {/* Kho voucher tri an */}
+            <div className="glass-box" style={{ padding: '36px', marginBottom: '40px' }}>
+              <div style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '16px', marginBottom: '20px' }}>
+                <span style={{ background: 'var(--gold-primary)', color: '#000', padding: '3px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 800, marginRight: '8px' }}>ĐẶC QUYỀN CHỦ XE</span>
+                <h3 style={{ color: '#fff', fontSize: '1.35rem', fontWeight: 800, display: 'inline' }}>KHO VOUCHER TRI ÂN CHỦ XE DUY TRƯỜNG MOTOR</h3>
+              </div>
+              <p style={{ color: 'var(--text-sub)', fontSize: '0.88rem', marginBottom: '20px' }}>
+                Khi sở hữu bất kỳ môtô phân khối lớn hay cào cào nào tại Duy Trường Motor, bạn được tự động cấp sổ bảo hành điện tử và tặng ngay bộ <strong style={{ color: 'var(--gold-primary)' }}>Voucher độc bản</strong> dùng trọn đời:
+              </p>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px' }}>
+                <div style={{ background: '#0a0d14', border: '2px dashed rgba(212,175,55,0.4)', borderRadius: '14px', padding: '20px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                    <span style={{ background: '#28a745', color: '#fff', padding: '2px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 700 }}>FREE 100%</span>
+                    <i className="fa-solid fa-oil-can text-gold fs-4"></i>
+                  </div>
+                  <h5 style={{ color: '#fff', fontWeight: 800, marginBottom: '6px' }}>BẢO DƯỠNG &amp; NHỚT MOTUL 300V</h5>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.78rem', lineHeight: 1.5 }}>Miễn phí 100% toàn bộ công kiểm định PDI, thay lọc nhớt và 4L nhớt Motul 300V Factory Line chính hãng Pháp.</p>
+                  <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <strong style={{ color: 'var(--gold-primary)' }}>VIP-BAODUONG-FREE</strong>
+                    <button className="btn-gold" style={{ padding: '4px 12px', fontSize: '0.75rem' }} onClick={() => {
+                      navigator.clipboard.writeText('VIP-BAODUONG-FREE');
+                      alert('Đã chép mã: VIP-BAODUONG-FREE');
+                    }}>Sao Chép</button>
+                  </div>
+                </div>
+
+                <div style={{ background: '#0a0d14', border: '2px dashed rgba(212,175,55,0.4)', borderRadius: '14px', padding: '20px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                    <span style={{ background: 'var(--gold-primary)', color: '#000', padding: '2px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 800 }}>-15 TRIỆU</span>
+                    <i className="fa-solid fa-motorcycle text-gold fs-4"></i>
+                  </div>
+                  <h5 style={{ color: '#fff', fontWeight: 800, marginBottom: '6px' }}>LÊN ĐỜI SIÊU MÔTÔ TIẾP THEO</h5>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.78rem', lineHeight: 1.5 }}>Trừ thẳng 15.000.000 đ vào giá bán khi chủ xe đổi xe lên đời phân khúc cao hơn hoặc tậu thêm xe thứ 2.</p>
+                  <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <strong style={{ color: 'var(--gold-primary)' }}>LENDOI-MOTO-15TR</strong>
+                    <button className="btn-gold" style={{ padding: '4px 12px', fontSize: '0.75rem' }} onClick={() => {
+                      navigator.clipboard.writeText('LENDOI-MOTO-15TR');
+                      alert('Đã chép mã: LENDOI-MOTO-15TR');
+                    }}>Sao Chép</button>
+                  </div>
+                </div>
+
+                <div style={{ background: '#0a0d14', border: '2px dashed rgba(212,175,55,0.4)', borderRadius: '14px', padding: '20px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                    <span style={{ background: '#e53e3e', color: '#fff', padding: '2px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 700 }}>GIẢM 20%</span>
+                    <i className="fa-solid fa-helmet-safety text-gold fs-4"></i>
+                  </div>
+                  <h5 style={{ color: '#fff', fontWeight: 800, marginBottom: '6px' }}>PÔ ĐỘ &amp; ĐỒ BẢO HỘ BIKER</h5>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.78rem', lineHeight: 1.5 }}>Giảm ngay 20% khi độ pô Akrapovic, SC Project, Austin Racing hoặc sắm nón AGV Pista, giáp Dainese.</p>
+                  <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <strong style={{ color: 'var(--gold-primary)' }}>PHUTUNG-GIAM20</strong>
+                    <button className="btn-gold" style={{ padding: '4px 12px', fontSize: '0.75rem' }} onClick={() => {
+                      navigator.clipboard.writeText('PHUTUNG-GIAM20');
+                      alert('Đã chép mã: PHUTUNG-GIAM20');
+                    }}>Sao Chép</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Vận chuyển xe sàn trượt & hotline */}
+            <div className="glass-box" style={{ padding: '36px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', alignItems: 'center' }}>
+                <div>
+                  <h4 style={{ color: '#fff', fontWeight: 800, marginBottom: '16px' }}>
+                    <i className="fa-solid fa-truck-shield text-gold me-2"></i> VẬN CHUYỂN SÀN TRƯỢT &amp; CỨU HỘ 24/7
+                  </h4>
+                  <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '0.85rem', color: 'var(--text-sub)' }}>
+                    <li><i className="fa-solid fa-check text-gold me-2"></i> <strong>100% Giao xe sàn trượt thủy lực VIP:</strong> Không tự ý chạy rodage xe của khách trên đường. Khóa bánh và chằng đai chống trầy 4 điểm.</li>
+                    <li><i className="fa-solid fa-check text-gold me-2"></i> <strong>Hạ sàn test máy tận cổng nhà:</strong> Nổ máy kiểm tra tiếng pô, hệ thống điện đèn ưng ý 100% mới ký biên bản.</li>
+                    <li><i className="fa-solid fa-check text-gold me-2"></i> <strong>Cứu hộ khẩn cấp 24/7 toàn quốc:</strong> Gọi ngay hotline khi gặp sự cố trên mọi cung đường.</li>
+                  </ul>
+                </div>
+                <div style={{ textAlign: 'center', background: '#000', padding: '24px', borderRadius: '16px', border: '1px solid rgba(212,175,55,0.3)' }}>
+                  <div style={{ fontSize: '2rem', fontWeight: 900, color: 'var(--gold-primary)', marginBottom: '8px' }}>0903.456.789</div>
+                  <div style={{ color: '#fff', fontWeight: 700, fontSize: '0.9rem', marginBottom: '16px' }}>TỔNG ĐÀI CỨU HỘ &amp; TƯ VẤN PHÁP LÝ XE 24/7</div>
+                  <a href="tel:0903456789" className="btn-gold" style={{ display: 'inline-block', width: '100%', padding: '12px', borderRadius: '30px', textDecoration: 'none', fontWeight: 800 }}>
+                    <i className="fa-solid fa-phone me-1"></i> GỌI TỔNG ĐÀI NGAY
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {currentTab === 'vendor' && (
           <div style={{ maxWidth: '1240px', margin: '0 auto', padding: '50px 30px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
@@ -3349,12 +3698,15 @@ export default function App() {
           </div>
 
           <div>
-            <h5 style={{ color: 'var(--gold-primary)', fontWeight: 800, marginBottom: '16px', fontFamily: 'var(--font-brand)' }}>CHÍNH SÁCH &amp; PHÁP LÝ</h5>
+            <h5 style={{ color: 'var(--gold-primary)', fontWeight: 800, marginBottom: '16px', fontFamily: 'var(--font-brand)', cursor: 'pointer' }} onClick={() => navigateTab('policy')}>
+              <i className="fa-solid fa-file-shield me-1"></i> CHÍNH SÁCH &amp; PHÁP LÝ
+            </h5>
             <ul style={{ listStyle: 'none', padding: 0, fontSize: '0.85rem', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <li><i className="fa-solid fa-shield-halved text-racing me-2"></i> Chính sách bảo hành chính hãng 3 năm không giới hạn km</li>
-              <li><i className="fa-solid fa-credit-card text-gold me-2"></i> Đặt cọc giữ xe và giao dịch an toàn qua VNPAY QR</li>
-              <li><i className="fa-solid fa-store text-gold me-2"></i> Đăng ký đại lý &amp; Mở showroom ủy quyền toàn quốc</li>
-              <li><i className="fa-solid fa-rotate-left text-racing me-2"></i> Cam kết 100% HQCN - Bao sang tên rút gốc trong 24h</li>
+              <li style={{ cursor: 'pointer' }} onClick={() => navigateTab('policy')}><i className="fa-solid fa-angle-right text-gold me-2"></i> Quy trình sang tên &amp; bấm biển số xe cũ lướt</li>
+              <li style={{ cursor: 'pointer' }} onClick={() => navigateTab('policy')}><i className="fa-solid fa-angle-right text-gold me-2"></i> Cam kết 100% HQCN &amp; bao rút hồ sơ gốc 24h</li>
+              <li style={{ cursor: 'pointer' }} onClick={() => navigateTab('policy')}><i className="fa-solid fa-angle-right text-gold me-2"></i> Bảo hành chính hãng 3 năm &amp; cứu hộ 24/7</li>
+              <li style={{ cursor: 'pointer' }} onClick={() => navigateTab('policy')}><i className="fa-solid fa-angle-right text-gold me-2"></i> Cam kết quay đầu thu mua xe 85% - 90%</li>
+              <li style={{ cursor: 'pointer', color: 'var(--gold-primary)', fontWeight: 700 }} onClick={() => navigateTab('policy')}><i className="fa-solid fa-gift me-2"></i> Kho Voucher tri ân đặc quyền chủ xe VIP</li>
             </ul>
           </div>
         </div>

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chính Sách Mua Bán &amp; Pháp Lý Xe Cũ Lướt - Duy Trường Motor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css(v='20261028_final')}">
+    <style>
+        .policy-hero {
+            background: radial-gradient(circle at top right, rgba(212, 175, 55, 0.15), transparent 60%),
+                        linear-gradient(180deg, #0b0d14 0%, #050608 100%);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+            padding: 70px 0 50px;
+        }
+        .policy-card {
+            background: rgba(13, 16, 23, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .policy-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--dt-gradient-gold);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .policy-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(212, 175, 55, 0.4);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 20px rgba(212, 175, 55, 0.15);
+        }
+        .policy-card:hover::before {
+            opacity: 1;
+        }
+        .step-bubble {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--dt-gradient-gold);
+            color: #000;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+        .voucher-ticket {
+            background: linear-gradient(135deg, #131722 0%, #0a0c10 100%);
+            border: 2px dashed rgba(212, 175, 55, 0.5);
+            border-radius: 14px;
+            padding: 18px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .voucher-ticket:hover {
+            border-color: var(--dt-gold);
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-dark text-light">
+
+    <!-- Topbar & Nav Include -->
+    <div th:replace="~{layout/main :: topbar}"></div>
+    <div th:replace="~{layout/main :: nav}"></div>
+
+    <!-- 1. HERO BANNER -->
+    <section class="policy-hero text-center">
+        <div class="container">
+            <span class="badge bg-gold text-dark fw-bold px-3 py-2 rounded-pill mb-3 fs-6">
+                <i class="fa-solid fa-certificate me-1"></i> CAM KẾT VÀNG PHÁP LÝ &amp; CHẤT LƯỢNG
+            </span>
+            <h1 class="display-5 fw-black text-white text-uppercase tracking-tight mb-3">
+                CHÍNH SÁCH MUA XE &amp; <span class="text-gradient-gold">PHÁP LÝ XE CŨ LƯỚT</span>
+            </h1>
+            <p class="lead text-secondary mx-auto" style="max-width: 820px; font-size: 1.05rem;">
+                Hệ thống Siêu Thị Mô Tô Duy Trường Motor tự hào áp dụng tiêu chuẩn pháp lý khắt khe nhất Việt Nam: 
+                <strong class="text-white">100% Hải Quan Chính Ngạch (HQCN)</strong>, bảo hành <strong class="text-gold">3 năm chính hãng</strong>, 
+                hỗ trợ <strong class="text-white">rút hồ sơ gốc 24h &amp; bấm biển số định danh chính chủ toàn quốc</strong>.
+            </p>
+            <div class="d-flex justify-content-center gap-3 flex-wrap mt-4">
+                <a href="#quy-trinh-giay-to" class="btn btn-gold px-4 py-2 fw-bold rounded-pill shadow">
+                    <i class="fa-solid fa-file-signature me-1"></i> Quy Trình Sang Tên Biển Số
+                </a>
+                <a href="#voucher-tri-an" class="btn btn-outline-warning px-4 py-2 fw-bold rounded-pill">
+                    <i class="fa-solid fa-ticket me-1"></i> Kho Voucher Tri Ân Chủ Xe
+                </a>
+                <a th:href="@{/products}" class="btn btn-outline-light px-4 py-2 rounded-pill">
+                    <i class="fa-solid fa-motorcycle me-1"></i> Khám Phá Kho Xe HQCN
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div class="container py-5">
+
+        <!-- 2. 4 TRỤ CỘT CAM KẾT VÀNG -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-6 col-lg-3">
+                <div class="policy-card p-4 h-100">
+                    <div class="fs-1 text-gold mb-3"><i class="fa-solid fa-shield-halved"></i></div>
+                    <h5 class="fw-bold text-white mb-2">100% Xe HQCN Chuẩn Chỉ</h5>
+                    <p class="text-secondary small mb-0">
+                        Cam kết 100% xe Hải Quan Chính Ngạch, đầy đủ tờ khai hải quan, chứng nhận chất lượng xuất xưởng. Tuyệt đối nói không với xe GTHL, xe gian, xe trộm cắp.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="policy-card p-4 h-100">
+                    <div class="fs-1 text-gold mb-3"><i class="fa-solid fa-id-card"></i></div>
+                    <h5 class="fw-bold text-white mb-2">Rút Gốc &amp; Bấm Biển Số 24H</h5>
+                    <p class="text-secondary small mb-0">
+                        Showroom chịu 100% chi phí và nhân sự rút hồ sơ gốc toàn quốc trong 24h - 48h. Hỗ trợ bấm biển số định danh theo tỉnh/thành của khách hàng tận nơi.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="policy-card p-4 h-100">
+                    <div class="fs-1 text-gold mb-3"><i class="fa-solid fa-wrench"></i></div>
+                    <h5 class="fw-bold text-white mb-2">Bảo Hành 3 Năm / 30.000 Km</h5>
+                    <p class="text-secondary small mb-0">
+                        Bảo hành toàn diện động cơ, hộp số, ECU, hệ thống phun xăng và phanh ABS. Cứu hộ bằng xe sàn trượt thủy lực 24/7 trên phạm vi toàn quốc.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="policy-card p-4 h-100">
+                    <div class="fs-1 text-gold mb-3"><i class="fa-solid fa-repeat"></i></div>
+                    <h5 class="fw-bold text-white mb-2">Cam Kết Quay Đầu 85% - 90%</h5>
+                    <p class="text-secondary small mb-0">
+                        Chính sách "Mua của người chán - Bán cho người cần": Cam kết thu mua lại xe đã bán với mức khấu hao thấp nhất thị trường (thu lại 85-90% trong 12 tháng đầu).
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. QUY TRÌNH PHÁP LÝ SANG TÊN BIỂN SỐ XE CŨ LƯỚT -->
+        <div id="quy-trinh-giay-to" class="policy-card p-4 p-md-5 mb-5">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary">
+                <div>
+                    <span class="badge bg-gold text-dark fw-bold small me-2"><i class="fa-solid fa-stamp me-1"></i> PHÁP LÝ MINH BẠCH</span>
+                    <h3 class="fw-bold text-white mb-0 d-inline align-middle">QUY TRÌNH SANG TÊN GIẤY TỜ &amp; BẤM BIỂN SỐ ĐỊNH DANH XE CŨ LƯỚT</h3>
+                </div>
+                <div class="text-gold small fw-bold mt-2 mt-md-0">
+                    <i class="fa-solid fa-check-double me-1"></i> Trọn gói A - Z bởi phòng pháp lý Duy Trường Motor
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="d-flex gap-3 mb-4">
+                        <div class="step-bubble">1</div>
+                        <div>
+                            <h5 class="fw-bold text-white mb-1">Kiểm định số khung - số máy &amp; Check phạt nguội</h5>
+                            <p class="text-secondary small mb-0">
+                                Chuyên viên pháp lý cùng khách hàng đối chiếu số khung, số máy thực tế trùng khớp 100% với cà vẹt gốc. Kiểm tra tra cứu hệ thống phạt nguội Cục CSGT, cam kết không nợ phạt nguội trước thời điểm bàn giao.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-3 mb-4">
+                        <div class="step-bubble">2</div>
+                        <div>
+                            <h5 class="fw-bold text-white mb-1">Công chứng ủy quyền hoặc hợp đồng mua bán trong 30 phút</h5>
+                            <p class="text-secondary small mb-0">
+                                Hỗ trợ lập hợp đồng công chứng mua bán hoặc ủy quyền toàn quyền tại phòng công chứng đối tác hoặc ký trực tiếp tại nhà riêng/Showroom theo lịch hẹn của Quý khách.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="d-flex gap-3 mb-4">
+                        <div class="step-bubble">3</div>
+                        <div>
+                            <h5 class="fw-bold text-white mb-1">Rút hồ sơ gốc toàn quốc trong 24h - 48h</h5>
+                            <p class="text-secondary small mb-0">
+                                Nếu xe đăng ký ở tỉnh/thành khác, nhân viên pháp lý của Duy Trường Motor sẽ trực tiếp nộp hồ sơ thu hồi biển số và cà vẹt cũ, rút túi hồ sơ gốc niêm phong tại Phòng CSGT tỉnh gốc. Showroom chịu toàn bộ chi phí phát sinh.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-3 mb-4">
+                        <div class="step-bubble">4</div>
+                        <div>
+                            <h5 class="fw-bold text-white mb-1">Đóng thuế trước bạ &amp; Bấm biển số định danh mới</h5>
+                            <p class="text-secondary small mb-0">
+                                Hỗ trợ kê khai thuế trước bạ điện tử (chỉ 1% đối với xe cũ lướt). Đưa Quý khách đến Đội CSGT địa phương bấm biển số định danh theo CCCD hoặc bàn giao biển số và giấy hẹn cà vẹt tên chính chủ trong ngày.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-3 bg-black rounded-3 border border-warning border-opacity-50 mt-2 d-flex align-items-center gap-3">
+                <i class="fa-solid fa-shield-virus text-warning fs-3"></i>
+                <div class="small">
+                    <strong class="text-white">BẢO HIỂM PHÁP LÝ TRỌN ĐỜI:</strong>
+                    <span class="text-secondary"> Nếu xe phát sinh bất kỳ tranh chấp pháp lý, tranh chấp số khung số máy hoặc phạt nguội tồn đọng trước ngày mua, Duy Trường Motor cam kết thu hồi xe và bồi hoàn 100% số tiền cùng lãi suất ngân hàng.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. KHO VOUCHER TRI ÂN & ĐẶC QUYỀN CHỦ XE (GARAGE VIP) -->
+        <div id="voucher-tri-an" class="policy-card p-4 p-md-5 mb-5">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary">
+                <div>
+                    <span class="badge bg-gold text-dark fw-bold small me-2"><i class="fa-solid fa-gift me-1"></i> ĐẶC QUYỀN CHỦ XE</span>
+                    <h3 class="fw-bold text-white mb-0 d-inline align-middle">KHO VOUCHER TRI ÂN CHỦ XE DUY TRƯỜNG MOTOR</h3>
+                </div>
+                <div class="text-secondary small mt-2 mt-md-0">
+                    Tự động kích hoạt ngay sau khi mua xe thành công tại hệ thống Showroom
+                </div>
+            </div>
+
+            <p class="text-secondary mb-4">
+                Khi Quý khách sở hữu bất kỳ dòng môtô phân khối lớn, cào cào hoặc tay ga tại Duy Trường Motor, hệ thống sẽ tự động cấp sổ bảo hành điện tử và tặng ngay bộ <strong class="text-gold">3 Voucher đặc quyền độc bản</strong> dùng trọn đời:
+            </p>
+
+            <div class="row g-4">
+                <!-- Voucher 1 -->
+                <div class="col-md-4">
+                    <div class="voucher-ticket h-100 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-success text-white fw-bold">MIỄN PHÍ 100%</span>
+                                <i class="fa-solid fa-oil-can text-gold fs-4"></i>
+                            </div>
+                            <h5 class="fw-bold text-white mb-1">BẢO DƯỠNG &amp; NHỚT MOTUL 300V</h5>
+                            <p class="text-secondary small mb-3">Miễn phí 100% toàn bộ công kiểm định PDI, thay lọc nhớt và 4L nhớt Motul 300V Factory Line chính hãng Pháp.</p>
+                        </div>
+                        <div class="pt-3 border-top border-secondary d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="text-secondary" style="font-size: 0.72rem;">MÃ VOUCHER:</div>
+                                <strong class="text-gold fs-6" id="codeVipBaoduong">VIP-BAODUONG-FREE</strong>
+                            </div>
+                            <button class="btn btn-sm btn-outline-warning rounded-pill" onclick="copyVoucher('VIP-BAODUONG-FREE')">
+                                <i class="fa-solid fa-copy me-1"></i> Sao Chép
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Voucher 2 -->
+                <div class="col-md-4">
+                    <div class="voucher-ticket h-100 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-warning text-dark fw-bold">TRỢ GIÁ 15 TRIỆU</span>
+                                <i class="fa-solid fa-motorcycle text-gold fs-4"></i>
+                            </div>
+                            <h5 class="fw-bold text-white mb-1">LÊN ĐỜI SIÊU MÔTÔ TIẾP THEO</h5>
+                            <p class="text-secondary small mb-3">Trừ thẳng 15.000.000 đ vào giá bán khi chủ xe đổi xe lên đời phân khúc cao hơn hoặc tậu thêm xe thứ 2.</p>
+                        </div>
+                        <div class="pt-3 border-top border-secondary d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="text-secondary" style="font-size: 0.72rem;">MÃ VOUCHER:</div>
+                                <strong class="text-gold fs-6" id="codeLendoi">LENDOI-MOTO-15TR</strong>
+                            </div>
+                            <button class="btn btn-sm btn-outline-warning rounded-pill" onclick="copyVoucher('LENDOI-MOTO-15TR')">
+                                <i class="fa-solid fa-copy me-1"></i> Sao Chép
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Voucher 3 -->
+                <div class="col-md-4">
+                    <div class="voucher-ticket h-100 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-danger text-white fw-bold">GIẢM 20%</span>
+                                <i class="fa-solid fa-helmet-safety text-gold fs-4"></i>
+                            </div>
+                            <h5 class="fw-bold text-white mb-1">PÔ ĐỘ &amp; ĐỒ BẢO HỘ BIKER</h5>
+                            <p class="text-secondary small mb-3">Giảm ngay 20% khi độ pô Akrapovic, SC Project, Austin Racing hoặc sắm nón AGV Pista, giáp Dainese.</p>
+                        </div>
+                        <div class="pt-3 border-top border-secondary d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="text-secondary" style="font-size: 0.72rem;">MÃ VOUCHER:</div>
+                                <strong class="text-gold fs-6" id="codePhutung">PHUTUNG-GIAM20</strong>
+                            </div>
+                            <button class="btn btn-sm btn-outline-warning rounded-pill" onclick="copyVoucher('PHUTUNG-GIAM20')">
+                                <i class="fa-solid fa-copy me-1"></i> Sao Chép
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 text-center">
+                <a th:href="@{/checkout}" class="btn btn-gold px-4 py-2 fw-bold rounded-pill">
+                    <i class="fa-solid fa-ticket me-1"></i> Dùng Voucher Ngay Tại Trang Đặt Xe
+                </a>
+            </div>
+        </div>
+
+        <!-- 5. CHÍNH SÁCH BẢO HÀNH & CỨU HỘ SÀN TRƯỢT 24/7 -->
+        <div class="policy-card p-4 p-md-5">
+            <h3 class="fw-bold text-white mb-4"><i class="fa-solid fa-truck-shield text-gold me-2"></i> CHÍNH SÁCH VẬN CHUYỂN XE SÀN TRƯỢT &amp; CỨU HỘ TOÀN QUỐC</h3>
+            <div class="row g-4 align-items-center">
+                <div class="col-lg-7">
+                    <ul class="list-unstyled d-flex flex-column gap-3 text-secondary mb-0">
+                        <li class="d-flex align-items-start gap-2">
+                            <i class="fa-solid fa-circle-check text-gold mt-1"></i>
+                            <span><strong class="text-white">100% Giao Xe Bằng Xe Chuyên Dụng Sàn Trượt Thủy Lực VIP:</strong> Tuyệt đối không tự ý chạy rodage xe của khách trên đường. Xe được cố định bánh trước và buộc dây đai chống trầy xước 4 điểm chuyên dụng.</span>
+                        </li>
+                        <li class="d-flex align-items-start gap-2">
+                            <i class="fa-solid fa-circle-check text-gold mt-1"></i>
+                            <span><strong class="text-white">Kiểm Tra Nổ Máy &amp; Test Pô Tận Cổng Nhà:</strong> Tài xế hạ sàn trượt, hỗ trợ khách nổ máy kiểm tra tiếng pô, hệ thống đèn còi, thẩm mỹ 360 độ ưng ý 100% mới ký biên bản bàn giao.</span>
+                        </li>
+                        <li class="d-flex align-items-start gap-2">
+                            <i class="fa-solid fa-circle-check text-gold mt-1"></i>
+                            <span><strong class="text-white">Hotline Cứu Hộ Khẩn Cấp 24/7 Toàn Quốc:</strong> Nếu gặp bất kỳ sự cố thủng lốp, hết bình, chết máy giữa đường phượt, gọi ngay Hotline <strong class="text-gold">0903.456.789</strong> để đội xe cứu hộ sàn trượt có mặt hỗ trợ nhanh nhất.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-5 text-center">
+                    <div class="p-4 bg-black rounded-4 border border-secondary border-opacity-50">
+                        <div class="display-6 fw-bold text-gold mb-2">0903.456.789</div>
+                        <div class="text-white fw-bold mb-3">TỔNG ĐÀI CỨU HỘ &amp; TƯ VẤN PHÁP LÝ XE 24/7</div>
+                        <a href="tel:0903456789" class="btn btn-warning fw-bold px-4 py-2 rounded-pill w-100 shadow">
+                            <i class="fa-solid fa-phone me-1"></i> GỌI TỔNG ĐÀI NGAY
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer Include -->
+    <div th:replace="~{layout/main :: footer}"></div>
+
+    <script>
+        function copyVoucher(code) {
+            navigator.clipboard.writeText(code).then(() => {
+                alert('Đã sao chép mã Voucher: ' + code + ' thành công! Bạn có thể dán mã này vào trang thanh toán để được giảm giá ngay.');
+            }).catch(err => {
+                prompt('Sao chép mã voucher:', code);
+            });
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

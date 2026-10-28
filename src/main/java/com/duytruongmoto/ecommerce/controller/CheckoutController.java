@@ -7,6 +7,7 @@ import com.duytruongmoto.ecommerce.service.CartService;
 import com.duytruongmoto.ecommerce.service.OrderService;
 import com.duytruongmoto.ecommerce.service.UserService;
 import com.duytruongmoto.ecommerce.service.VnPayService;
+import com.duytruongmoto.ecommerce.service.VoucherService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,7 @@ public class CheckoutController {
     private final UserService userService;
     private final DeliveryRepository deliveryRepository;
     private final VnPayService vnPayService;
+    private final VoucherService voucherService;
 
     @GetMapping("/checkout")
     public String checkoutPage(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
@@ -48,6 +50,7 @@ public class CheckoutController {
         model.addAttribute("cartTotal", cartService.getCartTotal(user.getId()));
         model.addAttribute("addresses", userService.getUserAddresses(user.getId()));
         model.addAttribute("deliveries", deliveryRepository.findByIsDeletedFalse());
+        model.addAttribute("activeVouchers", voucherService.getAllActiveVouchers());
 
         return "client/checkout";
     }
@@ -233,6 +236,9 @@ public class CheckoutController {
         model.addAttribute("statusCounts", statusCounts);
         model.addAttribute("currentStatus", status);
         model.addAttribute("statuses", OrderStatus.values());
+        boolean hasPurchasedBefore = allUserOrders.stream().anyMatch(o -> o.getStatus() == OrderStatus.DELIVERED || Boolean.TRUE.equals(o.getIsPaidBefore()));
+        model.addAttribute("hasPurchasedBefore", hasPurchasedBefore);
+        model.addAttribute("loyaltyVouchers", voucherService.getAllActiveVouchers());
 
         return "client/order-history";
     }

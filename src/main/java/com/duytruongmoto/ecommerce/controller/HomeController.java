@@ -48,4 +48,12 @@ public class HomeController {
 
         return "client/home";
     }
+
+    @GetMapping("/policy")
+    public String policyPage(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
+        if (userDetails != null) {
+            model.addAttribute("currentUser", userDetails.getUser());
+        }
+        return "client/policy";
+    }
 }

@@ -81,6 +81,9 @@
                     <li class="nav-item">
                         <a class="nav-link text-light" th:href="@{/products}"><i class="fa-solid fa-motorcycle text-gold me-1"></i> Tất Cả Sản Phẩm</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" th:href="@{/policy}"><i class="fa-solid fa-file-shield text-gold me-1"></i> Chính Sách &amp; Pháp Lý</a>
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown">
                             <i class="fa-solid fa-gem text-gold me-1"></i> Hãng Xe
@@ -281,12 +284,13 @@
                 </div>
 
                 <div class="col-lg-4">
-                    <h5 class="text-gold fw-bold mb-3">CHÍNH SÁCH & PHÁP LÝ</h5>
+                    <h5 class="text-gold fw-bold mb-3"><a th:href="@{/policy}" class="text-gold text-decoration-none"><i class="fa-solid fa-file-shield me-1"></i> CHÍNH SÁCH &amp; PHÁP LÝ</a></h5>
                     <ul class="list-unstyled text-secondary small d-flex flex-column gap-2">
-                        <li><a href="#" class="text-secondary text-decoration-none">Chính sách bảo hành chính hãng 3 năm không giới hạn km</a></li>
-                        <li><a href="#" class="text-secondary text-decoration-none">Quy trình đặt cọc giữ xe và giao dịch qua VNPAY an toàn</a></li>
-                        <li><a href="#" class="text-secondary text-decoration-none">Đăng ký đại lý / Mở Showroom ủy quyền trong chuỗi</a></li>
-                        <li><a href="#" class="text-secondary text-decoration-none">Chính sách đổi trả phụ tùng và hoàn tiền</a></li>
+                        <li><a th:href="@{/policy}" class="text-secondary text-decoration-none"><i class="fa-solid fa-angle-right text-gold me-1"></i> Quy trình sang tên &amp; bấm biển số xe cũ lướt</a></li>
+                        <li><a th:href="@{/policy}" class="text-secondary text-decoration-none"><i class="fa-solid fa-angle-right text-gold me-1"></i> Cam kết 100% HQCN &amp; bao rút hồ sơ gốc 24h</a></li>
+                        <li><a th:href="@{/policy}" class="text-secondary text-decoration-none"><i class="fa-solid fa-angle-right text-gold me-1"></i> Bảo hành chính hãng 3 năm &amp; cứu hộ 24/7</a></li>
+                        <li><a th:href="@{/policy}" class="text-secondary text-decoration-none"><i class="fa-solid fa-angle-right text-gold me-1"></i> Cam kết quay đầu thu mua xe 85% - 90%</a></li>
+                        <li><a th:href="@{/policy#voucher-tri-an}" class="text-warning text-decoration-none fw-bold"><i class="fa-solid fa-gift text-gold me-1"></i> Kho Voucher tri ân đặc quyền chủ xe VIP</a></li>
                     </ul>
                 </div>
             </div>
@@ -302,9 +306,9 @@
         <button type="button" class="btn btn-warning rounded-3 shadow d-flex align-items-center justify-content-center p-0" style="width: 48px; height: 48px;" data-bs-toggle="modal" data-bs-target="#liveChatModal" title="Định giá thu mua xe cũ">
             <i class="fa-solid fa-handshake text-dark fs-5"></i>
         </button>
-        <button type="button" class="btn btn-warning rounded-3 shadow d-flex align-items-center justify-content-center p-0" style="width: 48px; height: 48px;" onclick="alert('CAM KẾT PHÁP LÝ DUY TRƯƠNG MOTOR:\n• 100% Xe Hải Quan Chính Ngạch (HQCN)\n• Bao sang tên bấm biển số toàn quốc\n• Bao rút hồ sơ gốc trong 24 giờ\n• Hoàn tiền 100% nếu phát hiện xe tranh chấp pháp lý!')" title="Hồ sơ pháp lý HQCN">
+        <a th:href="@{/policy}" class="btn btn-warning rounded-3 shadow d-flex align-items-center justify-content-center p-0" style="width: 48px; height: 48px;" title="Chính sách &amp; Pháp lý xe HQCN">
             <i class="fa-solid fa-shield-halved text-dark fs-5"></i>
-        </button>
+        </a>
         <a th:href="@{/products}" class="btn btn-warning rounded-3 shadow d-flex align-items-center justify-content-center p-0" style="width: 48px; height: 48px;" title="Kho hình ảnh xe thực tế">
             <i class="fa-solid fa-images text-dark fs-5"></i>
         </a>

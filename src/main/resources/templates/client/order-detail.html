@@ -169,6 +169,34 @@
                         <span th:if="${!order.isPaidBefore}" class="badge bg-warning text-dark p-2 w-100">THANH TOÁN KHI NHẬN XE (COD)</span>
                     </div>
                 </div>
+
+                <!-- ĐẶC QUYỀN CHỦ XE & QUY TRÌNH PHÁP LÝ -->
+                <div class="glass-panel p-4 rounded-4 mt-4 border border-warning border-opacity-50 shadow">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <i class="fa-solid fa-gift text-gold fs-5"></i>
+                        <h6 class="text-white fw-bold mb-0">ĐẶC QUYỀN CHỦ XE (GARAGE VIP)</h6>
+                    </div>
+                    <p class="text-secondary small mb-3">Tặng bộ voucher tri ân giảm phí bảo dưỡng định kỳ và hỗ trợ lên đời siêu môtô độc quyền.</p>
+                    <div class="d-flex flex-column gap-2 mb-3">
+                        <div class="p-2 bg-black rounded-3 border border-secondary d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="badge bg-success small me-1">Free 100%</span>
+                                <span class="text-gold fw-bold small">VIP-BAODUONG-FREE</span>
+                            </div>
+                            <button class="btn btn-sm btn-outline-warning py-0 px-2 rounded-pill" onclick="navigator.clipboard.writeText('VIP-BAODUONG-FREE'); alert('Đã chép mã bảo dưỡng miễn phí: VIP-BAODUONG-FREE');"><i class="fa-solid fa-copy"></i></button>
+                        </div>
+                        <div class="p-2 bg-black rounded-3 border border-secondary d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="badge bg-warning text-dark small me-1">-15 Triệu</span>
+                                <span class="text-gold fw-bold small">LENDOI-MOTO-15TR</span>
+                            </div>
+                            <button class="btn btn-sm btn-outline-warning py-0 px-2 rounded-pill" onclick="navigator.clipboard.writeText('LENDOI-MOTO-15TR'); alert('Đã chép mã lên đời xe: LENDOI-MOTO-15TR');"><i class="fa-solid fa-copy"></i></button>
+                        </div>
+                    </div>
+                    <a th:href="@{/policy}" class="btn btn-gold btn-sm w-100 rounded-pill fw-bold shadow">
+                        <i class="fa-solid fa-file-shield me-1"></i> Chính Sách &amp; Sang Tên Biển Số
+                    </a>
+                </div>
             </div>
         </div>
     </div>
