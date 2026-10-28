@@ -1525,3 +1525,25 @@ body {
   border: 1px solid rgba(212, 175, 55, 0.3) !important;
   cursor: pointer;
 }
+
+
+/* --- Skeleton Loading Styles & Smooth Scroll --- */
+html {
+  scroll-behavior: smooth;
+}
+
+@keyframes skeleton-pulse {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton-box {
+  background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(212,175,55,0.08) 50%, rgba(255,255,255,0.03) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-pulse 1.8s infinite ease-in-out;
+  border-radius: 12px;
+}

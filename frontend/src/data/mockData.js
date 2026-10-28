@@ -177,7 +177,7 @@ export const CATEGORIES = [
   { id: 'adventure', name: 'Adventure Phượt Bụi', group: 'motor', icon: 'fa-compass' },
   { id: 'scooter', name: 'Tay Ga Độc Lạ Ý', group: 'motor', icon: 'fa-gem' },
   { id: 'xenho', name: 'Xe Nhỏ Sưu Tầm', group: 'motor', icon: 'fa-motorcycle' },
-  { id: 'oto', name: 'Siêu Xe Ô Tô & Xe Sang', group: 'motor', icon: 'fa-car-side' }
+  { id: 'gear-parts', name: 'Pô Độ & Phụ Tùng Hiệu Năng Cao', group: 'bike-parts', icon: 'fa-gears' }
 ];
 
 export function getProductBranchStocks(product) {

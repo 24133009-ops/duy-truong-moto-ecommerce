@@ -64,7 +64,7 @@ public class ProductController {
                             return s.equals(cleanCat) ||
                                    (cleanCat.equals("gear-parts") && (s.contains("gear") || s.contains("po-do") || s.contains("bao-ho") || n.contains("pô") || n.contains("bảo hộ"))) ||
                                    (cleanCat.equals("cruiser") && (s.contains("cruiser") || n.contains("cruiser"))) ||
-                                   (cleanCat.equals("oto") && (s.contains("oto") || n.contains("ô tô") || n.contains("siêu xe"))) ||
+                                   (cleanCat.equals("phu-tung") && (s.contains("gear") || n.contains("phụ tùng"))) ||
                                    (cleanCat.equals("xenho") && (s.contains("xenho") || n.contains("xe nhỏ") || n.contains("tay ga"))) ||
                                    s.contains(cleanCat) || cleanCat.contains(s);
                         })

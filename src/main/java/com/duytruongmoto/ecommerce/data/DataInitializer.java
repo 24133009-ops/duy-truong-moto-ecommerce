@@ -260,7 +260,7 @@ public class DataInitializer implements CommandLineRunner {
     private Map<String, Category> initCategories() {
         Map<String, Category> catMap = new HashMap<>();
         String[][] catDefs = {
-            {"Siêu Xe Ô Tô & Xe Sang", "oto", "/images/lamborghini_huracan.jpg"},
+            {"Pô Độ & Phụ Tùng Hiệu Năng Cao", "gear-parts", "/images/sc_project_exhaust.jpg"},
             {"Xe Nhỏ & Tay Ga Sưu Tầm", "xenho", "/images/honda_monkey_125.jpg"},
             {"Xe Cào Cào - Địa Hình", "dirtbike", "/images/ktm_300_exc.jpg"},
             {"Superbike / Thể Thao", "superbike", "/images/ducati_panigale_v4s.jpg"},
@@ -273,6 +273,23 @@ public class DataInitializer implements CommandLineRunner {
             {"Pô Độ & Phụ Tùng Cao Cấp", "phu-tung-po-do", "/images/sc_project_exhaust.jpg"},
             {"Đồ Bảo Hộ & Nón Bảo Hiểm", "do-bao-ho", "/images/agv_helmet.jpg"}
         };
+
+        // Đồng bộ triệt để: Chuyển đổi danh mục 'oto' cũ thành 'gear-parts' (Pô Độ & Phụ Tùng Hiệu Năng Cao)
+        categoryRepository.findBySlug("oto").ifPresent(cat -> {
+            cat.setName("Pô Độ & Phụ Tùng Hiệu Năng Cao");
+            cat.setSlug("gear-parts");
+            cat.setImage("/images/sc_project_exhaust.jpg");
+            categoryRepository.save(cat);
+            log.info(">>> Đã cập nhật chuyển đổi danh mục 'oto' cũ sang 'gear-parts'!");
+        });
+        categoryRepository.findAll().forEach(cat -> {
+            if (cat.getName() != null && (cat.getName().contains("Ô Tô") || cat.getName().contains("Xe Sang"))) {
+                cat.setName("Pô Độ & Phụ Tùng Hiệu Năng Cao");
+                cat.setSlug("gear-parts");
+                cat.setImage("/images/sc_project_exhaust.jpg");
+                categoryRepository.save(cat);
+            }
+        });
 
         for (String[] def : catDefs) {
             String name = def[0];
@@ -594,7 +611,7 @@ public class DataInitializer implements CommandLineRunner {
             "/images/bmw_r1250gs.jpg",
             "Vua việt dã thám hiểm thế giới. Động cơ Boxer 1.254cc êm ái đầm chắc, phuộc điện tử Dynamic ESA cân bằng tải trọng tự động, hỗ trợ khởi hành ngang dốc Hill Start Control và full bộ 3 thùng nhôm chính hãng.");
 
-        seedProduct(storeMap.get(1), catMap.get("scooter"),
+        seedProduct(storeMap.get(1), catMap.get("xenho"),
             "Vespa 946 Christian Dior Limited Edition (Hàng Sưu Tầm)",
             "vespa-946-christian-dior-limited-edition-hang-suu-tam-7",
             "Vespa",

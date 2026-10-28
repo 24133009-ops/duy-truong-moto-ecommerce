@@ -59,8 +59,8 @@
             <a th:href="@{/products}" class="category-tab-pill" th:classappend="${categoryId == null && (keyword == null || keyword == '') && (brand == null || brand == '') ? 'active' : ''}">
                 <i class="fa-solid fa-border-all"></i> Tất Cả Kho Xe
             </a>
-            <a th:href="@{/products(category='oto')}" class="category-tab-pill" th:classappend="${selectedCategorySlug == 'oto' || brand == 'oto'} ? 'active' : ''">
-                <i class="fa-solid fa-car-side text-gold"></i> Siêu Xe Ô Tô & Xe Sang
+            <a th:href="@{/products(category='gear-parts')}" class="category-tab-pill" th:classappend="${selectedCategorySlug == 'gear-parts' || brand == 'gear-parts'} ? 'active' : ''">
+                <i class="fa-solid fa-gears text-gold"></i> Pô Độ & Phụ Tùng Hiệu Năng Cao
             </a>
             <a th:href="@{/products(category='dirtbike')}" class="category-tab-pill" th:classappend="${selectedCategorySlug == 'dirtbike'} ? 'active' : ''">
                 <i class="fa-solid fa-mountain text-gold"></i> Xe Cào Cào Địa Hình
@@ -197,7 +197,7 @@
                         <div class="luxury-bike-card">
                             <!-- Card Image -->
                             <div class="card-img-container">
-                                <img th:src="@{${product.mainImage}}" th:alt="${product.name}" onerror="if (this.src.indexOf('unsplash') === -1) { this.src='https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=800&q=80'; }">
+                                <img th:src="@{${product.mainImage}}" loading="lazy" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=800&q=80';" th:alt="${product.name}" onerror="if (this.src.indexOf('unsplash') === -1) { this.src='https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=800&q=80'; }">
                                 <div class="luxury-badge-hqcn">
                                     <i class="fa-solid fa-certificate me-1"></i> HQCN
                                 </div>

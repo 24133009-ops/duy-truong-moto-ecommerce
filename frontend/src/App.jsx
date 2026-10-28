@@ -47,7 +47,59 @@ export default function App() {
   const [authSuccess, setAuthSuccess] = useState('');
   const [authLoading, setAuthLoading] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [currentTab, setCurrentTab] = useState('home'); // home, products, showrooms, orders, vendor, admin, shipper
+  const getInitialTab = () => {
+    if (typeof window === 'undefined') return 'home';
+    const path = window.location.pathname.replace(/^\/+|\/+$/g, '').toLowerCase();
+    if (!path || path === 'home') return 'home';
+    const validTabs = ['products', 'showrooms', 'orders', 'vendor', 'admin', 'shipper'];
+    if (validTabs.includes(path)) return path;
+    return 'notfound';
+  };
+  const [currentTab, setCurrentTab] = useState(getInitialTab);
+
+  // Sync browser popstate (Back/Forward navigation)
+  useEffect(() => {
+    const handlePopState = () => {
+      setCurrentTab(getInitialTab());
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const navigateTab = (tab) => {
+    setCurrentTab(tab);
+    if (typeof window !== 'undefined') {
+      const newPath = tab === 'home' ? '/' : `/${tab}`;
+      if (window.location.pathname !== newPath) {
+        window.history.pushState(null, '', newPath);
+      }
+    }
+  };
+
+  // Dynamic document.title & Scroll To Top
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (activeProductDetail) {
+      document.title = `${activeProductDetail.name} | Duy Trương Motor`;
+      return;
+    }
+    const titleMap = {
+      home: 'Duy Trương Motor | Siêu Thị Mô Tô PKL & Xe Cào Cào Uy Tín',
+      products: 'Kho Mô Tô PKL & Xe Cào Cào Địa Hình | Duy Trương Motor',
+      showrooms: 'Hệ Thống 3 Showroom Toàn Quốc | Duy Trương Motor',
+      orders: 'Tra Cứu Đơn Hàng & Đặt Cọc | Duy Trương Motor',
+      vendor: 'Kênh Quản Trị Showroom | Duy Trương Motor',
+      admin: 'Trung Tâm Quản Trị Hệ Thống | Duy Trương Motor',
+      shipper: 'Phân Hệ Vận Tải Sàn Trượt | Duy Trương Motor',
+      notfound: '404 Không Tìm Thấy Trang | Duy Trương Motor'
+    };
+    document.title = titleMap[currentTab] || 'Duy Trương Motor | Siêu Thị Mô Tô PKL & Xe Cào Cào Uy Tín';
+  }, [currentTab, activeProductDetail]);
+
+  const handleImgFallback = (e) => {
+    e.currentTarget.onerror = null;
+    e.currentTarget.src = 'https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=800&q=80';
+  };
   const [selectedShowroomFilter, setSelectedShowroomFilter] = useState('all');
   const [selectedCategoryGroup, setSelectedCategoryGroup] = useState('all'); // all, rider-gear, bike-parts, motor
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -59,6 +111,8 @@ export default function App() {
 
   // Data Collections & Live API State
   const [products, setProducts] = useState(INITIAL_PRODUCTS);
+  const [isProductsLoading, setIsProductsLoading] = useState(false);
+  const [isOrdersLoading, setIsOrdersLoading] = useState(false);
   const [reviews, setReviews] = useState(INITIAL_REVIEWS);
   const [apiStatus, setApiStatus] = useState({
     connected: false,
@@ -270,7 +324,7 @@ export default function App() {
     setAuthToken('');
     setAuthUser(null);
     setCurrentRoleKey('guest');
-    setCurrentTab('home');
+    navigateTab('home');
   };
 
   const handleQuickSwitchRole = (roleKey, email, pass, targetTab) => {
@@ -616,7 +670,7 @@ export default function App() {
     setIsVnPayModalOpen(false);
     confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
     alert("Chúc mừng Quý khách! Đơn hàng đặt xe đã được tạo thành công trên hệ thống Duy Trương Motor!");
-    setCurrentTab('orders');
+    navigateTab('orders');
   };
 
   // Chat message send (Smart AI CSKH Engine)
@@ -711,7 +765,7 @@ export default function App() {
 
       {/* 2. MAIN APP HEADER (Thoáng đãng, rộng rãi, đẳng cấp showroom) */}
       <header className="app-header">
-        <div className="logo-badge" onClick={() => setCurrentTab('home')}>
+        <div className="logo-badge" onClick={() => navigateTab('home')}>
           <div className="logo-icon-box">
             <i className="fa-solid fa-helmet-safety"></i>
           </div>
@@ -727,32 +781,32 @@ export default function App() {
 
         {/* Navigation Tabs */}
         <nav className="header-nav">
-          <button className={`btn-subtle ${currentTab === 'home' ? 'active' : ''}`} onClick={() => setCurrentTab('home')}>
+          <button className={`btn-subtle ${currentTab === 'home' ? 'active' : ''}`} onClick={() => navigateTab('home')}>
             <i className="fa-solid fa-house"></i> Trang Chủ
           </button>
-          <button className={`btn-subtle ${currentTab === 'products' ? 'active' : ''}`} onClick={() => { setSelectedCategory('all'); setBrandFilter('all'); setCurrentTab('products'); }}>
+          <button className={`btn-subtle ${currentTab === 'products' ? 'active' : ''}`} onClick={() => { setSelectedCategory('all'); setBrandFilter('all'); navigateTab('products'); }}>
             <i className="fa-solid fa-motorcycle"></i> Kho Xe ({products.length})
           </button>
-          <button className={`btn-subtle ${currentTab === 'showrooms' ? 'active' : ''}`} onClick={() => setCurrentTab('showrooms')}>
+          <button className={`btn-subtle ${currentTab === 'showrooms' ? 'active' : ''}`} onClick={() => navigateTab('showrooms')}>
             <i className="fa-solid fa-store"></i> Showroom
           </button>
-          <button className={`btn-subtle ${currentTab === 'orders' ? 'active' : ''}`} onClick={() => setCurrentTab('orders')}>
+          <button className={`btn-subtle ${currentTab === 'orders' ? 'active' : ''}`} onClick={() => navigateTab('orders')}>
             <i className="fa-solid fa-receipt"></i> Đơn Hàng ({orders.length})
           </button>
 
           {/* Conditional Role Portals */}
           {(currentRoleKey === 'vendor' || currentRoleKey === 'vendor_tinh') && (
-            <button className={`btn-subtle ${currentTab === 'vendor' ? 'active' : ''}`} style={{ borderColor: 'var(--gold-primary)', color: 'var(--gold-primary)' }} onClick={() => setCurrentTab('vendor')}>
+            <button className={`btn-subtle ${currentTab === 'vendor' ? 'active' : ''}`} style={{ borderColor: 'var(--gold-primary)', color: 'var(--gold-primary)' }} onClick={() => navigateTab('vendor')}>
               <i className="fa-solid fa-warehouse"></i> {currentRoleKey === 'vendor' ? 'Kho HN (Khôi)' : 'Kho ĐN (Tình)'}
             </button>
           )}
           {currentRoleKey === 'admin' && (
-            <button className={`btn-subtle ${currentTab === 'admin' ? 'active' : ''}`} style={{ borderColor: 'var(--red-racing)', color: 'var(--red-racing)' }} onClick={() => setCurrentTab('admin')}>
+            <button className={`btn-subtle ${currentTab === 'admin' ? 'active' : ''}`} style={{ borderColor: 'var(--red-racing)', color: 'var(--red-racing)' }} onClick={() => navigateTab('admin')}>
               <i className="fa-solid fa-shield-halved"></i> Quản Trị Sàn
             </button>
           )}
           {currentRoleKey === 'shipper' && (
-            <button className={`btn-subtle ${currentTab === 'shipper' ? 'active' : ''}`} style={{ borderColor: 'var(--cyan-neon)', color: 'var(--cyan-neon)' }} onClick={() => setCurrentTab('shipper')}>
+            <button className={`btn-subtle ${currentTab === 'shipper' ? 'active' : ''}`} style={{ borderColor: 'var(--cyan-neon)', color: 'var(--cyan-neon)' }} onClick={() => navigateTab('shipper')}>
               <i className="fa-solid fa-truck-fast"></i> Phân Hệ Giao Xe
             </button>
           )}
@@ -761,7 +815,7 @@ export default function App() {
         {/* Right Actions: Search Pill, Cart & User status */}
         <div className="header-right-actions">
           {/* Vuong Khang Style Search Pill */}
-          <div className="search-pill-btn" onClick={() => { setSelectedCategory('all'); setBrandFilter('all'); setCurrentTab('products'); }}>
+          <div className="search-pill-btn" onClick={() => { setSelectedCategory('all'); setBrandFilter('all'); navigateTab('products'); }}>
             <i className="fa-solid fa-magnifying-glass text-gold"></i>
             <span>Các dòng xe khác...</span>
             <i className="fa-solid fa-chevron-right text-gold" style={{ fontSize: '0.72rem' }}></i>
@@ -771,7 +825,7 @@ export default function App() {
             <i className="fa-solid fa-cart-shopping"></i> Giỏ ({cart.length})
           </button>
 
-          <div className="header-user-badge" onClick={() => setCurrentTab('orders')}>
+          <div className="header-user-badge" onClick={() => navigateTab('orders')}>
             <img src={currentUser.avatar} alt="Avatar" style={{ width: '32px', height: '32px', borderRadius: '50%', border: '2px solid var(--gold-primary)', objectFit: 'cover' }} />
             <div style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>
               <div style={{ fontWeight: 700, color: '#fff', maxWidth: '100px', overflow: 'hidden', textOverflow: 'ellipsis' }}>{currentUser.name}</div>
@@ -879,7 +933,7 @@ export default function App() {
                         onClick={() => {
                           setSelectedCategory(MEGA_MENU_DATA[selectedMegaKey]?.categoryKey || 'all');
                           setBrandFilter('all');
-                          setCurrentTab('products');
+                          navigateTab('products');
                           setSelectedMegaKey(null);
                         }}
                       >
@@ -926,7 +980,7 @@ export default function App() {
                                 setSelectedCategory(MEGA_MENU_DATA[selectedMegaKey]?.categoryKey || 'all');
                                 setBrandFilter(targetBrand);
                                 setSearchQuery('');
-                                setCurrentTab('products');
+                                navigateTab('products');
                                 setSelectedMegaKey(null);
                               }}
                             >
@@ -1061,10 +1115,10 @@ export default function App() {
                   </p>
 
                   <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-                    <button className="btn-gold" style={{ fontSize: '1rem', padding: '14px 32px' }} onClick={() => setCurrentTab('products')}>
+                    <button className="btn-gold" style={{ fontSize: '1rem', padding: '14px 32px' }} onClick={() => navigateTab('products')}>
                       <i className="fa-solid fa-motorcycle"></i> Khám Phá Kho Xe ({products.length})
                     </button>
-                    <button className="btn-racing" style={{ fontSize: '1rem', padding: '14px 28px' }} onClick={() => { setSelectedCategory('dirtbike'); setCurrentTab('products'); }}>
+                    <button className="btn-racing" style={{ fontSize: '1rem', padding: '14px 28px' }} onClick={() => { setSelectedCategory('dirtbike'); navigateTab('products'); }}>
                       <i className="fa-solid fa-mountain"></i> Xem Xe Cào Cào Địa Hình
                     </button>
                     <button className="btn-outline-gold" style={{ fontSize: '1rem', padding: '14px 24px' }} onClick={() => setIsChatOpen(true)}>
@@ -1155,7 +1209,7 @@ export default function App() {
                       key={cat.id} 
                       className={`btn-subtle ${selectedCategory === cat.id ? 'active' : ''}`}
                       style={{ fontSize: '0.8rem', padding: '5px 12px' }}
-                      onClick={() => { setSelectedCategory(cat.id); setCurrentTab('products'); }}
+                      onClick={() => { setSelectedCategory(cat.id); navigateTab('products'); }}
                     >
                       <i className={`fa-solid ${cat.icon}`}></i> {cat.name}
                     </button>
@@ -1187,7 +1241,7 @@ export default function App() {
                 {topOver10Sold.map(bike => (
                   <div key={bike.id} className="bike-card">
                     <div className="bike-img-box">
-                      <img src={bike.image} alt={bike.name} loading="lazy" />
+                      <img src={bike.image} alt={bike.name} loading="lazy" onError={handleImgFallback} />
                       <div className="badge-sold">
                         <i className="fa-solid fa-fire text-racing me-1"></i> Đã bán: <strong>{bike.sold} xe</strong>
                       </div>
@@ -1456,7 +1510,7 @@ export default function App() {
               <div className="glass-box" style={{ padding: '60px', textAlign: 'center' }}>
                 <h4>Chưa có đơn hàng nào</h4>
                 <p style={{ color: 'var(--text-muted)' }}>Hãy chọn mẫu xe ưa thích và đặt cọc online ngay hôm nay.</p>
-                <button className="btn-gold" onClick={() => setCurrentTab('products')}>Khám Phá Kho Xe</button>
+                <button className="btn-gold" onClick={() => navigateTab('products')}>Khám Phá Kho Xe</button>
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
@@ -1569,7 +1623,7 @@ export default function App() {
                     {products.filter(p => p.storeId === (currentUser.storeId || 1)).map(p => (
                       <tr key={p.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
                         <td style={{ padding: '12px' }}>
-                          <img src={p.image} alt={p.name} loading="lazy" style={{ width: '60px', height: '42px', objectFit: 'cover', borderRadius: '6px' }} />
+                          <img src={p.image} alt={p.name} loading="lazy" onError={handleImgFallback} style={{ width: '60px', height: '42px', objectFit: 'cover', borderRadius: '6px' }} />
                         </td>
                         <td style={{ padding: '12px', fontWeight: 700, color: '#fff' }}>{p.name}</td>
                         <td style={{ padding: '12px', color: 'var(--gold-primary)', fontWeight: 700 }}>{formatMoney(p.price)}</td>
@@ -1662,7 +1716,33 @@ export default function App() {
         )}
 
         {/* ================= TAB: SHIPPER ================= */}
-        {currentTab === 'shipper' && (
+
+        {/* NOT FOUND 404 VIEW */}
+        {currentTab === 'notfound' && (
+          <div style={{ minHeight: '65vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '60px 20px' }}>
+            <div style={{ width: '84px', height: '84px', borderRadius: '50%', background: 'rgba(239,68,68,0.12)', border: '2px solid var(--red-racing)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px', boxShadow: '0 0 30px rgba(239,68,68,0.25)' }}>
+              <i className="fa-solid fa-motorcycle" style={{ fontSize: '2.4rem', color: '#ef4444' }}></i>
+            </div>
+            <div style={{ fontSize: '5rem', fontWeight: 900, background: 'linear-gradient(135deg, #ef4444, #f87171, #b91c1c)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', lineHeight: 1, marginBottom: '14px' }}>404</div>
+            <h2 style={{ color: '#fff', fontWeight: 800, marginBottom: '12px' }}>LẠC ĐƯỜNG RỒI BIKER ƠI!</h2>
+            <p style={{ color: '#94a3b8', maxWidth: '520px', lineHeight: 1.6, marginBottom: '28px', fontSize: '0.95rem' }}>
+              Cung đường hoặc chiếc xe bạn đang tìm kiếm không tồn tại trên hệ thống Duy Trương Motor (hoặc xe đã hoàn tất thủ tục bàn giao sang garage khác).
+            </p>
+            <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', justifyContent: 'center' }}>
+              <button className="search-pill-btn" style={{ padding: '12px 28px', background: 'var(--gold-primary)', color: '#000', fontWeight: 700 }} onClick={() => navigateTab('home')}>
+                <i className="fa-solid fa-house me-2"></i> Quay Về Trang Chủ Showroom
+              </button>
+              <button className="search-pill-btn" style={{ padding: '12px 28px', background: 'rgba(212,175,55,0.15)', color: 'var(--gold-light)', border: '1px solid var(--gold-primary)' }} onClick={() => navigateTab('products')}>
+                <i className="fa-solid fa-motorcycle me-2"></i> Khám Phá Kho Xe ({products.length})
+              </button>
+              <a href="tel:0903456789" className="search-pill-btn" style={{ padding: '12px 28px', background: 'rgba(255,255,255,0.06)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', textDecoration: 'none' }}>
+                <i className="fa-solid fa-phone me-2 text-gold"></i> Hotline 0903.456.789
+              </a>
+            </div>
+          </div>
+        )}
+
+                {currentTab === 'shipper' && (
           <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '50px 30px' }}>
             <div style={{ marginBottom: '32px' }}>
               <span style={{ background: 'var(--cyan-neon)', color: '#000', padding: '4px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 800 }}>ĐỘI XE SÀN TRƯỢT VIP</span>
@@ -2197,7 +2277,7 @@ export default function App() {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px', marginBottom: '30px' }}>
               <div>
-                <img src={activeProductDetail.image} alt={activeProductDetail.name} loading="lazy" style={{ width: '100%', borderRadius: '16px', border: '1px solid var(--gold-primary)', objectFit: 'cover' }} />
+                <img src={activeProductDetail.image} alt={activeProductDetail.name} loading="lazy" onError={handleImgFallback} style={{ width: '100%', borderRadius: '16px', border: '1px solid var(--gold-primary)', objectFit: 'cover' }} />
                 <div style={{ display: 'flex', gap: '8px', marginTop: '12px', flexWrap: 'wrap' }}>
                   <span className="badge-hqcn">Bao Test Hãng</span>
                   <span className="badge-odo">Odo: {activeProductDetail.odo || 'Mới 100%'}</span>

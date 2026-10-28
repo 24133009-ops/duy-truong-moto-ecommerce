@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <!-- Racing Gradient Background -->
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e2230"/>
+      <stop offset="50%" stop-color="#0a0c12"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </linearGradient>
+
+    <!-- Gold Metallic Gradient -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fcf6ba"/>
+      <stop offset="35%" stop-color="#bf953f"/>
+      <stop offset="70%" stop-color="#d4af37"/>
+      <stop offset="100%" stop-color="#aa771c"/>
+    </linearGradient>
+
+    <!-- Racing Crimson Red Gradient -->
+    <linearGradient id="redGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ef4444"/>
+      <stop offset="100%" stop-color="#b91c1c"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Outer Protective Racing Shield -->
+  <path d="M32 3 L57 12 C57 38 32 59 32 61 C32 59 7 38 7 12 Z" 
+        fill="url(#shieldGrad)" 
+        stroke="url(#goldGrad)" 
+        stroke-width="2.5" 
+        stroke-linejoin="round" />
+
+  <!-- Inner Dynamic Racing Stripes -->
+  <path d="M32 7 L52 14 C52 35 32 54 32 55 Z" 
+        fill="none" 
+        stroke="url(#redGrad)" 
+        stroke-width="1.2" 
+        opacity="0.8" />
+
+  <!-- Stylized Biker Fullface Helmet Silhouette -->
+  <!-- Helmet Dome -->
+  <path d="M22 25 C22 17 42 17 42 25 C42 30 40 37 32 37 C24 37 22 30 22 25 Z" 
+        fill="url(#goldGrad)" />
+        
+  <!-- Helmet Aerodynamic Visor (Kính nón che gió) -->
+  <path d="M25 24 C28 22 36 22 39 24 C40 27 38 30 32 30 C26 30 24 27 25 24 Z" 
+        fill="#0b0f19" 
+        stroke="url(#redGrad)" 
+        stroke-width="1" />
+
+  <!-- Chin Guard & Air Vent (Hàm nón & Khe hút gió) -->
+  <path d="M27 32 L37 32 L34 35 L30 35 Z" 
+        fill="url(#redGrad)" />
+
+  <!-- Monogram Brand Badge: DT MOTOR -->
+  <text x="32" y="47" 
+        text-anchor="middle" 
+        font-family="'Montserrat', 'Arial Black', sans-serif" 
+        font-weight="900" 
+        font-size="8.5" 
+        letter-spacing="0.5" 
+        fill="url(#goldGrad)">DT</text>
+
+  <text x="32" y="53" 
+        text-anchor="middle" 
+        font-family="'Montserrat', 'Arial', sans-serif" 
+        font-weight="800" 
+        font-size="4" 
+        letter-spacing="1.5" 
+        fill="#ffffff">MOTOR</text>
+</svg>
