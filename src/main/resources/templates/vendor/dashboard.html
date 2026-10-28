@@ -11,6 +11,7 @@
 <body>
 
     <!-- Header / Navbar Include -->
+    <div th:replace="~{layout/main :: topbar}"></div>
     <div th:replace="~{layout/main :: nav}"></div>
 
     <div class="container py-5">
@@ -63,6 +64,82 @@
                     <h3 class="fw-black text-white mb-0" th:text="(${totalOrders != null ? totalOrders : 0}) + ' Đơn Hàng'"></h3>
                     <div class="small text-light mt-1">Khách đặt cọc hoặc thanh toán</div>
                 </div>
+            </div>
+        </div>
+
+                <!-- Showroom Inventory Section (Quản lý kho xe trực tiếp trên Dashboard) -->
+        <div class="glass-panel p-4 rounded-4 mb-4">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+                <div>
+                    <h5 class="fw-bold text-gold mb-1">
+                        <i class="fa-solid fa-motorcycle me-2"></i> QUẢN LÝ KHO XE &amp; PHỤ TÙNG CỦA SHOWROOM
+                    </h5>
+                    <div class="text-secondary small">
+                        Danh sách các mẫu xe &amp; phụ kiện đang có mặt tại chi nhánh này (<span class="text-gold fw-bold" th:text="${products != null ? #lists.size(products) : 0}"></span> sản phẩm).
+                    </div>
+                </div>
+                <div class="d-flex gap-2 mt-2 mt-sm-0">
+                    <a th:href="@{/vendor/products/new}" class="btn btn-gold btn-sm px-3 shadow">
+                        <i class="fa-solid fa-plus me-1"></i> Thêm Dòng Xe Mới
+                    </a>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-dark table-borderless align-middle mb-0">
+                    <thead>
+                        <tr class="border-bottom border-secondary text-gold small">
+                            <th>HÌNH ẢNH</th>
+                            <th>TÊN XE / PHỤ TÙNG</th>
+                            <th>HÃNG</th>
+                            <th>GIÁ BÁN</th>
+                            <th>TỒN KHO</th>
+                            <th>ĐÃ BÁN</th>
+                            <th>TRẠNG THÁI BÁN</th>
+                            <th>THAO TÁC</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${products == null or #lists.isEmpty(products)}">
+                            <td colspan="8" class="text-center text-secondary py-4">
+                                <i class="fa-solid fa-box-open fs-3 text-secondary d-block mb-2"></i>
+                                Kho xe chi nhánh hiện chưa có sản phẩm. Bấm nút <strong>"Thêm Dòng Xe Mới"</strong> để nhập xe vào kho.
+                            </td>
+                        </tr>
+                        <tr class="border-bottom border-secondary" th:each="product : ${products}">
+                            <td>
+                                <img th:src="${product.mainImage}" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=800&q=80';" class="rounded-3 shadow" style="width: 75px; height: 50px; object-fit: cover;">
+                            </td>
+                            <td>
+                                <strong class="text-white" th:text="${product.name}"></strong>
+                                <div class="text-secondary small" th:text="${product.engineCapacity != null ? product.engineCapacity : 'Phụ tùng chính hãng'}"></div>
+                            </td>
+                            <td><span class="badge bg-dark border border-secondary text-gold" th:text="${product.brand}"></span></td>
+                            <td class="fw-bold text-gradient-gold" th:text="${#numbers.formatDecimal(product.getEffectivePrice(), 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                            <td><span class="badge bg-success" th:text="${product.quantity} + ' chiếc'"></span></td>
+                            <td><strong class="text-danger" th:text="${product.sold}"></strong></td>
+                            <td>
+                                <span th:if="${product.isSelling}" class="badge bg-success"><i class="fa-solid fa-circle-check me-1"></i> Đang mở bán</span>
+                                <span th:if="${!product.isSelling}" class="badge bg-secondary"><i class="fa-solid fa-pause me-1"></i> Tạm ngừng bán</span>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center gap-1">
+                                    <form th:action="@{/vendor/products/{id}/toggle(id=${product.id})}" method="post" class="d-inline m-0">
+                                        <button type="submit" class="btn btn-outline-warning btn-sm p-1 px-2" th:title="${product.isSelling ? 'Ngừng bán' : 'Mở bán lại'}">
+                                            <i class="fa-solid fa-power-off"></i>
+                                        </button>
+                                    </form>
+                                    <a th:href="@{/products/{slug}(slug=${product.slug})}" target="_blank" class="btn btn-outline-info btn-sm p-1 px-2" title="Xem trên web">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
+                                    <a th:href="@{/vendor/products/{id}/edit(id=${product.id})}" class="btn btn-outline-secondary btn-sm p-1 px-2" title="Chỉnh sửa thông số">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 

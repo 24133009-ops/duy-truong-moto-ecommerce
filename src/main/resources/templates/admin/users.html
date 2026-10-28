@@ -99,27 +99,33 @@
                                 </span>
                             </td>
                             <td>
-                                <span th:if="${u.isBlocked == true}" class="badge bg-danger">
+                                <span th:if="${u.isBlocked != null and u.isBlocked}" class="badge bg-danger">
                                     <i class="fa-solid fa-ban me-1"></i> Đã Bị Khóa
                                 </span>
-                                <span th:unless="${u.isBlocked == true}" class="badge bg-success">
+                                <span th:unless="${u.isBlocked != null and u.isBlocked}" class="badge bg-success">
                                     <i class="fa-solid fa-circle-check me-1"></i> Hoạt Động
                                 </span>
                             </td>
                             <td>
-                                <form th:action="@{'/admin/users/' + ${u.id} + '/toggle-lock'}" method="post" class="d-inline"
-                                    onsubmit="return confirm('Bạn có chắc chắn muốn thay đổi trạng thái tài khoản này?');">
-                                    <button th:unless="${u.isBlocked == true}" type="submit"
-                                        class="btn btn-outline-danger btn-sm px-2 py-1"
-                                        th:disabled="${u.email == 'admin@duytruongmoto.com' or (u.role != null and u.role.name() == 'ROLE_ADMIN')}"
-                                        title="Khóa tài khoản">
-                                        <i class="fa-solid fa-lock me-1"></i> Khóa
-                                    </button>
-                                    <button th:if="${u.isBlocked == true}" type="submit"
-                                        class="btn btn-outline-success btn-sm px-2 py-1" title="Mở khóa tài khoản">
-                                        <i class="fa-solid fa-lock-open me-1"></i> Mở
-                                    </button>
-                                </form>
+                                <div th:if="${u.email == 'admin@duytruongmoto.com' or (u.role != null and u.role.name() == 'ROLE_ADMIN')}">
+                                    <span class="badge bg-dark border border-secondary text-secondary small px-2 py-1">
+                                        <i class="fa-solid fa-shield-halved me-1"></i> Super Admin
+                                    </span>
+                                </div>
+                                <div th:unless="${u.email == 'admin@duytruongmoto.com' or (u.role != null and u.role.name() == 'ROLE_ADMIN')}">
+                                    <form th:action="@{'/admin/users/' + ${u.id} + '/toggle-lock'}" method="post" class="d-inline m-0"
+                                        onsubmit="return confirm('Bạn có chắc chắn muốn thay đổi trạng thái tài khoản này?');">
+                                        <button th:unless="${u.isBlocked != null and u.isBlocked}" type="submit"
+                                            class="btn btn-outline-danger btn-sm px-2 py-1"
+                                            title="Khóa tài khoản này">
+                                            <i class="fa-solid fa-lock me-1"></i> Khóa
+                                        </button>
+                                        <button th:if="${u.isBlocked != null and u.isBlocked}" type="submit"
+                                            class="btn btn-outline-success btn-sm px-2 py-1" title="Mở khóa tài khoản">
+                                            <i class="fa-solid fa-lock-open me-1"></i> Mở
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     </tbody>

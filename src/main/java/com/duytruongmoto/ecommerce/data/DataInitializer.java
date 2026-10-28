@@ -792,7 +792,27 @@ public class DataInitializer implements CommandLineRunner {
             "Vàng Ohlins Gold Huyền Thoại Ty Mạ DLC",
             "/images/ohlins_suspension.jpg",
             "Đỉnh cao của hệ thống giảm xóc xe đua thế giới. Trang bị công nghệ van tiết lưu TTX độc quyền triệt tiêu hoàn toàn hiện tượng bọt khí dầu phuộc, đem lại độ êm ái, bám đường tuyệt đối khi vào cua tốc độ cao trên đường đua cũng như đường phố.");
+    
+        // Tự động phân bổ đồng đều sản phẩm cho cả 3 Showroom (Phú Nhuận, Cầu Giấy, Đà Nẵng)
+        Store store1 = storeMap.get(1);
+        Store store2 = storeMap.get(2);
+        Store store3 = storeMap.get(3);
+        List<Product> allProds = productRepository.findAll();
+        for (int i = 0; i < allProds.size(); i++) {
+            Product prod = allProds.get(i);
+            int mod = i % 3;
+            Store targetS = (mod == 0) ? store1 : (mod == 1 ? store2 : store3);
+            if (targetS != null && (prod.getStore() == null || !targetS.getId().equals(prod.getStore().getId()))) {
+                prod.setStore(targetS);
+                productRepository.save(prod);
+            }
+        }
+        log.info(">>> Đã phân bổ cân đối kho xe cho cả 3 Showroom (Phú Nhuận: {}, Cầu Giấy: {}, Đà Nẵng: {})!",
+                productRepository.findByStoreId(store1.getId()).size(),
+                productRepository.findByStoreId(store2.getId()).size(),
+                productRepository.findByStoreId(store3.getId()).size());
     }
+
 
     private void initDemoOrders(Map<Integer, Store> storeMap) {
         if (orderRepository.count() > 0) {

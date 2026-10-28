@@ -38,10 +38,10 @@
                 <a th:href="@{/admin/dashboard}" class="badge bg-danger text-light text-decoration-none px-2 py-1"><i class="fa-solid fa-shield-halved me-1"></i> 4. Admin</a>
                 <a th:href="@{/shipper/dashboard}" class="badge bg-info text-dark text-decoration-none px-2 py-1"><i class="fa-solid fa-truck-fast me-1"></i> 5. Shipper</a>
             </div>
-            <div class="d-none d-lg-flex align-items-center gap-3 text-secondary small">
-                <span class="text-gold-light"><i class="fa-solid fa-quote-left text-gold me-1"></i> MUA CỦA NGƯỜI CHÁN - BÁN CHO NGƯỜI CẦN</span>
-                <span><i class="fa-solid fa-phone text-gold me-1"></i> Hotline: <strong class="text-gold">0903.456.789</strong></span>
-                <span><i class="fa-solid fa-location-dot text-gold me-1"></i> Toàn Quốc (3 Showroom)</span>
+            <div class="d-flex align-items-center gap-3 text-secondary small ms-auto">
+                <span class="d-none d-lg-inline text-gold-light"><i class="fa-solid fa-quote-left text-gold me-1"></i> MUA CỦA NGƯỜI CHÁN - BÁN CHO NGƯỜI CẦN</span>
+                <span class="d-none d-xl-inline"><i class="fa-solid fa-phone text-gold me-1"></i> Hotline: <strong class="text-gold">0903.456.789</strong></span>
+                <span class="d-none d-md-inline"><i class="fa-solid fa-location-dot text-gold me-1"></i> Toàn Quốc (3 Showroom)</span>
                 <span sec:authorize="isAuthenticated()" class="ms-2">
                     <form th:action="@{/auth/logout}" method="post" class="d-inline m-0 p-0">
                         <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-2 fw-bold rounded-pill" style="font-size:0.72rem;"><i class="fa-solid fa-right-from-bracket me-1"></i>Đăng xuất</button>
@@ -166,7 +166,7 @@
 
                         <!-- Prominent Red Logout Button (Nút Đăng Xuất Đỏ Nổi Bật) -->
                         <form th:action="@{/auth/logout}" method="post" class="d-inline m-0 p-0">
-                            <button type="submit" class="btn btn-danger btn-sm rounded-pill px-3 py-2 fw-bold d-flex align-items-center gap-1 shadow" title="Đăng xuất khỏi hệ thống ngay lập tức">
+                            <button type="submit" class="btn btn-danger btn-sm rounded-pill px-3 py-2 fw-bold d-flex align-items-center gap-1 shadow flex-shrink-0" style="white-space: nowrap;" title="Đăng xuất khỏi hệ thống ngay lập tức">
                                 <i class="fa-solid fa-right-from-bracket"></i>
                                 <span>Đăng Xuất</span>
                             </button>

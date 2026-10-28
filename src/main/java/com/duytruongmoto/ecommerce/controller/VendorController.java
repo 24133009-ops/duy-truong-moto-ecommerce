@@ -47,6 +47,7 @@ public class VendorController {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         model.addAttribute("store", store);
+        model.addAttribute("products", products);
         model.addAttribute("totalProducts", products.size());
         model.addAttribute("totalOrders", orders.size());
         model.addAttribute("totalRevenue", totalRevenue != null ? totalRevenue : BigDecimal.ZERO);
