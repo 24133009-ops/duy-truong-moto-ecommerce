@@ -49,7 +49,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="text-secondary small" th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                                    <td class="text-secondary small" th:text="${#numbers.formatDecimal(item.price, 0, 'POINT', 0, 'COMMA')} + ' đ'"></td>
                                     <td>
                                         <form th:action="@{/cart/update}" method="post" class="d-flex align-items-center gap-1">
                                             <input type="hidden" name="cartItemId" th:value="${item.id}">
@@ -73,7 +73,7 @@
                     <h5 class="fw-bold text-gold mb-3">TỔNG KẾT ĐƠN HÀNG</h5>
                     <div class="d-flex justify-content-between text-secondary small mb-2">
                         <span>Tạm tính giỏ hàng:</span>
-                        <strong class="text-white" th:text="${#numbers.formatDecimal(cartTotal, 0, 'COMMA', 0, 'POINT')} + ' đ'"></strong>
+                        <strong class="text-white" th:text="${#numbers.formatDecimal(cartTotal, 0, 'POINT', 0, 'COMMA')} + ' đ'"></strong>
                     </div>
                     <div class="d-flex justify-content-between text-secondary small mb-3">
                         <span>Hỗ trợ hồ sơ ra biển:</span>
@@ -82,7 +82,7 @@
 
                     <div class="border-top border-secondary pt-3 mb-4 d-flex justify-content-between align-items-center">
                         <span class="fw-bold text-white">Tổng cộng thanh toán:</span>
-                        <span class="fs-4 fw-bold text-gradient-gold" th:text="${#numbers.formatDecimal(cartTotal, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
+                        <span class="fs-4 fw-bold text-gradient-gold" th:text="${#numbers.formatDecimal(cartTotal, 0, 'POINT', 0, 'COMMA')} + ' đ'"></span>
                     </div>
 
                     <a th:href="@{/checkout}" class="btn btn-gold w-100 py-3 fw-bold shadow">

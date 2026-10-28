@@ -45,7 +45,7 @@
                         </div>
                         <div>
                             <div class="small text-secondary">Ví tài khoản:</div>
-                            <strong class="text-white fs-5" th:text="${#numbers.formatDecimal(currentUser.eWallet, 0, 'COMMA', 0, 'POINT')} + ' đ'"></strong>
+                            <strong class="text-white fs-5" th:text="${#numbers.formatDecimal(currentUser.eWallet, 0, 'POINT', 0, 'COMMA')} + ' đ'"></strong>
                         </div>
                     </div>
 

@@ -41,7 +41,7 @@
                             </div>
                             <div class="text-end">
                                 <div class="text-gold fw-bold" th:text="${#numbers.formatDecimal(item.getSubTotal(), 0, 'COMMA', 0, 'POINT')} + ' đ'"></div>
-                                <div class="text-secondary small" th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')} + ' đ / chiếc'"></div>
+                                <div class="text-secondary small" th:text="${#numbers.formatDecimal(item.price, 0, 'POINT', 0, 'COMMA')} + ' đ / chiếc'"></div>
                             </div>
                         </div>
                     </div>
@@ -75,11 +75,11 @@
                     </div>
                     <div class="d-flex justify-content-between text-secondary small mb-2">
                         <span>Cước vận chuyển VIP:</span>
-                        <span class="text-white" th:text="${order.delivery != null ? #numbers.formatDecimal(order.delivery.price, 0, 'COMMA', 0, 'POINT') + ' đ' : '0 đ'}"></span>
+                        <span class="text-white" th:text="${order.delivery != null ? #numbers.formatDecimal(order.delivery.price, 0, 'POINT', 0, 'COMMA') + ' đ' : '0 đ'}"></span>
                     </div>
                     <div class="border-top border-secondary pt-3 mt-3 d-flex justify-content-between align-items-center">
                         <span class="fw-bold text-white fs-5">Tổng thanh toán:</span>
-                        <span class="fs-4 fw-black text-gradient-gold" th:text="${#numbers.formatDecimal(order.amountFromUser, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
+                        <span class="fs-4 fw-black text-gradient-gold" th:text="${#numbers.formatDecimal(order.amountFromUser, 0, 'POINT', 0, 'COMMA')} + ' đ'"></span>
                     </div>
                     <div class="mt-3 text-center">
                         <span th:if="${order.isPaidBefore}" class="badge bg-success p-2 w-100"><i class="fa-solid fa-check me-1"></i> ĐÃ THANH TOÁN ĐẦY ĐỦ</span>

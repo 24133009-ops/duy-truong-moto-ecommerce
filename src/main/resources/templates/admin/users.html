@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
+
 <body>
 
     <!-- Header / Navbar Include -->
@@ -19,17 +21,21 @@
                 <a th:href="@{/admin/dashboard}" class="text-gold text-decoration-none small d-inline-block mb-1">
                     <i class="fa-solid fa-arrow-left me-1"></i> Trở về Dashboard Admin
                 </a>
-                <h3 class="fw-bold text-white mb-0"><i class="fa-solid fa-users-gear text-gold me-2"></i> QUẢN TRỊ TÀI KHOẢN &amp; PHÂN QUYỀN</h3>
-                <p class="text-secondary small">Tra cứu người dùng, kiểm soát trạng thái kích hoạt OTP và khóa/mở khóa tài khoản.</p>
+                <h3 class="fw-bold text-white mb-0"><i class="fa-solid fa-users-gear text-gold me-2"></i> QUẢN TRỊ TÀI
+                    KHOẢN &amp; PHÂN QUYỀN</h3>
+                <p class="text-secondary small">Tra cứu người dùng, kiểm soát trạng thái kích hoạt OTP và khóa/mở khóa
+                    tài khoản.</p>
             </div>
             <span class="badge bg-gold text-dark fs-6" th:text="${#lists.size(users)} + ' Tài khoản'"></span>
         </div>
 
-        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show bg-success text-white border-0 rounded-4 shadow">
+        <div th:if="${successMessage}"
+            class="alert alert-success alert-dismissible fade show bg-success text-white border-0 rounded-4 shadow">
             <i class="fa-solid fa-circle-check me-2"></i> <span th:text="${successMessage}"></span>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
         </div>
-        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show bg-danger text-white border-0 rounded-4 shadow">
+        <div th:if="${errorMessage}"
+            class="alert alert-danger alert-dismissible fade show bg-danger text-white border-0 rounded-4 shadow">
             <i class="fa-solid fa-triangle-exclamation me-2"></i> <span th:text="${errorMessage}"></span>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
         </div>
@@ -39,13 +45,17 @@
             <form method="get" th:action="@{/admin/users}" class="row g-2 align-items-center">
                 <div class="col-md-9">
                     <div class="input-group">
-                        <span class="input-group-text bg-black text-gold border-secondary"><i class="fa-solid fa-magnifying-glass"></i></span>
-                        <input type="text" name="keyword" th:value="${keyword}" class="form-control form-control-luxury" placeholder="Tìm kiếm nhanh theo họ tên, email hoặc số điện thoại...">
+                        <span class="input-group-text bg-black text-gold border-secondary"><i
+                                class="fa-solid fa-magnifying-glass"></i></span>
+                        <input type="text" name="keyword" th:value="${keyword}" class="form-control form-control-luxury"
+                            placeholder="Tìm kiếm nhanh theo họ tên, email hoặc số điện thoại...">
                     </div>
                 </div>
                 <div class="col-md-3 d-flex gap-2">
-                    <button type="submit" class="btn btn-gold fw-bold w-100"><i class="fa-solid fa-search me-1"></i> Tìm Kiếm</button>
-                    <a th:if="${keyword != null and !keyword.isEmpty()}" th:href="@{/admin/users}" class="btn btn-outline-secondary">Đặt Lại</a>
+                    <button type="submit" class="btn btn-gold fw-bold w-100"><i class="fa-solid fa-search me-1"></i> Tìm
+                        Kiếm</button>
+                    <a th:if="${keyword != null and !keyword.isEmpty()}" th:href="@{/admin/users}"
+                        class="btn btn-outline-secondary">Đặt Lại</a>
                 </div>
             </form>
         </div>
@@ -74,29 +84,35 @@
                             <td class="text-gold small fw-bold" th:text="${u.email}"></td>
                             <td class="text-secondary small" th:text="${u.phone}"></td>
                             <td>
-                                <span class="badge" 
-                                      th:classappend="${u.role.name() == 'ROLE_ADMIN' ? 'bg-danger' : (u.role.name() == 'ROLE_VENDOR' ? 'bg-warning text-dark' : (u.role.name() == 'ROLE_SHIPPER' ? 'bg-info text-dark' : 'bg-secondary'))}"
-                                      th:text="${u.role.name()}">
+                                <span class="badge"
+                                    th:classappend="${u.role.name() == 'ROLE_ADMIN' ? 'bg-danger' : (u.role.name() == 'ROLE_VENDOR' ? 'bg-warning text-dark' : (u.role.name() == 'ROLE_SHIPPER' ? 'bg-info text-dark' : 'bg-secondary'))}"
+                                    th:text="${u.role.name()}">
                                 </span>
                             </td>
                             <td>
-                                <span th:if="${u.isEmailActive}" class="badge bg-success"><i class="fa-solid fa-check me-1"></i> Đã Kích Hoạt</span>
-                                <span th:if="${!u.isEmailActive}" class="badge bg-warning text-dark">Chờ Xác Thực OTP</span>
+                                <span th:if="${u.isEmailActive}" class="badge bg-success"><i
+                                        class="fa-solid fa-check me-1"></i> Đã Kích Hoạt</span>
+                                <span th:if="${!u.isEmailActive}" class="badge bg-warning text-dark">Chờ Xác Thực
+                                    OTP</span>
                             </td>
                             <td>
-                                <span th:if="${!Boolean.TRUE.equals(u.isBlocked)}" class="badge bg-success">Hoạt Động</span>
-                                <span th:if="${Boolean.TRUE.equals(u.isBlocked)}" class="badge bg-danger">Đã Bị Khóa</span>
+                                <span th:if="${!Boolean.TRUE.equals(u.isBlocked)}" class="badge bg-success">Hoạt
+                                    Động</span>
+                                <span th:if="${Boolean.TRUE.equals(u.isBlocked)}" class="badge bg-danger">Đã Bị
+                                    Khóa</span>
                             </td>
                             <td>
-                                <form th:action="@{'/admin/users/' + ${u.id} + '/toggle-lock'}" method="post" class="d-inline"
-                                      th:onsubmit="return confirm('Bạn có chắc chắn muốn thay đổi trạng thái khóa của tài khoản: ' + [[${u.email}]] + '?');">
-                                    <button th:if="${!Boolean.TRUE.equals(u.isBlocked)}" type="submit" class="btn btn-outline-danger btn-sm px-2 py-1"
-                                            th:disabled="${u.role.name() == 'ROLE_ADMIN' and #authentication != null and #authentication.name == u.email}"
-                                            title="Khóa tài khoản">
+                                <form th:action="@{'/admin/users/' + ${u.id} + '/toggle-lock'}" method="post"
+                                    class="d-inline"
+                                    th:onsubmit="return confirm('Bạn có chắc chắn muốn thay đổi trạng thái khóa của tài khoản: ' + [[${u.email}]] + '?');">
+                                    <button th:if="${!Boolean.TRUE.equals(u.isBlocked)}" type="submit"
+                                        class="btn btn-outline-danger btn-sm px-2 py-1"
+                                        th:disabled="${u.role.name() == 'ROLE_ADMIN' and #authentication != null and #authentication.name == u.email}"
+                                        title="Khóa tài khoản">
                                         <i class="fa-solid fa-lock me-1"></i> Khóa
                                     </button>
-                                    <button th:if="${Boolean.TRUE.equals(u.isBlocked)}" type="submit" class="btn btn-outline-success btn-sm px-2 py-1"
-                                            title="Mở khóa tài khoản">
+                                    <button th:if="${Boolean.TRUE.equals(u.isBlocked)}" type="submit"
+                                        class="btn btn-outline-success btn-sm px-2 py-1" title="Mở khóa tài khoản">
                                         <i class="fa-solid fa-lock-open me-1"></i> Mở
                                     </button>
                                 </form>
@@ -112,4 +128,5 @@
     <div th:replace="~{layout/main :: footer}"></div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

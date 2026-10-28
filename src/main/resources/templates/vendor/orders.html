@@ -56,7 +56,7 @@
                                 <div class="text-secondary small" th:text="${order.phone}"></div>
                             </td>
                             <td class="text-secondary small" style="max-width: 200px;" th:text="${order.address}"></td>
-                            <td class="fw-bold text-gradient-gold" th:text="${order.amountToStore != null ? #numbers.formatDecimal(order.amountToStore, 0, 'COMMA', 0, 'POINT') + ' đ' : '0 đ'}"></td>
+                            <td class="fw-bold text-gradient-gold" th:text="${order.amountToStore != null ? #numbers.formatDecimal(order.amountToStore, 0, 'POINT', 0, 'COMMA') + ' đ' : '0 đ'}"></td>
                             <td>
                                 <span class="badge badge-status"
                                       th:classappend="${order.status != null and order.status.name() == 'NOT_PROCESSED' ? 'badge-status-new' : (order.status != null and order.status.name() == 'DELIVERED' ? 'badge-status-delivered' : 'badge-status-confirmed')}"

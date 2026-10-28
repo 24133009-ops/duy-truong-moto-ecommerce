@@ -31,6 +31,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     List<Product> findTop20ByIsActiveTrueAndIsSellingTrueOrderByRatingDesc();
 
     // Phân trang theo Category
+    List<Product> findByCategoryId(Long categoryId);
     Page<Product> findByCategoryIdAndIsActiveTrueAndIsSellingTrue(Long categoryId, Pageable pageable);
 
     // Lọc theo store của vendor

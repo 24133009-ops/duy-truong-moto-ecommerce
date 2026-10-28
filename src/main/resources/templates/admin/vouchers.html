@@ -63,8 +63,8 @@
                             <td>
                                 <span class="badge bg-danger fs-6" th:text="${v.discountPercent} + '%'"></span>
                             </td>
-                            <td class="text-warning fw-bold small" th:text="${v.maxDiscountAmount != null ? #numbers.formatDecimal(v.maxDiscountAmount, 0, 'COMMA', 0, 'POINT') + ' đ' : 'Không giới hạn'}"></td>
-                            <td class="text-secondary small" th:text="${v.minOrderAmount != null ? #numbers.formatDecimal(v.minOrderAmount, 0, 'COMMA', 0, 'POINT') + ' đ' : '0 đ'}"></td>
+                            <td class="text-warning fw-bold small" th:text="${v.maxDiscountAmount != null ? #numbers.formatDecimal(v.maxDiscountAmount, 0, 'POINT', 0, 'COMMA') + ' đ' : 'Không giới hạn'}"></td>
+                            <td class="text-secondary small" th:text="${v.minOrderAmount != null ? #numbers.formatDecimal(v.minOrderAmount, 0, 'POINT', 0, 'COMMA') + ' đ' : '0 đ'}"></td>
                             <td>
                                 <span class="badge bg-dark border border-secondary text-light" th:text="${v.usedCount} + ' / ' + ${v.usageLimit}"></span>
                             </td>

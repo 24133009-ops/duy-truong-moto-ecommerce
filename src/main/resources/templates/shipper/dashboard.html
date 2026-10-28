@@ -49,7 +49,7 @@
             <div class="col-sm-6 col-lg-3">
                 <div class="glass-panel p-3 rounded-4">
                     <div class="text-secondary small fw-bold mb-1">TIỀN THU HỘ (COD)</div>
-                    <h3 class="fw-black text-gradient-gold mb-0" th:text="${#numbers.formatDecimal(totalCod, 0, 'COMMA', 0, 'POINT')} + ' đ'"></h3>
+                    <h3 class="fw-black text-gradient-gold mb-0" th:text="${#numbers.formatDecimal(totalCod, 0, 'POINT', 0, 'COMMA')} + ' đ'"></h3>
                     <div class="small text-gold mt-1">Tiền mặt bàn giao về kho</div>
                 </div>
             </div>
@@ -106,7 +106,7 @@
 
                     <div class="col-lg-4 text-lg-end border-start-lg border-secondary pt-3 pt-lg-0">
                         <div class="text-secondary small">Tổng tiền thu hộ (COD):</div>
-                        <div th:if="${!order.isPaidBefore}" class="fs-4 fw-black text-danger mb-3" th:text="${#numbers.formatDecimal(order.amountFromUser, 0, 'COMMA', 0, 'POINT')} + ' đ'"></div>
+                        <div th:if="${!order.isPaidBefore}" class="fs-4 fw-black text-danger mb-3" th:text="${#numbers.formatDecimal(order.amountFromUser, 0, 'POINT', 0, 'COMMA')} + ' đ'"></div>
                         <div th:if="${order.isPaidBefore}" class="fs-5 fw-bold text-success mb-3"><i class="fa-solid fa-check-circle me-1"></i> KHÁCH ĐÃ CỌC ĐẦY ĐỦ</div>
 
                         <form th:if="${order.status.name() != 'DELIVERED'}" th:action="@{/shipper/orders/{id}/deliver(id=${order.id})}" method="post">

@@ -64,7 +64,7 @@
                             <td class="text-secondary small" style="max-width: 380px;" th:text="${d.description}"></td>
                             <td>
                                 <strong class="text-gradient-gold fs-6"
-                                    th:text="${#numbers.formatDecimal(d.price, 0, 'COMMA', 0, 'POINT')} + ' đ'"></strong>
+                                    th:text="${#numbers.formatDecimal(d.price, 0, 'POINT', 0, 'COMMA')} + ' đ'"></strong>
                             </td>
                             <td>
                                 <span class="badge bg-success">Đang Cung Cấp</span>

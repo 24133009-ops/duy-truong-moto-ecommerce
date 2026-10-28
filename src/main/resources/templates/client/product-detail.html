@@ -75,7 +75,7 @@
                     <div class="small text-secondary mb-1">GIÁ NIÊM YẾT CHÍNH HÃNG:</div>
                     <div class="d-flex align-items-baseline gap-3">
                         <div class="fs-2 fw-black text-gradient-gold" th:text="${#numbers.formatDecimal(product.getEffectivePrice(), 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></div>
-                        <div th:if="${product.promotionalPrice != null}" class="fs-5 text-secondary text-decoration-line-through" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></div>
+                        <div th:if="${product.promotionalPrice != null}" class="fs-5 text-secondary text-decoration-line-through" th:text="${#numbers.formatDecimal(product.price, 0, 'POINT', 0, 'COMMA')} + ' VNĐ'"></div>
                     </div>
                     <div class="small text-secondary mt-1">Đã bao gồm thuế VAT & Hỗ trợ thủ tục đăng ký ra biển số</div>
                 </div>

@@ -54,7 +54,7 @@
                                 <img th:src="${item.product.mainImage}" class="rounded-3 shadow" style="width: 70px; height: 50px; object-fit: cover;">
                                 <div>
                                     <div class="text-white fw-bold small" th:text="${item.product.name}"></div>
-                                    <div class="text-secondary small">Số lượng: <span th:text="${item.count}"></span> | Đơn giá: <span th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span></div>
+                                    <div class="text-secondary small">Số lượng: <span th:text="${item.count}"></span> | Đơn giá: <span th:text="${#numbers.formatDecimal(item.price, 0, 'POINT', 0, 'COMMA')} + ' đ'"></span></div>
                                 </div>
                             </div>
                         </div>
@@ -62,7 +62,7 @@
 
                     <div class="col-lg-4 text-lg-end border-start-lg border-secondary pt-3 pt-lg-0">
                         <div class="text-secondary small">Tổng tiền thanh toán:</div>
-                        <div class="fs-4 fw-black text-gradient-gold mb-3" th:text="${#numbers.formatDecimal(order.amountFromUser, 0, 'COMMA', 0, 'POINT')} + ' đ'"></div>
+                        <div class="fs-4 fw-black text-gradient-gold mb-3" th:text="${#numbers.formatDecimal(order.amountFromUser, 0, 'POINT', 0, 'COMMA')} + ' đ'"></div>
                         <div class="d-flex gap-2 justify-content-lg-end">
                             <a th:href="@{/orders/{id}(id=${order.id})}" class="btn btn-outline-gold btn-sm px-3 rounded-pill">Xem Chi Tiết</a>
                             <form th:if="${order.status.name() == 'NOT_PROCESSED'}" th:action="@{/orders/{id}/cancel(id=${order.id})}" method="post" onsubmit="return confirm('Bạn có chắc chắn muốn hủy đơn đặt này?')">

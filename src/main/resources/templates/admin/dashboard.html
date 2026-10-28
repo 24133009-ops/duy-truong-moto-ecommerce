@@ -31,7 +31,7 @@
             <div class="col-md-3">
                 <div class="glass-panel p-4 rounded-4">
                     <div class="text-gold-light small fw-bold mb-1">TỔNG GMV GIAO DỊCH</div>
-                    <h3 class="fw-black text-gradient-gold mb-0" th:text="${#numbers.formatDecimal(totalGmv, 0, 'COMMA', 0, 'POINT')} + ' đ'"></h3>
+                    <h3 class="fw-black text-gradient-gold mb-0" th:text="${#numbers.formatDecimal(totalGmv, 0, 'POINT', 0, 'COMMA')} + ' đ'"></h3>
                     <div class="small text-light mt-1">Toàn chuỗi showroom</div>
                 </div>
             </div>
@@ -39,7 +39,7 @@
             <div class="col-md-3">
                 <div class="glass-panel p-4 rounded-4">
                     <div class="text-gold-light small fw-bold mb-1">HOA HỒNG SÀN THU VỀ</div>
-                    <h3 class="fw-black text-success mb-0" th:text="${#numbers.formatDecimal(totalPlatformRevenue, 0, 'COMMA', 0, 'POINT')} + ' đ'"></h3>
+                    <h3 class="fw-black text-success mb-0" th:text="${#numbers.formatDecimal(totalPlatformRevenue, 0, 'POINT', 0, 'COMMA')} + ' đ'"></h3>
                     <div class="small text-light mt-1">Lợi nhuận ròng chiết khấu</div>
                 </div>
             </div>
@@ -81,8 +81,8 @@
                             <td><strong class="text-gold" th:text="${order.orderCode}"></strong></td>
                             <td class="text-white" th:text="${order.store.name}"></td>
                             <td class="text-secondary" th:text="${order.recipientName}"></td>
-                            <td class="fw-bold text-white" th:text="${#numbers.formatDecimal(order.amountFromUser, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
-                            <td class="text-success fw-bold" th:text="${#numbers.formatDecimal(order.amountToGD, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                            <td class="fw-bold text-white" th:text="${#numbers.formatDecimal(order.amountFromUser, 0, 'POINT', 0, 'COMMA')} + ' đ'"></td>
+                            <td class="text-success fw-bold" th:text="${#numbers.formatDecimal(order.amountToGD, 0, 'POINT', 0, 'COMMA')} + ' đ'"></td>
                             <td>
                                 <span class="badge badge-status"
                                       th:classappend="${order.status.name() == 'NOT_PROCESSED' ? 'badge-status-new' : (order.status.name() == 'DELIVERED' ? 'badge-status-delivered' : 'badge-status-confirmed')}"

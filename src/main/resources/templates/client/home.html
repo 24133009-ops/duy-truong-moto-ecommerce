@@ -55,7 +55,7 @@
             <a href="#servicesSection" class="vk-menu-item" onclick="smoothScroll('servicesSection', event)">
                 DỊCH VỤ
             </a>
-            <a href="#contactSection" class="vk-menu-item" onclick="smoothScroll('contactSection', event)">
+            <a href="#bookingSection" class="vk-menu-item" onclick="smoothScroll('bookingSection', event)">
                 BOOKING & LÁI THỬ
             </a>
             <a href="#blogSection" class="vk-menu-item" onclick="smoothScroll('blogSection', event)">
@@ -69,7 +69,7 @@
         <!-- Frosted Glass Brands Panel (Chỉ hiển thị khi click vào mục) -->
         <div class="vk-frosted-panel d-none" id="megaFrostedPanel">
             <div class="text-end mb-2">
-                <button type="button" class="btn btn-sm btn-light rounded-circle shadow-sm fw-bold px-2 py-1" onclick="closeMegaPanel()" title="Đóng menu">✕</button>
+                <button type="button" class="btn btn-sm btn-outline-warning text-gold rounded-circle shadow-sm fw-bold px-2 py-1" onclick="closeMegaPanel()" title="Đóng menu">✕</button>
             </div>
             <!-- PÔ ĐỘ & ĐỒ CHƠI CAO CẤP -->
             <div id="contentOto" class="mega-content-box d-none">
@@ -356,7 +356,7 @@
                         <div class="glass-panel p-3 text-start position-absolute bottom-0 start-0 m-3 d-none d-sm-block" style="border-radius: 16px; background: rgba(14, 17, 26, 0.92); border: 1px solid var(--dt-gold);">
                             <div class="small fw-bold" style="color: #ff6600;"><i class="fa-solid fa-fire me-1"></i> VUA CÀO CÀO ENDURO 2 THÌ</div>
                             <div class="fw-bold fs-6 text-white">KTM 300 EXC TPI Factory Edition 2024</div>
-                            <div class="text-gold-light small">355.000.000 ₫ • HQCN Sang Tên 24h</div>
+                            <div class="text-gold-light small">355.000.000 đ • HQCN Sang Tên 24h</div>
                         </div>
                     </div>
                 </div>
@@ -421,7 +421,7 @@
                             <div class="mt-auto d-flex justify-content-between align-items-center">
                                 <div>
                                     <div class="bike-price" th:text="${#numbers.formatDecimal(product.getEffectivePrice(), 0, 'COMMA', 0, 'POINT')} + ' đ'"></div>
-                                    <div th:if="${product.promotionalPrice != null}" class="bike-price-old" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' đ'"></div>
+                                    <div th:if="${product.promotionalPrice != null}" class="bike-price-old" th:text="${#numbers.formatDecimal(product.price, 0, 'POINT', 0, 'COMMA')} + ' đ'"></div>
                                 </div>
                                 <a th:href="@{/products/{slug}(slug=${product.slug})}" class="btn btn-outline-gold rounded-circle p-2" title="Xem chi tiết xe">
                                     <i class="fa-solid fa-arrow-right"></i>
@@ -555,7 +555,7 @@
                     <h3 class="fw-bold text-white mb-1"><i class="fa-solid fa-newspaper text-gold me-2"></i> BẢN TIN BIKER &amp; KIẾN THỨC MÔ TÔ</h3>
                     <p class="text-secondary small mb-0">Cập nhật xu hướng xe cào cào, siêu mô tô và cẩm nang trang bị bảo hộ an toàn</p>
                 </div>
-                <a th:href="@{/products}" class="btn btn-outline-gold rounded-pill btn-sm">Xem Thêm Bài Viết</a>
+                <button type="button" class="btn btn-outline-gold rounded-pill btn-sm" data-bs-toggle="modal" data-bs-target="#allBlogsModal"><i class="fa-solid fa-book-open me-1"></i> Xem Thêm Bài Viết</button>
             </div>
 
             <div class="row g-4">
@@ -664,6 +664,68 @@
             </div>
         </div>
     </section>
+
+    
+    <!-- Modal Xem Thêm Tất Cả Bài Viết Biker -->
+    <div class="modal fade" id="allBlogsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content glass-panel text-light border-gold rounded-4">
+                <div class="modal-header border-secondary">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-newspaper text-gold fs-4"></i>
+                        <h5 class="modal-title fw-bold text-gradient-gold">CẨM NANG & KIẾN THỨC BIKER CHUYÊN SÂU</h5>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="p-3 rounded-3 bg-dark border border-secondary h-100">
+                                <span class="badge bg-warning text-dark fw-bold mb-2">Bảo Dưỡng Xe</span>
+                                <h6 class="text-white fw-bold">Quy trình vệ sinh và dưỡng sên D.I.D Gold chuẩn thợ</h6>
+                                <p class="text-secondary small mb-0">Nên dùng xịt rửa sên chuyên dụng không chứa cồn để bảo vệ gioăng cao su O-Ring / X-Ring, sau đó lau khô và dưỡng xịt mỡ bám dính cao.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 rounded-3 bg-dark border border-secondary h-100">
+                                <span class="badge bg-warning text-dark fw-bold mb-2">Đồ Bảo Hộ</span>
+                                <h6 class="text-white fw-bold">Cách chọn size áo giáp Dainese và mũ AGV ôm khít</h6>
+                                <p class="text-secondary small mb-0">Mũ đua chuẩn ôm khít 2 má nhưng không gây cấn thái dương; áo giáp da mới sẽ hơi chật và sẽ giãn ôm theo form người sau 2-3 chuyến tour.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 rounded-3 bg-dark border border-secondary h-100">
+                                <span class="badge bg-warning text-dark fw-bold mb-2">Hiệu Năng</span>
+                                <h6 class="text-white fw-bold">So sánh lốp Pirelli Supercorsa vs Michelin Power GP2</h6>
+                                <p class="text-secondary small mb-0">Pirelli ôm cua bám đường đỉnh cao khi nhiệt độ cao trong track; Michelin Power GP2 bền bỉ hơn khi đi tour đường mưa ướt hỗn hợp.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 rounded-3 bg-dark border border-secondary h-100">
+                                <span class="badge bg-warning text-dark fw-bold mb-2">Pháp Lý Biker</span>
+                                <h6 class="text-white fw-bold">Hồ sơ Hải quan chính ngạch (HQCN) gồm những gì?</h6>
+                                <p class="text-secondary small mb-0">Tờ khai hải quan điện tử thông quan, hóa đơn VAT đại lý, phiếu kiểm tra chất lượng xuất xưởng (nếu lắp ráp) hoặc giấy chứng nhận kiểm định an toàn kỹ thuật nhập khẩu.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-secondary">
+                    <button type="button" class="btn btn-outline-light rounded-pill btn-sm px-4" data-bs-dismiss="modal">Đóng</button>
+                    <a th:href="@{/home#contactSection}" onclick="closeModalAndScroll('allBlogsModal', 'contactSection')" class="btn btn-gold rounded-pill btn-sm px-4">Tư Vấn Thêm Qua Hotline</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function closeModalAndScroll(modalId, targetSectionId) {
+            const modalEl = document.getElementById(modalId);
+            if (modalEl) {
+                const modalInstance = bootstrap.Modal.getInstance(modalEl);
+                if (modalInstance) modalInstance.hide();
+            }
+            smoothScroll(targetSectionId);
+        }
+    </script>
 
     <!-- Footer Include -->
     <div th:replace="~{layout/main :: footer}"></div>

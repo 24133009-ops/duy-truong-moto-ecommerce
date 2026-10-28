@@ -58,7 +58,7 @@
                                         <div class="small text-secondary fw-normal" th:text="${deliv.description}"></div>
                                     </label>
                                 </div>
-                                <div class="text-gold fw-bold text-end" th:text="${#numbers.formatDecimal(deliv.price, 0, 'COMMA', 0, 'POINT')} + ' đ'"></div>
+                                <div class="text-gold fw-bold text-end" th:text="${#numbers.formatDecimal(deliv.price, 0, 'POINT', 0, 'COMMA')} + ' đ'"></div>
                             </div>
                         </div>
                     </div>
@@ -121,7 +121,7 @@
 
                         <div class="d-flex justify-content-between text-secondary small mb-2">
                             <span>Tổng phụ kiện & xe:</span>
-                            <span class="text-white" th:text="${#numbers.formatDecimal(cartTotal, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
+                            <span class="text-white" th:text="${#numbers.formatDecimal(cartTotal, 0, 'POINT', 0, 'COMMA')} + ' đ'"></span>
                         </div>
                         <div class="d-flex justify-content-between text-secondary small mb-3">
                             <span>Ưu đãi thành viên:</span>
@@ -143,7 +143,7 @@
 
                         <div class="border-top border-secondary pt-3 mb-4 d-flex justify-content-between align-items-center">
                             <span class="fw-bold text-white fs-5">Tổng tiền đặt:</span>
-                            <span class="fs-4 fw-black text-gradient-gold" th:text="${#numbers.formatDecimal(cartTotal, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
+                            <span class="fs-4 fw-black text-gradient-gold" th:text="${#numbers.formatDecimal(cartTotal, 0, 'POINT', 0, 'COMMA')} + ' đ'"></span>
                         </div>
 
                         <button type="submit" class="btn btn-gold w-100 py-3 fw-bold shadow fs-5">
