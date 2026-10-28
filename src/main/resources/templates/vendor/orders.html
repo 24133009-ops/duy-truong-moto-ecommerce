@@ -60,7 +60,7 @@
                             <td class="fw-bold text-gradient-gold" th:text="${order.amountToStore != null ? #numbers.formatDecimal(order.amountToStore, 0, 'POINT', 0, 'COMMA') + ' đ' : '0 đ'}"></td>
                             <td th:with="stName=${order.status != null ? order.status.name() : ''}, stepIdx=${stName == 'NOT_PROCESSED' ? 1 : (stName == 'CONFIRMED' ? 2 : (stName == 'PICKED_UP' ? 3 : (stName == 'SHIPPING' ? 4 : (stName == 'DELIVERED' ? 6 : 0))))}">
                                 <div class="badge bg-gold text-dark fw-bold small mb-1" th:if="${stName != 'CANCELLED' and stName != 'REFUNDED'}">
-                                    <i class="fa-solid fa-truck-fast me-1"></i> Chặng ${stepIdx}/6
+                                    <i class="fa-solid fa-truck-fast me-1"></i> <span th:text="|Chặng ${stepIdx}/6|">Chặng 1/6</span>
                                 </div>
                                 <div>
                                     <span class="badge badge-status"

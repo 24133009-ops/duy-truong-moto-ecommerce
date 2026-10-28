@@ -78,7 +78,7 @@
                     </div>
                     <div th:with="stName=${order.status.name()}, stepIdx=${stName == 'NOT_PROCESSED' ? 1 : (stName == 'CONFIRMED' ? 2 : (stName == 'PICKED_UP' ? 3 : (stName == 'SHIPPING' ? 4 : (stName == 'DELIVERED' ? 6 : 0))))}">
                         <span class="badge bg-gold text-dark fw-bold me-1" th:if="${stName != 'CANCELLED' and stName != 'REFUNDED'}">
-                            <i class="fa-solid fa-truck-fast me-1"></i> Chặng ${stepIdx}/6
+                            <i class="fa-solid fa-truck-fast me-1"></i> <span th:text="|Chặng ${stepIdx}/6|">Chặng 1/6</span>
                         </span>
                         <span class="badge badge-status"
                               th:classappend="${order.status.name() == 'NOT_PROCESSED' ? 'badge-status-new' : (order.status.name() == 'DELIVERED' ? 'badge-status-delivered' : 'badge-status-confirmed')}"
