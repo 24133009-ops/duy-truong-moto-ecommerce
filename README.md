@@ -18,7 +18,7 @@
 3. **Lê Nghĩa Tình** (MSSV: **20133096** | GitHub: [@20133096-ENTI](https://github.com/20133096-ENTI) | Email: `nghiatinh2002@gmail.com`) - **Thành viên**: Đặc tả yêu cầu nghiệp vụ SRS, Quản trị Store Manager Chi nhánh Hải Châu - Đà Nẵng, Quy trình vận chuyển Shipper 6 chặng, Báo cáo Word & Video Demo.
 
 ### 🌐 Liên kết đồ án:
-- **Website Demo trực tuyến:** [https://duytruong-motor.vercel.app](https://duytruong-motor.vercel.app)
+- **Website Demo trực tuyến:** [https://duy-truong-moto-ecommerce.onrender.com/](https://duy-truong-moto-ecommerce.onrender.com/)
 - **Repository GitHub:** [https://github.com/24133009-ops/duy-truong-moto-ecommerce](https://github.com/24133009-ops/duy-truong-moto-ecommerce)
 - **File Prompt:** [Prompt.md](./Prompt.md)
 - **Thư mục tài liệu đồ án:** Thư mục [`Nhom_17/`](./Nhom_17/) gồm đầy đủ Báo cáo Word, CSDL SQL, Source code zip, Kịch bản Video Demo, Hướng dẫn chấm Rubric.
@@ -40,7 +40,7 @@
 ## 3. LIÊN KẾT TRUY CẬP HỆ THỐNG & CÁC PHÂN HỆ
 
 ### 🌐 Truy cập trực tiếp hệ thống:
-- **Website chính thức (Online Demo):** [https://duytruong-motor.vercel.app](https://duytruong-motor.vercel.app)
+- **Website chính thức (Online Demo):** [https://duy-truong-moto-ecommerce.onrender.com/](https://duy-truong-moto-ecommerce.onrender.com/)
 - **Môi trường chạy cục bộ (Local):** [http://localhost:5173](http://localhost:5173)
 - **Backend API (Spring Boot 3):** [https://duy-truong-moto-ecommerce.onrender.com/api/products](https://duy-truong-moto-ecommerce.onrender.com/api/products) *(Local API: [http://localhost:8080/api/products](http://localhost:8080/api/products))*
 
