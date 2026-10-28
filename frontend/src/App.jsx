@@ -83,11 +83,11 @@ export default function App() {
               source: 'LIVE_API',
               message: `Đã kết nối trực tiếp Spring Boot 3 REST API (${liveData.length} sản phẩm đồng bộ từ DB)`
             });
-            console.log(`[Duy Trương Moto] ✅ Live API Synchronized ${liveData.length} products!`);
+            console.log(`[DUY TRƯƠNG MOTOR] ✅ Live API Synchronized ${liveData.length} products!`);
           }
         }
       } catch (err) {
-        console.warn("[Duy Trương Moto] Backend API unreachable for products:", err);
+        console.warn("[DUY TRƯƠNG MOTOR] Backend API unreachable for products:", err);
         if (isMounted) {
           setApiStatus({
             connected: false,
@@ -107,11 +107,11 @@ export default function App() {
           const liveOrders = await orderRes.json();
           if (isMounted && Array.isArray(liveOrders)) {
             setOrders(liveOrders);
-            console.log(`[Duy Trương Moto] ✅ Live API Synchronized ${liveOrders.length} orders!`);
+            console.log(`[DUY TRƯƠNG MOTOR] ✅ Live API Synchronized ${liveOrders.length} orders!`);
           }
         }
       } catch (err) {
-        console.warn("[Duy Trương Moto] Backend API unreachable for orders:", err);
+        console.warn("[DUY TRƯƠNG MOTOR] Backend API unreachable for orders:", err);
       } finally {
         if (isMounted) setIsOrdersLoading(false);
       }

@@ -297,7 +297,7 @@ public class DataInitializer implements CommandLineRunner {
         Store s1 = storeRepository.findBySlug("duy-truong-moto-showroom-quan-1").orElseGet(() ->
             Store.builder().slug("duy-truong-moto-showroom-quan-1").build()
         );
-        s1.setName("Duy Truong Moto - Trụ Sở & Kho Phụ Tùng Phú Nhuận TP.HCM");
+        s1.setName("Duy Trương Motor - Chi Nhánh Phú Nhuận TP.HCM (Trụ Sở Chính)");
         s1.setOwner(vendorMinh);
         s1.setBio("Trụ sở chính & kho tổng phụ tùng đồ bảo hộ mô tô lớn nhất miền Nam. Quản lý bởi Minh Showroom Phú Nhuận.");
         s1.setAddress("Số 123 Đường Hoàng Văn Thụ, Phường 8, Quận Phú Nhuận, TP. Hồ Chí Minh");
@@ -314,7 +314,7 @@ public class DataInitializer implements CommandLineRunner {
         Store s2 = storeRepository.findBySlug("duy-truong-moto-showroom-cau-giay").orElseGet(() ->
             Store.builder().slug("duy-truong-moto-showroom-cau-giay").build()
         );
-        s2.setName("Duy Truong Moto - Chi Nhánh & Kho Phụ Tùng Cầu Giấy Hà Nội");
+        s2.setName("Duy Trương Motor - Chi Nhánh Cầu Giấy Hà Nội");
         s2.setOwner(vendorKhoi);
         s2.setBio("Chi nhánh miền Bắc phân phối đồ bảo hộ và phụ tùng xe mô tô. Quản lý bởi Đỗ Trọng Khôi.");
         s2.setAddress("Số 168 Đường Trần Duy Hưng, Cầu Giấy, Hà Nội");
@@ -331,7 +331,7 @@ public class DataInitializer implements CommandLineRunner {
         Store s3 = storeRepository.findBySlug("duy-truong-moto-showroom-da-nang").orElseGet(() ->
             Store.builder().slug("duy-truong-moto-showroom-da-nang").build()
         );
-        s3.setName("Duy Truong Moto - Chi Nhánh & Kho Phụ Tùng Hải Châu Đà Nẵng");
+        s3.setName("Duy Trương Motor - Chi Nhánh Hải Châu Đà Nẵng");
         s3.setOwner(vendorTinh);
         s3.setBio("Chi nhánh miền Trung phân phối đồ bảo hộ và phụ tùng xe mô tô. Quản lý bởi Lê Nghĩa Tình.");
         s3.setAddress("Số 52 Đường Nguyễn Văn Linh, Hải Châu, Đà Nẵng");
