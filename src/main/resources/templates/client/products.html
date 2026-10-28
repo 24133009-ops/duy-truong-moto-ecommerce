@@ -252,7 +252,8 @@
                                         <div class="price-racing-tag" th:text="${#numbers.formatDecimal(product.getEffectivePrice(), 0, 'COMMA', 0, 'POINT')} + ' đ'"></div>
                                     </div>
                                     <a th:href="@{/products/{slug}(slug=${product.slug})}" class="btn btn-gold btn-sm px-3 rounded-pill fw-bold shadow-sm">
-                                        <i class="fa-solid fa-eye me-1"></i> Xem Xe
+                                        <i class="fa-solid fa-eye me-1"></i>
+                                        <span th:text="${product.category != null and (product.category.slug == 'do-bao-ho' or product.category.slug == 'gear-parts' or product.category.slug == 'phu-tung-po-do') ? 'Xem Chi Tiết' : 'Xem Xe'}">Xem Xe</span>
                                     </a>
                                 </div>
                             </div>

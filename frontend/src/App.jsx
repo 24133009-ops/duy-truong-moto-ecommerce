@@ -424,11 +424,34 @@ export default function App() {
   // Format VND Currency
   const formatMoney = (val) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(val);
 
-  const getCategoryBadgeTitle = (cat) => {
+  const isAccessory = (item) => {
+    if (!item) return false;
+    const cat = (item.category || '').toLowerCase();
+    const catName = (item.categoryName || '').toLowerCase();
+    const nameUpper = (item.name || '').toUpperCase();
+    const brandUpper = (item.brand || '').toUpperCase();
+    return cat === 'do-bao-ho' || 
+           cat === 'gear-parts' || 
+           cat === 'phu-tung-po-do' ||
+           catName.includes('bảo hộ') ||
+           catName.includes('phụ tùng') ||
+           catName.includes('pô độ') ||
+           catName.includes('nón') ||
+           ['MŨ BẢO HIỂM', 'NÓN BẢO HIỂM', 'GĂNG TAY', 'GIÁP', 'PÔ', 'PHUỘC', 'ỐNG XẢ', 'AKRAPOVIC', 'SC-PROJECT', 'SC PROJECT', 'OHLINS', 'BREMBO', 'AGV', 'DAINESE', 'ALPINESTARS', 'LS2'].some(k => nameUpper.includes(k) || brandUpper.includes(k));
+  };
+
+  const getCategoryBadgeTitle = (cat, item = null) => {
+    if (item && isAccessory(item)) {
+      const name = (item.name || '').toUpperCase();
+      if (name.includes('MŨ') || name.includes('NÓN') || name.includes('GĂNG') || name.includes('GIÁP') || name.includes('AGV') || name.includes('DAINESE') || name.includes('ALPINESTARS')) {
+        return 'Đồ Bảo Hộ Biker';
+      }
+      return 'Pô Độ & Phụ Tùng';
+    }
     switch (cat) {
       case 'do-bao-ho': return 'Đồ Bảo Hộ Biker';
-      case 'gear-parts': return 'Pô Độ & Phụ Tùng CNC';
-      case 'oto': return 'Siêu Xe & Ô Tô Sang';
+      case 'gear-parts': 
+      case 'phu-tung-po-do': return 'Pô Độ & Phụ Tùng CNC';
       case 'dirtbike': return 'Xe Cào Cào Địa Hình';
       case 'xenho': return 'Xe Nhỏ Sưu Tầm';
       case 'superbike': return 'Superbike Thể Thao';
@@ -438,16 +461,6 @@ export default function App() {
       case 'scooter': return 'Tay Ga Độc Lạ';
       default: return 'Mô Tô Phân Khối Lớn';
     }
-  };
-
-  const isAccessory = (item) => {
-    if (!item) return false;
-    const cat = item.category || '';
-    const nameUpper = (item.name || '').toUpperCase();
-    const brandUpper = (item.brand || '').toUpperCase();
-    return cat === 'do-bao-ho' || 
-           cat === 'gear-parts' || 
-           ['MŨ BẢO HIỂM', 'GĂNG TAY', 'GIÁP', 'PÔ', 'PHUỘC', 'AKRAPOVIC', 'SC-PROJECT', 'SC PROJECT', 'OHLINS', 'BREMBO', 'AGV', 'DAINESE', 'ALPINESTARS', 'LS2'].some(k => nameUpper.includes(k) || brandUpper.includes(k));
   };
 
   const renderCategoryTag = (cat) => {
@@ -1333,7 +1346,7 @@ export default function App() {
                     </div>
                     <div className="bike-content">
                       <div style={{ fontSize: '0.75rem', color: 'var(--gold-primary)', fontWeight: 800, textTransform: 'uppercase' }}>
-                        {bike.brand} • {getCategoryBadgeTitle(bike.category)}
+                        {bike.brand} • {getCategoryBadgeTitle(bike.category, bike)}
                       </div>
                       <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: '6px 0 10px', color: '#fff', minHeight: '44px', fontFamily: 'var(--font-brand)' }}>
                         {bike.name}
@@ -1571,7 +1584,7 @@ export default function App() {
                         </div>
                         <div className="bike-content">
                           <div style={{ fontSize: '0.75rem', color: 'var(--gold-primary)', fontWeight: 800, textTransform: 'uppercase' }}>
-                            {bike.brand} • {getCategoryBadgeTitle(bike.category)} • {bike.year || '2024'}
+                            {bike.brand} • {getCategoryBadgeTitle(bike.category, bike)} • {isAccessory(bike) ? 'Mới 100%' : (bike.year || '2024')}
                           </div>
                           <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: '6px 0 10px', color: '#fff', minHeight: '44px', fontFamily: 'var(--font-brand)' }}>
                             {bike.name}
@@ -1822,6 +1835,194 @@ export default function App() {
                 <div className="price-racing" style={{ fontSize: '2.2rem', color: '#fff', margin: '8px 0' }}>{formatMoney(vendorNetRevenue)}</div>
                 <div style={{ color: 'var(--text-sub)', fontSize: '0.8rem' }}>Doanh thu thực nhận sau trừ 5% hoa hồng</div>
               </div>
+            </div>
+
+            {/* QUY TRÌNH 6 CHẶNG BÀN GIAO XE SÀN TRƯỢT VIP TẠI CHI NHÁNH */}
+            <div className="glass-box" style={{ padding: '28px', marginBottom: '32px', border: '1px solid rgba(212,175,55,0.35)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                <div>
+                  <span style={{ background: 'rgba(212,175,55,0.15)', color: 'var(--gold-primary)', padding: '4px 12px', borderRadius: '20px', fontSize: '0.78rem', fontWeight: 800, border: '1px solid var(--gold-primary)' }}>
+                    <i className="fa-solid fa-truck-fast me-1"></i> TIẾN TRÌNH ĐIỀU PHỐI 6 CHẶNG SHOWROOM
+                  </span>
+                  <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#fff', marginTop: '8px', fontFamily: 'var(--font-brand)' }}>
+                    QUẢN LÝ ĐƠN ĐẶT CỌC &amp; TIẾN ĐỘ BÀN GIAO XE ({currentStoreOrders.length} ĐƠN)
+                  </h3>
+                </div>
+                <div style={{ color: 'var(--text-sub)', fontSize: '0.85rem' }}>
+                  Showroom: <strong style={{ color: 'var(--gold-primary)' }}>{currentUser.storeName || 'Toàn Hệ Thống'}</strong>
+                </div>
+              </div>
+
+              {currentStoreOrders.length === 0 ? (
+                <div style={{ padding: '40px 20px', textAlign: 'center', color: 'var(--text-muted)' }}>
+                  <i className="fa-solid fa-clipboard-list" style={{ fontSize: '2.5rem', marginBottom: '12px', opacity: 0.5 }}></i>
+                  <div>Chưa có đơn đặt cọc mới nào tại chi nhánh này. Các đơn hàng từ khách sẽ hiển thị tại đây theo thời gian thực!</div>
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                  {currentStoreOrders.map(order => {
+                    const getStepIdx = (st) => {
+                      switch (st) {
+                        case 'NOT_PROCESSED': return 1;
+                        case 'CONFIRMED': return 2;
+                        case 'PICKED_UP': return 3;
+                        case 'SHIPPING': return 4;
+                        case 'DELIVERED': return 6;
+                        default: return 2;
+                      }
+                    };
+                    const sIdx = getStepIdx(order.status);
+                    const steps = [
+                      { num: 1, title: 'Đặt Cọc Online', desc: 'Khách cọc VNPay', icon: 'fa-file-invoice-dollar' },
+                      { num: 2, title: 'Duyệt HQCN', desc: 'Kiểm tra số khung', icon: 'fa-stamp' },
+                      { num: 3, title: 'PDI Kiểm Định', desc: 'Siết ốc & Rửa xe', icon: 'fa-warehouse' },
+                      { num: 4, title: 'Xe Sàn Trượt', desc: 'Vận chuyển VIP', icon: 'fa-truck-ramp-box' },
+                      { num: 5, title: 'Bàn Giao Xe', desc: 'Test pô & Ký biên bản', icon: 'fa-key' },
+                      { num: 6, title: 'Bảo Hành 3 Năm', desc: 'Kích hoạt điện tử', icon: 'fa-shield-halved' }
+                    ];
+
+                    const handleAdvanceStage = (nextStatus, message) => {
+                      setOrders(orders.map(o => o.id === order.id ? { ...o, status: nextStatus } : o));
+                      try {
+                        fetch(`${API_BASE_URL}/orders/${order.id}/status`, {
+                          method: 'PUT',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ status: nextStatus })
+                        }).catch(e => console.warn('API error:', e));
+                      } catch (err) {}
+                      confetti({ particleCount: 80, spread: 50 });
+                      alert(message);
+                    };
+
+                    return (
+                      <div key={order.id} style={{ background: '#0e111a', border: '1px solid rgba(212,175,55,0.25)', borderRadius: '14px', padding: '20px' }}>
+                        {/* Order Header */}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '12px', marginBottom: '14px', flexWrap: 'wrap', gap: '10px' }}>
+                          <div>
+                            <span style={{ color: 'var(--text-muted)', fontSize: '0.82rem' }}>MÃ ĐƠN: </span>
+                            <strong className="text-gold" style={{ fontSize: '1.05rem', marginRight: '12px' }}>{order.id}</strong>
+                            <span style={{ color: '#fff', fontSize: '0.85rem' }}>
+                              👤 Khách: <strong>{order.customerName}</strong> ({order.phone})
+                            </span>
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span style={{ 
+                              padding: '3px 10px', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 700,
+                              background: order.status === 'CONFIRMED' ? 'rgba(212,175,55,0.15)' : (order.status === 'DELIVERED' ? 'rgba(40,167,69,0.15)' : 'rgba(0,242,254,0.15)'),
+                              color: order.status === 'CONFIRMED' ? 'var(--gold-light)' : (order.status === 'DELIVERED' ? '#28a745' : 'var(--cyan-neon)'),
+                              border: '1px solid currentColor'
+                            }}>
+                              {order.status === 'NOT_PROCESSED' ? 'Chặng 1: Mới Đặt Cọc' : (order.status === 'CONFIRMED' ? 'Chặng 2: Đã Duyệt HQCN' : (order.status === 'PICKED_UP' ? 'Chặng 3: Đã PDI Chờ Xe Sàn' : (order.status === 'SHIPPING' ? 'Chặng 4: Xe Sàn Trượt Đang Chạy' : 'Chặng 6: Hoàn Tất Bàn Giao')))}
+                            </span>
+                            {order.isPaid && (
+                              <span style={{ background: '#28a745', color: '#fff', padding: '3px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 700 }}>
+                                <i className="fa-solid fa-check-circle me-1"></i> ĐÃ THANH TOÁN
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Order Info & Delivery Stepper */}
+                        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '20px', alignItems: 'center', marginBottom: '16px' }}>
+                          <div>
+                            <div style={{ color: '#fff', fontWeight: 700, fontSize: '1rem', marginBottom: '4px' }}>
+                              <i className="fa-solid fa-motorcycle text-gold me-2"></i> {order.productName}
+                            </div>
+                            <div style={{ color: 'var(--text-sub)', fontSize: '0.82rem' }}>
+                              <i className="fa-solid fa-location-dot text-racing me-1"></i> Địa chỉ giao: {order.address}
+                            </div>
+                            <div style={{ color: 'var(--text-muted)', fontSize: '0.78rem', marginTop: '2px' }}>
+                              Đơn vị vận chuyển: {order.deliveryName} • Ngày đặt: {order.date}
+                            </div>
+                          </div>
+                          <div style={{ textAlign: 'right' }}>
+                            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Thực thu Showroom:</div>
+                            <div className="price-racing text-gradient-gold" style={{ fontSize: '1.3rem' }}>
+                              {formatMoney(order.totalAmount)}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Stepper 6 chặng */}
+                        <div style={{ background: 'rgba(0,0,0,0.3)', padding: '14px', borderRadius: '12px', border: '1px solid rgba(212,175,55,0.2)', marginBottom: '14px' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                            <span style={{ fontSize: '0.75rem', color: 'var(--gold-light)', fontWeight: 700 }}>
+                              <i className="fa-solid fa-route me-1"></i> TIẾN TRÌNH 6 CHẶNG BÀN GIAO:
+                            </span>
+                            <span style={{ fontSize: '0.75rem', color: sIdx === 6 ? '#28a745' : 'var(--gold-primary)', fontWeight: 800 }}>
+                              {sIdx === 6 ? 'Chặng 6/6: Hoàn Tất Bàn Giao & Bảo Hành 3 Năm' : `Chặng ${sIdx}/6: ${steps[sIdx - 1]?.title || ''}`}
+                            </span>
+                          </div>
+                          <div className="delivery-stepper" style={{ margin: 0, padding: 0 }}>
+                            <div className="delivery-stepper-line" style={{ top: '22px' }}></div>
+                            <div className="delivery-stepper-progress" style={{ top: '22px', width: `${(sIdx - 1) * 20}%` }}></div>
+                            {steps.map(s => {
+                              const isCompleted = sIdx > s.num || (sIdx === 6 && s.num === 6);
+                              const isActive = sIdx === s.num && sIdx !== 6;
+                              return (
+                                <div key={s.num} className={`stepper-step ${isCompleted ? 'completed' : (isActive ? 'active' : '')}`}>
+                                  <div className="stepper-icon-circle" style={{ width: '34px', height: '34px', fontSize: '0.8rem' }}>
+                                    <i className={`fa-solid ${isCompleted ? 'fa-check' : s.icon}`}></i>
+                                  </div>
+                                  <div className="stepper-step-num">C{s.num}</div>
+                                  <div className="stepper-title" style={{ fontSize: '0.7rem' }}>{s.title}</div>
+                                  <div className="stepper-desc" style={{ fontSize: '0.6rem' }}>{s.desc}</div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+
+                        {/* Quick 1-Touch Action Buttons for Showroom Manager */}
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+                          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Chuyển nhanh chặng tiếp theo:</span>
+                          {order.status === 'NOT_PROCESSED' && (
+                            <button 
+                              className="btn-gold" 
+                              style={{ padding: '6px 14px', fontSize: '0.8rem' }}
+                              onClick={() => handleAdvanceStage('CONFIRMED', 'Đã duyệt hồ sơ HQCN & số khung máy! Đơn chuyển sang Chặng 2 (PDI Chuẩn Bị Xe).')}
+                            >
+                              <i className="fa-solid fa-stamp me-1"></i> Duyệt Hồ Sơ HQCN (Sang Chặng 2)
+                            </button>
+                          )}
+                          {order.status === 'CONFIRMED' && (
+                            <button 
+                              className="btn-gold" 
+                              style={{ padding: '6px 14px', fontSize: '0.8rem' }}
+                              onClick={() => handleAdvanceStage('PICKED_UP', 'Đã hoàn tất PDI kiểm định kỹ thuật & gắn phụ kiện! Chuyển giao Shipper Chặng 3.')}
+                            >
+                              <i className="fa-solid fa-warehouse me-1"></i> Hoàn Tất PDI &amp; Giao Shipper (Sang Chặng 3)
+                            </button>
+                          )}
+                          {order.status === 'PICKED_UP' && (
+                            <button 
+                              className="btn-gold" 
+                              style={{ padding: '6px 14px', fontSize: '0.8rem' }}
+                              onClick={() => handleAdvanceStage('SHIPPING', 'Đã điều động xe sàn trượt VIP lăn bánh vận chuyển! Sang Chặng 4.')}
+                            >
+                              <i className="fa-solid fa-truck-ramp-box me-1"></i> Điều Xe Sàn Trượt (Sang Chặng 4)
+                            </button>
+                          )}
+                          {order.status === 'SHIPPING' && (
+                            <button 
+                              className="btn-gold" 
+                              style={{ padding: '6px 14px', fontSize: '0.8rem' }}
+                              onClick={() => handleAdvanceStage('DELIVERED', 'Đã xác nhận khách hàng nhận xe, nổ máy test pô thành công! Kích hoạt bảo hành điện tử 3 năm (Chặng 6).')}
+                            >
+                              <i className="fa-solid fa-circle-check me-1"></i> Xác Nhận Bàn Giao Xong (Hoàn Tất Chặng 6)
+                            </button>
+                          )}
+                          {order.status === 'DELIVERED' && (
+                            <span style={{ color: '#28a745', fontWeight: 800, fontSize: '0.88rem' }}>
+                              <i className="fa-solid fa-circle-check me-1"></i> ĐÃ HOÀN TẤT BÀN GIAO &amp; BẢO HÀNH 3 NĂM
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             {/* Inventory table */}

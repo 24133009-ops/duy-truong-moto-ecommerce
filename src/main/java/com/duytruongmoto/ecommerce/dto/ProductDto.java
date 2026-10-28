@@ -78,12 +78,23 @@ public class ProductDto {
         BigDecimal eff = p.getEffectivePrice();
         String display = formatPriceDisplay(eff);
 
+        // Determine whether product is accessory/gear
+        boolean isGear = "gear-parts".equalsIgnoreCase(catSlug) || 
+                         "do-bao-ho".equalsIgnoreCase(catSlug) || 
+                         "phu-tung-po-do".equalsIgnoreCase(catSlug) ||
+                         (p.getName() != null && (p.getName().toUpperCase().contains("MŨ") || p.getName().toUpperCase().contains("NÓN") || p.getName().toUpperCase().contains("GĂNG") || p.getName().toUpperCase().contains("GIÁP") || p.getName().toUpperCase().contains("PÔ") || p.getName().toUpperCase().contains("PHUỘC")));
+
+        if (isGear && (catName == null || catName.isEmpty() || catName.contains("Mô Tô"))) {
+            catName = (p.getName() != null && (p.getName().toUpperCase().contains("MŨ") || p.getName().toUpperCase().contains("NÓN") || p.getName().toUpperCase().contains("GĂNG") || p.getName().toUpperCase().contains("GIÁP")))
+                    ? "Đồ Bảo Hộ Biker" : "Pô Độ & Phụ Tùng";
+        }
+
         // Smart badges based on category/brand
         List<String> badgeList = new ArrayList<>();
-        if ("oto".equalsIgnoreCase(catSlug)) {
-            badgeList.addAll(Arrays.asList("Nhập Khẩu Nguyên Chiếc", "Full Lịch Sử Hãng", "Bao Test Hãng"));
-        } else if ("gear-parts".equalsIgnoreCase(catSlug) || "do-bao-ho".equalsIgnoreCase(catSlug) || "phu-tung-po-do".equalsIgnoreCase(catSlug)) {
+        if (isGear) {
             badgeList.addAll(Arrays.asList("Chính Hãng 100%", "Bảo Hành 2 Năm", "Free Lắp Đặt"));
+        } else if ("dirtbike".equalsIgnoreCase(catSlug)) {
+            badgeList.addAll(Arrays.asList("Cào Cào HQCN", "Full Pô Độ", "Bao Test Hãng"));
         } else if ("xenho".equalsIgnoreCase(catSlug) || "scooter".equalsIgnoreCase(catSlug)) {
             badgeList.addAll(Arrays.asList("Xe Lướt Siêu Đẹp", "Biển Số Đẹp", "HQCN Sang Tên"));
         } else {
@@ -145,8 +156,8 @@ public class ProductDto {
                 .power(extractPower(p.getDescription()))
                 .color(p.getColor() != null ? p.getColor() : "Nguyên Bản")
                 .colors(generateColorsForProduct(p))
-                .odo("Lướt Mới HQCN")
-                .year("2024")
+                .odo(isGear ? "Mới 100% Chính Hãng" : "Lướt Mới HQCN")
+                .year(isGear ? "Mới 100%" : (p.getYear() != null ? String.valueOf(p.getYear()) : "2024"))
                 .badges(badgeList)
                 .branchStocks(branchStocks)
                 .image(p.getMainImage() != null ? p.getMainImage() : "/images/ktm_300_exc.jpg")

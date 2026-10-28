@@ -15,10 +15,68 @@
     <div th:replace="~{layout/main :: nav}"></div>
 
     <div class="container py-5">
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
             <div>
                 <a th:href="@{/vendor/dashboard}" class="text-gold text-decoration-none small d-inline-block mb-1"><i class="fa-solid fa-arrow-left me-1"></i> Trở về Dashboard Showroom</a>
-                <h3 class="fw-bold text-white mb-0"><i class="fa-solid fa-clipboard-check text-gold me-2"></i> QUẢN LÝ ĐƠN ĐẶT HÀNG & BÀN GIAO XE</h3>
+                <h3 class="fw-bold text-white mb-0"><i class="fa-solid fa-clipboard-check text-gold me-2"></i> QUẢN LÝ ĐƠN ĐẶT HÀNG &amp; TIẾN TRÌNH BÀN GIAO XE 6 CHẶNG</h3>
+            </div>
+            <a th:href="@{/shipper/dashboard}" class="btn btn-sm btn-outline-warning rounded-pill px-3">
+                <i class="fa-solid fa-truck-fast me-1"></i> Kênh Điều Phối Xe Sàn Trượt
+            </a>
+        </div>
+
+        <!-- Banner Tiến Trình 6 Chặng Chuẩn Showroom VIP -->
+        <div class="glass-panel p-4 rounded-4 mb-4 border border-warning border-opacity-25 shadow-lg">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="badge bg-gold text-dark fw-bold px-3 py-2 rounded-pill">
+                    <i class="fa-solid fa-shield-halved me-1"></i> QUY TRÌNH BÀN GIAO XE SÀN TRƯỢT VIP 6 CHẶNG LIÊN KẾT
+                </span>
+                <span class="text-secondary small">Áp dụng đồng bộ cho Khách Hàng, Showroom Manager và Đội Xe VIP</span>
+            </div>
+            
+            <div class="row g-2 text-center">
+                <div class="col-6 col-md-2">
+                    <div class="p-2 rounded-3 bg-dark bg-opacity-75 border border-secondary border-opacity-25 h-100">
+                        <div class="text-gold mb-1"><i class="fa-solid fa-file-invoice-dollar fs-5"></i></div>
+                        <div class="fw-bold text-white small">Chặng 1</div>
+                        <div class="text-secondary" style="font-size: 0.72rem;">Đặt Cọc Online (VNPay)</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <div class="p-2 rounded-3 bg-dark bg-opacity-75 border border-secondary border-opacity-25 h-100">
+                        <div class="text-gold mb-1"><i class="fa-solid fa-stamp fs-5"></i></div>
+                        <div class="fw-bold text-white small">Chặng 2</div>
+                        <div class="text-secondary" style="font-size: 0.72rem;">Duyệt Hồ Sơ HQCN</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <div class="p-2 rounded-3 bg-dark bg-opacity-75 border border-secondary border-opacity-25 h-100">
+                        <div class="text-gold mb-1"><i class="fa-solid fa-warehouse fs-5"></i></div>
+                        <div class="fw-bold text-white small">Chặng 3</div>
+                        <div class="text-secondary" style="font-size: 0.72rem;">PDI Kiểm Định Xe</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <div class="p-2 rounded-3 bg-dark bg-opacity-75 border border-secondary border-opacity-25 h-100">
+                        <div class="text-gold mb-1"><i class="fa-solid fa-truck-ramp-box fs-5"></i></div>
+                        <div class="fw-bold text-white small">Chặng 4</div>
+                        <div class="text-secondary" style="font-size: 0.72rem;">Xe Sàn Trượt Chạy</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <div class="p-2 rounded-3 bg-dark bg-opacity-75 border border-secondary border-opacity-25 h-100">
+                        <div class="text-gold mb-1"><i class="fa-solid fa-key fs-5"></i></div>
+                        <div class="fw-bold text-white small">Chặng 5</div>
+                        <div class="text-secondary" style="font-size: 0.72rem;">Bàn Giao &amp; Test Pô</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <div class="p-2 rounded-3 bg-dark bg-opacity-75 border border-secondary border-opacity-25 h-100">
+                        <div class="text-success mb-1"><i class="fa-solid fa-shield-halved fs-5"></i></div>
+                        <div class="fw-bold text-white small">Chặng 6</div>
+                        <div class="text-secondary" style="font-size: 0.72rem;">Bảo Hành 3 Năm</div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -34,7 +92,7 @@
             <a th:each="st : ${statuses}" th:href="@{/vendor/orders(status=${st})}" class="btn btn-sm rounded-pill" th:classappend="${currentStatus == st ? 'btn-gold' : 'btn-dark border-secondary text-secondary'}" th:text="${st.displayName}"></a>
         </div>
 
-        <div class="glass-panel p-4 rounded-4">
+        <div class="glass-panel p-4 rounded-4 shadow-lg">
             <div class="table-responsive">
                 <table class="table table-dark table-borderless align-middle mb-0">
                     <thead>
@@ -44,13 +102,26 @@
                             <th>KHÁCH HÀNG</th>
                             <th>ĐỊA CHỈ NHẬN XE</th>
                             <th>THỰC THU SHOWROOM</th>
-                            <th>TRẠNG THÁI HIỆN TẠI</th>
-                            <th>CẬP NHẬT TRẠNG THÁI</th>
+                            <th style="min-width: 220px;">TIẾN TRÌNH 6 CHẶNG</th>
+                            <th style="min-width: 240px;">ĐIỀU PHỐI CHUYỂN CHẶNG</th>
                         </tr>
                     </thead>
                     <tbody>
+                        <tr th:if="${orders == null or #lists.isEmpty(orders)}">
+                            <td colspan="7" class="text-center py-5 text-secondary">
+                                <i class="fa-solid fa-clipboard-list fs-2 mb-2 d-block opacity-50"></i>
+                                Không có đơn hàng nào trong mục này.
+                            </td>
+                        </tr>
                         <tr class="border-bottom border-secondary" th:each="order : ${orders}">
-                            <td><strong class="text-gold" th:text="${order.orderCode}"></strong></td>
+                            <td>
+                                <a th:href="@{/orders/{id}(id=${order.id})}" class="text-gold fw-bold text-decoration-none" th:text="${order.orderCode}"></a>
+                                <div class="mt-1">
+                                    <a th:href="@{/orders/{id}(id=${order.id})}" class="badge bg-secondary text-white text-decoration-none" style="font-size: 0.68rem;">
+                                        <i class="fa-solid fa-eye me-1"></i> Xem Chi Tiết
+                                    </a>
+                                </div>
+                            </td>
                             <td class="text-secondary small" th:text="${#temporals.format(order.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
                             <td>
                                 <strong class="text-white" th:text="${order.recipientName}"></strong>
@@ -58,24 +129,82 @@
                             </td>
                             <td class="text-secondary small" style="max-width: 200px;" th:text="${order.address}"></td>
                             <td class="fw-bold text-gradient-gold" th:text="${order.amountToStore != null ? #numbers.formatDecimal(order.amountToStore, 0, 'POINT', 0, 'COMMA') + ' đ' : '0 đ'}"></td>
+                            
+                            <!-- Cột Tiến Trình 6 Chặng Trực Quan -->
                             <td th:with="stName=${order.status != null ? order.status.name() : ''}, stepIdx=${stName == 'NOT_PROCESSED' ? 1 : (stName == 'CONFIRMED' ? 2 : (stName == 'PICKED_UP' ? 3 : (stName == 'SHIPPING' ? 4 : (stName == 'DELIVERED' ? 6 : 0))))}">
-                                <div class="badge bg-gold text-dark fw-bold small mb-1" th:if="${stName != 'CANCELLED' and stName != 'REFUNDED'}">
-                                    <i class="fa-solid fa-truck-fast me-1"></i> <span th:text="|Chặng ${stepIdx}/6|">Chặng 1/6</span>
+                                <div th:if="${stName != 'CANCELLED' and stName != 'REFUNDED'}">
+                                    <div class="d-flex align-items-center gap-1 mb-1">
+                                        <span class="badge bg-gold text-dark fw-bold" style="font-size: 0.72rem;">
+                                            <i class="fa-solid fa-route me-1"></i> <span th:text="|Chặng ${stepIdx}/6|"></span>
+                                        </span>
+                                        <span class="text-light small fw-bold" style="font-size: 0.75rem;" th:text="${order.status.displayName}"></span>
+                                    </div>
+                                    <!-- Mini Stepper Dots -->
+                                    <div class="d-flex align-items-center gap-1 mt-1">
+                                        <div th:each="i : ${#numbers.sequence(1, 6)}" 
+                                             class="rounded-circle d-flex align-items-center justify-content-center fw-bold"
+                                             th:style="${stepIdx >= i ? 'background: #ffd700; color: #000;' : 'background: rgba(255,255,255,0.15); color: #888;'} + ' width: 20px; height: 20px; font-size: 0.65rem;'"
+                                             th:title="|Chặng ${i}|"
+                                             th:text="${i}">
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <span class="badge badge-status"
-                                          th:classappend="${order.status != null and order.status.name() == 'NOT_PROCESSED' ? 'badge-status-new' : (order.status != null and order.status.name() == 'DELIVERED' ? 'badge-status-delivered' : 'badge-status-confirmed')}"
-                                          th:text="${order.status != null ? order.status.displayName : 'Đang xử lý'}">
-                                    </span>
+                                <div th:if="${stName == 'CANCELLED'}">
+                                    <span class="badge bg-danger"><i class="fa-solid fa-ban me-1"></i> Đã Hủy Đơn</span>
+                                </div>
+                                <div th:if="${stName == 'REFUNDED'}">
+                                    <span class="badge bg-secondary"><i class="fa-solid fa-rotate-left me-1"></i> Đã Hoàn Tiền</span>
                                 </div>
                             </td>
-                            <td>
-                                <form th:action="@{/vendor/orders/{id}/status(id=${order.id})}" method="post" class="d-flex align-items-center gap-1">
-                                    <select name="status" class="form-select form-select-sm form-select-luxury" style="font-size: 0.75rem;">
-                                        <option th:each="st : ${statuses}" th:value="${st}" th:text="${st.displayName}" th:selected="${order.status == st}"></option>
-                                    </select>
-                                    <button type="submit" class="btn btn-gold btn-sm px-2 py-1" style="font-size: 0.75rem;">Lưu</button>
-                                </form>
+
+                            <!-- Cột Thao Tác Chuyển Chặng 1-Chạm -->
+                            <td th:with="stName=${order.status != null ? order.status.name() : ''}">
+                                <div class="d-flex flex-column gap-2">
+                                    <!-- Nút chuyển nhanh 1-chạm -->
+                                    <div th:if="${stName == 'NOT_PROCESSED'}">
+                                        <form th:action="@{/vendor/orders/{id}/status(id=${order.id})}" method="post">
+                                            <input type="hidden" name="status" value="CONFIRMED">
+                                            <button type="submit" class="btn btn-gold btn-sm w-100 fw-bold py-1 px-2" style="font-size: 0.75rem;">
+                                                <i class="fa-solid fa-stamp me-1"></i> Duyệt HQCN (Chặng 2)
+                                            </button>
+                                        </form>
+                                    </div>
+                                    <div th:if="${stName == 'CONFIRMED'}">
+                                        <form th:action="@{/vendor/orders/{id}/status(id=${order.id})}" method="post">
+                                            <input type="hidden" name="status" value="PICKED_UP">
+                                            <button type="submit" class="btn btn-gold btn-sm w-100 fw-bold py-1 px-2" style="font-size: 0.75rem;">
+                                                <i class="fa-solid fa-warehouse me-1"></i> Xong PDI &amp; Giao Shipper (Chặng 3)
+                                            </button>
+                                        </form>
+                                    </div>
+                                    <div th:if="${stName == 'PICKED_UP'}">
+                                        <form th:action="@{/vendor/orders/{id}/status(id=${order.id})}" method="post">
+                                            <input type="hidden" name="status" value="SHIPPING">
+                                            <button type="submit" class="btn btn-gold btn-sm w-100 fw-bold py-1 px-2" style="font-size: 0.75rem;">
+                                                <i class="fa-solid fa-truck-ramp-box me-1"></i> Điều Xe Sàn Trượt (Chặng 4)
+                                            </button>
+                                        </form>
+                                    </div>
+                                    <div th:if="${stName == 'SHIPPING'}">
+                                        <form th:action="@{/vendor/orders/{id}/status(id=${order.id})}" method="post">
+                                            <input type="hidden" name="status" value="DELIVERED">
+                                            <button type="submit" class="btn btn-success btn-sm w-100 fw-bold py-1 px-2" style="font-size: 0.75rem;">
+                                                <i class="fa-solid fa-circle-check me-1"></i> Khách Đã Nhận (Chặng 6)
+                                            </button>
+                                        </form>
+                                    </div>
+                                    <div th:if="${stName == 'DELIVERED'}">
+                                        <span class="text-success small fw-bold"><i class="fa-solid fa-check-double me-1"></i> Hoàn tất bảo hành 3 năm</span>
+                                    </div>
+
+                                    <!-- Dropdown tùy chọn bất kỳ trạng thái nào -->
+                                    <form th:action="@{/vendor/orders/{id}/status(id=${order.id})}" method="post" class="d-flex align-items-center gap-1">
+                                        <select name="status" class="form-select form-select-sm form-select-luxury" style="font-size: 0.75rem; background-repeat: no-repeat !important; background-position: right 0.75rem center !important; background-size: 14px 10px !important;">
+                                            <option th:each="st : ${statuses}" th:value="${st}" th:text="${st.displayName}" th:selected="${order.status == st}"></option>
+                                        </select>
+                                        <button type="submit" class="btn btn-outline-secondary btn-sm px-2 py-1 text-white" style="font-size: 0.75rem;">Lưu</button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     </tbody>
