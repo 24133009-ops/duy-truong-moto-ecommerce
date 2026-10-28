@@ -27,36 +27,21 @@
 </head>
 <body>
 
-    <!-- 1. TOP UTILITY BAR: ROLE SWITCHER HUD + HOTLINE & SLOGAN (Tích hợp 1 thanh tinh gọn, sang trọng) -->
-    <div th:fragment="topbar" class="py-2 border-bottom border-secondary top-utility-bar" style="background: #07090e; font-size: 0.8rem; position: relative; z-index: 1045 !important;">
-        <div class="container-fluid px-4 d-flex flex-wrap justify-content-between align-items-center gap-2">
-            <div class="top-bar-role-switcher d-flex align-items-center gap-2 flex-wrap">
-                <span class="badge bg-gold text-dark fw-bold small"><i class="fa-solid fa-sliders me-1"></i> PHÂN HỆ:</span>
-                <a th:href="@{/home}" class="badge bg-secondary text-decoration-none px-2 py-1" title="Khách mua hàng"><i class="fa-solid fa-user me-1"></i> 1. Khách</a>
-                <a th:href="@{/user/profile}" class="badge bg-dark border border-secondary text-light text-decoration-none px-2 py-1" title="Khách VIP"><i class="fa-solid fa-motorcycle me-1"></i> 2. Biker Hoàng</a>
-                <a th:href="@{/vendor/dashboard}" class="badge bg-warning text-dark text-decoration-none px-2 py-1" title="Showroom Phú Nhuận TP.HCM - Minh Quản Lý"><i class="fa-solid fa-store me-1"></i> 3. Showroom PN</a>
-                <a th:href="@{/vendor/dashboard}" class="badge bg-warning text-dark text-decoration-none px-2 py-1" title="Showroom Cầu Giấy HN - Đỗ Trọng Khôi"><i class="fa-solid fa-store me-1"></i> 4. Showroom CG (Khôi)</a>
-                <a th:href="@{/vendor/dashboard}" class="badge bg-warning text-dark text-decoration-none px-2 py-1" title="Showroom Hải Châu ĐN - Lê Nghĩa Tình"><i class="fa-solid fa-store me-1"></i> 5. Showroom ĐN (Tình)</a>
-                <a th:href="@{/shipper/dashboard}" class="badge bg-info text-dark text-decoration-none px-2 py-1" title="Tài xế xe sàn trượt VIP"><i class="fa-solid fa-truck-fast me-1"></i> 6. Tài Xế VIP</a>
-                <a th:href="@{/admin/dashboard}" class="badge bg-danger text-light text-decoration-none px-2 py-1" title="Quản trị toàn sàn"><i class="fa-solid fa-shield-halved me-1"></i> 7. Admin</a>
+    <!-- 1. TOP UTILITY BAR (Thanh tiện ích sang trọng, chuẩn chỉ, không bao giờ tràn) -->
+    <div th:fragment="topbar" class="py-1 border-bottom border-secondary border-opacity-25" style="background: #050608; font-size: 0.78rem;">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="text-secondary small d-flex align-items-center gap-2">
+                <span class="text-gold-light fw-bold"><i class="fa-solid fa-crown text-gold me-1"></i> DUY TRƯƠNG MOTOR</span>
+                <span class="text-secondary opacity-50">|</span>
+                <span class="d-none d-md-inline text-secondary"><i class="fa-solid fa-shield-halved text-gold me-1"></i> Chuỗi Showroom Siêu Môtô PKL &amp; Cào Cào HQCN</span>
             </div>
-            <div class="d-flex align-items-center gap-3 text-secondary small ms-auto">
-                <span class="d-none d-lg-inline text-gold-light"><i class="fa-solid fa-quote-left text-gold me-1"></i> MUA CỦA NGƯỜI CHÁN - BÁN CHO NGƯỜI CẦN</span>
-                <span class="d-none d-xl-inline"><i class="fa-solid fa-phone text-gold me-1"></i> Hotline: <strong class="text-gold">0903.456.789</strong></span>
-                <div class="d-none d-md-inline-flex align-items-center gap-1">
-                    <i class="fa-solid fa-location-dot text-gold" style="font-size: 0.78rem;"></i>
-                    <select class="form-select form-select-sm form-select-luxury py-0 px-2 fw-bold text-gold" 
-                            style="width: auto; font-size: 0.75rem; height: 26px; border-color: rgba(212,175,55,0.6); background-color: #0e111a; background-repeat: no-repeat !important; background-position: right 6px center !important; background-size: 10px 8px !important; padding-right: 20px !important; cursor: pointer;"
-                            onchange="if(this.value) window.location.href=this.value;">
-                        <option value="/products">🏢 Kho Showroom: Toàn Quốc (3 Kho)</option>
-                        <option value="/products?storeId=1">📍 Showroom Phú Nhuận TP.HCM (Trụ Sở)</option>
-                        <option value="/products?storeId=2">📍 Showroom Cầu Giấy Hà Nội (Miền Bắc)</option>
-                        <option value="/products?storeId=3">📍 Showroom Hải Châu Đà Nẵng (Miền Trung)</option>
-                    </select>
-                </div>
-                <span sec:authorize="isAuthenticated()" class="ms-2">
+            <div class="d-flex align-items-center gap-3 text-secondary small">
+                <span><i class="fa-solid fa-phone text-gold me-1"></i> Hotline: <strong class="text-gold">0903.456.789</strong></span>
+                <span sec:authorize="isAuthenticated()">
                     <form th:action="@{/auth/logout}" method="post" class="d-inline m-0 p-0">
-                        <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-2 fw-bold rounded-pill" style="font-size:0.72rem;"><i class="fa-solid fa-right-from-bracket me-1"></i>Đăng xuất</button>
+                        <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-2 rounded-pill fw-bold" style="font-size:0.72rem;">
+                            <i class="fa-solid fa-right-from-bracket me-1"></i>Đăng xuất
+                        </button>
                     </form>
                 </span>
             </div>
@@ -65,7 +50,7 @@
 
 
     <!-- 3. Main Navigation Bar -->
-    <nav th:fragment="nav" class="navbar navbar-expand-lg navbar-luxury">
+    <nav th:fragment="nav" class="navbar navbar-expand-lg navbar-luxury" style="max-width: 100vw; overflow-x: clip;">
         <div class="container-fluid px-xl-4 px-3">
             <a class="navbar-brand-logo" th:href="@{/home}">
                 <div class="logo-icon">
