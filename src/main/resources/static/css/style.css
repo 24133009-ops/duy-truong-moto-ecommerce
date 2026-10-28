@@ -593,6 +593,19 @@ h1, h2, h3, h4, .brand-font {
     transform: scale(1.02);
 }
 
+@media (max-width: 1440px) {
+    .search-pill-btn span,
+    .search-pill-btn .fa-chevron-right {
+        display: none !important;
+    }
+    .search-pill-btn {
+        padding: 0 !important;
+        width: 38px !important;
+        height: 38px !important;
+        justify-content: center !important;
+    }
+}
+
 .vk-mega-hero {
     position: relative;
     min-height: 580px;

@@ -878,7 +878,7 @@ export default function App() {
           <div className="header-user-badge" onClick={() => navigateTab('orders')} title="Xem đơn hàng & tài khoản">
             <img src={currentUser.avatar} alt="Avatar" style={{ width: '32px', height: '32px', borderRadius: '50%', border: '2px solid var(--gold-primary)', objectFit: 'cover' }} />
             <div style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>
-              <div style={{ fontWeight: 700, color: '#fff', maxWidth: '100px', overflow: 'hidden', textOverflow: 'ellipsis' }}>{currentUser.name}</div>
+              <div style={{ fontWeight: 700, color: '#fff', maxWidth: '145px', overflow: 'hidden', textOverflow: 'ellipsis' }}>{currentUser.name}</div>
               <span style={{ color: 'var(--gold-primary)', fontSize: '0.65rem', fontWeight: 700 }}>{currentUser.levelTitle || currentUser.name}</span>
             </div>
           </div>
