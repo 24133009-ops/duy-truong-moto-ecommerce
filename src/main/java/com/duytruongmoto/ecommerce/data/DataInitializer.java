@@ -232,6 +232,21 @@ public class DataInitializer implements CommandLineRunner {
             } catch (Exception ex) {
                 log.warn("Lưu ý khi dọn dẹp đơn trùng: {}", ex.getMessage());
             }
+
+            // Dọn dẹp triệt để các dòng chữ trắng log trạng thái thừa thãi trong ghi chú đơn hàng
+            try {
+                List<Order> ordersWithNotes = orderRepository.findAll();
+                for (Order o : ordersWithNotes) {
+                    if (o.getNote() != null && (o.getNote().contains("Trạng thái:") || o.getNote().contains("["))) {
+                        String clean = o.getNote().replaceAll("\\[\\d{4}-\\d{2}-\\d{2}T[^\\]]*\\][^\\[\n]*", "").trim();
+                        clean = clean.replaceAll("(?m)^\\s*$\n?", "").trim();
+                        o.setNote(clean.isEmpty() ? null : clean);
+                        orderRepository.save(o);
+                    }
+                }
+            } catch (Exception ex) {
+                log.warn("Lưu ý khi dọn dẹp ghi chú đơn hàng: {}", ex.getMessage());
+            }
         } catch (Exception ex) {
             log.warn("Lưu ý khi dọn dẹp user trùng lặp: {}", ex.getMessage());
         }

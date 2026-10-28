@@ -142,10 +142,9 @@ public class OrderService {
                 .orElseThrow(() -> new IllegalArgumentException("Đơn hàng không tồn tại"));
         order.setIsPaidBefore(true);
         order.setStatus(OrderStatus.CONFIRMED);
-        String historyEntry = "\n[" + LocalDateTime.now() + "] Đã thanh toán cọc VNPAY thành công (Mã GD: " + transactionNo + ")";
-        order.setNote((order.getNote() != null ? order.getNote() : "") + historyEntry);
         order.setUpdatedAt(LocalDateTime.now());
         orderRepository.save(order);
+        log.info(">>> Đơn hàng {} đã thanh toán cọc VNPAY thành công (Mã GD: {})", order.getOrderCode(), transactionNo);
     }
 
     @Transactional
@@ -154,10 +153,9 @@ public class OrderService {
                 .orElseThrow(() -> new IllegalArgumentException("Đơn hàng không tồn tại"));
         OrderStatus oldStatus = order.getStatus();
         order.setStatus(status);
-        String historyEntry = "\n[" + LocalDateTime.now() + "] Trạng thái: " + oldStatus + " -> " + status;
-        order.setNote((order.getNote() != null ? order.getNote() : "") + historyEntry);
         order.setUpdatedAt(LocalDateTime.now());
         orderRepository.save(order);
+        log.info(">>> Đơn hàng {} cập nhật trạng thái: {} -> {}", order.getOrderCode(), oldStatus, status);
     }
 
     @Transactional
@@ -202,10 +200,9 @@ public class OrderService {
         }
 
         order.setStatus(newStatus);
-        String historyEntry = "\n[" + LocalDateTime.now() + " - " + role.name() + " (" + actor.getEmail() + ")] Chuyển trạng thái: " + currentStatus + " -> " + newStatus;
-        order.setNote((order.getNote() != null ? order.getNote() : "") + historyEntry);
         order.setUpdatedAt(LocalDateTime.now());
         orderRepository.save(order);
+        log.info(">>> Đơn hàng {} chuyển trạng thái bởi {} ({}): {} -> {}", order.getOrderCode(), role.name(), actor.getEmail(), currentStatus, newStatus);
     }
 
     @Transactional
