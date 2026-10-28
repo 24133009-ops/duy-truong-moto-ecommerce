@@ -100,7 +100,7 @@
                     </div>
                     <div class="col-md-5 text-md-end">
                         <div class="small text-secondary">Số tiền thanh toán cọc:</div>
-                        <div class="fs-3 fw-bold text-danger" th:text="${#numbers.formatDecimal(order.amountFromUser, 0, 'POINT', 0, 'COMMA')} + ' đ'"></div>
+                        <div class="fs-3 fw-bold text-danger" th:text="${order.amountFromUser != null ? #numbers.formatDecimal(order.amountFromUser, 0, 'POINT', 0, 'COMMA') + ' đ' : '0 đ'}"></div>
                     </div>
                 </div>
             </div>
@@ -139,6 +139,7 @@
                 <input type="hidden" name="vnp_Amount" th:value="${order.amountFromUser != null ? order.amountFromUser.multiply(100).longValue() : 0}">
                 <input type="hidden" name="vnp_OrderInfo" th:value="'Thanh toan don dat xe ' + ${order.orderCode}">
                 <input type="hidden" name="vnp_PayDate" value="20261029010000">
+                <input type="hidden" name="vnp_TransactionNo" th:value="'VNPAY-' + ${order.orderCode}">
 
                 <div class="mb-4">
                     <label class="form-label fw-bold small text-secondary">MÃ XÁC THỰC OTP (ĐÃ ĐIỀN TỰ ĐỘNG CHO TEST):</label>

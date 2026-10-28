@@ -73,6 +73,7 @@ export default function App() {
       if (window.location.pathname !== newPath) {
         window.history.pushState(null, '', newPath);
       }
+      window.scrollTo({ top: 0, behavior: 'instant' });
     }
   };
 
@@ -141,7 +142,7 @@ export default function App() {
         const orderRes = await fetch(`${API_BASE_URL}/orders`);
         if (orderRes.ok) {
           const liveOrders = await orderRes.json();
-          if (isMounted && Array.isArray(liveOrders)) {
+          if (isMounted && Array.isArray(liveOrders) && liveOrders.length > 0) {
             setOrders(liveOrders);
             console.log(`[DUY TRƯƠNG MOTOR] ✅ Live API Synchronized ${liveOrders.length} orders!`);
           }
@@ -159,7 +160,82 @@ export default function App() {
   const [cart, setCart] = useState([
     { product: INITIAL_PRODUCTS[0], count: 1 } // Default 1 KTM 300 EXC TPI in cart
   ]);
-  const [orders, setOrders] = useState([]);
+const INITIAL_DEMO_ORDERS = [
+  {
+    id: "DTM-1127CB1F",
+    storeId: 3,
+    storeName: "Duy Trương Motor - Chi Nhánh Hải Châu Đà Nẵng",
+    customerName: "Tình Lê Nghĩa",
+    recipientName: "Tình Lê Nghĩa",
+    phone: "0905112002",
+    address: "Số 52 Đường Nguyễn Văn Linh, Quận Hải Châu, TP. Đà Nẵng",
+    productName: "Mũ Bảo Hiểm AGV Pista GP RR Carbon Italia Limited Edition",
+    productImage: "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=800&q=80",
+    deliveryName: "Giao xe sàn trượt thủy lực VIP (Chống trầy xước 100%)",
+    totalAmount: 38300000,
+    amountToStore: 36460000,
+    paymentMethod: "VNPAY",
+    isPaid: true,
+    status: "DELIVERED",
+    date: "28/10/2026 17:04"
+  },
+  {
+    id: "DTM-DN-002",
+    storeId: 3,
+    storeName: "Duy Trương Motor - Chi Nhánh Hải Châu Đà Nẵng",
+    customerName: "Phạm Quốc Bảo",
+    recipientName: "Phạm Quốc Bảo",
+    phone: "0905777888",
+    address: "Số 268 Đường Trần Hưng Đạo, Phường An Hải Tây, Quận Sơn Trà, Đà Nẵng",
+    productName: "Yamaha WR450F Rally Champion 2024",
+    productImage: "https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=800&q=80",
+    deliveryName: "Giao xe sàn trượt thủy lực VIP (Chống trầy xước 100%)",
+    totalAmount: 410000000,
+    amountToStore: 389500000,
+    paymentMethod: "VNPAY",
+    isPaid: true,
+    status: "SHIPPING",
+    date: "29/10/2026 01:15"
+  },
+  {
+    id: "DTM-4A1B988F",
+    storeId: 2,
+    storeName: "Duy Trương Motor - Chi Nhánh Cầu Giấy Hà Nội",
+    customerName: "Hoàng Biker VIP",
+    recipientName: "Hoàng Biker VIP",
+    phone: "0905555777",
+    address: "Số 168 Trần Duy Hưng, Trung Hòa, Cầu Giấy, Hà Nội",
+    productName: "BMW S1000RR M Package 2025 Cá Mập Lên Cánh",
+    productImage: "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=800&q=80",
+    deliveryName: "Giao xe sàn trượt thủy lực VIP (Chống trầy xước 100%)",
+    totalAmount: 405250000,
+    amountToStore: 384987500,
+    paymentMethod: "VNPAY",
+    isPaid: true,
+    status: "CONFIRMED",
+    date: "28/10/2026 18:13"
+  },
+  {
+    id: "DTM-SG-001",
+    storeId: 1,
+    storeName: "Duy Trương Motor - Chi Nhánh Phú Nhuận TP.HCM",
+    customerName: "Nguyễn Văn Hùng",
+    recipientName: "Nguyễn Văn Hùng",
+    phone: "0918234567",
+    address: "Số 45 Đường Lê Lợi, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh",
+    productName: "KTM 300 EXC TPI Factory Edition 2024",
+    productImage: "https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=800&q=80",
+    deliveryName: "Giao xe sàn trượt thủy lực VIP (Chống trầy xước 100%)",
+    totalAmount: 435000000,
+    amountToStore: 413250000,
+    paymentMethod: "VNPAY",
+    isPaid: true,
+    status: "DELIVERED",
+    date: "27/10/2026 14:20"
+  }
+];
+
+  const [orders, setOrders] = useState(INITIAL_DEMO_ORDERS);
 
   // Modal States
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -662,14 +738,17 @@ export default function App() {
 
   const finalizeOrder = (isPaid = false) => {
     const calculatedTotal = cartSubtotal + checkoutData.deliveryFee;
+    const storeId = cart[0]?.product?.storeId || 1;
+    const storeName = cart[0]?.product?.storeName || 'Duy Trương Motor - Chi Nhánh Phú Nhuận TP.HCM';
     const newOrder = {
       id: "DTM-" + Math.random().toString(36).substr(2, 8).toUpperCase(),
+      storeId: storeId,
+      storeName: storeName,
       customerName: checkoutData.recipientName,
       phone: checkoutData.phone,
       address: checkoutData.address,
       productName: cart[0].product.name + (cart[0].selectedColor ? ` (Màu: ${cart[0].selectedColor})` : ''),
       productImage: cart[0].product.image,
-      storeName: cart[0].product.storeName,
       deliveryName: checkoutData.deliveryName,
       totalAmount: calculatedTotal,
       paymentMethod: checkoutData.paymentMethod,
@@ -864,12 +943,15 @@ export default function App() {
 
         {/* Right Actions: Search Pill, Cart & User status */}
         <div className="header-right-actions">
-          {/* Vuong Khang Style Search Pill */}
-          <div className="search-pill-btn" onClick={() => { setSelectedCategory('all'); setBrandFilter('all'); navigateTab('products'); }}>
+          {/* Compact Gold Search Button (Không ép dồn các tab menu) */}
+          <button 
+            type="button" 
+            className="btn-search-icon" 
+            onClick={() => { setSelectedCategory('all'); setBrandFilter('all'); navigateTab('products'); }}
+            title="Khám phá toàn bộ kho xe"
+          >
             <i className="fa-solid fa-magnifying-glass text-gold"></i>
-            <span>Các dòng xe khác...</span>
-            <i className="fa-solid fa-chevron-right text-gold" style={{ fontSize: '0.72rem' }}></i>
-          </div>
+          </button>
 
           <button className="btn-outline-gold header-cart-btn" onClick={() => setIsCartOpen(true)}>
             <i className="fa-solid fa-cart-shopping"></i> Giỏ ({cart.length})
@@ -878,7 +960,7 @@ export default function App() {
           <div className="header-user-badge" onClick={() => navigateTab('orders')} title="Xem đơn hàng & tài khoản">
             <img src={currentUser.avatar} alt="Avatar" style={{ width: '32px', height: '32px', borderRadius: '50%', border: '2px solid var(--gold-primary)', objectFit: 'cover' }} />
             <div style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>
-              <div style={{ fontWeight: 700, color: '#fff', maxWidth: '145px', overflow: 'hidden', textOverflow: 'ellipsis' }}>{currentUser.name}</div>
+              <div style={{ fontWeight: 700, color: '#fff', whiteSpace: 'nowrap' }}>{currentUser.name}</div>
               <span style={{ color: 'var(--gold-primary)', fontSize: '0.65rem', fontWeight: 700 }}>{currentUser.levelTitle || currentUser.name}</span>
             </div>
           </div>

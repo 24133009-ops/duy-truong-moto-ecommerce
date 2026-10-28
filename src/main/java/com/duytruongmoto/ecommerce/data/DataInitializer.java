@@ -63,6 +63,19 @@ public class DataInitializer implements CommandLineRunner {
             log.error("Lỗi initAll60Products: {}", e.getMessage());
         }
 
+        
+        // Purge dirty status strings from order notes
+        try {
+            orderRepository.findAll().forEach(ord -> {
+                if (ord.getNote() != null && (ord.getNote().contains("Trạng thái") || ord.getNote().trim().startsWith("["))) {
+                    ord.setNote("Bàn giao xe sàn trượt VIP và đầy đủ hồ sơ HQCN tận tay khách.");
+                    orderRepository.save(ord);
+                }
+            });
+        } catch (Exception ex) {
+            log.warn("Lỗi dọn dẹp ghi chú đơn hàng cũ: {}", ex.getMessage());
+        }
+
         log.info(">>> Đã đồng bộ thành công {} sản phẩm trong kho Duy Truong Motor!", productRepository.count());
     }
 
@@ -836,19 +849,99 @@ public class DataInitializer implements CommandLineRunner {
 
 
     private void initDemoOrders(Map<Integer, Store> storeMap) {
-        if (orderRepository.count() > 0) {
-            log.info(">>> Đã có {} đơn hàng trong CSDL, bỏ qua seed đơn hàng demo.", orderRepository.count());
-            return;
-        }
-
         User customerHung = userRepository.findByEmail("customer@duytruongmoto.com").orElse(null);
         User customerHoang = userRepository.findByEmail("customer@gmail.com").orElse(customerHung);
+        User customerTinh = userRepository.findByEmail("nghiatinh2002@gmail.com").orElse(customerHung);
         User shipperTuan = userRepository.findByEmail("shipper@duytruongmoto.com").orElse(null);
         Delivery delivVip = deliveryRepository.findAll().stream().findFirst().orElse(null);
 
         Store s1 = storeMap.get(1); // Phu Nhuan HCM
         Store s2 = storeMap.get(2); // Cau Giay HN
         Store s3 = storeMap.get(3); // Hai Chau DN
+
+        // Đảm bảo Showroom 3 (Hải Châu Đà Nẵng) LUÔN có lịch sử đơn hàng phát sinh
+        if (s3 != null) {
+            log.info(">>> Showroom Đà Nẵng chưa có đơn hàng, tiến hành seed 3 đơn hàng thực tế...");
+            // Đơn 1: Đã giao xe & kích hoạt bảo hành 3 năm
+            Product pHelmet = productRepository.findAll().stream()
+                    .filter(p -> p.getStore() != null && p.getStore().getId().equals(s3.getId()))
+                    .findFirst().orElse(null);
+            if (pHelmet == null) {
+                pHelmet = productRepository.findAll().stream().findFirst().orElse(null);
+            }
+            if (pHelmet != null) {
+                BigDecimal t1 = pHelmet.getEffectivePrice();
+                if (orderRepository.findByOrderCode("DTM-1127CB1F").isEmpty()) {
+                Order od1 = orderRepository.save(Order.builder()
+                    .orderCode("DTM-1127CB1F")
+                    .user(customerTinh).store(s3).delivery(delivVip).shipper(shipperTuan)
+                    .recipientName("Tình Lê Nghĩa").phone("0905112002")
+                    .address("Số 52 Đường Nguyễn Văn Linh, Quận Hải Châu, TP. Đà Nẵng")
+                    .paymentMethod("VNPAY").isPaidBefore(true).status(OrderStatus.DELIVERED)
+                    .amountFromUser(t1)
+                    .amountToStore(t1.multiply(BigDecimal.valueOf(0.95)))
+                    .amountToGD(t1.multiply(BigDecimal.valueOf(0.05)))
+                    .note("Bàn giao mũ carbon và xe chuyên dụng tận nơi, khách kiểm tra ưng ý 100%.")
+                    .createdAt(LocalDateTime.now().minusDays(1))
+                    .updatedAt(LocalDateTime.now().minusHours(5))
+                    .build());
+                orderItemRepository.save(OrderItem.builder().order(od1).product(pHelmet).count(1).price(pHelmet.getEffectivePrice()).selectedStyle("Carbon Italia").build());
+            }
+            }
+
+            // Đơn 2: Đang trên xe sàn trượt VIP vận chuyển
+            Product pOhlins = productRepository.findAll().stream()
+                    .filter(p -> p.getName() != null && p.getName().contains("Ohlins"))
+                    .findFirst().orElse(null);
+            if (pOhlins != null) {
+                BigDecimal t2 = pOhlins.getEffectivePrice();
+                if (orderRepository.findByOrderCode("DTM-DN-002").isEmpty()) {
+                Order od2 = orderRepository.save(Order.builder()
+                    .orderCode("DTM-DN-002")
+                    .user(customerHoang).store(s3).delivery(delivVip).shipper(shipperTuan)
+                    .recipientName("Phạm Quốc Bảo").phone("0905777888")
+                    .address("Số 268 Đường Trần Hưng Đạo, Phường An Hải Tây, Quận Sơn Trà, Đà Nẵng")
+                    .paymentMethod("VNPAY").isPaidBefore(true).status(OrderStatus.SHIPPING)
+                    .amountFromUser(t2)
+                    .amountToStore(t2.multiply(BigDecimal.valueOf(0.95)))
+                    .amountToGD(t2.multiply(BigDecimal.valueOf(0.05)))
+                    .note("Xe sàn trượt chuyên dụng đang vận chuyển bàn giao phụ tùng tận nhà.")
+                    .createdAt(LocalDateTime.now().minusHours(12))
+                    .updatedAt(LocalDateTime.now().minusHours(2))
+                    .build());
+                orderItemRepository.save(OrderItem.builder().order(od2).product(pOhlins).count(1).price(pOhlins.getEffectivePrice()).selectedStyle("Thụy Điển TTX").build());
+            }
+            }
+
+            // Đơn 3: Khách đặt cọc môtô địa hình KLX300
+            Product pBike = productRepository.findAll().stream()
+                    .filter(p -> p.getName() != null && (p.getName().contains("KLX") || p.getName().contains("Kawasaki") || p.getName().contains("Yamaha")))
+                    .findFirst().orElse(null);
+            if (pBike != null) {
+                BigDecimal t3 = pBike.getEffectivePrice();
+                if (orderRepository.findByOrderCode("DTM-DN-003").isEmpty()) {
+                Order od3 = orderRepository.save(Order.builder()
+                    .orderCode("DTM-DN-003")
+                    .user(customerHung).store(s3).delivery(delivVip).shipper(shipperTuan)
+                    .recipientName("Lê Hoàng Nam").phone("0905123456")
+                    .address("Số 89 Đường Bạch Đằng, Phường Hải Châu 1, Quận Hải Châu, Đà Nẵng")
+                    .paymentMethod("COD").isPaidBefore(false).status(OrderStatus.CONFIRMED)
+                    .amountFromUser(t3)
+                    .amountToStore(t3.multiply(BigDecimal.valueOf(0.95)))
+                    .amountToGD(t3.multiply(BigDecimal.valueOf(0.05)))
+                    .note("Khách cọc giữ xe tại showroom, hẹn ngày đẹp bấm biển số định danh.")
+                    .createdAt(LocalDateTime.now().minusHours(4))
+                    .updatedAt(LocalDateTime.now().minusHours(1))
+                    .build());
+                orderItemRepository.save(OrderItem.builder().order(od3).product(pBike).count(1).price(pBike.getEffectivePrice()).selectedStyle("Lime Green").build());
+            }
+            }
+        }
+
+        if (orderRepository.count() > 0) {
+            log.info(">>> Đã kiểm tra và đảm bảo các Showroom đều có đơn hàng lịch sử!");
+            return;
+        }
 
         // Order 1: Delivered - KTM 300 EXC
         Product p1 = productRepository.findBySlug("ktm-300-exc-tpi-factory-edition-2024-101").orElse(null);

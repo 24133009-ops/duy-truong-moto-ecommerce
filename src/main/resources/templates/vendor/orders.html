@@ -26,7 +26,7 @@
         </div>
 
         <!-- Banner Tiến Trình 6 Chặng Chuẩn Showroom VIP -->
-        <div class="glass-panel p-4 rounded-4 mb-4 border border-warning border-opacity-25 shadow-lg">
+        <div class="glass-panel p-4 rounded-4 mb-5 border border-warning border-opacity-35 shadow-lg" style="background: rgba(13, 16, 23, 0.85);">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <span class="badge bg-gold text-dark fw-bold px-3 py-2 rounded-pill">
                     <i class="fa-solid fa-shield-halved me-1"></i> QUY TRÌNH BÀN GIAO XE SÀN TRƯỢT VIP 6 CHẶNG LIÊN KẾT
@@ -92,7 +92,12 @@
             <a th:each="st : ${statuses}" th:href="@{/vendor/orders(status=${st})}" class="btn btn-sm rounded-pill" th:classappend="${currentStatus == st ? 'btn-gold' : 'btn-dark border-secondary text-secondary'}" th:text="${st.displayName}"></a>
         </div>
 
-        <div class="glass-panel p-4 rounded-4 shadow-lg">
+        <div class="d-flex align-items-center justify-content-center my-4 opacity-75">
+            <hr class="w-100 border-secondary">
+            <span class="px-4 text-gold small fw-bold text-nowrap"><i class="fa-solid fa-list-check me-2"></i> DANH SÁCH CHI TIẾT ĐƠN HÀNG SHOWROOM</span>
+            <hr class="w-100 border-secondary">
+        </div>
+        <div class="glass-panel p-4 rounded-4 shadow-lg border border-warning border-opacity-50" style="background: rgba(13, 16, 23, 0.95);">
             <div class="table-responsive">
                 <table class="table table-dark table-borderless align-middle mb-0">
                     <thead>

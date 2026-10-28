@@ -1754,3 +1754,76 @@ html {
 .stepper-step.active .stepper-desc {
     color: #ffd700;
 }
+
+/* ==========================================================================
+   PERMANENT NAVBAR & HEADER OVERFLOW ELIMINATION (Anti-cramping)
+   ========================================================================== */
+
+/* Compact Circular Search Icon Button */
+.btn-search-icon {
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 50% !important;
+  background: rgba(0, 0, 0, 0.85) !important;
+  border: 1.5px solid #ffd700 !important;
+  color: #ffd700 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  flex-shrink: 0 !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+}
+.btn-search-icon:hover {
+  background: rgba(255, 215, 0, 0.15) !important;
+  border-color: #ffe066 !important;
+  transform: scale(1.08) !important;
+  box-shadow: 0 0 16px rgba(255, 215, 0, 0.3) !important;
+}
+
+/* Ensure header-nav has ample room and never clips into '...m' or '[🎫]' */
+.header-nav {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex: 1 1 auto !important;
+  justify-content: center !important;
+  margin: 0 12px !important;
+  min-width: 0 !important;
+  overflow: visible !important;
+}
+
+.header-nav button, .header-nav .btn-subtle {
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  padding: 6px 12px !important;
+  font-size: 0.82rem !important;
+  height: 36px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  border-radius: 9999px !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+/* Header Right Actions - Compact & Non-wrapping */
+.header-right-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-shrink: 0 !important;
+  margin-left: auto !important;
+}
+
+.header-user-badge {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 4px 12px !important;
+  border-radius: 9999px !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(212, 175, 55, 0.35) !important;
+  cursor: pointer !important;
+  flex-shrink: 0 !important;
+}
