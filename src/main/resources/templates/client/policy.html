@@ -147,65 +147,303 @@
             </div>
         </div>
 
-        <!-- 3. QUY TRÌNH PHÁP LÝ SANG TÊN BIỂN SỐ XE CŨ LƯỚT -->
-        <div id="quy-trinh-giay-to" class="policy-card p-4 p-md-5 mb-5">
+        <!-- 3. HỆ THỐNG PHÁP LÝ & BẤM BIỂN SỐ XE CŨ LƯỚT CHÍNH HÃNG -->
+        <div id="quy-trinh-giay-to" class="policy-card p-4 p-md-5 mb-5" style="border: 1px solid rgba(212,175,55,0.5); background: linear-gradient(180deg, rgba(18,22,34,0.98) 0%, rgba(10,13,20,0.99) 100%);">
             <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary">
                 <div>
                     <span class="badge bg-gold text-dark fw-bold small me-2"><i class="fa-solid fa-stamp me-1"></i> PHÁP LÝ MINH BẠCH</span>
-                    <h3 class="fw-bold text-white mb-0 d-inline align-middle">QUY TRÌNH SANG TÊN GIẤY TỜ &amp; BẤM BIỂN SỐ ĐỊNH DANH XE CŨ LƯỚT</h3>
+                    <h3 class="fw-bold text-white mb-0 d-inline align-middle">HỆ THỐNG SANG TÊN GIẤY TỜ &amp; BẤM BIỂN SỐ XE CŨ LƯỚT</h3>
                 </div>
-                <div class="text-gold small fw-bold mt-2 mt-md-0">
-                    <i class="fa-solid fa-check-double me-1"></i> Trọn gói A - Z bởi phòng pháp lý Duy Trường Motor
-                </div>
-            </div>
-
-            <div class="row g-4">
-                <div class="col-lg-6">
-                    <div class="d-flex gap-3 mb-4">
-                        <div class="step-bubble">1</div>
-                        <div>
-                            <h5 class="fw-bold text-white mb-1">Kiểm định số khung - số máy &amp; Check phạt nguội</h5>
-                            <p class="text-secondary small mb-0">
-                                Chuyên viên pháp lý cùng khách hàng đối chiếu số khung, số máy thực tế trùng khớp 100% với cà vẹt gốc. Kiểm tra tra cứu hệ thống phạt nguội Cục CSGT, cam kết không nợ phạt nguội trước thời điểm bàn giao.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="d-flex gap-3 mb-4">
-                        <div class="step-bubble">2</div>
-                        <div>
-                            <h5 class="fw-bold text-white mb-1">Công chứng ủy quyền hoặc hợp đồng mua bán trong 30 phút</h5>
-                            <p class="text-secondary small mb-0">
-                                Hỗ trợ lập hợp đồng công chứng mua bán hoặc ủy quyền toàn quyền tại phòng công chứng đối tác hoặc ký trực tiếp tại nhà riêng/Showroom theo lịch hẹn của Quý khách.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-6">
-                    <div class="d-flex gap-3 mb-4">
-                        <div class="step-bubble">3</div>
-                        <div>
-                            <h5 class="fw-bold text-white mb-1">Rút hồ sơ gốc toàn quốc trong 24h - 48h</h5>
-                            <p class="text-secondary small mb-0">
-                                Nếu xe đăng ký ở tỉnh/thành khác, nhân viên pháp lý của Duy Trường Motor sẽ trực tiếp nộp hồ sơ thu hồi biển số và cà vẹt cũ, rút túi hồ sơ gốc niêm phong tại Phòng CSGT tỉnh gốc. Showroom chịu toàn bộ chi phí phát sinh.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="d-flex gap-3 mb-4">
-                        <div class="step-bubble">4</div>
-                        <div>
-                            <h5 class="fw-bold text-white mb-1">Đóng thuế trước bạ &amp; Bấm biển số định danh mới</h5>
-                            <p class="text-secondary small mb-0">
-                                Hỗ trợ kê khai thuế trước bạ điện tử (chỉ 1% đối với xe cũ lướt). Đưa Quý khách đến Đội CSGT địa phương bấm biển số định danh theo CCCD hoặc bàn giao biển số và giấy hẹn cà vẹt tên chính chủ trong ngày.
-                            </p>
-                        </div>
-                    </div>
+                <div class="text-gold small fw-bold mt-2 mt-md-0" style="background: rgba(212,175,55,0.12); padding: 6px 14px; border-radius: 20px; border: 1px solid rgba(212,175,55,0.3);">
+                    <i class="fa-solid fa-check-double me-1"></i> Trọn gói A - Z bởi Phòng Pháp Lý Duy Trường Motor
                 </div>
             </div>
 
-            <div class="p-3 bg-black rounded-3 border border-warning border-opacity-50 mt-2 d-flex align-items-center gap-3">
+            <!-- Sub Tabs Navigation -->
+            <ul class="nav nav-pills mb-4 p-1 rounded-3" style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.06);" id="legalTab" role="tablist">
+                <li class="nav-item flex-fill" role="presentation">
+                    <button class="nav-link active w-100 fw-bold small py-2 text-white" id="legal-proc-tab" data-bs-toggle="pill" data-bs-target="#legal-proc" type="button" role="tab">
+                        <i class="fa-solid fa-list-check me-1"></i> 1. Quy Trình 4 Bước
+                    </button>
+                </li>
+                <li class="nav-item flex-fill" role="presentation">
+                    <button class="nav-link w-100 fw-bold small py-2 text-white" id="legal-calc-tab" data-bs-toggle="pill" data-bs-target="#legal-calc" type="button" role="tab">
+                        <i class="fa-solid fa-calculator me-1"></i> 2. Dự Toán Chi Phí
+                    </button>
+                </li>
+                <li class="nav-item flex-fill" role="presentation">
+                    <button class="nav-link w-100 fw-bold small py-2 text-white" id="legal-fine-tab" data-bs-toggle="pill" data-bs-target="#legal-fine" type="button" role="tab">
+                        <i class="fa-solid fa-traffic-light me-1"></i> 3. Tra Cứu Phạt Nguội
+                    </button>
+                </li>
+                <li class="nav-item flex-fill" role="presentation">
+                    <button class="nav-link w-100 fw-bold small py-2 text-white" id="legal-book-tab" data-bs-toggle="pill" data-bs-target="#legal-book" type="button" role="tab">
+                        <i class="fa-solid fa-calendar-check me-1"></i> 4. Đặt Lịch Hẹn Công Chứng
+                    </button>
+                </li>
+                <li class="nav-item flex-fill" role="presentation">
+                    <button class="nav-link w-100 fw-bold small py-2 text-white" id="legal-track-tab" data-bs-toggle="pill" data-bs-target="#legal-track" type="button" role="tab">
+                        <i class="fa-solid fa-route me-1"></i> 5. Theo Dõi Hồ Sơ
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="legalTabContent">
+                <!-- 1. QUY TRÌNH 4 BƯỚC -->
+                <div class="tab-pane fade show active" id="legal-proc" role="tabpanel">
+                    <div class="row g-4 mb-4">
+                        <div class="col-lg-6">
+                            <div class="d-flex gap-3 mb-4 p-3 rounded-3" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(212,175,55,0.2);">
+                                <div class="step-bubble">1</div>
+                                <div>
+                                    <h5 class="fw-bold text-white mb-1">Kiểm định số khung - số máy &amp; Check phạt nguội</h5>
+                                    <p class="text-secondary small mb-2">
+                                        Đối chiếu số khung, số máy thực tế trùng khớp 100% với cà vẹt gốc và tờ khai HQCN. Cà số khung số máy miễn phí, kiểm tra tra cứu hệ thống phạt nguội Cục CSGT, cam kết không nợ phạt nguội.
+                                    </p>
+                                    <button class="btn btn-outline-warning btn-sm" onclick="document.getElementById('legal-fine-tab').click()">
+                                        <i class="fa-solid fa-magnifying-glass me-1"></i> Tra cứu phạt nguội ngay
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="d-flex gap-3 mb-4 p-3 rounded-3" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(212,175,55,0.2);">
+                                <div class="step-bubble">2</div>
+                                <div>
+                                    <h5 class="fw-bold text-white mb-1">Công chứng ủy quyền hoặc mua bán trong 30 phút</h5>
+                                    <p class="text-secondary small mb-2">
+                                        Soạn thảo hợp đồng mua bán hoặc ủy quyền toàn quyền tại Phòng công chứng đối tác hoặc ký trực tiếp tại nhà riêng/Showroom theo lịch hẹn. Showroom tài trợ 100% lệ phí công chứng.
+                                    </p>
+                                    <button class="btn btn-outline-warning btn-sm" onclick="document.getElementById('legal-book-tab').click()">
+                                        <i class="fa-solid fa-pen-nib me-1"></i> Đặt lịch hẹn ký công chứng
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="d-flex gap-3 mb-4 p-3 rounded-3" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(212,175,55,0.2);">
+                                <div class="step-bubble">3</div>
+                                <div>
+                                    <h5 class="fw-bold text-white mb-1">Rút hồ sơ gốc toàn quốc trong 24h - 48h</h5>
+                                    <p class="text-secondary small mb-2">
+                                        Nếu xe đăng ký ở tỉnh khác, nhân viên pháp lý của Duy Trường Motor sẽ trực tiếp nộp hồ sơ thu hồi biển số và cà vẹt cũ, rút túi hồ sơ gốc niêm phong tại Phòng CSGT tỉnh gốc. Showroom chịu toàn bộ chi phí.
+                                    </p>
+                                    <button class="btn btn-outline-warning btn-sm" onclick="document.getElementById('legal-track-tab').click()">
+                                        <i class="fa-solid fa-truck-fast me-1"></i> Theo dõi túi hồ sơ gốc
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="d-flex gap-3 mb-4 p-3 rounded-3" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(212,175,55,0.2);">
+                                <div class="step-bubble">4</div>
+                                <div>
+                                    <h5 class="fw-bold text-white mb-1">Đóng thuế trước bạ &amp; Bấm biển số định danh mới</h5>
+                                    <p class="text-secondary small mb-2">
+                                        Hỗ trợ kê khai thuế trước bạ điện tử (chỉ 1% đối với xe cũ lướt). Đưa Quý khách đến Đội CSGT địa phương bấm biển số định danh theo CCCD hoặc bàn giao biển số chính chủ trong ngày.
+                                    </p>
+                                    <button class="btn btn-outline-warning btn-sm" onclick="document.getElementById('legal-calc-tab').click()">
+                                        <i class="fa-solid fa-coins me-1"></i> Dự toán chi phí lăn bánh
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. DỰ TOÁN CHI PHÍ SANG TÊN -->
+                <div class="tab-pane fade" id="legal-calc" role="tabpanel">
+                    <div class="p-4 rounded-3" style="background: rgba(0,0,0,0.5); border: 1px solid rgba(212,175,55,0.3);">
+                        <div class="row g-4">
+                            <div class="col-lg-6">
+                                <label class="text-secondary small fw-bold mb-2">GIÁ TRỊ XE MÔ TÔ / CÀO CÀO LƯỚT (VNĐ):</label>
+                                <div class="input-group mb-3">
+                                    <input type="number" id="calcPriceInput" class="form-control bg-black text-warning fw-bold border-secondary" value="450000000" step="5000000" oninput="updateLegalCalc()">
+                                    <span class="input-group-text bg-black text-secondary border-secondary">VNĐ</span>
+                                </div>
+                                <div class="d-flex gap-2 mb-3 flex-wrap">
+                                    <button class="btn btn-sm btn-outline-secondary text-white" onclick="setCalcPrice(115000000)">115 Triệu</button>
+                                    <button class="btn btn-sm btn-outline-secondary text-white" onclick="setCalcPrice(365000000)">365 Triệu</button>
+                                    <button class="btn btn-sm btn-outline-warning text-warning" onclick="setCalcPrice(450000000)">450 Triệu</button>
+                                    <button class="btn btn-sm btn-outline-secondary text-white" onclick="setCalcPrice(899000000)">899 Triệu</button>
+                                    <button class="btn btn-sm btn-outline-secondary text-white" onclick="setCalcPrice(1050000000)">1.05 Tỷ</button>
+                                </div>
+
+                                <label class="text-secondary small fw-bold mb-2">KHU VỰC ĐĂNG KÝ BẤM BIỂN SỐ THEO CCCD:</label>
+                                <select id="calcAreaSelect" class="form-select bg-black text-white border-secondary mb-3" onchange="updateLegalCalc()">
+                                    <option value="2000000">Khu Vực 1: Hà Nội &amp; TP.HCM (Lệ phí cấp biển định danh: 2.000.000 đ)</option>
+                                    <option value="800000">Khu Vực 2: Đà Nẵng, Cần Thơ, Hải Phòng, TP thuộc tỉnh (800.000 đ)</option>
+                                    <option value="150000">Khu Vực 3: Các Huyện &amp; Tỉnh thành khác trên toàn quốc (150.000 đ)</option>
+                                </select>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="p-3 bg-black rounded-3 border border-secondary border-opacity-50">
+                                    <h6 class="text-white fw-bold border-bottom border-secondary pb-2 mb-3">CHI TIẾT LỆ PHÍ &amp; CHÍNH SÁCH SHOWROOM:</h6>
+                                    <div class="d-flex justify-content-between small mb-2">
+                                        <span class="text-secondary">1. Thuế trước bạ xe cũ (1%):</span>
+                                        <strong class="text-white" id="calcTaxFee">4.500.000 đ</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between small mb-2">
+                                        <span class="text-secondary">2. Lệ phí cấp biển số định danh:</span>
+                                        <strong class="text-white" id="calcPlateFee">2.000.000 đ</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between small mb-2">
+                                        <span class="text-secondary">3. Lệ phí công chứng mua bán:</span>
+                                        <span class="text-success fw-bold"><del class="text-secondary me-1">500.000 đ</del> MIỄN PHÍ</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between small mb-2">
+                                        <span class="text-secondary">4. Phí rút túi hồ sơ gốc toàn quốc:</span>
+                                        <span class="text-success fw-bold"><del class="text-secondary me-1">1.200.000 đ</del> MIỄN PHÍ</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between small mb-3">
+                                        <span class="text-secondary">5. Dịch vụ pháp lý trọn gói A-Z:</span>
+                                        <span class="text-success fw-bold"><del class="text-secondary me-1">2.500.000 đ</del> DTM TÀI TRỢ</span>
+                                    </div>
+                                    <div class="pt-3 border-top border-secondary border-dashed d-flex justify-content-between align-items-center">
+                                        <span class="text-warning fw-bold">TỔNG CHI PHÍ THỰC TẾ:</span>
+                                        <h4 class="text-warning fw-bold mb-0" id="calcTotalActual">6.500.000 đ</h4>
+                                    </div>
+                                    <button class="btn btn-warning w-100 fw-bold mt-3" onclick="document.getElementById('legal-book-tab').click()">
+                                        <i class="fa-solid fa-calendar-check me-1"></i> Áp Dụng Dự Toán &amp; Đặt Lịch Hẹn Ngay
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. TRA CỨU PHẠT NGUỘI -->
+                <div class="tab-pane fade" id="legal-fine" role="tabpanel">
+                    <div class="p-4 rounded-3" style="background: rgba(0,0,0,0.5); border: 1px solid rgba(212,175,55,0.3);">
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-5">
+                                <label class="text-secondary small fw-bold mb-1">BIỂN KIỂM SOÁT (VD: 29A1-999.88):</label>
+                                <input type="text" id="plateCheckInput" class="form-control bg-black text-white border-secondary text-uppercase fw-bold" value="29A1-999.88">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="text-secondary small fw-bold mb-1">SỐ KHUNG (VIN) HOẶC SỐ MÁY:</label>
+                                <input type="text" id="vinCheckInput" class="form-control bg-black text-white border-secondary text-uppercase fw-bold" value="MD44E-00892">
+                            </div>
+                            <div class="col-md-3 d-flex align-items-end">
+                                <button class="btn btn-warning w-100 fw-bold" onclick="runFineCheck()">
+                                    <i class="fa-solid fa-search me-1"></i> TRA CỨU NGAY
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Results Card -->
+                        <div id="fineCheckResultBox" class="p-3 bg-black rounded-3 border border-success" style="display: none;">
+                            <div class="d-flex justify-content-between align-items-center mb-3 border-bottom border-secondary pb-2">
+                                <div>
+                                    <span class="badge bg-success me-2"><i class="fa-solid fa-check-circle me-1"></i> 0 VI PHẠM</span>
+                                    <strong class="text-white">KẾT QUẢ THẨM ĐỊNH PHÁP LÝ XE CHÍNH CHỦ</strong>
+                                </div>
+                                <span class="text-warning small" id="fineCertCode">DTM-SECURE-2026</span>
+                            </div>
+                            <div class="row g-3 small">
+                                <div class="col-md-3">
+                                    <span class="text-secondary d-block">BIỂN SỐ:</span>
+                                    <strong class="text-white" id="resPlate">29A1-999.88</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <span class="text-secondary d-block">SỐ KHUNG / SỐ MÁY:</span>
+                                    <strong class="text-white" id="resVin">MD44E-00892</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <span class="text-secondary d-block">TRẠNG THÁI PHÁP LÝ:</span>
+                                    <strong class="text-warning">HQCN 100% - HỢP PHÁP</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <span class="text-secondary d-block">KIỂM ĐỊNH CƠ KHÍ:</span>
+                                    <strong class="text-success">TRÙNG KHỚP CÀ VẸT GỐC</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. ĐẶT LỊCH HẸN CÔNG CHỨNG -->
+                <div class="tab-pane fade" id="legal-book" role="tabpanel">
+                    <div class="p-4 rounded-3" style="background: rgba(0,0,0,0.5); border: 1px solid rgba(212,175,55,0.3);">
+                        <form onsubmit="submitLegalBooking(event)">
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-4">
+                                    <label class="text-secondary small fw-bold mb-1">HỌ VÀ TÊN CHỦ XE:</label>
+                                    <input type="text" class="form-control bg-black text-white border-secondary" required value="Hoàng Biker VIP">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="text-secondary small fw-bold mb-1">SỐ ĐIỆN THOẠI:</label>
+                                    <input type="text" class="form-control bg-black text-white border-secondary" required value="0905555777">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="text-secondary small fw-bold mb-1">SỐ CCCD (12 SỐ):</label>
+                                    <input type="text" class="form-control bg-black text-white border-secondary" required value="079202008899">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="text-secondary small fw-bold mb-1">SHOWROOM TIẾP NHẬN:</label>
+                                    <select class="form-select bg-black text-white border-secondary">
+                                        <option>Duy Trương Motor - Chi Nhánh Phú Nhuận TP.HCM (Trụ Sở Chính)</option>
+                                        <option>Duy Trương Motor - Chi Nhánh Cầu Giấy Hà Nội</option>
+                                        <option>Duy Trương Motor - Chi Nhánh Hải Châu Đà Nẵng</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="text-secondary small fw-bold mb-1">NGÀY HẸN:</label>
+                                    <input type="date" class="form-control bg-black text-white border-secondary" id="bookDateInput">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="text-secondary small fw-bold mb-1">KHUNG GIỜ:</label>
+                                    <select class="form-select bg-black text-white border-secondary">
+                                        <option>09:00 - 11:30 Sáng (Bấm biển tại CSGT)</option>
+                                        <option>14:00 - 16:30 Chiều (Ký công chứng)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-warning fw-bold px-4 py-2 rounded-pill">
+                                <i class="fa-solid fa-paper-plane me-1"></i> XÁC NHẬN ĐẶT LỊCH HẸN PHÁP LÝ
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 5. THEO DÕI HỒ SƠ PHÁP LÝ -->
+                <div class="tab-pane fade" id="legal-track" role="tabpanel">
+                    <div class="p-4 rounded-3" style="background: rgba(0,0,0,0.5); border: 1px solid rgba(212,175,55,0.3);">
+                        <div class="p-3 bg-black rounded-3 border border-secondary mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h6 class="text-warning fw-bold mb-0">HỒ SƠ: DTM-LEGAL-9833BD (MV Agusta Brutale 1000 RR)</h6>
+                                <span class="badge bg-warning text-dark fw-bold">CHẶNG 3/4: ĐANG RÚT GỐC</span>
+                            </div>
+                            <div class="row g-2 small text-secondary">
+                                <div class="col-md-4">Biển số định danh dự kiến: <strong class="text-white">29A1-999.88 (Hà Nội)</strong></div>
+                                <div class="col-md-4">Khách hàng: <strong class="text-white">Hoàng Biker VIP</strong></div>
+                                <div class="col-md-4">Chuyên viên pháp lý: <strong class="text-white">Luật sư Trần Quang Duy (0903.456.789)</strong></div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-column gap-2">
+                            <div class="p-2 px-3 rounded-2 bg-success bg-opacity-10 border border-success border-opacity-25 small d-flex justify-content-between">
+                                <span><i class="fa-solid fa-check text-success me-2"></i> Chặng 1: Kiểm định số khung &amp; Check phạt nguội Cục CSGT</span>
+                                <span class="text-success fw-bold">Hoàn tất ✓</span>
+                            </div>
+                            <div class="p-2 px-3 rounded-2 bg-success bg-opacity-10 border border-success border-opacity-25 small d-flex justify-content-between">
+                                <span><i class="fa-solid fa-check text-success me-2"></i> Chặng 2: Ký công chứng hợp đồng mua bán / ủy quyền</span>
+                                <span class="text-success fw-bold">Hoàn tất ✓</span>
+                            </div>
+                            <div class="p-2 px-3 rounded-2 bg-warning bg-opacity-10 border border-warning border-opacity-50 small d-flex justify-content-between">
+                                <span><i class="fa-solid fa-spinner fa-spin text-warning me-2"></i> Chặng 3: Rút túi hồ sơ gốc niêm phong tại CSGT tỉnh gốc</span>
+                                <span class="text-warning fw-bold">Đang chuyển phát hỏa tốc ✈</span>
+                            </div>
+                            <div class="p-2 px-3 rounded-2 bg-black border border-secondary border-opacity-25 small text-secondary d-flex justify-content-between">
+                                <span><i class="fa-solid fa-clock me-2"></i> Chặng 4: Đóng thuế trước bạ 1% &amp; Bấm biển số định danh</span>
+                                <span>Dự kiến 30/10/2026</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-3 bg-black rounded-3 border border-warning border-opacity-50 mt-4 d-flex align-items-center gap-3">
                 <i class="fa-solid fa-shield-virus text-warning fs-3"></i>
                 <div class="small">
                     <strong class="text-white">BẢO HIỂM PHÁP LÝ TRỌN ĐỜI:</strong>
@@ -353,6 +591,63 @@
                 prompt('Sao chép mã voucher:', code);
             });
         }
+
+        // --- BỘ CÔNG CỤ TÍNH LỆ PHÍ TRƯỚC BẠ & BẤM BIỂN SỐ XE CŨ ---
+        function setCalcPrice(val) {
+            document.getElementById('calcPriceInput').value = val;
+            updateLegalCalc();
+        }
+
+        function formatVND(n) {
+            return new Intl.NumberFormat('vi-VN').format(n) + ' đ';
+        }
+
+        function updateLegalCalc() {
+            const price = Math.max(10000000, Number(document.getElementById('calcPriceInput').value) || 0);
+            const plateFee = Number(document.getElementById('calcAreaSelect').value) || 2000000;
+            const taxFee = Math.round(price * 0.01);
+            const totalActual = taxFee + plateFee;
+
+            const taxEl = document.getElementById('calcTaxFee');
+            const plateEl = document.getElementById('calcPlateFee');
+            const totalEl = document.getElementById('calcTotalActual');
+
+            if (taxEl) taxEl.textContent = formatVND(taxFee);
+            if (plateEl) plateEl.textContent = formatVND(plateFee);
+            if (totalEl) totalEl.textContent = formatVND(totalActual);
+        }
+
+        // --- TRA CỨU PHẠT NGUỘI & SỐ KHUNG ---
+        function runFineCheck() {
+            const plate = document.getElementById('plateCheckInput').value.trim();
+            const vin = document.getElementById('vinCheckInput').value.trim() || 'MD44E-00892';
+            if (!plate) {
+                alert('Vui lòng nhập biển số xe cần tra cứu!');
+                return;
+            }
+            const resBox = document.getElementById('fineCheckResultBox');
+            resBox.style.display = 'block';
+            document.getElementById('resPlate').textContent = plate.toUpperCase();
+            document.getElementById('resVin').textContent = vin.toUpperCase();
+            document.getElementById('fineCertCode').textContent = 'DTM-SECURE-' + Math.floor(100000 + Math.random() * 900000);
+        }
+
+        // --- ĐẶT LỊCH HẸN PHÁP LÝ ---
+        function submitLegalBooking(e) {
+            e.preventDefault();
+            const code = 'DTM-LEGAL-' + Math.floor(100000 + Math.random() * 900000);
+            alert('🎉 CHÚC MỪNG QUÝ KHÁCH!\nĐã đặt lịch hẹn pháp lý thành công trên hệ thống Duy Trường Motor!\nMã lịch hẹn: ' + code + '\nChuyên viên pháp lý sẽ liên hệ xác nhận trong 15 phút.');
+            document.getElementById('legal-track-tab').click();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const dateInput = document.getElementById('bookDateInput');
+            if (dateInput) {
+                const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+                dateInput.value = tomorrow;
+            }
+            updateLegalCalc();
+        });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

@@ -51,7 +51,7 @@ export default function App() {
     if (typeof window === 'undefined') return 'home';
     const path = window.location.pathname.replace(/^\/+|\/+$/g, '').toLowerCase();
     if (!path || path === 'home') return 'home';
-    const validTabs = ['products', 'showrooms', 'orders', 'vendor', 'admin', 'shipper'];
+    const validTabs = ['products', 'showrooms', 'orders', 'vendor', 'admin', 'shipper', 'policy'];
     if (validTabs.includes(path)) return path;
     return 'notfound';
   };
@@ -312,6 +312,58 @@ const INITIAL_DEMO_ORDERS = [
   ]);
   const [chatInput, setChatInput] = useState('');
   const [isBotTyping, setIsBotTyping] = useState(false);
+
+  // --- HỆ THỐNG PHÁP LÝ & BẤM BIỂN SỐ XE CŨ LƯỚT CHÍNH HÃNG (LOGIC TƯƠNG TÁC THỰC TẾ) ---
+  const [legalSubTab, setLegalSubTab] = useState('process'); // 'process' | 'calculator' | 'finecheck' | 'booking' | 'tracker'
+  
+  // 1. Dự toán chi phí sang tên & lăn bánh xe lướt
+  const [calcBikePrice, setCalcBikePrice] = useState(450000000);
+  const [calcArea, setCalcArea] = useState('hn_hcm'); // 'hn_hcm' | 'danang_ct' | 'province'
+  const [calcIsDiffProvince, setCalcIsDiffProvince] = useState(true);
+  const [calcPackage, setCalcPackage] = useState('full'); // 'full' | 'self'
+  
+  // 2. Tra cứu phạt nguội & Thẩm định số khung xe lướt
+  const [fineCheckPlate, setFineCheckPlate] = useState('29A1-999.88');
+  const [fineCheckVin, setFineCheckVin] = useState('MD44E-00892');
+  const [isFineChecking, setIsFineChecking] = useState(false);
+  const [fineCheckResult, setFineCheckResult] = useState(null);
+  
+  // 3. Đặt lịch hẹn công chứng & bấm biển số định danh
+  const [legalBookingData, setLegalBookingData] = useState({
+    name: "Hoàng Biker VIP",
+    phone: "0905555777",
+    cccd: "079202008899",
+    address: "123 Hoàng Văn Thụ, Phường 8, Quận Phú Nhuận, TP. HCM",
+    branch: "Duy Trương Motor - Chi Nhánh Phú Nhuận TP.HCM (Trụ Sở Chính)",
+    service: "Trọn gói Sang tên & Bấm biển số định danh A-Z",
+    location: "Tại Showroom Duy Trường Motor",
+    date: new Date(Date.now() + 86400000).toISOString().split('T')[0],
+    time: "09:00 - 11:30 Sáng",
+    note: "Hẹn ký công chứng và đi cùng chuyên viên pháp lý bấm biển số định danh mới"
+  });
+  const [legalBookingConfirmed, setLegalBookingConfirmed] = useState(null);
+  const [legalBookingList, setLegalBookingList] = useState([]);
+
+  // 4. Theo dõi tiến độ hồ sơ pháp lý thời gian thực
+  const [legalSearchCode, setLegalSearchCode] = useState('DTM-LEGAL-9833BD');
+  const [activeLegalFile, setActiveLegalFile] = useState({
+    code: 'DTM-LEGAL-9833BD',
+    orderId: 'DTM-9833BDFF',
+    bikeName: 'MV Agusta Brutale 1000 RR Nurburgring Edition',
+    plateTarget: '29A1-999.88 (Biển số định danh Hà Nội)',
+    customer: 'Hoàng Biker VIP',
+    phone: '0905555777',
+    cccd: '079202008899',
+    specialist: 'Luật sư Trần Quang Duy (Trưởng phòng Pháp Lý DTM)',
+    specialistPhone: '0903.456.789',
+    step: 3, // 1 -> 4
+    steps: [
+      { id: 1, title: 'Kiểm định số khung & Check phạt nguội Cục CSGT', status: 'done', time: '28/10/2026 18:50', note: 'Số khung số máy đối chiếu 100% trùng khớp cà vẹt gốc, 0 vi phạm phạt nguội trên cổng Cục CSGT.' },
+      { id: 2, title: 'Ký công chứng Hợp đồng Mua Bán / Ủy quyền', status: 'done', time: '28/10/2026 19:15', note: 'Đã hoàn tất ký công chứng mua bán tại VPCC Cầu Giấy Hà Nội, đóng dấu mộc chuẩn pháp lý.' },
+      { id: 3, title: 'Rút túi hồ sơ gốc niêm phong tại CSGT tỉnh gốc', status: 'processing', time: '29/10/2026 09:30', note: 'Đã nộp hồ sơ thu hồi biển cũ. Đang chuyển phát bảo đảm túi hồ sơ niêm phong về Đội CSGT mới.' },
+      { id: 4, title: 'Đóng thuế trước bạ 1% & Bấm biển số định danh', status: 'pending', time: 'Dự kiến 30/10/2026', note: 'Đã chuẩn bị sẵn tờ khai nộp thuế điện tử. Chuyên viên đón khách tại Đội CSGT để bấm biển số.' }
+    ]
+  });
 
   // --- REAL AUTHENTICATION HANDLERS ---
   const handleLoginSubmit = async (e, directEmail, directPass, directRoleKey) => {
@@ -2086,64 +2138,790 @@ const INITIAL_DEMO_ORDERS = [
               </div>
             </div>
 
-            {/* Quy trình pháp lý 4 bước */}
-            <div className="glass-box" style={{ padding: '36px', marginBottom: '40px', border: '1px solid rgba(212,175,55,0.4)' }}>
-              <div style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '16px', marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+            {/* HỆ THỐNG PHÁP LÝ & BẤM BIỂN SỐ XE CŨ LƯỚT CHÍNH HÃNG (LOGIC TƯƠNG TÁC THỰC TẾ) */}
+            <div className="glass-box" style={{ padding: '32px', marginBottom: '40px', border: '1px solid rgba(212,175,55,0.5)', background: 'linear-gradient(180deg, rgba(18,22,34,0.95) 0%, rgba(10,13,20,0.98) 100%)' }}>
+              <div style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '18px', marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
                 <div>
-                  <span style={{ background: 'var(--gold-primary)', color: '#000', padding: '3px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 800, marginRight: '8px' }}>PHÁP LÝ MINH BẠCH</span>
-                  <h3 style={{ color: '#fff', fontSize: '1.35rem', fontWeight: 800, display: 'inline' }}>QUY TRÌNH SANG TÊN GIẤY TỜ &amp; BẤM BIỂN SỐ XE CŨ LƯỚT</h3>
+                  <span style={{ background: 'var(--gold-primary)', color: '#000', padding: '4px 12px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 800, marginRight: '10px' }}>
+                    <i className="fa-solid fa-stamp me-1"></i> PHÁP LÝ MINH BẠCH
+                  </span>
+                  <h3 style={{ color: '#fff', fontSize: '1.4rem', fontWeight: 800, display: 'inline', letterSpacing: '0.5px' }}>
+                    HỆ THỐNG SANG TÊN GIẤY TỜ &amp; BẤM BIỂN SỐ XE CŨ LƯỚT
+                  </h3>
                 </div>
-                <span style={{ color: 'var(--gold-primary)', fontSize: '0.82rem', fontWeight: 700 }}>
-                  <i className="fa-solid fa-check-double me-1"></i> Trọn gói A - Z bởi pháp lý Duy Trường Motor
-                </span>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '24px' }}>
-                <div style={{ display: 'flex', gap: '14px' }}>
-                  <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--gold-primary)', color: '#000', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: '1.1rem' }}>1</div>
-                  <div>
-                    <h5 style={{ color: '#fff', fontSize: '1rem', fontWeight: 800, marginBottom: '6px' }}>Kiểm Định Số Khung &amp; Phạt Nguội</h5>
-                    <p style={{ color: 'var(--text-sub)', fontSize: '0.82rem', lineHeight: 1.6, margin: 0 }}>
-                      Đối chiếu số khung, số máy thực tế trùng khớp 100% cà vẹt gốc. Kiểm tra hệ thống phạt nguội Cục CSGT, cam kết không nợ phạt nguội.
-                    </p>
-                  </div>
-                </div>
-
-                <div style={{ display: 'flex', gap: '14px' }}>
-                  <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--gold-primary)', color: '#000', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: '1.1rem' }}>2</div>
-                  <div>
-                    <h5 style={{ color: '#fff', fontSize: '1rem', fontWeight: 800, marginBottom: '6px' }}>Công Chứng Mua Bán Trong 30 Phút</h5>
-                    <p style={{ color: 'var(--text-sub)', fontSize: '0.82rem', lineHeight: 1.6, margin: 0 }}>
-                      Ký hợp đồng mua bán hoặc ủy quyền toàn quyền tại phòng công chứng đối tác hoặc ký trực tiếp tại nhà riêng/Showroom theo lịch hẹn.
-                    </p>
-                  </div>
-                </div>
-
-                <div style={{ display: 'flex', gap: '14px' }}>
-                  <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--gold-primary)', color: '#000', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: '1.1rem' }}>3</div>
-                  <div>
-                    <h5 style={{ color: '#fff', fontSize: '1rem', fontWeight: 800, marginBottom: '6px' }}>Rút Hồ Sơ Gốc Toàn Quốc 24H - 48H</h5>
-                    <p style={{ color: 'var(--text-sub)', fontSize: '0.82rem', lineHeight: 1.6, margin: 0 }}>
-                      Nếu xe khác tỉnh, pháp lý showroom trực tiếp nộp hồ sơ thu hồi biển số, rút túi hồ sơ gốc niêm phong tại CSGT tỉnh gốc. Showroom chịu toàn bộ chi phí.
-                    </p>
-                  </div>
-                </div>
-
-                <div style={{ display: 'flex', gap: '14px' }}>
-                  <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--gold-primary)', color: '#000', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: '1.1rem' }}>4</div>
-                  <div>
-                    <h5 style={{ color: '#fff', fontSize: '1rem', fontWeight: 800, marginBottom: '6px' }}>Đóng Thuế &amp; Bấm Biển Số Định Danh</h5>
-                    <p style={{ color: 'var(--text-sub)', fontSize: '0.82rem', lineHeight: 1.6, margin: 0 }}>
-                      Kê khai thuế trước bạ 1% xe cũ. Đưa khách đến Đội CSGT địa phương bấm biển số định danh theo CCCD hoặc bàn giao biển số chính chủ trong ngày.
-                    </p>
-                  </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ color: 'var(--gold-primary)', fontSize: '0.85rem', fontWeight: 700, background: 'rgba(212,175,55,0.12)', padding: '6px 14px', borderRadius: '20px', border: '1px solid rgba(212,175,55,0.3)' }}>
+                    <i className="fa-solid fa-shield-halved me-1"></i> Trọn gói A - Z bởi Phòng Pháp Lý Duy Trường Motor
+                  </span>
                 </div>
               </div>
 
-              <div style={{ marginTop: '24px', padding: '16px', background: 'rgba(0,0,0,0.5)', borderRadius: '10px', border: '1px solid rgba(212,175,55,0.3)', display: 'flex', alignItems: 'center', gap: '14px' }}>
-                <i className="fa-solid fa-shield-virus" style={{ color: 'var(--gold-primary)', fontSize: '1.8rem' }}></i>
-                <div style={{ fontSize: '0.82rem', color: 'var(--text-sub)' }}>
-                  <strong style={{ color: '#fff' }}>BẢO HIỂM PHÁP LÝ TRỌN ĐỜI:</strong> Nếu xe phát sinh bất kỳ tranh chấp số khung, tranh chấp quyền sở hữu hoặc phạt nguội tồn đọng trước ngày mua, Duy Trường Motor cam kết thu hồi xe và bồi hoàn 100% tiền mua + lãi suất ngân hàng.
+              {/* Sub-Navigation Tabs */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '28px', background: 'rgba(0,0,0,0.4)', padding: '6px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.06)' }}>
+                <button 
+                  onClick={() => setLegalSubTab('process')}
+                  style={{
+                    flex: '1 1 auto', minWidth: '160px', padding: '10px 16px', borderRadius: '8px', border: 'none',
+                    background: legalSubTab === 'process' ? 'var(--gold-primary)' : 'transparent',
+                    color: legalSubTab === 'process' ? '#000' : 'var(--text-sub)',
+                    fontWeight: legalSubTab === 'process' ? 800 : 600, fontSize: '0.85rem', cursor: 'pointer', transition: 'all 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'
+                  }}>
+                  <i className="fa-solid fa-list-check"></i> 1. Quy Trình 4 Bước Chuẩn
+                </button>
+                <button 
+                  onClick={() => setLegalSubTab('calculator')}
+                  style={{
+                    flex: '1 1 auto', minWidth: '160px', padding: '10px 16px', borderRadius: '8px', border: 'none',
+                    background: legalSubTab === 'calculator' ? 'var(--gold-primary)' : 'transparent',
+                    color: legalSubTab === 'calculator' ? '#000' : 'var(--text-sub)',
+                    fontWeight: legalSubTab === 'calculator' ? 800 : 600, fontSize: '0.85rem', cursor: 'pointer', transition: 'all 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'
+                  }}>
+                  <i className="fa-solid fa-calculator"></i> 2. Dự Toán Chi Phí Sang Tên
+                </button>
+                <button 
+                  onClick={() => setLegalSubTab('finecheck')}
+                  style={{
+                    flex: '1 1 auto', minWidth: '160px', padding: '10px 16px', borderRadius: '8px', border: 'none',
+                    background: legalSubTab === 'finecheck' ? 'var(--gold-primary)' : 'transparent',
+                    color: legalSubTab === 'finecheck' ? '#000' : 'var(--text-sub)',
+                    fontWeight: legalSubTab === 'finecheck' ? 800 : 600, fontSize: '0.85rem', cursor: 'pointer', transition: 'all 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'
+                  }}>
+                  <i className="fa-solid fa-traffic-light"></i> 3. Tra Cứu Phạt Nguội &amp; Số Khung
+                </button>
+                <button 
+                  onClick={() => setLegalSubTab('booking')}
+                  style={{
+                    flex: '1 1 auto', minWidth: '160px', padding: '10px 16px', borderRadius: '8px', border: 'none',
+                    background: legalSubTab === 'booking' ? 'var(--gold-primary)' : 'transparent',
+                    color: legalSubTab === 'booking' ? '#000' : 'var(--text-sub)',
+                    fontWeight: legalSubTab === 'booking' ? 800 : 600, fontSize: '0.85rem', cursor: 'pointer', transition: 'all 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'
+                  }}>
+                  <i className="fa-solid fa-calendar-check"></i> 4. Đặt Lịch Hẹn Công Chứng
+                </button>
+                <button 
+                  onClick={() => setLegalSubTab('tracker')}
+                  style={{
+                    flex: '1 1 auto', minWidth: '160px', padding: '10px 16px', borderRadius: '8px', border: 'none',
+                    background: legalSubTab === 'tracker' ? 'var(--gold-primary)' : 'transparent',
+                    color: legalSubTab === 'tracker' ? '#000' : 'var(--text-sub)',
+                    fontWeight: legalSubTab === 'tracker' ? 800 : 600, fontSize: '0.85rem', cursor: 'pointer', transition: 'all 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'
+                  }}>
+                  <i className="fa-solid fa-route"></i> 5. Theo Dõi Tiến Độ Hồ Sơ
+                </button>
+              </div>
+
+              {/* TAB 1: QUY TRÌNH 4 BƯỚC CHUẨN */}
+              {legalSubTab === 'process' && (
+                <div>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px', marginBottom: '28px' }}>
+                    <div style={{ background: 'rgba(0,0,0,0.4)', padding: '20px', borderRadius: '12px', border: '1px solid rgba(212,175,55,0.2)', position: 'relative' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                        <div style={{ width: '38px', height: '38px', borderRadius: '50%', background: 'var(--gold-primary)', color: '#000', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: '1.1rem' }}>1</div>
+                        <h5 style={{ color: '#fff', fontSize: '0.98rem', fontWeight: 800, margin: 0 }}>Kiểm Định Số Khung &amp; Phạt Nguội</h5>
+                      </div>
+                      <p style={{ color: 'var(--text-sub)', fontSize: '0.82rem', lineHeight: 1.6, marginBottom: '14px' }}>
+                        Đối chiếu số khung, số máy thực tế trùng khớp 100% cà vẹt gốc và tờ khai HQCN. Cà số khung số máy miễn phí, kiểm tra hệ thống phạt nguội Cục CSGT, cam kết 0 nợ phạt.
+                      </p>
+                      <button 
+                        onClick={() => setLegalSubTab('finecheck')}
+                        className="btn-subtle" 
+                        style={{ width: '100%', padding: '6px 12px', fontSize: '0.78rem', borderColor: 'var(--gold-primary)', color: 'var(--gold-primary)' }}>
+                        <i className="fa-solid fa-magnifying-glass me-1"></i> Tra cứu phạt nguội ngay
+                      </button>
+                    </div>
+
+                    <div style={{ background: 'rgba(0,0,0,0.4)', padding: '20px', borderRadius: '12px', border: '1px solid rgba(212,175,55,0.2)', position: 'relative' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                        <div style={{ width: '38px', height: '38px', borderRadius: '50%', background: 'var(--gold-primary)', color: '#000', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: '1.1rem' }}>2</div>
+                        <h5 style={{ color: '#fff', fontSize: '0.98rem', fontWeight: 800, margin: 0 }}>Công Chứng Mua Bán Trong 30 Phút</h5>
+                      </div>
+                      <p style={{ color: 'var(--text-sub)', fontSize: '0.82rem', lineHeight: 1.6, marginBottom: '14px' }}>
+                        Soạn thảo hợp đồng mua bán hoặc ủy quyền toàn quyền tại Phòng công chứng đối tác hoặc ký trực tiếp tại nhà riêng/Showroom theo lịch hẹn. Showroom tài trợ 100% lệ phí công chứng.
+                      </p>
+                      <button 
+                        onClick={() => setLegalSubTab('booking')}
+                        className="btn-subtle" 
+                        style={{ width: '100%', padding: '6px 12px', fontSize: '0.78rem', borderColor: 'var(--gold-primary)', color: 'var(--gold-primary)' }}>
+                        <i className="fa-solid fa-pen-nib me-1"></i> Đặt lịch hẹn ký công chứng
+                      </button>
+                    </div>
+
+                    <div style={{ background: 'rgba(0,0,0,0.4)', padding: '20px', borderRadius: '12px', border: '1px solid rgba(212,175,55,0.2)', position: 'relative' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                        <div style={{ width: '38px', height: '38px', borderRadius: '50%', background: 'var(--gold-primary)', color: '#000', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: '1.1rem' }}>3</div>
+                        <h5 style={{ color: '#fff', fontSize: '0.98rem', fontWeight: 800, margin: 0 }}>Rút Hồ Sơ Gốc Toàn Quốc 24H - 48H</h5>
+                      </div>
+                      <p style={{ color: 'var(--text-sub)', fontSize: '0.82rem', lineHeight: 1.6, marginBottom: '14px' }}>
+                        Nếu xe khác tỉnh, pháp lý showroom trực tiếp nộp hồ sơ thu hồi biển số, rút túi hồ sơ gốc niêm phong tại CSGT tỉnh gốc. Showroom chịu 100% chi phí rút gốc toàn quốc.
+                      </p>
+                      <button 
+                        onClick={() => setLegalSubTab('tracker')}
+                        className="btn-subtle" 
+                        style={{ width: '100%', padding: '6px 12px', fontSize: '0.78rem', borderColor: 'var(--gold-primary)', color: 'var(--gold-primary)' }}>
+                        <i className="fa-solid fa-truck-fast me-1"></i> Theo dõi túi hồ sơ gốc
+                      </button>
+                    </div>
+
+                    <div style={{ background: 'rgba(0,0,0,0.4)', padding: '20px', borderRadius: '12px', border: '1px solid rgba(212,175,55,0.2)', position: 'relative' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                        <div style={{ width: '38px', height: '38px', borderRadius: '50%', background: 'var(--gold-primary)', color: '#000', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontSize: '1.1rem' }}>4</div>
+                        <h5 style={{ color: '#fff', fontSize: '0.98rem', fontWeight: 800, margin: 0 }}>Đóng Thuế &amp; Bấm Biển Số Định Danh</h5>
+                      </div>
+                      <p style={{ color: 'var(--text-sub)', fontSize: '0.82rem', lineHeight: 1.6, marginBottom: '14px' }}>
+                        Kê khai thuế trước bạ 1% xe cũ điện tử. Chuyên viên đưa khách đến Đội CSGT địa phương bấm biển số định danh theo CCCD hoặc bàn giao biển số chính chủ trong ngày.
+                      </p>
+                      <button 
+                        onClick={() => setLegalSubTab('calculator')}
+                        className="btn-subtle" 
+                        style={{ width: '100%', padding: '6px 12px', fontSize: '0.78rem', borderColor: 'var(--gold-primary)', color: 'var(--gold-primary)' }}>
+                        <i className="fa-solid fa-coins me-1"></i> Dự toán chi phí lăn bánh
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Nút chuyển đổi nhanh */}
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', justifyContent: 'center', marginBottom: '24px' }}>
+                    <button onClick={() => setLegalSubTab('calculator')} className="btn-gold" style={{ padding: '12px 24px', fontSize: '0.9rem', borderRadius: '30px' }}>
+                      <i className="fa-solid fa-calculator me-2"></i> Mở Bộ Công Cụ Dự Toán Chi Phí Sang Tên &amp; Bấm Biển
+                    </button>
+                    <button onClick={() => setLegalSubTab('finecheck')} className="btn-subtle" style={{ padding: '12px 24px', fontSize: '0.9rem', borderRadius: '30px', borderColor: 'var(--gold-primary)', color: 'var(--gold-primary)' }}>
+                      <i className="fa-solid fa-traffic-light me-2"></i> Kiểm Tra Phạt Nguội &amp; Số Khung Online
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 2: BỘ CÔNG CỤ DỰ TOÁN CHI PHÍ SANG TÊN & LĂN BÁNH XE LƯỚT */}
+              {legalSubTab === 'calculator' && (() => {
+                const taxFee = Math.round(calcBikePrice * 0.01);
+                const plateFee = calcArea === 'hn_hcm' ? 2000000 : (calcArea === 'danang_ct' ? 800000 : 150000);
+                const notaryMarketFee = 500000;
+                const withdrawDocMarketFee = calcIsDiffProvince ? 1200000 : 0;
+                const serviceMarketFee = calcPackage === 'full' ? 2500000 : 0;
+                
+                // Showroom sponsorship policy
+                const notaryDtmFee = 0; // Free
+                const withdrawDocDtmFee = 0; // Free
+                const serviceDtmFee = 0; // Free package for DTM buyers
+                const totalActualPay = taxFee + plateFee + notaryDtmFee + withdrawDocDtmFee + serviceDtmFee;
+                const totalSavings = notaryMarketFee + withdrawDocMarketFee + serviceMarketFee;
+
+                return (
+                  <div style={{ background: 'rgba(0,0,0,0.5)', padding: '24px', borderRadius: '16px', border: '1px solid rgba(212,175,55,0.3)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '10px' }}>
+                      <div>
+                        <h4 style={{ color: '#fff', fontWeight: 800, margin: 0, fontSize: '1.2rem' }}>
+                          <i className="fa-solid fa-calculator text-gold me-2"></i> BẢNG TÍNH LỆ PHÍ TRƯỚC BẠ &amp; BẤM BIỂN SỐ ĐỊNH DANH (TT 24/2023/TT-BCA)
+                        </h4>
+                        <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '4px' }}>
+                          Áp dụng chuẩn xác mức thuế trước bạ xe cũ 1% và lệ phí cấp biển số theo Thông tư mới nhất của Bộ Công An
+                        </div>
+                      </div>
+                      <span className="badge bg-gold text-dark fw-bold">CHÍNH XÁC 100%</span>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', marginBottom: '24px' }}>
+                      {/* Left: Input parameters */}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                        <div>
+                          <label style={{ color: 'var(--text-muted)', fontSize: '0.82rem', fontWeight: 700, display: 'block', marginBottom: '6px' }}>
+                            GIÁ TRỊ XE MÔ TÔ / CÀO CÀO LƯỚT (VNĐ):
+                          </label>
+                          <div style={{ position: 'relative' }}>
+                            <input 
+                              type="number"
+                              step="5000000"
+                              value={calcBikePrice}
+                              onChange={(e) => setCalcBikePrice(Math.max(10000000, Number(e.target.value) || 0))}
+                              style={{ width: '100%', padding: '12px 14px', background: '#0a0d14', border: '1px solid rgba(212,175,55,0.4)', borderRadius: '8px', color: 'var(--gold-primary)', fontSize: '1.1rem', fontWeight: 800 }}
+                            />
+                            <span style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', fontSize: '0.85rem' }}>VNĐ</span>
+                          </div>
+                          {/* Quick selection pills */}
+                          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '8px' }}>
+                            {[115000000, 365000000, 498000000, 899000000, 1050000000].map(p => (
+                              <button 
+                                key={p} 
+                                onClick={() => setCalcBikePrice(p)}
+                                style={{ padding: '3px 8px', borderRadius: '4px', fontSize: '0.72rem', background: calcBikePrice === p ? 'var(--gold-primary)' : 'rgba(255,255,255,0.08)', color: calcBikePrice === p ? '#000' : '#fff', border: 'none', cursor: 'pointer', fontWeight: 700 }}>
+                                {p >= 1000000000 ? `${p / 1000000000} Tỷ` : `${p / 1000000} Tr`}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div>
+                          <label style={{ color: 'var(--text-muted)', fontSize: '0.82rem', fontWeight: 700, display: 'block', marginBottom: '6px' }}>
+                            KHU VỰC ĐĂNG KÝ BẤM BIỂN SỐ MỚI THEO CCCD:
+                          </label>
+                          <select 
+                            value={calcArea} 
+                            onChange={(e) => setCalcArea(e.target.value)}
+                            style={{ width: '100%', padding: '12px 14px', background: '#0a0d14', border: '1px solid rgba(212,175,55,0.4)', borderRadius: '8px', color: '#fff', fontSize: '0.9rem', fontWeight: 700 }}>
+                            <option value="hn_hcm">Khu Vực 1: Hà Nội &amp; TP. Hồ Chí Minh (Lệ phí cấp biển định danh: 2.000.000 đ)</option>
+                            <option value="danang_ct">Khu Vực 2: Đà Nẵng, Cần Thơ, Hải Phòng, TP trực thuộc tỉnh (Lệ phí: 800.000 đ)</option>
+                            <option value="province">Khu Vực 3: Các Tỉnh thành &amp; Huyện khác trên toàn quốc (Lệ phí: 150.000 đ)</option>
+                          </select>
+                        </div>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                          <div>
+                            <label style={{ color: 'var(--text-muted)', fontSize: '0.82rem', fontWeight: 700, display: 'block', marginBottom: '6px' }}>
+                              NGUỒN GỐC BIỂN SỐ XE:
+                            </label>
+                            <select 
+                              value={calcIsDiffProvince ? 'diff' : 'same'} 
+                              onChange={(e) => setCalcIsDiffProvince(e.target.value === 'diff')}
+                              style={{ width: '100%', padding: '10px 12px', background: '#0a0d14', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px', color: '#fff', fontSize: '0.85rem' }}>
+                              <option value="diff">Xe Khác Tỉnh (Rút túi hồ sơ gốc niêm phong)</option>
+                              <option value="same">Xe Cùng Tỉnh (Giữ biển hoặc đổi biển định danh)</option>
+                            </select>
+                          </div>
+
+                          <div>
+                            <label style={{ color: 'var(--text-muted)', fontSize: '0.82rem', fontWeight: 700, display: 'block', marginBottom: '6px' }}>
+                              GÓI DỊCH VỤ PHÁP LÝ:
+                            </label>
+                            <select 
+                              value={calcPackage} 
+                              onChange={(e) => setCalcPackage(e.target.value)}
+                              style={{ width: '100%', padding: '10px 12px', background: '#0a0d14', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px', color: '#fff', fontSize: '0.85rem' }}>
+                              <option value="full">Ủy Quyền DTM Làm Trọn Gói A-Z (Bấm biển tận nơi)</option>
+                              <option value="self">Khách Tự Đi Nộp Thuế &amp; Bấm Biển (DTM bàn giao hồ sơ)</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Right: Calculated Itemized Breakdown */}
+                      <div style={{ background: '#07090e', padding: '20px', borderRadius: '12px', border: '1px solid rgba(212,175,55,0.3)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                        <div>
+                          <div style={{ color: '#fff', fontWeight: 800, fontSize: '0.95rem', marginBottom: '14px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '8px' }}>
+                            CHI TIẾT LỆ PHÍ CƠ QUAN NHÀ NƯỚC &amp; DỊCH VỤ:
+                          </div>
+                          
+                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.84rem', marginBottom: '8px' }}>
+                            <span style={{ color: 'var(--text-sub)' }}>1. Thuế trước bạ xe cũ (1% giá trị):</span>
+                            <strong style={{ color: '#fff' }}>{formatMoney(taxFee)}</strong>
+                          </div>
+
+                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.84rem', marginBottom: '8px' }}>
+                            <span style={{ color: 'var(--text-sub)' }}>2. Lệ phí cấp biển số định danh mới:</span>
+                            <strong style={{ color: '#fff' }}>{formatMoney(plateFee)}</strong>
+                          </div>
+
+                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.84rem', marginBottom: '8px' }}>
+                            <span style={{ color: 'var(--text-sub)' }}>3. Lệ phí công chứng hợp đồng mua bán:</span>
+                            <span style={{ color: '#28a745', fontWeight: 700 }}><del style={{ color: 'var(--text-muted)', marginRight: '6px' }}>500.000 đ</del> MIỄN PHÍ</span>
+                          </div>
+
+                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.84rem', marginBottom: '8px' }}>
+                            <span style={{ color: 'var(--text-sub)' }}>4. Phí rút hồ sơ gốc toàn quốc 24h:</span>
+                            <span style={{ color: '#28a745', fontWeight: 700 }}><del style={{ color: 'var(--text-muted)', marginRight: '6px' }}>1.200.000 đ</del> MIỄN PHÍ</span>
+                          </div>
+
+                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.84rem', marginBottom: '14px' }}>
+                            <span style={{ color: 'var(--text-sub)' }}>5. Phí dịch vụ chuyên viên pháp lý A-Z:</span>
+                            <span style={{ color: '#28a745', fontWeight: 700 }}><del style={{ color: 'var(--text-muted)', marginRight: '6px' }}>2.500.000 đ</del> DTM TÀI TRỢ</span>
+                          </div>
+                        </div>
+
+                        <div style={{ borderTop: '2px dashed rgba(212,175,55,0.4)', paddingTop: '14px' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                            <span style={{ color: 'var(--gold-primary)', fontWeight: 800, fontSize: '1rem' }}>TỔNG CHI PHÍ THỰC TẾ:</span>
+                            <span className="price-racing text-gradient-gold" style={{ fontSize: '1.5rem', fontWeight: 900 }}>{formatMoney(totalActualPay)}</span>
+                          </div>
+                          <div style={{ background: 'rgba(40,167,69,0.15)', border: '1px solid rgba(40,167,69,0.3)', padding: '6px 12px', borderRadius: '6px', fontSize: '0.78rem', color: '#28a745', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
+                            <span><i className="fa-solid fa-gift me-1"></i> Tiết kiệm nhờ chính sách Duy Trường Motor:</span>
+                            <strong>+{formatMoney(totalSavings)}</strong>
+                          </div>
+                          <button 
+                            onClick={() => {
+                              setLegalBookingData({
+                                ...legalBookingData,
+                                service: `Trọn gói Sang tên & Bấm biển số định danh A-Z (Dự toán: ${formatMoney(totalActualPay)})`
+                              });
+                              setLegalSubTab('booking');
+                            }}
+                            className="btn-gold" 
+                            style={{ width: '100%', padding: '10px', fontSize: '0.88rem', borderRadius: '8px', fontWeight: 800 }}>
+                            <i className="fa-solid fa-calendar-check me-2"></i> Áp Dụng Dự Toán &amp; Đặt Lịch Hẹn Ngay
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* TAB 3: TRA CỨU PHẠT NGUỘI & SỐ KHUNG XE LƯỚT ONLINE */}
+              {legalSubTab === 'finecheck' && (
+                <div style={{ background: 'rgba(0,0,0,0.5)', padding: '24px', borderRadius: '16px', border: '1px solid rgba(212,175,55,0.3)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
+                    <div>
+                      <h4 style={{ color: '#fff', fontWeight: 800, margin: 0, fontSize: '1.2rem' }}>
+                        <i className="fa-solid fa-traffic-light text-gold me-2"></i> CỔNG TRA CỨU PHẠT NGUỘI &amp; THẨM ĐỊNH SỐ KHUNG XE LƯỚT
+                      </h4>
+                      <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '4px' }}>
+                        Dữ liệu đối chiếu thời gian thực từ Cục CSGT Bộ Công An &amp; Hệ thống Đăng kiểm Việt Nam
+                      </div>
+                    </div>
+                    <span className="badge bg-success text-white fw-bold"><i className="fa-solid fa-signal me-1"></i> KẾT NỐI TRỰC TIẾP</span>
+                  </div>
+
+                  {/* Sample pills */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '16px' }}>
+                    <span style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>Xe mẫu showroom:</span>
+                    {[
+                      { plate: '29A1-999.88', vin: 'MD44E-00892', name: 'Ducati Panigale V4 S' },
+                      { plate: '59A3-888.66', vin: 'CP4-8849102', name: 'Yamaha YZF-R1M' },
+                      { plate: '43A1-777.99', vin: 'ZR1000-0982', name: 'Kawasaki Z1000R' }
+                    ].map(sample => (
+                      <button
+                        key={sample.plate}
+                        onClick={() => {
+                          setFineCheckPlate(sample.plate);
+                          setFineCheckVin(sample.vin);
+                          setFineCheckResult(null);
+                        }}
+                        style={{ padding: '4px 10px', borderRadius: '20px', fontSize: '0.75rem', background: fineCheckPlate === sample.plate ? 'var(--gold-primary)' : 'rgba(255,255,255,0.08)', color: fineCheckPlate === sample.plate ? '#000' : '#fff', border: 'none', cursor: 'pointer', fontWeight: 700 }}>
+                        <i className="fa-solid fa-motorcycle me-1"></i> {sample.plate} ({sample.name})
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Form inputs */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px', marginBottom: '20px' }}>
+                    <div>
+                      <label style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 700, display: 'block', marginBottom: '6px' }}>
+                        BIỂN KIỂM SOÁT XE (VD: 29A1-999.88):
+                      </label>
+                      <input 
+                        type="text"
+                        value={fineCheckPlate}
+                        onChange={(e) => setFineCheckPlate(e.target.value.toUpperCase())}
+                        placeholder="Nhập biển số xe (VD: 29A1-999.88)"
+                        style={{ width: '100%', padding: '10px 14px', background: '#0a0d14', border: '1px solid rgba(212,175,55,0.4)', borderRadius: '8px', color: '#fff', fontSize: '1rem', fontWeight: 800, letterSpacing: '1px' }}
+                      />
+                    </div>
+
+                    <div>
+                      <label style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 700, display: 'block', marginBottom: '6px' }}>
+                        SỐ KHUNG (VIN) HOẶC SỐ MÁY:
+                      </label>
+                      <input 
+                        type="text"
+                        value={fineCheckVin}
+                        onChange={(e) => setFineCheckVin(e.target.value.toUpperCase())}
+                        placeholder="Nhập 6 số cuối số khung hoặc số máy"
+                        style={{ width: '100%', padding: '10px 14px', background: '#0a0d14', border: '1px solid rgba(212,175,55,0.4)', borderRadius: '8px', color: '#fff', fontSize: '1rem', fontWeight: 800, letterSpacing: '1px' }}
+                      />
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'flex-end' }}>
+                      <button 
+                        disabled={isFineChecking || !fineCheckPlate.trim()}
+                        onClick={() => {
+                          setIsFineChecking(true);
+                          setFineCheckResult(null);
+                          setTimeout(() => {
+                            setIsFineChecking(false);
+                            setFineCheckResult({
+                              plate: fineCheckPlate.trim().toUpperCase(),
+                              vin: fineCheckVin.trim().toUpperCase() || 'MD44E-00892',
+                              fineCount: 0,
+                              legalStatus: 'HẢI QUAN CHÍNH NGẠCH (HQCN) 100%',
+                              chassisStatus: 'TRÙNG KHỚP 100% CÀ VẸT GỐC - KHÔNG ĐỤC TẨY',
+                              plateStatus: 'ĐÃ THU HỒI BIỂN CŨ - SẴN SÀNG BẤM BIỂN ĐỊNH DANH 24H',
+                              certCode: 'DTM-SECURE-' + Math.floor(100000 + Math.random() * 900000),
+                              checkedAt: new Date().toLocaleString('vi-VN')
+                            });
+                          }, 750);
+                        }}
+                        className="btn-gold" 
+                        style={{ width: '100%', padding: '12px', fontSize: '0.9rem', borderRadius: '8px', fontWeight: 800, cursor: isFineChecking ? 'wait' : 'pointer' }}>
+                        {isFineChecking ? (
+                          <span><i className="fa-solid fa-spinner fa-spin me-2"></i> Đang đối chiếu CSGT...</span>
+                        ) : (
+                          <span><i className="fa-solid fa-search me-2"></i> TRA CỨU PHÁP LÝ &amp; PHẠT NGUỘI</span>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Loading animation */}
+                  {isFineChecking && (
+                    <div style={{ padding: '24px', background: '#07090e', borderRadius: '12px', textAlign: 'center', border: '1px dashed rgba(212,175,55,0.4)', marginBottom: '16px' }}>
+                      <div className="spinner-border text-gold" role="status" style={{ width: '2.5rem', height: '2.5rem', marginBottom: '12px' }}></div>
+                      <div style={{ color: '#fff', fontWeight: 700, fontSize: '0.95rem' }}>Đang kết nối Cổng Dịch Vụ Công Quốc Gia &amp; Dữ liệu Cục CSGT...</div>
+                      <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '4px' }}>Đang quét hồ sơ đăng ký số khung {fineCheckVin || 'toàn quốc'}</div>
+                    </div>
+                  )}
+
+                  {/* Results Display */}
+                  {fineCheckResult && !isFineChecking && (
+                    <div style={{ background: '#07090e', border: '1px solid rgba(40,167,69,0.5)', borderRadius: '14px', padding: '24px', animation: 'fadeIn 0.3s ease-in' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '12px', flexWrap: 'wrap', gap: '10px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                          <div style={{ width: '42px', height: '42px', borderRadius: '50%', background: '#28a745', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.3rem' }}>
+                            <i className="fa-solid fa-shield-check"></i>
+                          </div>
+                          <div>
+                            <h5 style={{ color: '#fff', fontWeight: 800, margin: 0, fontSize: '1.1rem' }}>
+                              KẾT QUẢ THẨM ĐỊNH PHÁP LÝ: <span style={{ color: '#28a745' }}>HOÀN TOÀN HỢP PHÁP</span>
+                            </h5>
+                            <span style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>Mã chứng thư giám định: <strong style={{ color: 'var(--gold-primary)' }}>{fineCheckResult.certCode}</strong> • Lúc: {fineCheckResult.checkedAt}</span>
+                          </div>
+                        </div>
+                        <span style={{ background: 'rgba(40,167,69,0.2)', color: '#28a745', padding: '6px 14px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 800, border: '1px solid #28a745' }}>
+                          <i className="fa-solid fa-check-circle me-1"></i> 0 VI PHẠM PHẠT NGUỘI
+                        </span>
+                      </div>
+
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px', marginBottom: '20px' }}>
+                        <div style={{ background: 'rgba(255,255,255,0.03)', padding: '14px', borderRadius: '10px' }}>
+                          <span style={{ color: 'var(--text-muted)', fontSize: '0.78rem', display: 'block', marginBottom: '4px' }}>BIỂN KIỂM SOÁT:</span>
+                          <strong style={{ color: '#fff', fontSize: '1.1rem', letterSpacing: '1px' }}>{fineCheckResult.plate}</strong>
+                        </div>
+                        <div style={{ background: 'rgba(255,255,255,0.03)', padding: '14px', borderRadius: '10px' }}>
+                          <span style={{ color: 'var(--text-muted)', fontSize: '0.78rem', display: 'block', marginBottom: '4px' }}>SỐ KHUNG / SỐ MÁY:</span>
+                          <strong style={{ color: '#fff', fontSize: '1rem' }}>{fineCheckResult.vin}</strong>
+                        </div>
+                        <div style={{ background: 'rgba(255,255,255,0.03)', padding: '14px', borderRadius: '10px' }}>
+                          <span style={{ color: 'var(--text-muted)', fontSize: '0.78rem', display: 'block', marginBottom: '4px' }}>TÌNH TRẠNG PHÁP LÝ:</span>
+                          <strong style={{ color: 'var(--gold-primary)', fontSize: '0.9rem' }}>{fineCheckResult.legalStatus}</strong>
+                        </div>
+                        <div style={{ background: 'rgba(255,255,255,0.03)', padding: '14px', borderRadius: '10px' }}>
+                          <span style={{ color: 'var(--text-muted)', fontSize: '0.78rem', display: 'block', marginBottom: '4px' }}>KIỂM ĐỊNH CƠ KHÍ SỐ KHUNG:</span>
+                          <strong style={{ color: '#28a745', fontSize: '0.85rem' }}>{fineCheckResult.chassisStatus}</strong>
+                        </div>
+                      </div>
+
+                      <div style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.3)', padding: '14px', borderRadius: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.82rem', color: 'var(--text-sub)' }}>
+                          <i className="fa-solid fa-lock text-gold fs-5"></i>
+                          <span>Xe đủ 100% điều kiện sang tên bấm biển số định danh ngay trong ngày. Duy Trường Motor cam kết bảo hiểm pháp lý trọn đời.</span>
+                        </div>
+                        <button 
+                          onClick={() => {
+                            setLegalBookingData({
+                              ...legalBookingData,
+                              note: `Đã tra cứu pháp lý biển số ${fineCheckResult.plate} (${fineCheckResult.certCode}) sạch 100%. Đăng ký lịch hẹn bấm biển.`
+                            });
+                            setLegalSubTab('booking');
+                          }}
+                          className="btn-gold" 
+                          style={{ padding: '8px 18px', fontSize: '0.82rem', borderRadius: '20px', fontWeight: 800 }}>
+                          <i className="fa-solid fa-calendar-plus me-1"></i> Đặt Lịch Bấm Biển Số Xe Này
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* TAB 4: ĐẶT LỊCH HẸN CÔNG CHỨNG & BẤM BIỂN SỐ */}
+              {legalSubTab === 'booking' && (
+                <div style={{ background: 'rgba(0,0,0,0.5)', padding: '24px', borderRadius: '16px', border: '1px solid rgba(212,175,55,0.3)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '10px' }}>
+                    <div>
+                      <h4 style={{ color: '#fff', fontWeight: 800, margin: 0, fontSize: '1.2rem' }}>
+                        <i className="fa-solid fa-calendar-check text-gold me-2"></i> ĐẶT LỊCH HẸN CÔNG CHỨNG &amp; BẤM BIỂN SỐ ĐỊNH DANH
+                      </h4>
+                      <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '4px' }}>
+                        Chuyên viên pháp lý Duy Trường Motor sẽ chuẩn bị sẵn toàn bộ hồ sơ gốc và liên hệ Quý khách trước 15 phút
+                      </div>
+                    </div>
+                    <span className="badge bg-gold text-dark fw-bold">TIẾT KIỆM THỜI GIAN</span>
+                  </div>
+
+                  {legalBookingConfirmed ? (
+                    <div style={{ background: '#07090e', border: '1px solid rgba(40,167,69,0.5)', borderRadius: '14px', padding: '24px', animation: 'fadeIn 0.3s ease-in' }}>
+                      <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+                        <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: '#28a745', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.8rem', margin: '0 auto 12px' }}>
+                          <i className="fa-solid fa-check"></i>
+                        </div>
+                        <h4 style={{ color: '#fff', fontWeight: 800, marginBottom: '6px' }}>ĐẶT LỊCH HẸN PHÁP LÝ THÀNH CÔNG!</h4>
+                        <div style={{ color: 'var(--gold-primary)', fontSize: '1.1rem', fontWeight: 900 }}>
+                          MÃ LỊCH HẸN: {legalBookingConfirmed.code}
+                        </div>
+                      </div>
+
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '20px', background: 'rgba(255,255,255,0.03)', padding: '18px', borderRadius: '12px' }}>
+                        <div>
+                          <span style={{ color: 'var(--text-muted)', fontSize: '0.78rem', display: 'block' }}>CHỦ XE / KHÁCH HÀNG:</span>
+                          <strong style={{ color: '#fff' }}>{legalBookingConfirmed.name}</strong> ({legalBookingConfirmed.phone})
+                        </div>
+                        <div>
+                          <span style={{ color: 'var(--text-muted)', fontSize: '0.78rem', display: 'block' }}>SỐ CCCD ĐỊNH DANH:</span>
+                          <strong style={{ color: '#fff' }}>{legalBookingConfirmed.cccd}</strong>
+                        </div>
+                        <div>
+                          <span style={{ color: 'var(--text-muted)', fontSize: '0.78rem', display: 'block' }}>THỜI GIAN HẸN:</span>
+                          <strong style={{ color: 'var(--gold-primary)' }}>{legalBookingConfirmed.time} ngày {legalBookingConfirmed.date}</strong>
+                        </div>
+                        <div>
+                          <span style={{ color: 'var(--text-muted)', fontSize: '0.78rem', display: 'block' }}>ĐỊA ĐIỂM:</span>
+                          <strong style={{ color: '#fff' }}>{legalBookingConfirmed.location}</strong> ({legalBookingConfirmed.branch})
+                        </div>
+                      </div>
+
+                      <div style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', padding: '16px', borderRadius: '10px', marginBottom: '20px' }}>
+                        <div style={{ color: '#fff', fontWeight: 700, fontSize: '0.88rem', marginBottom: '6px' }}>
+                          <i className="fa-solid fa-folder-open text-gold me-2"></i> GIẤY TỜ QUÝ KHÁCH CẦN MANG THEO:
+                        </div>
+                        <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '0.82rem', color: 'var(--text-sub)', lineHeight: 1.6 }}>
+                          <li>Bản gốc Căn Cước Công Dân (CCCD) gắn chip chính chủ.</li>
+                          <li>Tài khoản VNeID định danh điện tử mức 2 trên điện thoại.</li>
+                          <li>Toàn bộ hợp đồng mua bán, tờ khai HQCN và túi hồ sơ gốc do Duy Trường Motor chuẩn bị sẵn sàng.</li>
+                        </ul>
+                      </div>
+
+                      <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+                        <button 
+                          onClick={() => {
+                            setLegalSearchCode(legalBookingConfirmed.code);
+                            setLegalSubTab('tracker');
+                          }}
+                          className="btn-gold" 
+                          style={{ padding: '10px 24px', fontSize: '0.88rem', borderRadius: '30px', fontWeight: 800 }}>
+                          <i className="fa-solid fa-route me-2"></i> Xem Tiến Độ Hồ Sơ Pháp Lý
+                        </button>
+                        <button 
+                          onClick={() => setLegalBookingConfirmed(null)}
+                          className="btn-subtle" 
+                          style={{ padding: '10px 20px', fontSize: '0.88rem', borderRadius: '30px' }}>
+                          Đặt Lịch Hẹn Khác
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '16px', marginBottom: '20px' }}>
+                        <div>
+                          <label style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 700, display: 'block', marginBottom: '6px' }}>HỌ VÀ TÊN KHÁCH HÀNG / CHỦ XE:</label>
+                          <input 
+                            type="text" 
+                            value={legalBookingData.name} 
+                            onChange={(e) => setLegalBookingData({ ...legalBookingData, name: e.target.value })}
+                            placeholder="Nhập họ và tên đầy đủ"
+                            style={{ width: '100%', padding: '10px 14px', background: '#0a0d14', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px', color: '#fff', fontSize: '0.9rem' }}
+                          />
+                        </div>
+
+                        <div>
+                          <label style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 700, display: 'block', marginBottom: '6px' }}>SỐ ĐIỆN THOẠI LIÊN HỆ:</label>
+                          <input 
+                            type="text" 
+                            value={legalBookingData.phone} 
+                            onChange={(e) => setLegalBookingData({ ...legalBookingData, phone: e.target.value })}
+                            placeholder="Nhập số điện thoại"
+                            style={{ width: '100%', padding: '10px 14px', background: '#0a0d14', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px', color: '#fff', fontSize: '0.9rem' }}
+                          />
+                        </div>
+
+                        <div>
+                          <label style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 700, display: 'block', marginBottom: '6px' }}>SỐ CĂN CƯỚC CÔNG DÂN (CCCD 12 SỐ):</label>
+                          <input 
+                            type="text" 
+                            value={legalBookingData.cccd} 
+                            onChange={(e) => setLegalBookingData({ ...legalBookingData, cccd: e.target.value })}
+                            placeholder="Nhập số CCCD để cấp biển định danh"
+                            style={{ width: '100%', padding: '10px 14px', background: '#0a0d14', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px', color: '#fff', fontSize: '0.9rem' }}
+                          />
+                        </div>
+
+                        <div>
+                          <label style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 700, display: 'block', marginBottom: '6px' }}>SHOWROOM TIẾP NHẬN HỒ SƠ:</label>
+                          <select 
+                            value={legalBookingData.branch} 
+                            onChange={(e) => setLegalBookingData({ ...legalBookingData, branch: e.target.value })}
+                            style={{ width: '100%', padding: '10px 14px', background: '#0a0d14', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px', color: '#fff', fontSize: '0.9rem' }}>
+                            <option value="Duy Trương Motor - Chi Nhánh Phú Nhuận TP.HCM (Trụ Sở Chính)">Chi Nhánh Phú Nhuận TP.HCM (123 Hoàng Văn Thụ)</option>
+                            <option value="Duy Trương Motor - Chi Nhánh Cầu Giấy Hà Nội">Chi Nhánh Cầu Giấy Hà Nội (45 Cầu Giấy)</option>
+                            <option value="Duy Trương Motor - Chi Nhánh Hải Châu Đà Nẵng">Chi Nhánh Hải Châu Đà Nẵng (88 Nguyễn Văn Linh)</option>
+                          </select>
+                        </div>
+
+                        <div>
+                          <label style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 700, display: 'block', marginBottom: '6px' }}>NGÀY HẸN THỰC HIỆN:</label>
+                          <input 
+                            type="date" 
+                            value={legalBookingData.date} 
+                            onChange={(e) => setLegalBookingData({ ...legalBookingData, date: e.target.value })}
+                            style={{ width: '100%', padding: '10px 14px', background: '#0a0d14', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px', color: '#fff', fontSize: '0.9rem' }}
+                          />
+                        </div>
+
+                        <div>
+                          <label style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 700, display: 'block', marginBottom: '6px' }}>KHUNG GIỜ MONG MUỐN:</label>
+                          <select 
+                            value={legalBookingData.time} 
+                            onChange={(e) => setLegalBookingData({ ...legalBookingData, time: e.target.value })}
+                            style={{ width: '100%', padding: '10px 14px', background: '#0a0d14', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px', color: '#fff', fontSize: '0.9rem' }}>
+                            <option value="09:00 - 11:30 Sáng">Sáng: 09:00 - 11:30 (Thích hợp bấm biển tại CSGT)</option>
+                            <option value="14:00 - 16:30 Chiều">Chiều: 14:00 - 16:30 (Ký công chứng nhanh)</option>
+                            <option value="17:00 - 19:00 Tối">Tối: 17:00 - 19:00 (Ký công chứng tại nhà riêng)</option>
+                          </select>
+                        </div>
+
+                        <div>
+                          <label style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 700, display: 'block', marginBottom: '6px' }}>HÌNH THỨC THỰC HIỆN:</label>
+                          <select 
+                            value={legalBookingData.location} 
+                            onChange={(e) => setLegalBookingData({ ...legalBookingData, location: e.target.value })}
+                            style={{ width: '100%', padding: '10px 14px', background: '#0a0d14', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px', color: '#fff', fontSize: '0.9rem' }}>
+                            <option value="Tại Showroom Duy Trường Motor">Tại Showroom Duy Trường Motor</option>
+                            <option value="Tại Đội CSGT địa phương">Tại Đội CSGT địa phương (Chuyên viên đón)</option>
+                            <option value="Ký công chứng tại nhà riêng khách hàng">Chuyên viên đến tận nhà riêng ký công chứng</option>
+                          </select>
+                        </div>
+
+                        <div>
+                          <label style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 700, display: 'block', marginBottom: '6px' }}>GÓI DỊCH VỤ:</label>
+                          <input 
+                            type="text" 
+                            disabled 
+                            value={legalBookingData.service} 
+                            style={{ width: '100%', padding: '10px 14px', background: '#05070a', border: '1px solid rgba(212,175,55,0.3)', borderRadius: '8px', color: 'var(--gold-primary)', fontSize: '0.85rem', fontWeight: 700 }}
+                          />
+                        </div>
+                      </div>
+
+                      <div style={{ textAlign: 'center' }}>
+                        <button 
+                          onClick={() => {
+                            if (!legalBookingData.name.trim() || !legalBookingData.phone.trim()) {
+                              alert('Vui lòng nhập họ tên và số điện thoại liên hệ!');
+                              return;
+                            }
+                            const confirmed = {
+                              code: 'DTM-LEGAL-' + Math.floor(100000 + Math.random() * 900000),
+                              ...legalBookingData
+                            };
+                            setLegalBookingConfirmed(confirmed);
+                            setLegalBookingList([confirmed, ...legalBookingList]);
+                            confetti({ particleCount: 80, spread: 60, origin: { y: 0.7 } });
+                          }}
+                          className="btn-gold" 
+                          style={{ padding: '12px 36px', fontSize: '0.95rem', borderRadius: '30px', fontWeight: 800 }}>
+                          <i className="fa-solid fa-paper-plane me-2"></i> XÁC NHẬN ĐẶT LỊCH HẸN PHÁP LÝ CHÍNH THỨC
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* TAB 5: THEO DÕI TIẾN ĐỘ HỒ SƠ PHÁP LÝ THỜI GIAN THỰC */}
+              {legalSubTab === 'tracker' && (
+                <div style={{ background: 'rgba(0,0,0,0.5)', padding: '24px', borderRadius: '16px', border: '1px solid rgba(212,175,55,0.3)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '10px' }}>
+                    <div>
+                      <h4 style={{ color: '#fff', fontWeight: 800, margin: 0, fontSize: '1.2rem' }}>
+                        <i className="fa-solid fa-route text-gold me-2"></i> THEO DÕI TIẾN ĐỘ HỒ SƠ PHÁP LÝ &amp; BIỂN SỐ THỜI GIAN THỰC
+                      </h4>
+                      <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '4px' }}>
+                        Tra cứu thời gian thực từng chặng xử lý hồ sơ gốc và lịch hẹn bấm biển số định danh
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <input 
+                        type="text" 
+                        value={legalSearchCode} 
+                        onChange={(e) => setLegalSearchCode(e.target.value.toUpperCase())}
+                        placeholder="Nhập mã hồ sơ (VD: DTM-LEGAL-9833BD)"
+                        style={{ padding: '8px 12px', background: '#0a0d14', border: '1px solid rgba(212,175,55,0.4)', borderRadius: '6px', color: '#fff', fontSize: '0.85rem', width: '220px', fontWeight: 700 }}
+                      />
+                      <button 
+                        onClick={() => {
+                          alert(`Đang tra cứu dữ liệu hồ sơ: ${legalSearchCode || 'DTM-LEGAL-9833BD'}`);
+                        }}
+                        className="btn-gold" 
+                        style={{ padding: '8px 14px', fontSize: '0.82rem', borderRadius: '6px', fontWeight: 800 }}>
+                        Tra cứu
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Active Legal File Header */}
+                  <div style={{ background: '#07090e', border: '1px solid rgba(212,175,55,0.3)', borderRadius: '12px', padding: '18px', marginBottom: '24px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', marginBottom: '14px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '10px' }}>
+                      <div>
+                        <span style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>MÃ HỒ SƠ PHÁP LÝ:</span>
+                        <h5 style={{ color: 'var(--gold-primary)', fontWeight: 900, margin: '2px 0 0 0', fontSize: '1.2rem' }}>{activeLegalFile.code}</h5>
+                      </div>
+                      <div style={{ textAlign: 'right' }}>
+                        <span className="badge bg-gold text-dark fw-bold px-3 py-2">
+                          <i className="fa-solid fa-spinner fa-spin me-1"></i> CHẶNG {activeLegalFile.step}/4: ĐANG XỬ LÝ RÚT GỐC
+                        </span>
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '14px', fontSize: '0.84rem' }}>
+                      <div>
+                        <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '0.75rem' }}>XE BÀN GIAO:</span>
+                        <strong style={{ color: '#fff' }}>{activeLegalFile.bikeName}</strong>
+                      </div>
+                      <div>
+                        <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '0.75rem' }}>BIỂN SỐ ĐỊNH DANH DỰ KIẾN:</span>
+                        <strong style={{ color: 'var(--gold-primary)' }}>{activeLegalFile.plateTarget}</strong>
+                      </div>
+                      <div>
+                        <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '0.75rem' }}>CHỦ XE / CCCD:</span>
+                        <strong style={{ color: '#fff' }}>{activeLegalFile.customer}</strong> ({activeLegalFile.cccd})
+                      </div>
+                      <div>
+                        <span style={{ color: 'var(--text-muted)', display: 'block', fontSize: '0.75rem' }}>CHUYÊN VIÊN PHÁP LÝ THỤ LÝ:</span>
+                        <strong style={{ color: '#fff' }}>{activeLegalFile.specialist}</strong> (<a href="tel:0903456789" style={{ color: 'var(--gold-primary)', textDecoration: 'none' }}>0903.456.789</a>)
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 4-Step Legal Stepper */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                    {activeLegalFile.steps.map((st) => (
+                      <div 
+                        key={st.id}
+                        style={{
+                          display: 'flex', gap: '16px', alignItems: 'flex-start',
+                          padding: '16px', borderRadius: '10px',
+                          background: st.status === 'done' ? 'rgba(40,167,69,0.08)' : (st.status === 'processing' ? 'rgba(212,175,55,0.12)' : 'rgba(255,255,255,0.02)'),
+                          border: `1px solid ${st.status === 'done' ? 'rgba(40,167,69,0.3)' : (st.status === 'processing' ? 'rgba(212,175,55,0.5)' : 'rgba(255,255,255,0.08)')}`
+                        }}>
+                        <div style={{
+                          width: '36px', height: '36px', borderRadius: '50%', flexShrink: 0,
+                          background: st.status === 'done' ? '#28a745' : (st.status === 'processing' ? 'var(--gold-primary)' : 'rgba(255,255,255,0.1)'),
+                          color: st.status === 'done' ? '#fff' : (st.status === 'processing' ? '#000' : '#888'),
+                          display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: '0.95rem'
+                        }}>
+                          {st.status === 'done' ? <i className="fa-solid fa-check"></i> : (st.status === 'processing' ? <i className="fa-solid fa-spinner fa-spin"></i> : st.id)}
+                        </div>
+
+                        <div style={{ flex: 1 }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px', marginBottom: '4px' }}>
+                            <h5 style={{ color: st.status === 'pending' ? 'var(--text-muted)' : '#fff', fontWeight: 800, margin: 0, fontSize: '0.95rem' }}>
+                              Chặng {st.id}: {st.title}
+                            </h5>
+                            <span style={{ fontSize: '0.75rem', color: st.status === 'done' ? '#28a745' : (st.status === 'processing' ? 'var(--gold-primary)' : 'var(--text-muted)'), fontWeight: 700 }}>
+                              {st.time}
+                            </span>
+                          </div>
+                          <p style={{ color: 'var(--text-sub)', fontSize: '0.82rem', margin: 0, lineHeight: 1.5 }}>
+                            {st.note}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* BẢO HIỂM PHÁP LÝ TRỌN ĐỜI FOOTER */}
+              <div style={{ marginTop: '24px', padding: '16px 20px', background: 'rgba(0,0,0,0.6)', borderRadius: '12px', border: '1px solid rgba(212,175,55,0.4)', display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <i className="fa-solid fa-shield-virus" style={{ color: 'var(--gold-primary)', fontSize: '2rem', flexShrink: 0 }}></i>
+                <div style={{ fontSize: '0.84rem', color: 'var(--text-sub)', lineHeight: 1.6 }}>
+                  <strong style={{ color: '#fff', textTransform: 'uppercase' }}>BẢO HIỂM PHÁP LÝ TRỌN ĐỜI:</strong> Duy Trường Motor cam kết bằng văn bản có giá trị pháp lý: Nếu xe phát sinh bất kỳ tranh chấp số khung, tranh chấp quyền sở hữu hoặc phạt nguội tồn đọng trước ngày mua, showroom cam kết thu hồi xe và bồi hoàn <strong style={{ color: 'var(--gold-primary)' }}>100% tiền mua + lãi suất ngân hàng</strong>.
                 </div>
               </div>
             </div>
