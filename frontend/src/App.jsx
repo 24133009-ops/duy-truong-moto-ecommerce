@@ -2922,12 +2922,13 @@ export default function App() {
           </div>
 
           <div>
-            <h5 style={{ color: 'var(--gold-primary)', fontWeight: 800, marginBottom: '16px', fontFamily: 'var(--font-brand)' }}>NHÓM PHÁT TRIỂN ĐỀ TÀI (NHÓM 17)</h5>
-            <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.8 }}>
-              <div>• <strong>Trương Quốc Duy (Leader &amp; Fullstack Dev):</strong> Kiến trúc toàn hệ thống, phát triển Fullstack Spring Boot 3 &amp; React SPA, Spring Security, JWT, OTP Email, VNPAY, WebSocket Live Chat</div>
-              <div>• <strong>Đỗ Trọng Khôi:</strong> Khảo sát hiện trạng chuỗi showroom, thiết kế lược đồ CSDL &amp; Data xe cào cào/mô tô, Kiểm thử chất lượng (QA/Tester)</div>
-              <div>• <strong>Lê Nghĩa Tình:</strong> Phân tích đặc tả nghiệp vụ SRS, Thiết kế sơ đồ luồng hệ thống &amp; UseCase, Xây dựng tài liệu kỹ thuật &amp; Video demo</div>
-            </div>
+            <h5 style={{ color: 'var(--gold-primary)', fontWeight: 800, marginBottom: '16px', fontFamily: 'var(--font-brand)' }}>CHÍNH SÁCH &amp; PHÁP LÝ</h5>
+            <ul style={{ listStyle: 'none', padding: 0, fontSize: '0.85rem', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <li><i className="fa-solid fa-shield-halved text-racing me-2"></i> Chính sách bảo hành chính hãng 3 năm không giới hạn km</li>
+              <li><i className="fa-solid fa-credit-card text-gold me-2"></i> Đặt cọc giữ xe và giao dịch an toàn qua VNPAY QR</li>
+              <li><i className="fa-solid fa-store text-gold me-2"></i> Đăng ký đại lý &amp; Mở showroom ủy quyền toàn quốc</li>
+              <li><i className="fa-solid fa-rotate-left text-racing me-2"></i> Cam kết 100% HQCN - Bao sang tên rút gốc trong 24h</li>
+            </ul>
           </div>
         </div>
 
