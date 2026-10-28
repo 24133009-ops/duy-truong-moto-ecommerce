@@ -27,13 +27,14 @@
 
 ## 2. TÀI KHOẢN MẪU DÙNG THỬ (DEMO ACCOUNTS)
 
-| Vai trò | Email đăng nhập | Mật khẩu | Chi nhánh / Chức năng truy cập |
-| :--- | :--- | :--- | :--- |
-| **Super Admin (Trương Quốc Duy)** | `admin@duytruongmoto.com` / `duytq4906@gmail.com` | `admin123` | Quản trị toàn hệ thống 3 chi nhánh, cấp phép sản phẩm, thống kê doanh thu |
-| **Store Manager Cầu Giấy HN (Đỗ Trọng Khôi)** | `dotrongkhoi2002@gmail.com` | `vendor123` | Quản lý kho hàng & đơn hàng Showroom Cầu Giấy - Hà Nội |
-| **Store Manager Hải Châu ĐN (Lê Nghĩa Tình)** | `nghiatinh2002@gmail.com` | `vendor123` | Quản lý kho hàng & đơn hàng Showroom Hải Châu - Đà Nẵng |
-| **Shipper (Vận tải)** | `shipper@duytruongmoto.com` | `shipper123` | Đội xe sàn trượt VIP, xác nhận bàn giao hàng 6 giai đoạn |
-| **Khách hàng (User)** | `customer@duytruongmoto.com` | `customer123` | Mua đồ bảo hộ / phụ tùng, chọn kho lấy gần nhất, giỏ hàng DB, thanh toán VNPAY |
+Hệ thống hỗ trợ tính năng **1-Click Điền tài khoản mẫu** ngay tại trang Đăng nhập giúp thao tác kiểm thử nhanh chóng:
+
+| STT | Vai trò | Email đăng nhập | Mật khẩu | Chức năng & Phân quyền truy cập |
+| :---: | :--- | :--- | :---: | :--- |
+| **1** | **Admin Quản Trị (Duy Trương)** | `admin@duytruongmoto.com` | `admin123` | Quản trị toàn bộ hệ thống chuỗi 3 chi nhánh, quản lý người dùng, duyệt sản phẩm và xem báo cáo doanh thu. |
+| **2** | **Khách Hàng VIP (Biker)** | `customer@gmail.com` | `user123` | Mua đồ bảo hộ, phụ tùng & xe mô tô, chọn kho lấy gần nhất, giỏ hàng DB, thanh toán VNPAY QR, đánh giá sản phẩm. |
+| **3** | **Showroom Phú Nhuận (Vendor)** | `vendor@duytruongmoto.com` | `vendor123` | Quản lý kho hàng, cập nhật số lượng tồn kho và xử lý/duyệt đơn hàng thuộc Showroom Phú Nhuận (TP.HCM). |
+| **4** | **Tài Xế Sàn Trượt VIP (Shipper)** | `shipper@duytruongmoto.com` | `shipper123` | Tiếp nhận và cập nhật trạng thái vận chuyển xe cứu hộ sàn trượt qua 6 giai đoạn bàn giao tận nơi. |
 
 ---
 
