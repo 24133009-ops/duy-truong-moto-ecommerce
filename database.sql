@@ -226,3 +226,4 @@ INSERT INTO vouchers (id, code, name, description, discount_percent, max_discoun
 (1, 'BIKERVIP', 'Ưu đãi khách hàng thân thiết Biker VIP', 'Giảm 5% tối đa 30.000.000 đ cho các dòng mô tô phân khối lớn', 5, 30000000.00, 200000000.00, 100, 5),
 (2, 'FREESHIP-VIP', 'Miễn phí 100% chi phí xe sàn trượt VIP', 'Hỗ trợ chi phí xe sàn trượt thủy lực VIP tận nhà cho khách hàng đặt cọc', 100, 2000000.00, 100000000.00, 200, 12),
 (3, 'BAOHO-500K', 'Voucher Phụ Kiện Đồ Bảo Hộ', 'Giảm ngay 500.000 đ khi mua nón AGV, giáp Dainese hoặc găng Alpinestars', 10, 500000.00, 5000000.00, 500, 38);
+
