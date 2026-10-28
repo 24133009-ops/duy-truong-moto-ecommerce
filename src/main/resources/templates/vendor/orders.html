@@ -131,7 +131,7 @@
                             <td class="fw-bold text-gradient-gold" th:text="${order.amountToStore != null ? #numbers.formatDecimal(order.amountToStore, 0, 'POINT', 0, 'COMMA') + ' đ' : '0 đ'}"></td>
                             
                             <!-- Cột Tiến Trình 6 Chặng Trực Quan -->
-                            <td th:with="stName=${order.status != null ? order.status.name() : ''}, stepIdx=${stName == 'NOT_PROCESSED' ? 1 : (stName == 'CONFIRMED' ? 2 : (stName == 'PICKED_UP' ? 3 : (stName == 'SHIPPING' ? 4 : (stName == 'DELIVERED' ? 6 : 0))))}">
+                            <td th:with="stName=${order.status != null ? order.status.name() : ''}, stepIdx=${stName == 'NOT_PROCESSED' ? 1 : (stName == 'CONFIRMED' ? 2 : (stName == 'PICKED_UP' ? 3 : (stName == 'SHIPPING' ? 4 : (stName == 'HANDOVER' ? 5 : (stName == 'DELIVERED' ? 6 : 0)))))}">
                                 <div th:if="${stName != 'CANCELLED' and stName != 'REFUNDED'}">
                                     <div class="d-flex align-items-center gap-1 mb-1">
                                         <span class="badge bg-gold text-dark fw-bold" style="font-size: 0.72rem;">
@@ -178,23 +178,22 @@
                                         </form>
                                     </div>
                                     <div th:if="${stName == 'PICKED_UP'}">
-                                        <form th:action="@{/vendor/orders/{id}/status(id=${order.id})}" method="post">
-                                            <input type="hidden" name="status" value="SHIPPING">
-                                            <button type="submit" class="btn btn-gold btn-sm w-100 fw-bold py-1 px-2" style="font-size: 0.75rem;">
-                                                <i class="fa-solid fa-truck-ramp-box me-1"></i> Điều Xe Sàn Trượt (Chặng 4)
-                                            </button>
-                                        </form>
+                                        <span class="badge bg-secondary text-light py-1 px-2 w-100" style="font-size: 0.72rem;">
+                                            <i class="fa-solid fa-clock me-1 text-gold"></i> Đã giao Shipper (Chờ xuất phát C4)
+                                        </span>
                                     </div>
                                     <div th:if="${stName == 'SHIPPING'}">
-                                        <form th:action="@{/vendor/orders/{id}/status(id=${order.id})}" method="post">
-                                            <input type="hidden" name="status" value="DELIVERED">
-                                            <button type="submit" class="btn btn-success btn-sm w-100 fw-bold py-1 px-2" style="font-size: 0.75rem;">
-                                                <i class="fa-solid fa-circle-check me-1"></i> Khách Đã Nhận (Chặng 6)
-                                            </button>
-                                        </form>
+                                        <span class="badge bg-warning text-dark py-1 px-2 w-100" style="font-size: 0.72rem;">
+                                            <i class="fa-solid fa-truck-ramp-box me-1"></i> Xe sàn trượt đang vận chuyển (C4)
+                                        </span>
+                                    </div>
+                                    <div th:if="${stName == 'HANDOVER'}">
+                                        <span class="badge bg-info text-dark py-1 px-2 w-100" style="font-size: 0.72rem;">
+                                            <i class="fa-solid fa-volume-high me-1"></i> Đang hạ sàn &amp; test pô tại nhà (C5)
+                                        </span>
                                     </div>
                                     <div th:if="${stName == 'DELIVERED'}">
-                                        <span class="text-success small fw-bold"><i class="fa-solid fa-check-double me-1"></i> Hoàn tất bảo hành 3 năm</span>
+                                        <span class="text-success small fw-bold"><i class="fa-solid fa-check-double me-1"></i> Hoàn tất bảo hành 3 năm (C6)</span>
                                     </div>
 
                                     <!-- Dropdown tùy chọn bất kỳ trạng thái nào -->

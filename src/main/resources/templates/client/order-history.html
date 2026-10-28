@@ -148,7 +148,7 @@
         </div>
 
         <div class="d-flex flex-column gap-4" th:if="${not #lists.isEmpty(orders)}">
-            <div class="glass-panel p-4 rounded-4" th:each="order : ${orders}" th:with="stName=${order.status.name()}, stepIdx=${stName == 'NOT_PROCESSED' ? 1 : (stName == 'CONFIRMED' ? 2 : (stName == 'PICKED_UP' ? 3 : (stName == 'SHIPPING' ? 4 : (stName == 'DELIVERED' ? 6 : 0))))}">
+            <div class="glass-panel p-4 rounded-4" th:each="order : ${orders}" th:with="stName=${order.status.name()}, stepIdx=${stName == 'NOT_PROCESSED' ? 1 : (stName == 'CONFIRMED' ? 2 : (stName == 'PICKED_UP' ? 3 : (stName == 'SHIPPING' ? 4 : (stName == 'HANDOVER' ? 5 : (stName == 'DELIVERED' ? 6 : 0)))))}">
                 <div class="d-flex flex-wrap justify-content-between align-items-center pb-3 border-bottom border-secondary mb-3">
                     <div>
                         <span class="text-secondary small">MÃ ĐƠN HÀNG:</span>
@@ -246,17 +246,17 @@
                         <!-- Chặng 5 -->
                         <div class="stepper-step" th:classappend="${stepIdx > 5 ? 'completed' : (stepIdx == 5 ? 'active' : '')}">
                             <div class="stepper-icon-circle" style="width: 36px; height: 36px; font-size: 0.85rem;">
-                                <i th:class="${stepIdx > 5 ? 'fa-solid fa-check' : 'fa-solid fa-key'}"></i>
+                                <i th:class="${stepIdx > 5 ? 'fa-solid fa-check' : 'fa-solid fa-volume-high'}"></i>
                             </div>
                             <div class="stepper-step-num">C5</div>
-                            <div class="stepper-title" style="font-size: 0.72rem;">Bàn Giao Xe</div>
-                            <div class="stepper-desc" style="font-size: 0.62rem;">Ký biên bản nhận xe</div>
+                            <div class="stepper-title" style="font-size: 0.72rem;">Bàn Giao &amp; Test Pô</div>
+                            <div class="stepper-desc" style="font-size: 0.62rem;">Hạ sàn &amp; nổ máy</div>
                         </div>
 
                         <!-- Chặng 6 -->
                         <div class="stepper-step" th:classappend="${stepIdx >= 6 ? 'completed' : ''}">
                             <div class="stepper-icon-circle" style="width: 36px; height: 36px; font-size: 0.85rem;">
-                                <i class="fa-solid fa-shield-halved"></i>
+                                <i th:class="${stepIdx >= 6 ? 'fa-solid fa-check' : 'fa-solid fa-shield-halved'}"></i>
                             </div>
                             <div class="stepper-step-num">C6</div>
                             <div class="stepper-title" style="font-size: 0.72rem;">Bảo Hành 3 Năm</div>

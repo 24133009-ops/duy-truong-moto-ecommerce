@@ -1749,17 +1749,18 @@ export default function App() {
                           case 'CONFIRMED': return 2;
                           case 'PICKED_UP': return 3;
                           case 'SHIPPING': return 4;
+                          case 'HANDOVER': return 5;
                           case 'DELIVERED': return 6;
-                          default: return 2;
+                          default: return 1;
                         }
                       };
                       const sIdx = getStepIdx(order.status);
                       const steps = [
-                        { num: 1, title: 'Đặt Cọc', desc: 'Online VNPay', icon: 'fa-file-invoice-dollar' },
+                        { num: 1, title: 'Đặt Cọc Online', desc: 'Khách cọc VNPay', icon: 'fa-file-invoice-dollar' },
                         { num: 2, title: 'Duyệt HQCN', desc: 'Showroom kiểm tra', icon: 'fa-stamp' },
                         { num: 3, title: 'Xuất Kho PDI', desc: 'Siết ốc & Rửa xe', icon: 'fa-warehouse' },
-                        { num: 4, title: 'Sàn Trượt Chạy', desc: 'Vận chuyển VIP', icon: 'fa-truck-ramp-box' },
-                        { num: 5, title: 'Bàn Giao Xe', desc: 'Ký biên bản & Smartkey', icon: 'fa-key' },
+                        { num: 4, title: 'Xe Sàn Trượt', desc: 'Vận chuyển VIP', icon: 'fa-truck-ramp-box' },
+                        { num: 5, title: 'Bàn Giao & Test Pô', desc: 'Hạ sàn & nổ máy', icon: 'fa-volume-high' },
                         { num: 6, title: 'Bảo Hành 3 Năm', desc: 'Kích hoạt chính hãng', icon: 'fa-shield-halved' }
                       ];
                       return (
@@ -1867,8 +1868,9 @@ export default function App() {
                         case 'CONFIRMED': return 2;
                         case 'PICKED_UP': return 3;
                         case 'SHIPPING': return 4;
+                        case 'HANDOVER': return 5;
                         case 'DELIVERED': return 6;
-                        default: return 2;
+                        default: return 1;
                       }
                     };
                     const sIdx = getStepIdx(order.status);
@@ -1877,7 +1879,7 @@ export default function App() {
                       { num: 2, title: 'Duyệt HQCN', desc: 'Kiểm tra số khung', icon: 'fa-stamp' },
                       { num: 3, title: 'PDI Kiểm Định', desc: 'Siết ốc & Rửa xe', icon: 'fa-warehouse' },
                       { num: 4, title: 'Xe Sàn Trượt', desc: 'Vận chuyển VIP', icon: 'fa-truck-ramp-box' },
-                      { num: 5, title: 'Bàn Giao Xe', desc: 'Test pô & Ký biên bản', icon: 'fa-key' },
+                      { num: 5, title: 'Bàn Giao & Test Pô', desc: 'Hạ sàn & nổ máy', icon: 'fa-volume-high' },
                       { num: 6, title: 'Bảo Hành 3 Năm', desc: 'Kích hoạt điện tử', icon: 'fa-shield-halved' }
                     ];
 
@@ -1912,7 +1914,7 @@ export default function App() {
                               color: order.status === 'CONFIRMED' ? 'var(--gold-light)' : (order.status === 'DELIVERED' ? '#28a745' : 'var(--cyan-neon)'),
                               border: '1px solid currentColor'
                             }}>
-                              {order.status === 'NOT_PROCESSED' ? 'Chặng 1: Mới Đặt Cọc' : (order.status === 'CONFIRMED' ? 'Chặng 2: Đã Duyệt HQCN' : (order.status === 'PICKED_UP' ? 'Chặng 3: Đã PDI Chờ Xe Sàn' : (order.status === 'SHIPPING' ? 'Chặng 4: Xe Sàn Trượt Đang Chạy' : 'Chặng 6: Hoàn Tất Bàn Giao')))}
+                              {order.status === 'NOT_PROCESSED' ? 'Chặng 1: Mới Đặt Cọc' : (order.status === 'CONFIRMED' ? 'Chặng 2: Đã Duyệt HQCN' : (order.status === 'PICKED_UP' ? 'Chặng 3: Đã PDI Chờ Xe Sàn' : (order.status === 'SHIPPING' ? 'Chặng 4: Xe Sàn Trượt Đang Chạy' : (order.status === 'HANDOVER' ? 'Chặng 5: Đang Bàn Giao & Test Pô' : 'Chặng 6: Hoàn Tất Bàn Giao'))))}
                             </span>
                             {order.isPaid && (
                               <span style={{ background: '#28a745', color: '#fff', padding: '3px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 700 }}>
@@ -1995,26 +1997,23 @@ export default function App() {
                             </button>
                           )}
                           {order.status === 'PICKED_UP' && (
-                            <button 
-                              className="btn-gold" 
-                              style={{ padding: '6px 14px', fontSize: '0.8rem' }}
-                              onClick={() => handleAdvanceStage('SHIPPING', 'Đã điều động xe sàn trượt VIP lăn bánh vận chuyển! Sang Chặng 4.')}
-                            >
-                              <i className="fa-solid fa-truck-ramp-box me-1"></i> Điều Xe Sàn Trượt (Sang Chặng 4)
-                            </button>
+                            <span style={{ color: 'var(--text-sub)', fontSize: '0.85rem' }}>
+                              <i className="fa-solid fa-clock me-1 text-gold"></i> Đã giao xe cho Shipper (Chờ xe sàn trượt xuất bến Chặng 4)
+                            </span>
                           )}
                           {order.status === 'SHIPPING' && (
-                            <button 
-                              className="btn-gold" 
-                              style={{ padding: '6px 14px', fontSize: '0.8rem' }}
-                              onClick={() => handleAdvanceStage('DELIVERED', 'Đã xác nhận khách hàng nhận xe, nổ máy test pô thành công! Kích hoạt bảo hành điện tử 3 năm (Chặng 6).')}
-                            >
-                              <i className="fa-solid fa-circle-check me-1"></i> Xác Nhận Bàn Giao Xong (Hoàn Tất Chặng 6)
-                            </button>
+                            <span style={{ color: 'var(--cyan-neon)', fontSize: '0.85rem', fontWeight: 700 }}>
+                              <i className="fa-solid fa-truck-ramp-box me-1"></i> Xe sàn trượt VIP đang vận chuyển đến nhà khách (Chặng 4)
+                            </span>
+                          )}
+                          {order.status === 'HANDOVER' && (
+                            <span style={{ color: 'var(--gold-light)', fontSize: '0.85rem', fontWeight: 700 }}>
+                              <i className="fa-solid fa-volume-high me-1"></i> Đang hạ sàn trượt &amp; cùng khách test pô tại nhà (Chặng 5)
+                            </span>
                           )}
                           {order.status === 'DELIVERED' && (
                             <span style={{ color: '#28a745', fontWeight: 800, fontSize: '0.88rem' }}>
-                              <i className="fa-solid fa-circle-check me-1"></i> ĐÃ HOÀN TẤT BÀN GIAO &amp; BẢO HÀNH 3 NĂM
+                              <i className="fa-solid fa-circle-check me-1"></i> ĐÃ HOÀN TẤT BÀN GIAO &amp; BẢO HÀNH 3 NĂM (Chặng 6)
                             </span>
                           )}
                         </div>
@@ -2198,34 +2197,123 @@ export default function App() {
                     </div>
 
                     <div>
-                      {order.status !== 'DELIVERED' ? (
+                      {order.status === 'PICKED_UP' && (
                         <button 
                           className="btn-gold" 
                           onClick={() => {
-                            setOrders(orders.map(o => o.id === order.id ? { ...o, status: 'DELIVERED' } : o));
+                            setOrders(orders.map(o => o.id === order.id ? { ...o, status: 'SHIPPING' } : o));
+                            try {
+                              fetch(`${API_BASE_URL}/orders/${order.id}/status`, {
+                                method: 'PUT',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ status: 'SHIPPING' })
+                              }).catch(e => console.warn('API error:', e));
+                            } catch (err) {}
+                            confetti({ particleCount: 70, spread: 50 });
+                            alert("Xe sàn trượt VIP đã xuất bến và đang vận chuyển đến nhà khách hàng (Chặng 4/6)!");
+                          }}
+                        >
+                          <i className="fa-solid fa-truck-ramp-box me-1"></i> BƯỚC 4: XE SÀN TRƯỢT XUẤT PHÁT
+                        </button>
+                      )}
 
-                            // Sync status update with Spring Boot backend API
+                      {order.status === 'SHIPPING' && (
+                        <button 
+                          className="btn-gold" 
+                          style={{ background: 'linear-gradient(135deg, #00f2fe, #4facfe)', color: '#000', border: 'none' }}
+                          onClick={() => {
+                            setOrders(orders.map(o => o.id === order.id ? { ...o, status: 'HANDOVER' } : o));
+                            try {
+                              fetch(`${API_BASE_URL}/orders/${order.id}/status`, {
+                                method: 'PUT',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ status: 'HANDOVER' })
+                              }).catch(e => console.warn('API error:', e));
+                            } catch (err) {}
+                            confetti({ particleCount: 70, spread: 50 });
+                            alert("Đã hạ sàn trượt thủy lực! Khách hàng đang đối chiếu số khung và nổ máy test tiếng pô (Chặng 5/6)!");
+                          }}
+                        >
+                          <i className="fa-solid fa-volume-high me-1"></i> BƯỚC 5: HẠ SÀN TRƯỢT &amp; TEST PÔ
+                        </button>
+                      )}
+
+                      {order.status === 'HANDOVER' && (
+                        <button 
+                          className="btn-gold" 
+                          style={{ background: 'linear-gradient(135deg, #28a745, #20c997)', color: '#fff', border: 'none' }}
+                          onClick={() => {
+                            setOrders(orders.map(o => o.id === order.id ? { ...o, status: 'DELIVERED', isPaid: true } : o));
                             try {
                               fetch(`${API_BASE_URL}/orders/${order.id}/status`, {
                                 method: 'PUT',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify({ status: 'DELIVERED' })
-                              }).catch(e => console.warn('Shipper status update API error:', e));
+                              }).catch(e => console.warn('API error:', e));
                             } catch (err) {}
-
-                            confetti({ particleCount: 100, spread: 60 });
-                            alert("Xác nhận bàn giao xe và biên bản kiểm tra kỹ thuật thành công!");
+                            confetti({ particleCount: 100, spread: 70 });
+                            alert("Khách hàng đã ký biên bản nghiệm thu & nhận Smartkey! Kích hoạt bảo hành điện tử chính hãng 3 năm (Chặng 6/6)!");
                           }}
                         >
-                          <i className="fa-solid fa-signature"></i> XÁC NHẬN ĐÃ BÀN GIAO XE
+                          <i className="fa-solid fa-key me-1"></i> BƯỚC 6: KÝ BIÊN BẢN &amp; KÍCH HOẠT BẢO HÀNH 3 NĂM
                         </button>
-                      ) : (
-                        <span style={{ color: '#28a745', fontWeight: 800, fontSize: '1rem' }}>
-                          <i className="fa-solid fa-circle-check me-1"></i> ĐÃ BÀN GIAO HOÀN TẤT
+                      )}
+
+                      {order.status === 'DELIVERED' && (
+                        <span style={{ color: '#28a745', fontWeight: 800, fontSize: '0.95rem' }}>
+                          <i className="fa-solid fa-circle-check me-1"></i> ĐÃ BÀN GIAO HOÀN TẤT &amp; BẢO HÀNH 3 NĂM
+                        </span>
+                      )}
+
+                      {(order.status === 'NOT_PROCESSED' || order.status === 'CONFIRMED') && (
+                        <span style={{ color: 'var(--text-sub)', fontSize: '0.85rem' }}>
+                          <i className="fa-solid fa-clock me-1 text-gold"></i> Chờ Showroom kiểm định PDI &amp; giao xe
                         </span>
                       )}
                     </div>
                   </div>
+
+                  {/* 6-Step Stepper on Shipper Card */}
+                  {(() => {
+                    const sIdx = order.status === 'NOT_PROCESSED' ? 1 : (order.status === 'CONFIRMED' ? 2 : (order.status === 'PICKED_UP' ? 3 : (order.status === 'SHIPPING' ? 4 : (order.status === 'HANDOVER' ? 5 : (order.status === 'DELIVERED' ? 6 : 1)))));
+                    const steps = [
+                      { num: 1, title: 'Đặt Cọc Online', icon: 'fa-file-invoice-dollar' },
+                      { num: 2, title: 'Duyệt HQCN', icon: 'fa-stamp' },
+                      { num: 3, title: 'Xuất Kho PDI', icon: 'fa-warehouse' },
+                      { num: 4, title: 'Xe Sàn Trượt', icon: 'fa-truck-ramp-box' },
+                      { num: 5, title: 'Bàn Giao & Test Pô', icon: 'fa-volume-high' },
+                      { num: 6, title: 'Bảo Hành 3 Năm', icon: 'fa-shield-halved' }
+                    ];
+                    return (
+                      <div style={{ marginTop: '16px', paddingTop: '14px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                          <span style={{ fontSize: '0.75rem', color: 'var(--gold-light)', fontWeight: 700 }}>
+                            <i className="fa-solid fa-truck-fast me-1"></i> TIẾN TRÌNH VẬN CHUYỂN VIP:
+                          </span>
+                          <span style={{ fontSize: '0.75rem', color: sIdx === 6 ? '#28a745' : 'var(--gold-primary)', fontWeight: 800 }}>
+                            Chặng {sIdx}/6 {sIdx === 6 ? '• Hoàn Tất Bàn Giao' : '• Đang Tiến Hành'}
+                          </span>
+                        </div>
+                        <div className="delivery-stepper" style={{ margin: 0, padding: 0 }}>
+                          <div className="delivery-stepper-line" style={{ top: '18px' }}></div>
+                          <div className="delivery-stepper-progress" style={{ top: '18px', width: `${(sIdx - 1) * 20}%` }}></div>
+                          {steps.map(s => {
+                            const isCompleted = sIdx > s.num || (sIdx === 6 && s.num === 6);
+                            const isActive = sIdx === s.num && sIdx !== 6;
+                            return (
+                              <div key={s.num} className={`stepper-step ${isCompleted ? 'completed' : (isActive ? 'active' : '')}`}>
+                                <div className="stepper-icon-circle" style={{ width: '32px', height: '32px', fontSize: '0.78rem' }}>
+                                  <i className={`fa-solid ${isCompleted ? 'fa-check' : s.icon}`}></i>
+                                </div>
+                                <div className="stepper-step-num" style={{ fontSize: '0.65rem' }}>C{s.num}</div>
+                                <div className="stepper-title" style={{ fontSize: '0.7rem' }}>{s.title}</div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })()}
                 </div>
               ))}
             </div>

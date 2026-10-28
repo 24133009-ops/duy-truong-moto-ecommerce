@@ -69,7 +69,7 @@
         </div>
 
         <div class="d-flex flex-column gap-4" th:if="${not #lists.isEmpty(orders)}">
-            <div class="glass-panel p-4 rounded-4" th:each="order : ${orders}" th:with="stName=${order.status.name()}, stepIdx=${stName == 'NOT_PROCESSED' ? 1 : (stName == 'CONFIRMED' ? 2 : (stName == 'PICKED_UP' ? 3 : (stName == 'SHIPPING' ? 4 : (stName == 'DELIVERED' ? 6 : 0))))}">
+            <div class="glass-panel p-4 rounded-4" th:each="order : ${orders}" th:with="stName=${order.status.name()}, stepIdx=${stName == 'NOT_PROCESSED' ? 1 : (stName == 'CONFIRMED' ? 2 : (stName == 'PICKED_UP' ? 3 : (stName == 'SHIPPING' ? 4 : (stName == 'HANDOVER' ? 5 : (stName == 'DELIVERED' ? 6 : 0)))))}">
                 <div class="d-flex flex-wrap justify-content-between align-items-center pb-3 border-bottom border-secondary mb-3">
                     <div>
                         <span class="text-secondary small">MÃ ĐƠN:</span>
@@ -108,7 +108,7 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-4 text-lg-end border-start-lg border-secondary pt-3 pt-lg-0">
+                    <div class="col-lg-4 text-lg-end border-start border-secondary pt-3 pt-lg-0">
                         <div class="text-secondary small">Tổng tiền thu hộ (COD):</div>
                         <div th:if="${!order.isPaidBefore}" class="fs-4 fw-black text-danger mb-3" th:text="${#numbers.formatDecimal(order.amountFromUser, 0, 'POINT', 0, 'COMMA')} + ' đ'"></div>
                         <div th:if="${order.isPaidBefore}" class="fs-5 fw-bold text-success mb-3"><i class="fa-solid fa-check-circle me-1"></i> KHÁCH ĐÃ CỌC ĐẦY ĐỦ</div>
@@ -120,10 +120,17 @@
                             </button>
                         </form>
 
-                        <!-- Chặng 4 -> 5: Xác nhận bàn giao & ký biên bản -->
-                        <form th:if="${order.status.name() == 'SHIPPING'}" th:action="@{/shipper/orders/{id}/deliver(id=${order.id})}" method="post">
+                        <!-- Chặng 4 -> 5: Hạ sàn trượt & test pô -->
+                        <form th:if="${order.status.name() == 'SHIPPING'}" th:action="@{/shipper/orders/{id}/handover(id=${order.id})}" method="post" class="mb-2">
+                            <button type="submit" class="btn btn-info w-100 py-2 fw-bold text-dark shadow">
+                                <i class="fa-solid fa-volume-high me-1"></i> BƯỚC 5: HẠ SÀN TRƯỢT &amp; TEST PÔ
+                            </button>
+                        </form>
+
+                        <!-- Chặng 5 -> 6: Ký biên bản nghiệm thu & kích hoạt bảo hành -->
+                        <form th:if="${order.status.name() == 'HANDOVER'}" th:action="@{/shipper/orders/{id}/deliver(id=${order.id})}" method="post">
                             <button type="submit" class="btn btn-success w-100 py-2 fw-bold shadow">
-                                <i class="fa-solid fa-key me-1"></i> BƯỚC 5: XÁC NHẬN BÀN GIAO &amp; KÝ NGHIỆM THU
+                                <i class="fa-solid fa-key me-1"></i> BƯỚC 6: KÝ BIÊN BẢN &amp; BẢO HÀNH 3 NĂM
                             </button>
                         </form>
 
@@ -196,17 +203,17 @@
                         <!-- Chặng 5 -->
                         <div class="stepper-step" th:classappend="${stepIdx > 5 ? 'completed' : (stepIdx == 5 ? 'active' : '')}">
                             <div class="stepper-icon-circle" style="width: 36px; height: 36px; font-size: 0.85rem;">
-                                <i th:class="${stepIdx > 5 ? 'fa-solid fa-check' : 'fa-solid fa-key'}"></i>
+                                <i th:class="${stepIdx > 5 ? 'fa-solid fa-check' : 'fa-solid fa-volume-high'}"></i>
                             </div>
                             <div class="stepper-step-num">C5</div>
-                            <div class="stepper-title" style="font-size: 0.72rem;">Bàn Giao Xe</div>
-                            <div class="stepper-desc" style="font-size: 0.62rem;">Ký biên bản nhận xe</div>
+                            <div class="stepper-title" style="font-size: 0.72rem;">Bàn Giao &amp; Test Pô</div>
+                            <div class="stepper-desc" style="font-size: 0.62rem;">Hạ sàn &amp; nổ máy</div>
                         </div>
 
                         <!-- Chặng 6 -->
                         <div class="stepper-step" th:classappend="${stepIdx >= 6 ? 'completed' : ''}">
                             <div class="stepper-icon-circle" style="width: 36px; height: 36px; font-size: 0.85rem;">
-                                <i class="fa-solid fa-shield-halved"></i>
+                                <i th:class="${stepIdx >= 6 ? 'fa-solid fa-check' : 'fa-solid fa-shield-halved'}"></i>
                             </div>
                             <div class="stepper-step-num">C6</div>
                             <div class="stepper-title" style="font-size: 0.72rem;">Bảo Hành 3 Năm</div>

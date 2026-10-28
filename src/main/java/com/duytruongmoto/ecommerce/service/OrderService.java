@@ -160,8 +160,8 @@ public class OrderService {
             if (order.getShipper() == null) {
                 order.setShipper(actor);
             }
-            if (newStatus != OrderStatus.SHIPPING && newStatus != OrderStatus.DELIVERED) {
-                throw new IllegalArgumentException("Tài xế giao nhận chỉ có quyền cập nhật trạng thái Đang giao hoặc Đã bàn giao!");
+            if (newStatus != OrderStatus.SHIPPING && newStatus != OrderStatus.HANDOVER && newStatus != OrderStatus.DELIVERED) {
+                throw new IllegalArgumentException("Tài xế giao nhận chỉ có quyền cập nhật trạng thái: Vận chuyển, Bàn giao hoặc Đã giao hoàn tất!");
             }
             if (newStatus == OrderStatus.DELIVERED) {
                 order.setIsPaidBefore(true);
