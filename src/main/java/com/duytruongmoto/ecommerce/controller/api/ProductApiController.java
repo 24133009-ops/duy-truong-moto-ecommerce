@@ -157,6 +157,40 @@ public class ProductApiController {
         }
     }
 
+
+    @PostMapping("/{id}/negotiate")
+    public ResponseEntity<?> negotiatePrice(
+            @PathVariable Long id,
+            @RequestBody Map<String, Object> req) {
+
+        Optional<Product> prodOpt = productRepository.findById(id);
+        if (prodOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Product product = prodOpt.get();
+        if (!req.containsKey("proposedPrice")) {
+            return ResponseEntity.badRequest().body(Map.of("accepted", false, "message", "Vui lòng nhập mức giá đề xuất bớt lộc!"));
+        }
+
+        BigDecimal proposedPrice = new BigDecimal(req.get("proposedPrice").toString());
+        BigDecimal floorPrice = product.getFloorPrice() != null ? product.getFloorPrice() : product.getPrice().multiply(BigDecimal.valueOf(0.90));
+
+        if (proposedPrice.compareTo(floorPrice) < 0) {
+            return ResponseEntity.ok(Map.of(
+                    "accepted", false,
+                    "floorPrice", floorPrice,
+                    "message", "Mức giá đề xuất thấp hơn giá sàn tối thiểu của Showroom. Showroom chưa thể chốt giá này!"
+            ));
+        }
+
+        return ResponseEntity.ok(Map.of(
+                "accepted", true,
+                "negotiatedPrice", proposedPrice,
+                "message", "Showroom chấp thuận mức giá bớt lộc! Quý khách có thể tiến hành đặt cọc ngay."
+        ));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
         if (!productRepository.existsById(id)) {

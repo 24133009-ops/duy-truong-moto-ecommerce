@@ -196,7 +196,17 @@ public class CheckoutController {
         Order order = orderService.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Đơn hàng không tồn tại"));
 
-        model.addAttribute("currentUser", userDetails.getUser());
+        User currentUser = userDetails.getUser();
+        boolean isOwner = order.getUser() != null && order.getUser().getId().equals(currentUser.getId());
+        boolean isAdmin = currentUser.getRole() == Role.ROLE_ADMIN || currentUser.getRole() == Role.ROLE_MANAGER;
+        boolean isStoreOwner = order.getStore() != null && order.getStore().getOwner() != null && order.getStore().getOwner().getId().equals(currentUser.getId());
+        boolean isAssignedShipper = order.getShipper() != null && order.getShipper().getId().equals(currentUser.getId());
+
+        if (!isOwner && !isAdmin && !isStoreOwner && !isAssignedShipper) {
+            throw new org.springframework.security.access.AccessDeniedException("Bạn không có quyền truy cập thông tin đơn hàng này!");
+        }
+
+        model.addAttribute("currentUser", currentUser);
         model.addAttribute("order", order);
 
         return "client/order-detail";
@@ -212,15 +222,25 @@ public class CheckoutController {
             return "redirect:/auth/login";
         }
 
-        Order order = orderService.findById(id).orElse(null);
-        if (order != null && order.getUser().getId().equals(userDetails.getUser().getId())) {
-            if (order.getStatus() == OrderStatus.NOT_PROCESSED) {
-                orderService.updateOrderStatus(id, OrderStatus.CANCELLED);
-                redirectAttributes.addFlashAttribute("successMessage", "Hủy đơn hàng thành công!");
-            } else {
-                redirectAttributes.addFlashAttribute("errorMessage", "Đơn hàng đã được Showroom xử lý, không thể hủy!");
-            }
+        Order order = orderService.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Đơn hàng không tồn tại"));
+
+        User currentUser = userDetails.getUser();
+        boolean isOwner = order.getUser() != null && order.getUser().getId().equals(currentUser.getId());
+        boolean isAdmin = currentUser.getRole() == Role.ROLE_ADMIN || currentUser.getRole() == Role.ROLE_MANAGER;
+
+        if (!isOwner && !isAdmin) {
+            throw new org.springframework.security.access.AccessDeniedException("Bạn không có quyền hủy đơn hàng của người khác!");
         }
+
+        // Khách hàng hủy chỉ trước khi đơn được bàn giao cho shipper lấy hàng
+        if (order.getStatus() == OrderStatus.NOT_PROCESSED || order.getStatus() == OrderStatus.CONFIRMED) {
+            orderService.updateOrderStatus(id, OrderStatus.CANCELLED);
+            redirectAttributes.addFlashAttribute("successMessage", "Hủy đơn hàng thành công!");
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "Đơn hàng đã được xuất kho hoặc đang vận chuyển, không thể hủy!");
+        }
+
         return "redirect:/orders/" + id;
     }
 }

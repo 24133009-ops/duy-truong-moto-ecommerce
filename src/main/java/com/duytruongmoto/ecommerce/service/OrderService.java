@@ -96,6 +96,12 @@ public class OrderService {
         Order savedOrder = orderRepository.save(order);
 
         for (CartItem item : cart.getItems()) {
+            // Kiểm tra số lượng tồn kho trước khi trừ
+            Product product = item.getProduct();
+            if (product.getQuantity() < item.getCount()) {
+                throw new IllegalStateException("Sản phẩm '" + product.getName() + "' trong kho không đủ số lượng yêu cầu!");
+            }
+
             OrderItem orderItem = OrderItem.builder()
                     .order(savedOrder)
                     .product(item.getProduct())
@@ -106,7 +112,6 @@ public class OrderService {
             orderItemRepository.save(orderItem);
 
             // Cập nhật số lượng bán và tồn kho
-            Product product = item.getProduct();
             product.setSold(product.getSold() + item.getCount());
             product.setQuantity(Math.max(0, product.getQuantity() - item.getCount()));
             productRepository.save(product);
@@ -122,7 +127,55 @@ public class OrderService {
     public void updateOrderStatus(Long orderId, OrderStatus status) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Đơn hàng không tồn tại"));
+        OrderStatus oldStatus = order.getStatus();
         order.setStatus(status);
+        String historyEntry = "\n[" + LocalDateTime.now() + "] Trạng thái: " + oldStatus + " -> " + status;
+        order.setNote((order.getNote() != null ? order.getNote() : "") + historyEntry);
+        order.setUpdatedAt(LocalDateTime.now());
+        orderRepository.save(order);
+    }
+
+    @Transactional
+    public void updateOrderStatusWithRoleCheck(Long orderId, OrderStatus newStatus, User actor) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Đơn hàng không tồn tại"));
+
+        if (actor == null) {
+            throw new org.springframework.security.access.AccessDeniedException("Yêu cầu xác thực tài khoản!");
+        }
+
+        Role role = actor.getRole();
+        OrderStatus currentStatus = order.getStatus();
+
+        if (role == Role.ROLE_ADMIN || role == Role.ROLE_MANAGER) {
+            // Admin có toàn quyền can thiệp, duyệt hoàn tiền hoặc hủy đơn
+        } else if (role == Role.ROLE_VENDOR) {
+            if (order.getStore() == null || order.getStore().getOwner() == null || !order.getStore().getOwner().getId().equals(actor.getId())) {
+                throw new org.springframework.security.access.AccessDeniedException("Bạn không có quyền chuyển trạng thái đơn hàng của Showroom khác!");
+            }
+            if (newStatus != OrderStatus.CONFIRMED && newStatus != OrderStatus.PREPARING && newStatus != OrderStatus.PICKED_UP && newStatus != OrderStatus.CANCELLED) {
+                throw new IllegalArgumentException("Quản lý Showroom không có quyền chuyển đơn sang trạng thái: " + newStatus.getDisplayName());
+            }
+        } else if (role == Role.ROLE_SHIPPER) {
+            if (newStatus != OrderStatus.SHIPPING && newStatus != OrderStatus.DELIVERED) {
+                throw new IllegalArgumentException("Tài xế giao nhận chỉ có quyền cập nhật trạng thái Đang giao hoặc Đã bàn giao!");
+            }
+            if (newStatus == OrderStatus.DELIVERED) {
+                order.setIsPaidBefore(true);
+            }
+        } else {
+            if (newStatus == OrderStatus.CANCELLED) {
+                if (currentStatus != OrderStatus.NOT_PROCESSED && currentStatus != OrderStatus.CONFIRMED) {
+                    throw new IllegalStateException("Đơn hàng đã xuất kho hoặc đang vận chuyển, không thể hủy!");
+                }
+            } else {
+                throw new org.springframework.security.access.AccessDeniedException("Khách hàng chỉ có quyền yêu cầu hủy đơn hàng!");
+            }
+        }
+
+        order.setStatus(newStatus);
+        String historyEntry = "\n[" + LocalDateTime.now() + " - " + role.name() + " (" + actor.getEmail() + ")] Chuyển trạng thái: " + currentStatus + " -> " + newStatus;
+        order.setNote((order.getNote() != null ? order.getNote() : "") + historyEntry);
         order.setUpdatedAt(LocalDateTime.now());
         orderRepository.save(order);
     }

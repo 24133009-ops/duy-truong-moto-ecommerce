@@ -59,12 +59,15 @@ public class Voucher {
     private Boolean isDeleted = false;
 
     public boolean isValid() {
-        if (Boolean.TRUE.equals(isDeleted)) return false;
+        if (Boolean.TRUE.equals(isDeleted))
+            return false;
         LocalDateTime now = LocalDateTime.now();
-        if (startDate != null && now.isBefore(startDate)) return false;
-        if (endDate != null && now.isAfter(endDate)) return false;
-        if (usageLimit != null && usedCount != null && usedCount >= usageLimit) return false;
+        if (startDate != null && now.isBefore(startDate))
+            return false;
+        if (endDate != null && now.isAfter(endDate))
+            return false;
+        if (usageLimit != null && usedCount != null && usedCount >= usageLimit)
+            return false;
         return true;
     }
 }
-

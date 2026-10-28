@@ -42,6 +42,12 @@ public class Product {
     @Column(precision = 18, scale = 2)
     private BigDecimal promotionalPrice; // Gia khuyen mai
 
+    @Column(precision = 18, scale = 2)
+    private BigDecimal floorPrice; // Gia san toi thieu cho phep thuong luong bot loc
+
+    @Version
+    private Long version; // Optimistic locking chong mua trung khi 2 nguoi cung coc
+
     @Builder.Default
     @Column(nullable = false)
     private Integer quantity = 1; // So luong ton kho showroom

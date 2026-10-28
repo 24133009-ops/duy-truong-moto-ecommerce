@@ -40,29 +40,29 @@
                 </div>
             </div>
 
-            <button type="button" class="vk-menu-item" id="btnTabGear" onclick="switchMegaTab('do-bao-ho')">
-                <span class="tab-dash d-none" style="color: #ffd700;">–</span> ĐỒ BẢO HỘ
-            </button>
-            <button type="button" class="vk-menu-item" id="btnTabParts" onclick="switchMegaTab('gear-parts')">
-                <span class="tab-dash d-none" style="color: #ffd700;">–</span> PHỤ TÙNG XE
-            </button>
             <button type="button" class="vk-menu-item" id="btnTabMotor" onclick="switchMegaTab('motor')">
                 <span class="tab-dash d-none" style="color: #ffd700;">–</span> MÔ TÔ PKL
             </button>
             <button type="button" class="vk-menu-item" id="btnTabXeNho" onclick="switchMegaTab('xenho')">
                 <span class="tab-dash d-none" style="color: #ffd700;">–</span> XE SƯU TẦM
             </button>
-            <button type="button" class="vk-menu-item" onclick="alert('Hotline Đặt Lịch Lái Thử VIP: 0903.456.789')">
-                BOOKING
+            <button type="button" class="vk-menu-item" id="btnTabPhuKien" onclick="switchMegaTab('phukien')">
+                <span class="tab-dash d-none" style="color: #ffd700;">–</span> ĐỒ BẢO HỘ & PHỤ KIỆN
             </button>
-            <button type="button" class="vk-menu-item" onclick="alert('Dịch Vụ: Cứu hộ sàn trượt VIP 24/7, Giao xe tận nhà, Sang tên HQCN!')">
+            <button type="button" class="vk-menu-item" id="btnTabOto" onclick="switchMegaTab('oto')">
+                <span class="tab-dash d-none" style="color: #ffd700;">–</span> SIÊU XE Ô TÔ
+            </button>
+            <a href="#servicesSection" class="vk-menu-item" onclick="smoothScroll('servicesSection', event)">
                 DỊCH VỤ
-            </button>
-            <button type="button" class="vk-menu-item" onclick="alert('Blog: Cập nhật tin tức mô tô PKL & siêu xe mới nhất!')">
-                BLOG
-            </button>
-            <a th:href="@{/products}" class="vk-menu-item">
-                LIÊN HỆ
+            </a>
+            <a href="#contactSection" class="vk-menu-item" onclick="smoothScroll('contactSection', event)">
+                BOOKING & LÁI THỬ
+            </a>
+            <a href="#blogSection" class="vk-menu-item" onclick="smoothScroll('blogSection', event)">
+                BLOG BIKER
+            </a>
+            <a href="#contactSection" class="vk-menu-item" onclick="smoothScroll('contactSection', event)">
+                LIÊN HỆ SHOWROOM
             </a>
         </div>
 
@@ -234,6 +234,12 @@
 
     <script>
         let currentActiveMegaTab = null;
+        const tabMapping = {
+            'motor': { btn: 'btnTabMotor', content: 'contentMotor' },
+            'xenho': { btn: 'btnTabXeNho', content: 'contentXeNho' },
+            'phukien': { btn: 'btnTabPhuKien', content: 'contentPhuKien' },
+            'oto': { btn: 'btnTabOto', content: 'contentOto' }
+        };
 
         function switchMegaTab(tabKey) {
             const panel = document.getElementById('megaFrostedPanel');
@@ -245,23 +251,22 @@
             currentActiveMegaTab = tabKey;
             if (panel) panel.classList.remove('d-none');
 
-            const tabs = ['motor', 'oto', 'xenho', 'phukien'];
-            tabs.forEach(t => {
-                const btn = document.getElementById('btnTab' + t.charAt(0).toUpperCase() + t.slice(1));
-                const content = document.getElementById('content' + t.charAt(0).toUpperCase() + t.slice(1));
+            Object.keys(tabMapping).forEach(key => {
+                const config = tabMapping[key];
+                const btn = document.getElementById(config.btn);
+                const content = document.getElementById(config.content);
                 if (btn) {
-                    if (t === tabKey) {
+                    const dash = btn.querySelector('.tab-dash');
+                    if (key === tabKey) {
                         btn.classList.add('active');
-                        const dash = btn.querySelector('.tab-dash');
                         if (dash) dash.classList.remove('d-none');
                     } else {
                         btn.classList.remove('active');
-                        const dash = btn.querySelector('.tab-dash');
                         if (dash) dash.classList.add('d-none');
                     }
                 }
                 if (content) {
-                    if (t === tabKey) content.classList.remove('d-none');
+                    if (key === tabKey) content.classList.remove('d-none');
                     else content.classList.add('d-none');
                 }
             });
@@ -271,17 +276,26 @@
             currentActiveMegaTab = null;
             const panel = document.getElementById('megaFrostedPanel');
             if (panel) panel.classList.add('d-none');
-            const tabs = ['motor', 'oto', 'xenho', 'phukien'];
-            tabs.forEach(t => {
-                const btn = document.getElementById('btnTab' + t.charAt(0).toUpperCase() + t.slice(1));
+            Object.keys(tabMapping).forEach(key => {
+                const config = tabMapping[key];
+                const btn = document.getElementById(config.btn);
+                const content = document.getElementById(config.content);
                 if (btn) {
                     btn.classList.remove('active');
                     const dash = btn.querySelector('.tab-dash');
                     if (dash) dash.classList.add('d-none');
                 }
-                const content = document.getElementById('content' + t.charAt(0).toUpperCase() + t.slice(1));
                 if (content) content.classList.add('d-none');
             });
+        }
+
+        function smoothScroll(sectionId, event) {
+            if (event) event.preventDefault();
+            closeMegaPanel();
+            const elem = document.getElementById(sectionId);
+            if (elem) {
+                elem.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
         }
     </script>
 

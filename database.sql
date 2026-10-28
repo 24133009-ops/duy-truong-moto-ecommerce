@@ -125,6 +125,8 @@ CREATE TABLE IF NOT EXISTS products (
     description TEXT,
     price DECIMAL(18,2) NOT NULL,
     promotional_price DECIMAL(18,2),
+    floor_price DECIMAL(18,2),
+    version BIGINT DEFAULT 0,
     quantity INT NOT NULL DEFAULT 1,
     sold INT NOT NULL DEFAULT 0,
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
@@ -179,7 +181,7 @@ CREATE TABLE IF NOT EXISTS order_items (
 );
 
 -- =============================================================================
--- DỮ LIỆU KHỞI TẠO CHUẨN (MẬT KHẨU MÃ HÓA BCRYPT: $2a$10$...)
+-- DỮ LIỆU KHỞI TẠO CHUẨN (MẬT KHẨU MÃ HÓA BCRYPT CHUẨN XÁC)
 -- =============================================================================
 
 -- Dữ liệu cấp bậc
@@ -191,18 +193,18 @@ INSERT INTO user_levels (id, name, min_point, discount) VALUES
 
 -- Dữ liệu tài khoản mẫu chuẩn 4 Roles:
 -- 1. Admin: admin@duytruongmoto.com / admin123
--- 2. Vendor Cầu Giấy: dotrongkhoi2002@gmail.com / vendor123
--- 3. Vendor Hải Châu: nghiatinh2002@gmail.com / vendor123
--- 4. Vendor Phú Nhuận: vendor@duytruongmoto.com / vendor123
+-- 2. Vendor Cầu Giấy HN: dotrongkhoi2002@gmail.com / vendor123
+-- 3. Vendor Hải Châu ĐN: nghiatinh2002@gmail.com / vendor123
+-- 4. Vendor Phú Nhuận TP.HCM: vendor@duytruongmoto.com / vendor123
 -- 5. Shipper: shipper@duytruongmoto.com / shipper123
 -- 6. Customer: customer@duytruongmoto.com / customer123
 INSERT INTO users (id, firstname, lastname, slug, email, phone, password, role, is_email_active, is_phone_active, is_blocked) VALUES
-(1, 'Duy', 'Trương Quốc', 'duy-truong-admin', 'admin@duytruongmoto.com', '0909111999', '$2a$10$vI8aWBnW3fID.3G1.7tXy.k0QzTfHj8Yj8N5V3sQhF2Q2C.vA2K6m', 'ROLE_ADMIN', TRUE, TRUE, FALSE),
-(2, 'Khôi', 'Đỗ Trọng', 'do-trong-khoi', 'dotrongkhoi2002@gmail.com', '0903112002', '$2a$10$eEfxI0F.m2pU5P.k2p9fheF.o9tH6bF8j3H0k6y0Z9w1Q4V7c5j4O', 'ROLE_VENDOR', TRUE, TRUE, FALSE),
-(3, 'Tình', 'Lê Nghĩa', 'le-nghia-tinh', 'nghiatinh2002@gmail.com', '0905112002', '$2a$10$eEfxI0F.m2pU5P.k2p9fheF.o9tH6bF8j3H0k6y0Z9w1Q4V7c5j4O', 'ROLE_VENDOR', TRUE, TRUE, FALSE),
-(4, 'Minh', 'Showroom Phú Nhuận', 'minh-showroom-phunhuan', 'vendor@duytruongmoto.com', '0903111222', '$2a$10$eEfxI0F.m2pU5P.k2p9fheF.o9tH6bF8j3H0k6y0Z9w1Q4V7c5j4O', 'ROLE_VENDOR', TRUE, TRUE, FALSE),
-(5, 'Tuấn', 'Vận Chuyển', 'tuan-shipper', 'shipper@duytruongmoto.com', '0904333444', '$2a$10$aE5W2A.3J.rE7m2fU5y7.e7W.K3Z1x9P.k7k6k5j4j3j2j1j0Z9w1', 'ROLE_SHIPPER', TRUE, TRUE, FALSE),
-(6, 'Hoàng', 'Biker VIP', 'customer@duytruongmoto.com', '0905555777', '$2a$10$bF6X3B.4K.sF8n3gV6z8.f8X.L4A2y0Q.l8l7l6k5k4k3k2k1a0x2', 'ROLE_USER', TRUE, TRUE, FALSE);
+(1, 'Duy', 'Trương Quốc', 'duy-truong-admin', 'admin@duytruongmoto.com', '0909111999', '$2a$10$bLMFToOHpuuZO3bC10vz5O0NDxYOwQleESjt1uXtkS1gWWUu4M8sm', 'ROLE_ADMIN', TRUE, TRUE, FALSE),
+(2, 'Khôi', 'Đỗ Trọng', 'do-trong-khoi', 'dotrongkhoi2002@gmail.com', '0903112002', '$2a$10$RzPVlnUDf7oUTBN5wgh5WeirvjyGsp0TISF190bhBUWC9h7eRKVGG', 'ROLE_VENDOR', TRUE, TRUE, FALSE),
+(3, 'Tình', 'Lê Nghĩa', 'le-nghia-tinh', 'nghiatinh2002@gmail.com', '0905112002', '$2a$10$RzPVlnUDf7oUTBN5wgh5WeirvjyGsp0TISF190bhBUWC9h7eRKVGG', 'ROLE_VENDOR', TRUE, TRUE, FALSE),
+(4, 'Minh', 'Showroom Phú Nhuận', 'minh-showroom-phunhuan', 'vendor@duytruongmoto.com', '0903111222', '$2a$10$RzPVlnUDf7oUTBN5wgh5WeirvjyGsp0TISF190bhBUWC9h7eRKVGG', 'ROLE_VENDOR', TRUE, TRUE, FALSE),
+(5, 'Tuấn', 'Vận Chuyển', 'tuan-shipper', 'shipper@duytruongmoto.com', '0904333444', '$2a$10$14c9rDpu5SMJ4r4rIDqtRuAPJHbiccgA0erbHmDs74DT/2OSu9VUO', 'ROLE_SHIPPER', TRUE, TRUE, FALSE),
+(6, 'Hoàng', 'Biker VIP', 'customer@duytruongmoto.com', '0905555777', '$2a$10$JX3V3AINRTAPK5keM21Te..5SIVCj2UVVb8hgFRQtUJTdp7rnHAwO', 'ROLE_USER', TRUE, TRUE, FALSE);
 
 -- Chính sách chiết khấu hoa hồng
 INSERT INTO commissions (id, name, cost, description) VALUES
@@ -226,4 +228,3 @@ INSERT INTO vouchers (id, code, name, description, discount_percent, max_discoun
 (1, 'BIKERVIP', 'Ưu đãi khách hàng thân thiết Biker VIP', 'Giảm 5% tối đa 30.000.000 đ cho các dòng mô tô phân khối lớn', 5, 30000000.00, 200000000.00, 100, 5),
 (2, 'FREESHIP-VIP', 'Miễn phí 100% chi phí xe sàn trượt VIP', 'Hỗ trợ chi phí xe sàn trượt thủy lực VIP tận nhà cho khách hàng đặt cọc', 100, 2000000.00, 100000000.00, 200, 12),
 (3, 'BAOHO-500K', 'Voucher Phụ Kiện Đồ Bảo Hộ', 'Giảm ngay 500.000 đ khi mua nón AGV, giáp Dainese hoặc găng Alpinestars', 10, 500000.00, 5000000.00, 500, 38);
-

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -102,7 +103,6 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-
     @Transactional
     public Product updateProduct(Long productId, Long storeId, Long categoryId, String name, String slug,
                                  String description, BigDecimal price, BigDecimal promotionalPrice,
@@ -110,7 +110,7 @@ public class ProductService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("Sản phẩm không tồn tại!"));
         if (!product.getStore().getId().equals(storeId)) {
-            throw new IllegalArgumentException("Bạn không có quyền sửa sản phẩm của showroom khác!");
+            throw new AccessDeniedException("Bạn không có quyền sửa sản phẩm của showroom khác!");
         }
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new IllegalArgumentException("Danh mục không tồn tại!"));
@@ -136,18 +136,20 @@ public class ProductService {
     public void toggleSelling(Long productId, Long storeId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("Sản phẩm không tồn tại!"));
-        if (product.getStore().getId().equals(storeId)) {
-            product.setIsSelling(!product.getIsSelling());
-            productRepository.save(product);
+        if (!product.getStore().getId().equals(storeId)) {
+            throw new AccessDeniedException("Bạn không có quyền thay đổi trạng thái sản phẩm của showroom khác!");
         }
+        product.setIsSelling(!product.getIsSelling());
+        productRepository.save(product);
     }
 
     @Transactional
     public void deleteProduct(Long productId, Long storeId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("Sản phẩm không tồn tại!"));
-        if (product.getStore().getId().equals(storeId)) {
-            productRepository.delete(product);
+        if (!product.getStore().getId().equals(storeId)) {
+            throw new AccessDeniedException("Bạn không có quyền xóa sản phẩm của showroom khác!");
         }
+        productRepository.delete(product);
     }
 }

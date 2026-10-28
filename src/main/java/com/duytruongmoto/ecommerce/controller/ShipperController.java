@@ -74,7 +74,7 @@ public class ShipperController {
         if (userDetails == null) return "redirect:/auth/login";
 
         try {
-            orderService.updateOrderStatus(id, OrderStatus.DELIVERED);
+            orderService.updateOrderStatusWithRoleCheck(id, OrderStatus.DELIVERED, userDetails.getUser());
             redirectAttributes.addFlashAttribute("successMessage", "Xác nhận bàn giao xe và giấy tờ cho khách hàng thành công!");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());

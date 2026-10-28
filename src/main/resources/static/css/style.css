@@ -1156,3 +1156,32 @@ label,
 
 
 
+
+/* ==============================================================
+   RESPONSIVE FIX FOR 375px (MOBILE IPHONE MINI / SE) & TABLETS
+   ============================================================== */
+@media (max-width: 576px) {
+    .navbar-brand-logo .brand-text {
+        font-size: 1.15rem !important;
+    }
+    .navbar-brand-logo .logo-icon {
+        width: 34px !important;
+        height: 34px !important;
+        font-size: 16px !important;
+    }
+    .navbar-brand-logo div div {
+        display: none !important;
+    }
+    .top-bar-role-switcher {
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding-bottom: 4px !important;
+    }
+    .top-bar-role-switcher::-webkit-scrollbar {
+        display: none;
+    }
+    .navbar-luxury {
+        padding: 8px 0 !important;
+    }
+}

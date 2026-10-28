@@ -156,6 +156,7 @@ public class DataInitializer implements CommandLineRunner {
                 user.setFirstname(firstname);
                 user.setLastname(lastname);
                 user.setRole(role);
+                user.setIsBlocked(false);
                 user.setIsEmailActive(true);
                 user.setIsPhoneActive(true);
                 user.setUserLevel(userLevel);
@@ -172,11 +173,41 @@ public class DataInitializer implements CommandLineRunner {
 
     private void cleanupDuplicateUsers() {
         try {
-            userRepository.findByEmail("duytq4906@gmail.com").ifPresent(userRepository::delete);
-            userRepository.findByEmail("shipper@duytruongmotor.com").ifPresent(userRepository::delete);
-            userRepository.findByEmail("customer@gmail.com").ifPresent(userRepository::delete);
-            userRepository.findByEmail("admin@duytruongmotor.com").ifPresent(userRepository::delete);
-            userRepository.findByEmail("vendor@duytruongmotor.com").ifPresent(userRepository::delete);
+            User admin = userRepository.findByEmail("admin@duytruongmoto.com").orElse(null);
+            User vendorMinh = userRepository.findByEmail("vendor@duytruongmoto.com").orElse(admin);
+            User shipperTuan = userRepository.findByEmail("shipper@duytruongmoto.com").orElse(admin);
+            User customerHoang = userRepository.findByEmail("customer@duytruongmoto.com").orElse(admin);
+
+            // Reassign and delete old duplicate @duytruongmotor.com or duytq4906 accounts safely
+            userRepository.findByEmail("admin@duytruongmotor.com").ifPresent(u -> {
+                orderRepository.findAll().stream().filter(o -> o.getUser() != null && o.getUser().getId().equals(u.getId()))
+                        .forEach(o -> { o.setUser(admin); orderRepository.save(o); });
+                try { userRepository.delete(u); } catch (Exception ignored) {}
+            });
+
+            userRepository.findByEmail("vendor@duytruongmotor.com").ifPresent(u -> {
+                storeRepository.findAll().stream().filter(st -> st.getOwner() != null && st.getOwner().getId().equals(u.getId()))
+                        .forEach(st -> { st.setOwner(vendorMinh); storeRepository.save(st); });
+                try { userRepository.delete(u); } catch (Exception ignored) {}
+            });
+
+            userRepository.findByEmail("shipper@duytruongmotor.com").ifPresent(u -> {
+                orderRepository.findAll().stream().filter(o -> o.getShipper() != null && o.getShipper().getId().equals(u.getId()))
+                        .forEach(o -> { o.setShipper(shipperTuan); orderRepository.save(o); });
+                try { userRepository.delete(u); } catch (Exception ignored) {}
+            });
+
+            userRepository.findByEmail("customer@gmail.com").ifPresent(u -> {
+                orderRepository.findAll().stream().filter(o -> o.getUser() != null && o.getUser().getId().equals(u.getId()))
+                        .forEach(o -> { o.setUser(customerHoang); orderRepository.save(o); });
+                try { userRepository.delete(u); } catch (Exception ignored) {}
+            });
+
+            userRepository.findByEmail("duytq4906@gmail.com").ifPresent(u -> {
+                try { userRepository.delete(u); } catch (Exception ignored) {}
+            });
+
+            log.info(">>> Đã dọn dẹp triệt để các tài khoản trùng tên miền @duytruongmotor.com trên database hiện hữu!");
         } catch (Exception ex) {
             log.warn("Lưu ý khi dọn dẹp user trùng lặp: {}", ex.getMessage());
         }
@@ -260,50 +291,58 @@ public class DataInitializer implements CommandLineRunner {
         User vendorTinh = userRepository.findByEmail("nghiatinh2002@gmail.com").orElse(vendorMinh);
         Commission comm = commissionRepository.findAll().stream().findFirst().orElse(null);
 
+        // Showroom 1: Phú Nhuận TP.HCM (Quản lý: Vendor Minh)
         Store s1 = storeRepository.findBySlug("duy-truong-moto-showroom-quan-1").orElseGet(() ->
-            storeRepository.save(Store.builder()
-                .name("Duy Truong Moto - Trụ Sở & Kho Phụ Tùng Phú Nhuận TP.HCM")
-                .slug("duy-truong-moto-showroom-quan-1")
-                .owner(vendorMinh)
-                .bio("Trụ sở chính & kho tổng phụ tùng đồ bảo hộ mô tô lớn nhất miền Nam. Quản lý bởi Minh Showroom Phú Nhuận.")
-                .address("Số 123 Đường Hoàng Văn Thụ, Phường 8, Quận Phú Nhuận, TP. Hồ Chí Minh")
-                .phone("0903.456.789")
-                .avatar("https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=300&q=80")
-                .cover("https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=1200&q=80")
-                .isActive(true).isOpen(true).commission(comm).point(1200L).rating(4.9)
-                .eWallet(BigDecimal.valueOf(120000000)).build())
+            Store.builder().slug("duy-truong-moto-showroom-quan-1").build()
         );
+        s1.setName("Duy Truong Moto - Trụ Sở & Kho Phụ Tùng Phú Nhuận TP.HCM");
+        s1.setOwner(vendorMinh);
+        s1.setBio("Trụ sở chính & kho tổng phụ tùng đồ bảo hộ mô tô lớn nhất miền Nam. Quản lý bởi Minh Showroom Phú Nhuận.");
+        s1.setAddress("Số 123 Đường Hoàng Văn Thụ, Phường 8, Quận Phú Nhuận, TP. Hồ Chí Minh");
+        s1.setPhone("0903.456.789");
+        s1.setAvatar("https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=300&q=80");
+        s1.setCover("https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=1200&q=80");
+        s1.setIsActive(true);
+        s1.setIsOpen(true);
+        s1.setCommission(comm);
+        s1 = storeRepository.save(s1);
         storeMap.put(1, s1);
 
+        // Showroom 2: Cầu Giấy Hà Nội (Quản lý: Đỗ Trọng Khôi)
         Store s2 = storeRepository.findBySlug("duy-truong-moto-showroom-cau-giay").orElseGet(() ->
-            storeRepository.save(Store.builder()
-                .name("Duy Truong Moto - Chi Nhánh & Kho Phụ Tùng Cầu Giấy Hà Nội")
-                .slug("duy-truong-moto-showroom-cau-giay")
-                .owner(vendorKhoi)
-                .bio("Chi nhánh miền Bắc phân phối đồ bảo hộ và phụ tùng xe mô tô. Quản lý bởi Đỗ Trọng Khôi.")
-                .address("Số 168 Đường Trần Duy Hưng, Cầu Giấy, Hà Nội")
-                .phone("024.3999.8888")
-                .avatar("https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=300&q=80")
-                .cover("https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=1200&q=80")
-                .isActive(true).isOpen(true).commission(comm).point(980L).rating(5.0)
-                .eWallet(BigDecimal.valueOf(85000000)).build())
+            Store.builder().slug("duy-truong-moto-showroom-cau-giay").build()
         );
+        s2.setName("Duy Truong Moto - Chi Nhánh & Kho Phụ Tùng Cầu Giấy Hà Nội");
+        s2.setOwner(vendorKhoi);
+        s2.setBio("Chi nhánh miền Bắc phân phối đồ bảo hộ và phụ tùng xe mô tô. Quản lý bởi Đỗ Trọng Khôi.");
+        s2.setAddress("Số 168 Đường Trần Duy Hưng, Cầu Giấy, Hà Nội");
+        s2.setPhone("024.3999.8888");
+        s2.setAvatar("https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=300&q=80");
+        s2.setCover("https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=1200&q=80");
+        s2.setIsActive(true);
+        s2.setIsOpen(true);
+        s2.setCommission(comm);
+        s2 = storeRepository.save(s2);
         storeMap.put(2, s2);
 
+        // Showroom 3: Hải Châu Đà Nẵng (Quản lý: Lê Nghĩa Tình)
         Store s3 = storeRepository.findBySlug("duy-truong-moto-showroom-da-nang").orElseGet(() ->
-            storeRepository.save(Store.builder()
-                .name("Duy Truong Moto - Chi Nhánh & Kho Phụ Tùng Hải Châu Đà Nẵng")
-                .slug("duy-truong-moto-showroom-da-nang")
-                .owner(vendorTinh)
-                .bio("Chi nhánh miền Trung phân phối đồ bảo hộ và phụ tùng xe mô tô. Quản lý bởi Lê Nghĩa Tình.")
-                .address("Số 234 Đường Nguyễn Văn Linh, Hải Châu, Đà Nẵng")
-                .phone("0236.3888.999")
-                .avatar("https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=300&q=80")
-                .cover("https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=1200&q=80")
-                .isActive(true).isOpen(true).commission(comm).point(850L).rating(4.9)
-                .eWallet(BigDecimal.valueOf(60000000)).build())
+            Store.builder().slug("duy-truong-moto-showroom-da-nang").build()
         );
+        s3.setName("Duy Truong Moto - Chi Nhánh & Kho Phụ Tùng Hải Châu Đà Nẵng");
+        s3.setOwner(vendorTinh);
+        s3.setBio("Chi nhánh miền Trung phân phối đồ bảo hộ và phụ tùng xe mô tô. Quản lý bởi Lê Nghĩa Tình.");
+        s3.setAddress("Số 52 Đường Nguyễn Văn Linh, Hải Châu, Đà Nẵng");
+        s3.setPhone("0236.3888.999");
+        s3.setAvatar("https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=300&q=80");
+        s3.setCover("https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=1200&q=80");
+        s3.setIsActive(true);
+        s3.setIsOpen(true);
+        s3.setCommission(comm);
+        s3 = storeRepository.save(s3);
         storeMap.put(3, s3);
+
+        log.info(">>> Đã chuẩn hóa và đồng bộ 3 Showroom (HCM: 0903.456.789, HN: 024.3999.8888, ĐN: 0236.3888.999)!");
         return storeMap;
     }
 

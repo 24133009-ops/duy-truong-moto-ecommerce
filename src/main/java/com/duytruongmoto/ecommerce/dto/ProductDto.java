@@ -25,6 +25,7 @@ public class ProductDto {
     private String storeName;
     private BigDecimal price;
     private BigDecimal promotionalPrice;
+    private BigDecimal floorPrice;
     private String priceDisplay;
     private Integer quantity;
     private Integer sold;
