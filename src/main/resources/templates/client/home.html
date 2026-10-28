@@ -44,13 +44,13 @@
                 <span class="tab-dash d-none" style="color: #ffd700;">–</span> MÔ TÔ PKL
             </button>
             <button type="button" class="vk-menu-item" id="btnTabXeNho" onclick="switchMegaTab('xenho')">
-                <span class="tab-dash d-none" style="color: #ffd700;">–</span> XE SƯU TẦM
+                <span class="tab-dash d-none" style="color: #ffd700;">–</span> CÀO CÀO &amp; ADVENTURE
             </button>
             <button type="button" class="vk-menu-item" id="btnTabPhuKien" onclick="switchMegaTab('phukien')">
-                <span class="tab-dash d-none" style="color: #ffd700;">–</span> ĐỒ BẢO HỘ & PHỤ KIỆN
+                <span class="tab-dash d-none" style="color: #ffd700;">–</span> ĐỒ BẢO HỘ CHÍNH HÃNG
             </button>
             <button type="button" class="vk-menu-item" id="btnTabOto" onclick="switchMegaTab('oto')">
-                <span class="tab-dash d-none" style="color: #ffd700;">–</span> SIÊU XE Ô TÔ
+                <span class="tab-dash d-none" style="color: #ffd700;">–</span> PÔ ĐỘ &amp; ĐỒ CHƠI XE
             </button>
             <a href="#servicesSection" class="vk-menu-item" onclick="smoothScroll('servicesSection', event)">
                 DỊCH VỤ
@@ -71,42 +71,36 @@
             <div class="text-end mb-2">
                 <button type="button" class="btn btn-sm btn-light rounded-circle shadow-sm fw-bold px-2 py-1" onclick="closeMegaPanel()" title="Đóng menu">✕</button>
             </div>
-            <!-- Ô TÔ Brands -->
+            <!-- PÔ ĐỘ & ĐỒ CHƠI CAO CẤP -->
             <div id="contentOto" class="mega-content-box d-none">
                 <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary border-opacity-25">
-                    <div class="fw-bold fs-5 text-white"><i class="fa-solid fa-car-side text-gold me-2"></i> BỘ SƯU TẬP SIÊU XE Ô TÔ &amp; XE SANG</div>
-                    <a th:href="@{/products}" class="btn btn-warning btn-sm fw-bold px-3 text-dark rounded-pill">Xem Tất Cả Xe <i class="fa-solid fa-arrow-right ms-1"></i></a>
+                    <div class="fw-bold fs-5 text-white"><i class="fa-solid fa-fire text-gold me-2"></i> BỘ SƯU TẬP PÔ ĐỘ &amp; PHỤ TÙNG NÂNG CẤP CAO CẤP</div>
+                    <a th:href="@{/products(category='gear-parts')}" class="btn btn-warning btn-sm fw-bold px-3 text-dark rounded-pill">Xem Tất Cả Phụ Tùng <i class="fa-solid fa-arrow-right ms-1"></i></a>
                 </div>
-                <div class="vk-brands-grid cols-4">
+                <div class="vk-brands-grid cols-3">
                     <div class="d-flex flex-column gap-2">
-                        <a th:href="@{/products(brand='Lamborghini')}" class="vk-brand-link">LAMBORGHINI</a>
-                        <a th:href="@{/products(brand='Chevrolet')}" class="vk-brand-link">CHEVROLET</a>
-                        <a th:href="@{/products(brand='VinFast')}" class="vk-brand-link">VINFAST</a>
-                        <a th:href="@{/products(brand='Mazda')}" class="vk-brand-link">MAZDA</a>
-                        <a th:href="@{/products(brand='Ford')}" class="vk-brand-link">FORD</a>
-                        <a th:href="@{/products(brand='BMW')}" class="vk-brand-link">BMW</a>
+                        <div class="fw-bold text-gold small border-bottom border-secondary pb-1"><i class="fa-solid fa-volume-high me-1"></i> HỆ THỐNG PÔ ĐỘ CHÍNH HÃNG</div>
+                        <a th:href="@{/products(brand='Akrapovic')}" class="vk-brand-link">PÔ AKRAPOVIC TITANIUM</a>
+                        <a th:href="@{/products(brand='SC Project')}" class="vk-brand-link">PÔ SC-PROJECT SC1-R / CR-T</a>
+                        <a th:href="@{/products(brand='Austin Racing')}" class="vk-brand-link">PÔ AUSTIN RACING GP1R</a>
+                        <a th:href="@{/products(brand='Yoshimura')}" class="vk-brand-link">PÔ YOSHIMURA R-77 RACING</a>
+                        <a th:href="@{/products(brand='Arrow')}" class="vk-brand-link">PÔ ARROW SPECIAL PARTS</a>
                     </div>
                     <div class="d-flex flex-column gap-2">
-                        <a th:href="@{/products(brand='Mercedes')}" class="vk-brand-link">MERCEDES BENZ</a>
-                        <a th:href="@{/products(brand='Porsche')}" class="vk-brand-link">PORSCHE</a>
-                        <a th:href="@{/products(brand='Toyota')}" class="vk-brand-link">TOYOTA</a>
-                        <a th:href="@{/products(brand='Honda')}" class="vk-brand-link">HONDA</a>
-                        <a th:href="@{/products(brand='Jeep')}" class="vk-brand-link">JEEP</a>
-                        <a th:href="@{/products(brand='Kia')}" class="vk-brand-link">KIA</a>
+                        <div class="fw-bold text-gold small border-bottom border-secondary pb-1"><i class="fa-solid fa-wrench me-1"></i> PHUỘC NHÚN &amp; HỆ THỐNG PHANH</div>
+                        <a th:href="@{/products(brand='Ohlins')}" class="vk-brand-link">PHUỘC OHLINS FGR / TTX FLOW</a>
+                        <a th:href="@{/products(brand='Brembo')}" class="vk-brand-link">HEO DẦU BREMBO GP4-RX BILLET</a>
+                        <a th:href="@{/products(brand='Brembo')}" class="vk-brand-link">TAY THẮNG BREMBO CORSA CORTA</a>
+                        <a th:href="@{/products(brand='Galfer')}" class="vk-brand-link">ĐĨA THẮNG GALFER RACING WAVE</a>
+                        <a th:href="@{/products(brand='Nitron')}" class="vk-brand-link">PHUỘC SAU NITRON RACING PRO</a>
                     </div>
                     <div class="d-flex flex-column gap-2">
-                        <a th:href="@{/products(brand='Volkswagen')}" class="vk-brand-link">VOLKSWAGEN</a>
-                        <a th:href="@{/products(brand='Hyundai')}" class="vk-brand-link">HYUNDAI</a>
-                        <a th:href="@{/products(brand='Jaguar')}" class="vk-brand-link">JAGUAR</a>
-                        <a th:href="@{/products(brand='Volvo')}" class="vk-brand-link">VOLVO</a>
-                        <a th:href="@{/products(brand='Mini')}" class="vk-brand-link">MINI</a>
-                    </div>
-                    <div class="d-flex flex-column gap-2">
-                        <a th:href="@{/products(brand='Land Rover')}" class="vk-brand-link">LAND ROVER</a>
-                        <a th:href="@{/products(brand='Peugeot')}" class="vk-brand-link">PEUGEOT</a>
-                        <a th:href="@{/products(brand='Nissan')}" class="vk-brand-link">NISSAN</a>
-                        <a th:href="@{/products(brand='Isuzu')}" class="vk-brand-link">ISUZU</a>
-                        <a th:href="@{/products(brand='Audi')}" class="vk-brand-link">AUDI</a>
+                        <div class="fw-bold text-gold small border-bottom border-secondary pb-1"><i class="fa-solid fa-gauge-high me-1"></i> LỐP XE &amp; TRANG BỊ BIKER</div>
+                        <a th:href="@{/products(brand='Pirelli')}" class="vk-brand-link">LỐP PIRELLI DIABLO SUPERCORSA</a>
+                        <a th:href="@{/products(brand='Michelin')}" class="vk-brand-link">LỐP MICHELIN POWER GP2</a>
+                        <a th:href="@{/products(brand='DID')}" class="vk-brand-link">SÊN TẢI D.I.D 525VR46 GOLD</a>
+                        <a th:href="@{/products(brand='Ohlins')}" class="vk-brand-link">TRỢ LỰC TAY LÁI OHLINS SD008</a>
+                        <a th:href="@{/products(brand='Puig')}" class="vk-brand-link">KÍNH CHẮN GIÓ PUIG RACING</a>
                     </div>
                 </div>
             </div>
@@ -137,21 +131,33 @@
                 </div>
             </div>
 
-            <!-- XE NHỎ Brands -->
+            <!-- XE CÀO CÀO & ADVENTURE -->
             <div id="contentXeNho" class="mega-content-box d-none">
                 <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary border-opacity-25">
-                    <div class="fw-bold fs-5 text-white"><i class="fa-solid fa-gem text-gold me-2"></i> BỘ SƯU TẬP XE NHỎ &amp; TAY GA ĐỘC LẠ</div>
-                    <a th:href="@{/products}" class="btn btn-warning btn-sm fw-bold px-3 text-dark rounded-pill">Xem Tất Cả Xe <i class="fa-solid fa-arrow-right ms-1"></i></a>
+                    <div class="fw-bold fs-5 text-white"><i class="fa-solid fa-mountain text-gold me-2"></i> BỘ SƯU TẬP XE CÀO CÀO, ADVENTURE &amp; TAY GA ĐỘC LẠ</div>
+                    <a th:href="@{/products(category='xenho')}" class="btn btn-warning btn-sm fw-bold px-3 text-dark rounded-pill">Xem Toàn Bộ Dòng Xe <i class="fa-solid fa-arrow-right ms-1"></i></a>
                 </div>
                 <div class="vk-brands-grid cols-3">
                     <div class="d-flex flex-column gap-2">
-                        <a th:href="@{/products(brand='Honda')}" class="vk-brand-link">HONDA (Monkey, Cub C125, SH350i)</a>
+                        <div class="fw-bold text-gold small border-bottom border-secondary pb-1"><i class="fa-solid fa-mountain-sun me-1"></i> XE CÀO CÀO CHUYÊN NGHIỆP</div>
+                        <a th:href="@{/products(brand='KTM')}" class="vk-brand-link">KTM 300 / 350 EXC-F FACTORY</a>
+                        <a th:href="@{/products(brand='Yamaha')}" class="vk-brand-link">YAMAHA WR450F RALLY EDITION</a>
+                        <a th:href="@{/products(brand='Honda')}" class="vk-brand-link">HONDA CRF300L / CRF450R</a>
+                        <a th:href="@{/products(brand='Kawasaki')}" class="vk-brand-link">KAWASAKI KLX300 DIRT BIKE</a>
                     </div>
                     <div class="d-flex flex-column gap-2">
-                        <a th:href="@{/products(brand='Vespa')}" class="vk-brand-link">PIAGGIO VESPA (946 Dior, Sprint)</a>
+                        <div class="fw-bold text-gold small border-bottom border-secondary pb-1"><i class="fa-solid fa-compass me-1"></i> ADVENTURE &amp; SCRAMBLER</div>
+                        <a th:href="@{/products(brand='BMW')}" class="vk-brand-link">BMW R1250GS ADVENTURE</a>
+                        <a th:href="@{/products(brand='Ducati')}" class="vk-brand-link">DUCATI DESERTX RALLY</a>
+                        <a th:href="@{/products(brand='KTM')}" class="vk-brand-link">KTM 890 ADVENTURE R</a>
+                        <a th:href="@{/products(brand='Triumph')}" class="vk-brand-link">TRIUMPH TIGER 1200 RALLY</a>
                     </div>
                     <div class="d-flex flex-column gap-2">
-                        <a th:href="@{/products(brand='BMW')}" class="vk-brand-link">BMW (CE 04 Electric)</a>
+                        <div class="fw-bold text-gold small border-bottom border-secondary pb-1"><i class="fa-solid fa-gem me-1"></i> XE NHỎ &amp; TAY GA SƯU TẦM</div>
+                        <a th:href="@{/products(brand='Honda')}" class="vk-brand-link">HONDA MONKEY 125 &amp; CUB C125</a>
+                        <a th:href="@{/products(brand='Vespa')}" class="vk-brand-link">PIAGGIO VESPA 946 DIOR LIMITED</a>
+                        <a th:href="@{/products(brand='BMW')}" class="vk-brand-link">BMW CE 04 URBAN ELECTRIC</a>
+                        <a th:href="@{/products(brand='Honda')}" class="vk-brand-link">HONDA SH350I SPORT ITALIA</a>
                     </div>
                 </div>
             </div>

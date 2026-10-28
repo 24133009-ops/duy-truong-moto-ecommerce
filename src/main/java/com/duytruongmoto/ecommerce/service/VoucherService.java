@@ -24,14 +24,15 @@ public class VoucherService {
     }
 
     public Optional<Voucher> findByCode(String code) {
-        if (code == null) return Optional.empty();
+        if (code == null)
+            return Optional.empty();
         return voucherRepository.findByCodeIgnoreCaseAndIsDeletedFalse(code.trim());
     }
 
     @Transactional
     public Voucher createVoucher(String code, String name, String description, int discountPercent,
-                                 BigDecimal maxDiscountAmount, BigDecimal minOrderAmount,
-                                 Integer usageLimit, Long storeId) {
+            BigDecimal maxDiscountAmount, BigDecimal minOrderAmount,
+            Integer usageLimit, Long storeId) {
         Store store = (storeId != null) ? storeRepository.findById(storeId).orElse(null) : null;
 
         Voucher voucher = Voucher.builder()
@@ -67,7 +68,8 @@ public class VoucherService {
             return BigDecimal.ZERO;
         }
 
-        BigDecimal discount = orderTotal.multiply(BigDecimal.valueOf(voucher.getDiscountPercent())).divide(BigDecimal.valueOf(100));
+        BigDecimal discount = orderTotal.multiply(BigDecimal.valueOf(voucher.getDiscountPercent()))
+                .divide(BigDecimal.valueOf(100));
         if (voucher.getMaxDiscountAmount() != null && discount.compareTo(voucher.getMaxDiscountAmount()) > 0) {
             discount = voucher.getMaxDiscountAmount();
         }
@@ -75,4 +77,3 @@ public class VoucherService {
         return discount;
     }
 }
-
