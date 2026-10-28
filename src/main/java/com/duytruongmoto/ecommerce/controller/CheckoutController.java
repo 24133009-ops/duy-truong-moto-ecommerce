@@ -73,8 +73,14 @@ public class CheckoutController {
             User user = userDetails.getUser();
             Order order = orderService.createOrder(user.getId(), recipientName, phone, address, deliveryId, paymentMethod, note, voucherCode);
 
-            // Nếu thanh toán qua VNPAY -> Chuyển hướng sang cổng thanh toán VNPAY Sandbox
+            // Nếu thanh toán qua VNPAY
             if ("VNPAY".equalsIgnoreCase(paymentMethod)) {
+                // Nếu đang dùng mã mẫu chưa đăng ký trên cổng VNPAY sandbox (tránh lỗi 72 "Không tìm thấy website")
+                // -> Chuyển hướng sang Cổng Mô Phỏng Thanh Toán VNPAY VIP chuẩn chỉ để demo trơn tru 100%
+                String tmn = vnPayService.getVnpTmnCode();
+                if (tmn == null || "DUYTRUONG".equalsIgnoreCase(tmn) || tmn.trim().isEmpty()) {
+                    return "redirect:/checkout/vnpay-simulator?orderCode=" + order.getOrderCode();
+                }
                 String paymentUrl = vnPayService.createPaymentUrl(order.getOrderCode(), order.getAmountFromUser(), "Thanh toan don dat xe " + order.getOrderCode(), request);
                 return "redirect:" + paymentUrl;
             }
@@ -85,6 +91,16 @@ public class CheckoutController {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             return "redirect:/checkout";
         }
+    }
+
+    @GetMapping("/checkout/vnpay-simulator")
+    public String vnpaySimulator(
+            @RequestParam String orderCode,
+            Model model) {
+        Order order = orderService.findByOrderCode(orderCode)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy đơn hàng: " + orderCode));
+        model.addAttribute("order", order);
+        return "client/vnpay-simulator";
     }
 
     @GetMapping("/checkout/vnpay-return")

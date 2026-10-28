@@ -30,6 +30,10 @@ public class VnPayService {
     @Value("${vnpay.return_url:http://localhost:8080/checkout/vnpay-return}")
     private String vnpReturnUrl;
 
+    public String getVnpTmnCode() {
+        return vnpTmnCode;
+    }
+
     public String createPaymentUrl(String orderCode, BigDecimal amount, String orderInfo, HttpServletRequest request) {
         String vnpVersion = "2.1.0";
         String vnpCommand = "pay";
