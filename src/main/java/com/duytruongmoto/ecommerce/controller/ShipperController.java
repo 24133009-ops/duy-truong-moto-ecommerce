@@ -12,7 +12,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/shipper")
@@ -39,10 +41,26 @@ public class ShipperController {
                     .toList();
         }
 
+        long inTransitCount = assignedOrders.stream()
+                .filter(o -> o.getStatus() == OrderStatus.SHIPPING || o.getStatus() == OrderStatus.PICKED_UP)
+                .count();
+        long deliveredCount = assignedOrders.stream()
+                .filter(o -> o.getStatus() == OrderStatus.DELIVERED)
+                .count();
+        BigDecimal totalCod = assignedOrders.stream()
+                .filter(o -> "COD".equalsIgnoreCase(o.getPaymentMethod()) && !Boolean.TRUE.equals(o.getIsPaidBefore()) && o.getStatus() != OrderStatus.CANCELLED)
+                .map(Order::getAmountFromUser)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
         model.addAttribute("currentUser", shipper);
         model.addAttribute("orders", assignedOrders);
         model.addAttribute("statuses", OrderStatus.values());
         model.addAttribute("currentStatus", status);
+        model.addAttribute("totalAssigned", assignedOrders.size());
+        model.addAttribute("inTransitCount", inTransitCount);
+        model.addAttribute("deliveredCount", deliveredCount);
+        model.addAttribute("totalCod", totalCod);
 
         return "shipper/dashboard";
     }

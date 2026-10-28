@@ -58,12 +58,28 @@ public class UserService {
         return saved;
     }
 
+    private final java.util.concurrent.ConcurrentHashMap<String, Integer> otpAttempts = new java.util.concurrent.ConcurrentHashMap<>();
+    private final java.util.concurrent.ConcurrentHashMap<String, Long> otpSendCount = new java.util.concurrent.ConcurrentHashMap<>();
+
     public Optional<String> getActiveOtpForEmail(String email) {
         return userRepository.findByEmail(email).map(User::getOtpCode);
     }
 
     @Transactional
     public boolean verifyOtp(String email, String otpCode) {
+        int currentAttempts = otpAttempts.getOrDefault(email.toLowerCase(), 0);
+        if (currentAttempts >= 5) {
+            Optional<User> uOpt = userRepository.findByEmail(email);
+            if (uOpt.isPresent()) {
+                User u = uOpt.get();
+                u.setOtpCode(null);
+                u.setOtpExpiry(null);
+                userRepository.save(u);
+            }
+            otpAttempts.remove(email.toLowerCase());
+            throw new IllegalArgumentException("Bạn đã nhập sai OTP quá 5 lần. Mã xác thực đã bị hủy vì lý do bảo mật. Vui lòng yêu cầu mã mới!");
+        }
+
         Optional<User> userOpt = userRepository.findByEmail(email);
         if (userOpt.isPresent()) {
             User user = userOpt.get();
@@ -75,7 +91,10 @@ public class UserService {
                 user.setOtpCode(null);
                 user.setOtpExpiry(null);
                 userRepository.save(user);
+                otpAttempts.remove(email.toLowerCase());
                 return true;
+            } else {
+                otpAttempts.put(email.toLowerCase(), currentAttempts + 1);
             }
         }
         return false;
@@ -169,6 +188,27 @@ public class UserService {
                 addressRepository.delete(addr);
             }
         });
+    }
+
+
+    public List<User> searchUsers(String keyword) {
+        if (keyword == null || keyword.isBlank()) {
+            return getAllUsers();
+        }
+        return userRepository.searchUsers(keyword.trim());
+    }
+
+    @Transactional
+    public User toggleLock(Long userId, String currentAdminEmail) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Người dùng không tồn tại"));
+
+        if (user.getEmail().equalsIgnoreCase(currentAdminEmail)) {
+            throw new IllegalArgumentException("Admin không thể tự khóa tài khoản của chính mình!");
+        }
+
+        user.setIsBlocked(!Boolean.TRUE.equals(user.getIsBlocked()));
+        return userRepository.save(user);
     }
 
     public List<User> getAllUsers() {

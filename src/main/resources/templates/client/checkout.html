@@ -128,6 +128,19 @@
                             <span class="text-gold fw-bold">Chiết khấu theo UserLevel</span>
                         </div>
 
+                        <!-- Voucher Input -->
+                        <div class="mb-3 p-3 bg-black rounded-3 border border-secondary">
+                            <label class="form-label text-gold small fw-bold mb-1"><i class="fa-solid fa-ticket me-1"></i> Mã Voucher Khuyến Mãi</label>
+                            <div class="input-group">
+                                <input type="text" name="voucherCode" id="voucherCodeInput" class="form-control form-control-luxury text-uppercase py-2" placeholder="Ví dụ: BIKERVIP, BAOHO-500K">
+                            </div>
+                            <div class="d-flex gap-1 flex-wrap mt-2" style="font-size: 0.75rem;">
+                                <span class="text-secondary">Gợi ý mã:</span>
+                                <span class="badge bg-dark border border-warning text-warning cursor-pointer" style="cursor: pointer;" onclick="document.getElementById('voucherCodeInput').value='BIKERVIP'">BIKERVIP (-5%)</span>
+                                <span class="badge bg-dark border border-warning text-warning cursor-pointer" style="cursor: pointer;" onclick="document.getElementById('voucherCodeInput').value='BAOHO-500K'">BAOHO-500K</span>
+                            </div>
+                        </div>
+
                         <div class="border-top border-secondary pt-3 mb-4 d-flex justify-content-between align-items-center">
                             <span class="fw-bold text-white fs-5">Tổng tiền đặt:</span>
                             <span class="fs-4 fw-black text-gradient-gold" th:text="${#numbers.formatDecimal(cartTotal, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>

@@ -121,6 +121,75 @@ public class VendorController {
         return "redirect:/vendor/products";
     }
 
+
+    @GetMapping("/products/{id}/edit")
+    public String editProductForm(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails, Model model, RedirectAttributes redirectAttributes) {
+        if (userDetails == null) return "redirect:/auth/login";
+        Store store = storeService.getOrCreateVendorStore(userDetails.getUser());
+        Optional<Product> prodOpt = productService.findById(id);
+        if (prodOpt.isEmpty() || !prodOpt.get().getStore().getId().equals(store.getId())) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Sản phẩm không tồn tại hoặc không thuộc showroom của bạn!");
+            return "redirect:/vendor/products";
+        }
+        model.addAttribute("product", prodOpt.get());
+        model.addAttribute("store", store);
+        model.addAttribute("categories", categoryRepository.findByIsDeletedFalse());
+        return "vendor/product-edit";
+    }
+
+    @PostMapping("/products/{id}/edit")
+    public String updateProduct(
+            @PathVariable Long id,
+            @RequestParam Long categoryId,
+            @RequestParam String name,
+            @RequestParam String slug,
+            @RequestParam String description,
+            @RequestParam BigDecimal price,
+            @RequestParam(required = false) BigDecimal promotionalPrice,
+            @RequestParam Integer quantity,
+            @RequestParam String engineCapacity,
+            @RequestParam String color,
+            @RequestParam String brand,
+            @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            RedirectAttributes redirectAttributes) {
+
+        if (userDetails == null) return "redirect:/auth/login";
+        Store store = storeService.getOrCreateVendorStore(userDetails.getUser());
+
+        try {
+            String imageUrl = null;
+            if (imageFile != null && !imageFile.isEmpty()) {
+                imageUrl = cloudinaryService.uploadFile(imageFile, "products");
+            }
+
+            productService.updateProduct(id, store.getId(), categoryId, name, slug, description,
+                    price, promotionalPrice, quantity, imageUrl, engineCapacity, color, brand);
+
+            redirectAttributes.addFlashAttribute("successMessage", "Đã cập nhật thông tin sản phẩm thành công!");
+            return "redirect:/vendor/products";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/vendor/products/" + id + "/edit";
+        }
+    }
+
+    @PostMapping("/products/{id}/delete")
+    public String deleteProduct(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails, RedirectAttributes redirectAttributes) {
+        if (userDetails != null) {
+            Store store = storeService.getOrCreateVendorStore(userDetails.getUser());
+            if (store != null) {
+                try {
+                    productService.deleteProduct(id, store.getId());
+                    redirectAttributes.addFlashAttribute("successMessage", "Đã xóa sản phẩm khỏi showroom thành công!");
+                } catch (Exception ex) {
+                    redirectAttributes.addFlashAttribute("errorMessage", "Không thể xóa sản phẩm đã có đơn hàng ràng buộc!");
+                }
+            }
+        }
+        return "redirect:/vendor/products";
+    }
+
     @GetMapping("/orders")
     public String listOrders(
             @RequestParam(required = false) OrderStatus status,

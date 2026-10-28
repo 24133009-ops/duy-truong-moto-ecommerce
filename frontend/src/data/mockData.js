@@ -1685,7 +1685,7 @@ export const DEMO_USERS = {
   guest: {
     role: "GUEST",
     name: "Khách Tham Quan",
-    levelTitle: "Cấp 0: Khách Vãng Lai",
+    levelTitle: "Khách Tham Quan",
     permissions: "Xem kho hàng, xem top bán chạy > 10, tra cứu tồn kho 3 chi nhánh",
     avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80",
     email: "guest@duytruongmoto.com",
@@ -1694,7 +1694,7 @@ export const DEMO_USERS = {
   customer: {
     role: "CUSTOMER",
     name: "Hoàng Biker (Khách VIP)",
-    levelTitle: "Cấp 1: Thành Viên Biker VIP",
+    levelTitle: "Thành Viên Biker VIP",
     permissions: "Giỏ hàng DB, đặt cọc VNPAY, gửi đánh giá >= 50 ký tự, chat tư vấn",
     avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80",
     email: "customer@gmail.com",
@@ -1704,10 +1704,10 @@ export const DEMO_USERS = {
   vendor: {
     role: "VENDOR",
     name: "Đỗ Trọng Khôi (QL Kho Cầu Giấy)",
-    levelTitle: "Cấp 2: Quản Lý Chi Nhánh Cầu Giấy (Hà Nội)",
+    levelTitle: "Quản Lý Showroom Cầu Giấy (Hà Nội)",
     permissions: "Chỉ quản lý kho hàng, nhập phụ tùng, duyệt đơn chi nhánh Cầu Giấy",
     avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80",
-    email: "dotrongkhoi2002@gmail.com",
+    email: "vendor.hn@duytruongmoto.com",
     storeId: 2,
     storeName: "Chi nhánh & Kho Phụ Tùng Cầu Giấy Hà Nội",
     canBuy: true
@@ -1715,10 +1715,10 @@ export const DEMO_USERS = {
   vendor_tinh: {
     role: "VENDOR",
     name: "Lê Nghĩa Tình (QL Kho Đà Nẵng)",
-    levelTitle: "Cấp 2: Quản Lý Chi Nhánh Hải Châu (Đà Nẵng)",
+    levelTitle: "Quản Lý Showroom Hải Châu (Đà Nẵng)",
     permissions: "Chỉ quản lý kho hàng, nhập phụ tùng, duyệt đơn chi nhánh Hải Châu",
     avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80",
-    email: "nghiatinh2002@gmail.com",
+    email: "vendor.dn@duytruongmoto.com",
     storeId: 3,
     storeName: "Chi nhánh & Kho Phụ Tùng Hải Châu Đà Nẵng",
     canBuy: true
@@ -1726,7 +1726,7 @@ export const DEMO_USERS = {
   admin: {
     role: "ADMIN",
     name: "Trương Quốc Duy (Tổng Quản Trị)",
-    levelTitle: "Cấp 3: Tổng Quản Trị Hệ Thống (Super Admin)",
+    levelTitle: "Tổng Quản Trị Hệ Thống",
     permissions: "Toàn quyền quản trị 3 chi nhánh, xem báo cáo doanh thu chuỗi, cấp phép tài khoản",
     avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=150&q=80",
     email: "admin@duytruongmoto.com",
@@ -1735,7 +1735,7 @@ export const DEMO_USERS = {
   shipper: {
     role: "SHIPPER",
     name: "Tài Xế Tuấn (Xe Sàn Trượt VIP)",
-    levelTitle: "Cấp 2: Nhân Viên Giao Nhận (Staff Shipper)",
+    levelTitle: "Tài Xế Giao Vận (Xe Sàn Trượt VIP)",
     permissions: "Tiếp nhận đơn điều phối, cập nhật trạng thái bàn giao phụ tùng/xe qua 6 chặng",
     avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=150&q=80",
     email: "shipper@duytruongmoto.com",

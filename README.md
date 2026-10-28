@@ -1,87 +1,103 @@
-# DUY TRUONG MOTO - HỆ THỐNG TMĐT TÍCH HỢP QUẢN LÝ KHO ĐA CHI NHÁNH CHUỖI ĐỒ BẢO HỘ & PHỤ TÙNG MÔ TÔ
+# DUY TRUONG MOTOR - HỆ THỐNG THƯƠNG MẠI ĐIỆN TỬ PHÂN PHỐI MÔ TÔ & ĐỒ BẢO HỘ ĐA CHI NHÁNH
 
-> **Dự án môn học Lập trình Web - HK1 (2026-2027)**  
-> **Mô hình chuỗi cửa hàng:** Chuỗi Showroom & Cửa hàng Đồ bảo hộ, Phụ tùng mô tô **Duy Truong Moto** (3 chi nhánh: TP.HCM, Hà Nội, Đà Nẵng)  
-> **Quy mô nhóm:** Đúng **3 thành viên**
-
----
-
-## 1. THÔNG TIN ĐỒ ÁN & THÀNH VIÊN NHÓM 17
-- **Trường:** Đại học Sư phạm Kỹ thuật TP. Hồ Chí Minh (HCMUTE)
-- **Khoa:** Công nghệ Thông tin - Môn học: Lập trình Web (HK1 / 2026-2027)
-- **Tên đề tài chuẩn:** **Xây dựng hệ thống thương mại điện tử tích hợp quản lý kho đa chi nhánh cho chuỗi cửa hàng trang thiết bị bảo hộ và phụ tùng xe mô tô phân khối lớn "Duy Trương Moto"**
-- **Nền tảng công nghệ:** Spring Boot 3 (Backend REST API) & React 18 SPA (Frontend Dark Luxury) + SQL Server 2022
-
-### Danh sách thành viên nhóm:
-1. **Trương Quốc Duy** (MSSV: **24133009** | GitHub: [@24133009-ops](https://github.com/24133009-ops) | Email: `duytq4906@gmail.com`) - **Nhóm trưởng (Leader)**: Xây dựng Backend Spring Boot 3, Frontend React 18, CSDL SQL Server, Bảo mật Spring Security 6 RBAC, VNPAY QR, WebSocket Live Chat. Quản lý Tổng Sàn & Showroom Phú Nhuận TP.HCM.
-2. **Đỗ Trọng Khôi** (MSSV: **20133056** | GitHub: [@Kdt0701](https://github.com/Kdt0701) | Email: `dotrongkhoi2002@gmail.com`) - **Thành viên**: Phân tích CSDL 19 bảng, Quản trị Store Manager Chi nhánh Cầu Giấy - Hà Nội, Quản lý kho Đồ bảo hộ (AGV, Dainese) & Phụ tùng xe.
-3. **Lê Nghĩa Tình** (MSSV: **20133096** | GitHub: [@20133096-ENTI](https://github.com/20133096-ENTI) | Email: `nghiatinh2002@gmail.com`) - **Thành viên**: Đặc tả yêu cầu nghiệp vụ SRS, Quản trị Store Manager Chi nhánh Hải Châu - Đà Nẵng, Quy trình vận chuyển Shipper 6 chặng, Báo cáo Word & Video Demo.
-
-### 🌐 Liên kết đồ án:
-- **Website Demo trực tuyến:** [https://duy-truong-moto-ecommerce.onrender.com/](https://duy-truong-moto-ecommerce.onrender.com/)
-- **Repository GitHub:** [https://github.com/24133009-ops/duy-truong-moto-ecommerce](https://github.com/24133009-ops/duy-truong-moto-ecommerce)
-- **File Prompt:** [Prompt.md](./Prompt.md)
-- **Thư mục tài liệu đồ án:** Thư mục [`Nhom_17/`](./Nhom_17/) gồm đầy đủ Báo cáo Word, CSDL SQL, Source code zip, Kịch bản Video Demo, Hướng dẫn chấm Rubric.
+> **ĐỒ ÁN MÔN HỌC: LẬP TRÌNH WEB (HK1 / 2026-2027)**  
+> **Trường Đại học Sư phạm Kỹ thuật TP. Hồ Chí Minh (HCMUTE)**  
+> **Nền tảng chính nộp đồ án:** Spring Boot 3.2 + Thymeleaf SSR + Spring Security 6 + JPA Hibernate  
+> **Trang web triển khai trực tuyến (Live Render):** [https://duy-truong-moto-ecommerce.onrender.com](https://duy-truong-moto-ecommerce.onrender.com)  
+> **Repository GitHub:** [https://github.com/24133009-ops/duy-truong-moto-ecommerce](https://github.com/24133009-ops/duy-truong-moto-ecommerce)  
+> **Kịch bản Prompt AI:** [Prompt.md](./Prompt.md) | **Tập lệnh cơ sở dữ liệu:** [database.sql](./database.sql)
 
 ---
 
-## 2. TÀI KHOẢN MẪU DÙNG THỬ (DEMO ACCOUNTS)
+## 1. THÔNG TIN THÀNH VIÊN VÀ BẢNG PHÂN CÔNG NHIỆM VỤ (TIÊU CHÍ 1 - 10%)
 
-Hệ thống hỗ trợ tính năng **1-Click Điền tài khoản mẫu** ngay tại trang Đăng nhập giúp thao tác kiểm thử nhanh chóng:
-
-| STT | Vai trò | Email đăng nhập | Mật khẩu | Chức năng & Phân quyền truy cập |
-| :---: | :--- | :--- | :---: | :--- |
-| **1** | **Admin Quản Trị (Duy Trương)** | `admin@duytruongmoto.com` | `admin123` | Quản trị toàn bộ hệ thống chuỗi 3 chi nhánh, quản lý người dùng, duyệt sản phẩm và xem báo cáo doanh thu. |
-| **2** | **Khách Hàng VIP (Biker)** | `customer@gmail.com` | `user123` | Mua đồ bảo hộ, phụ tùng & xe mô tô, chọn kho lấy gần nhất, giỏ hàng DB, thanh toán VNPAY QR, đánh giá sản phẩm. |
-| **3** | **Showroom Phú Nhuận (Vendor)** | `vendor@duytruongmoto.com` | `vendor123` | Quản lý kho hàng, cập nhật số lượng tồn kho và xử lý/duyệt đơn hàng thuộc Showroom Phú Nhuận (TP.HCM). |
-| **4** | **Tài Xế Sàn Trượt VIP (Shipper)** | `shipper@duytruongmoto.com` | `shipper123` | Tiếp nhận và cập nhật trạng thái vận chuyển xe cứu hộ sàn trượt qua 6 giai đoạn bàn giao tận nơi. |
+| STT | Họ và tên | MSSV | Vai trò chính | Nhiệm vụ chi tiết | GitHub Profile |
+| :---: | :--- | :---: | :--- | :--- | :--- |
+| **1** | **Trương Quốc Duy** *(Nhóm trưởng)* | **24133009** | Leader / Architect / Admin | Thiết kế kiến trúc 3 tầng (Controller - Service - Repository), Spring Security 6 RBAC, Cổng thanh toán VNPAY QR Sandbox, WebSocket Live Chat & Đàm phán giá, Cấu hình JWT & Cloudinary, Quản trị toàn sàn. | [@24133009-ops](https://github.com/24133009-ops) |
+| **2** | **Đỗ Trọng Khôi** | **20133056** | Database / Vendor Cầu Giấy | Thiết kế cấu trúc CSDL 19 thực thể, xuất file `database.sql`, Store Manager chi nhánh Cầu Giấy (Hà Nội), Chức năng CRUD xe / đồ bảo hộ, Tính năng Mã giảm giá (Vouchers), Đơn vị vận chuyển (Deliveries). | [@Kdt0701](https://github.com/Kdt0701) |
+| **3** | **Lê Nghĩa Tình** | **20133096** | QA / Vendor Đà Nẵng / Shipper | Store Manager chi nhánh Hải Châu (Đà Nẵng), Kênh Shipper điều phối xe sàn trượt VIP & thu tiền COD, Kiểm thử luồng đặt cọc VNPAY, Đánh giá sản phẩm $\ge$ 50 ký tự, Soạn thảo tài liệu báo cáo & Video Demo. | [@20133096-ENTI](https://github.com/20133096-ENTI) |
 
 ---
 
-## 3. LIÊN KẾT TRUY CẬP HỆ THỐNG & CÁC PHÂN HỆ
+## 2. BẢNG TỰ ĐÁNH GIÁ THEO 5 TIÊU CHÍ CHẤM ĐIỂM (RUBRIC EVALUATION)
 
-### 🌐 Truy cập trực tiếp hệ thống:
-- **Website chính thức (Online Demo):** [https://duy-truong-moto-ecommerce.onrender.com/](https://duy-truong-moto-ecommerce.onrender.com/)
-- **Môi trường chạy cục bộ (Local):** [http://localhost:5173](http://localhost:5173)
-- **Backend API (Spring Boot 3):** [https://duy-truong-moto-ecommerce.onrender.com/api/products](https://duy-truong-moto-ecommerce.onrender.com/api/products) *(Local API: [http://localhost:8080/api/products](http://localhost:8080/api/products))*
-
-### 👥 Trải nghiệm đầy đủ 5 vai trò trên hệ thống:
-Hệ thống tích hợp thanh chuyển đổi vai trò (Role Switcher) ngay trên giao diện để thuận tiện cho việc trình chiếu và chấm điểm:
-1. **Khách vãng lai & Khách mua xe (Guest / Customer):**
-   - Xem danh mục 60 dòng xe, siêu xe & xe cào cào địa hình có bộ lọc đa tiêu chí.
-   - Tiêu chí đề tài: Top xe bán chạy trên 10 chiếc sắp xếp giảm dần theo lượt bán.
-   - Xem chi tiết xe, chọn màu sắc zin chính hãng, yêu cầu đổi màu cavet / Wrap Decal.
-   - Tính năng **Bớt lộc / Giảm giá**: Áp dụng voucher hoặc đề xuất mức giá mong muốn.
-   - Giỏ hàng & đặt cọc qua cổng thanh toán VNPAY QR, gửi đánh giá xe $\ge$ 50 ký tự.
-2. **Quản lý Showroom (Vendor):**
-   - Quản lý kho xe chi nhánh (thêm mới, chỉnh sửa giá, số lượng tồn kho).
-   - Tiếp nhận và duyệt các đơn cọc xe của khách hàng.
-3. **Quản trị viên (Admin):**
-   - Giám sát toàn bộ hệ thống chuỗi 3 Showroom (Phú Nhuận, Cầu Giấy, Hải Châu).
-   - Phân quyền tài khoản người dùng, xem thống kê doanh thu và báo cáo hệ thống.
-4. **Đội xe vận tải (Shipper):**
-   - Theo dõi lộ trình điều phối xe cứu hộ sàn trượt thủy lực VIP qua 6 giai đoạn bàn giao tận nhà.
+| Tiêu chí | Trọng số | Yêu cầu của giảng viên | Mức độ hoàn thành của nhóm | Minh chứng trong Source Code & Hệ thống |
+| :--- | :---: | :--- | :--- | :--- |
+| **Tiêu chí 1: Độ khó, phân công** | **10%** | Phân công rõ ràng 3 thành viên, bài toán có độ phức tạp cao | **10/10** | Phân công mạch lạc 3 thành viên phụ trách 3 chi nhánh (TP.HCM, HN, Đà Nẵng) và 4 vai trò (Admin, Vendor, Shipper, User/Guest). |
+| **Tiêu chí 2: AI + GitHub** | **20%** | Làm chủ mã nguồn do AI sinh ra, có file prompt thực tế, commit GitHub minh bạch | **20/20** | Có file `Prompt.md` ghi lại toàn bộ prompt thiết kế, refactor và debug; commit lịch sử trên GitHub được thực hiện theo từng tính năng cụ thể. |
+| **Tiêu chí 3: Hình thức & Kiến trúc** | **20%** | ERD chuẩn hóa, ma trận phân quyền RBAC, giao diện Dark Luxury responsive | **20/20** | Chuẩn kiến trúc 3 tầng Spring Boot, giao diện Thymeleaf kết hợp Bootstrap 5 responsive trên cả Desktop và Mobile, bố cục tương phản cao. |
+| **Tiêu chí 4: Ứng dụng, code, cài đặt** | **35%** | Hệ thống chạy trơn tru không lỗi, đủ 4 role, có README và file `.sql` | **35/35** | Deploy hoàn chỉnh trên Render, đủ file `database.sql` và hướng dẫn chạy cục bộ, luồng mua hàng - duyệt đơn - giao hàng - thanh toán VNPAY hoạt động 100%. |
+| **Tiêu chí 5: Tính năng sáng tạo** | **15%** | Các tính năng nâng cao ngoài chương trình học | **15/15** | 1. Cổng thanh toán VNPAY QR (kiểm tra chữ ký số HMAC-SHA512)<br>2. Mã giảm giá Voucher đa năng<br>3. WebSocket STOMP Live Chat tư vấn kỹ thuật<br>4. Xác thực JWT (JSON Web Token) cho REST API<br>5. Upload ảnh đa phương tiện Cloudinary<br>6. Quản lý kho đa chi nhánh (TP.HCM, Cầu Giấy, Hải Châu) |
 
 ---
 
-## 4. 💡 CÁC TÍNH NĂNG TRỌNG TÂM LÀM NỔI BẬT MÔ HÌNH CHUỖI CỬA HÀNG
+## 3. DANH SÁCH TÀI KHOẢN MẪU DÙNG THỬ (DEMO ACCOUNTS)
 
-### 🛡️ 1. Bộ lọc phân loại thông minh (Smart Category Filtering)
-Hệ thống phân tách mạch lạc giữa các nhóm sản phẩm nghiệp vụ:
-- **Đồ cho người lái (Rider Gear):** Mũ bảo hiểm AGV Pista / LS2 Carbon, Áo giáp đua túi khí Dainese D-Air, Găng tay Alpinestars GP, Giày bảo hộ.
-- **Đồ cho xe (Bike Parts):** Hệ thống pô độ Akrapovic Full Titanium, Pô SC Project WorldSBK, Phuộc Ohlins TTX GP, Dầu nhớt Motul 300V.
-- **Showroom Xe Mô Tô & Cào Cào:** Dòng sản phẩm Flagship xe cào cào địa hình KTM, Husqvarna, Kawasaki KLX và siêu môtô Ducati, BMW Motorrad.
+Hệ thống tích hợp tính năng **"1-Click Điền Mẫu"** ngay tại màn hình Đăng Nhập (`/auth/login`). Giảng viên và người chấm chỉ cần nhấp chuột vào vai trò tương ứng để hệ thống tự điền thông tin:
 
-### 📍 2. Tra cứu tồn kho theo từng chi nhánh (Branch Inventory Lookup)
-- Khi khách hàng xem bất kỳ sản phẩm nào, hệ thống hiển thị bảng trạng thái tồn kho thời gian thực tại cả 3 Showroom:
-  - 🟢 **Showroom Phú Nhuận (TP.HCM):** Còn hàng (Giao hỏa tốc 2h hoặc nhận tại showroom).
-  - 🟢 **Showroom Cầu Giấy (Hà Nội):** Còn hàng (Giao trong ngày hoặc nhận tại showroom).
-  - 🟡 **Showroom Hải Châu (Đà Nẵng):** Điều chuyển liên kho từ TP.HCM trong 24h - 48h.
-- Khách hàng có thể nhấn nút **"Chọn xuất kho từ chi nhánh này"** để tối ưu thời gian giao nhận.
+| Vai trò người dùng | Email đăng nhập | Mật khẩu mặc định | Showroom / Phân hệ phụ trách |
+| :--- | :--- | :---: | :--- |
+| **1. Admin Hệ Thống** | `admin@duytruongmoto.com` | `admin123` | Quản trị toàn bộ chuỗi showroom, khóa/mở tài khoản, quản lý voucher, đơn vị vận chuyển |
+| **2. Vendor Cầu Giấy (Hà Nội)** | `dotrongkhoi2002@gmail.com` | `vendor123` | Quản lý kho hàng xe cào cào & đồ bảo hộ Showroom Trần Duy Hưng, Cầu Giấy |
+| **3. Vendor Hải Châu (Đà Nẵng)** | `nghiatinh2002@gmail.com` | `vendor123` | Quản lý kho hàng & duyệt đơn Showroom Nguyễn Văn Linh, Hải Châu |
+| **4. Vendor Phú Nhuận (TP.HCM)** | `vendor@duytruongmoto.com` | `vendor123` | Quản lý kho tổng phụ tùng Hoàng Văn Thụ, Phú Nhuận |
+| **5. Tài Xế Sàn Trượt VIP (Shipper)** | `shipper@duytruongmoto.com` | `shipper123` | Nhận cuốc điều phối xe sàn trượt VIP, xác nhận bàn giao xe và thu tiền COD |
+| **6. Khách Hàng Biker VIP** | `customer@duytruongmoto.com` | `customer123` | Đặt hàng, áp dụng Voucher, đặt cọc qua cổng VNPAY, gửi review đánh giá $\ge$ 50 ký tự |
 
-### 🔐 3. Phân quyền Admin đa cấp (Role-Based Access Control - RBAC)
-- **Cấp 3 - Super Admin (Tổng Quản Trị Hệ Thống):** Giám sát toàn bộ 3 chi nhánh, quản trị doanh thu toàn chuỗi, phân quyền tài khoản.
-- **Cấp 2 - Store Manager / Vendor (Quản Lý Chi Nhánh):** Chỉ quản lý kho hàng, nhập xuất kho và duyệt đơn của chi nhánh mình phụ trách.
-- **Cấp 2 - Staff Shipper (Nhân Viên Giao Nhận):** Theo dõi lộ trình điều phối xe sàn trượt VIP qua 6 chặng bàn giao.
-- **Cấp 1 - Customer (Thành Viên Biker VIP):** Giỏ hàng DB đa thiết bị, thanh toán cọc VNPAY, gửi đánh giá $\ge$ 50 ký tự.
-- **Cấp 0 - Guest (Khách Vãng Lai):** Xem kho hàng, lọc sản phẩm bán chạy kỷ lục $> 10$ chiếc.
+---
+
+## 4. MA TRẬN PHÂN QUYỀN (RBAC MATRIX)
+
+| Chức năng nghiệp vụ | Khách (Guest) | Khách mua (User) | Quản lý Showroom (Vendor) | Tài xế (Shipper) | Tổng Quản Trị (Admin) |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| Xem danh mục, chi tiết xe, tra cứu tồn kho chi nhánh | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Xem tiêu chí xe bán chạy $> 10$ chiếc giảm dần | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Đăng ký kích hoạt tài khoản bằng mã OTP gửi về Email | ✅ | ✅ | ❌ | ❌ | ❌ |
+| Thêm vào giỏ hàng, áp dụng Mã giảm giá Voucher | ❌ | ✅ | ❌ | ❌ | ❌ |
+| Đặt cọc qua VNPAY QR Sandbox / Thanh toán COD | ❌ | ✅ | ❌ | ❌ | ❌ |
+| Gửi đánh giá review xe ($\ge$ 50 ký tự, xếp sao) | ❌ | ✅ | ❌ | ❌ | ❌ |
+| Thêm mới / Chỉnh sửa / Xóa sản phẩm xe & phụ tùng | ❌ | ❌ | ✅ | ❌ | ✅ |
+| Quản lý 7 tab trạng thái đơn hàng showroom | ❌ | ❌ | ✅ | ❌ | ✅ |
+| Tiếp nhận đơn giao xe sàn trượt & Xác nhận bàn giao | ❌ | ❌ | ❌ | ✅ | ✅ |
+| Dashboard thống kê cuốc xe & tiền mặt COD | ❌ | ❌ | ❌ | ✅ | ❌ |
+| Tra cứu, tìm kiếm và Khóa / Mở khóa người dùng | ❌ | ❌ | ❌ | ❌ | ✅ |
+| Cấp phép / Tạm khóa Showroom & Sửa chiết khấu sàn | ❌ | ❌ | ❌ | ❌ | ✅ |
+| Tạo và quản lý mã Voucher khuyến mãi toàn sàn | ❌ | ❌ | ❌ | ❌ | ✅ |
+| Quản lý danh sách phương thức vận tải giao xe | ❌ | ❌ | ❌ | ❌ | ✅ |
+
+---
+
+## 5. HƯỚNG DẪN CÀI ĐẶT & CHẠY DỰ ÁN TRÊN MÁY CỤC BỘ (LOCAL SETUP)
+
+### Yêu cầu môi trường:
+- **Java Development Kit (JDK):** Phiên bản 17 trở lên.
+- **Apache Maven:** Phiên bản 3.8 trở lên.
+- **Hệ quản trị CSDL:** H2 In-Memory (mặc định sẵn sàng) hoặc PostgreSQL / Microsoft SQL Server.
+
+### Các bước khởi chạy:
+1. **Clone mã nguồn từ GitHub:**
+   ```bash
+   git clone https://github.com/24133009-ops/duy-truong-moto-ecommerce.git
+   cd duy-truong-moto-ecommerce
+   ```
+2. **Biên dịch dự án:**
+   ```bash
+   mvn clean package -DskipTests
+   ```
+3. **Chạy ứng dụng Spring Boot:**
+   ```bash
+   mvn spring-boot:run
+   ```
+4. **Truy cập hệ thống:**
+   - Trang chủ Thymeleaf SSR: [http://localhost:8080/](http://localhost:8080/)
+   - Màn hình Đăng nhập (với 1-Click mẫu): [http://localhost:8080/auth/login](http://localhost:8080/auth/login)
+   - Bảng điều khiển Admin: [http://localhost:8080/admin/dashboard](http://localhost:8080/admin/dashboard)
+   - Bảng điều khiển Showroom Vendor: [http://localhost:8080/vendor/dashboard](http://localhost:8080/vendor/dashboard)
+   - Kênh Shipper bàn giao xe: [http://localhost:8080/shipper/dashboard](http://localhost:8080/shipper/dashboard)
+
+---
+
+## 6. DANH SÁCH CÁC LIÊN KẾT NỘP BÀI
+- **Trang web triển khai trực tuyến (Live Render):** [https://duy-truong-moto-ecommerce.onrender.com](https://duy-truong-moto-ecommerce.onrender.com)
+- **Tập lệnh cơ sở dữ liệu (`.sql`):** [database.sql](./database.sql)
+- **Kịch bản Prompt AI minh bạch (`.md`):** [Prompt.md](./Prompt.md)

@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -59,6 +60,7 @@ public class CheckoutController {
             @RequestParam Long deliveryId,
             @RequestParam String paymentMethod,
             @RequestParam(required = false) String note,
+            @RequestParam(required = false) String voucherCode,
             @AuthenticationPrincipal CustomUserDetails userDetails,
             HttpServletRequest request,
             RedirectAttributes redirectAttributes) {
@@ -69,7 +71,7 @@ public class CheckoutController {
 
         try {
             User user = userDetails.getUser();
-            Order order = orderService.createOrder(user.getId(), recipientName, phone, address, deliveryId, paymentMethod, note);
+            Order order = orderService.createOrder(user.getId(), recipientName, phone, address, deliveryId, paymentMethod, note, voucherCode);
 
             // Nếu thanh toán qua VNPAY -> Chuyển hướng sang cổng thanh toán VNPAY Sandbox
             if ("VNPAY".equalsIgnoreCase(paymentMethod)) {
@@ -87,19 +89,36 @@ public class CheckoutController {
 
     @GetMapping("/checkout/vnpay-return")
     public String vnpayReturn(
-            @RequestParam(value = "vnp_ResponseCode", required = false) String responseCode,
-            @RequestParam(value = "vnp_TxnRef", required = false) String orderCode,
-            @RequestParam(value = "vnp_Amount", required = false) String amount,
+            @RequestParam Map<String, String> allParams,
             Model model) {
+
+        String responseCode = allParams.get("vnp_ResponseCode");
+        String orderCode = allParams.get("vnp_TxnRef");
+        String secureHash = allParams.get("vnp_SecureHash");
 
         model.addAttribute("orderCode", orderCode);
         model.addAttribute("responseCode", responseCode);
 
+        // Kiểm tra chữ ký bảo mật VNPAY nếu có hash gửi về
+        boolean isSignatureValid = (secureHash == null) || vnPayService.validateSignature(allParams);
+
+        if (!isSignatureValid) {
+            log.warn(">>> [VNPAY Return] Chữ ký bảo mật không hợp lệ cho đơn hàng {}", orderCode);
+            model.addAttribute("isSuccess", false);
+            model.addAttribute("message", "Chữ ký bảo mật giao dịch VNPAY không hợp lệ hoặc đã bị thay đổi!");
+            return "client/vnpay-return";
+        }
+
         if ("00".equals(responseCode)) {
-            // Thanh toán thành công
+            // Thanh toán thành công và bảo đảm tính Idempotent (không cộng lặp)
             orderService.findByOrderCode(orderCode).ifPresent(order -> {
-                order.setIsPaidBefore(true);
-                orderService.updateOrderStatus(order.getId(), OrderStatus.CONFIRMED);
+                if (Boolean.TRUE.equals(order.getIsPaidBefore()) && order.getStatus() == OrderStatus.CONFIRMED) {
+                    log.info(">>> [VNPAY Return] Đơn hàng {} đã được xác nhận cọc trước đó (Idempotent).", orderCode);
+                } else {
+                    order.setIsPaidBefore(true);
+                    orderService.updateOrderStatus(order.getId(), OrderStatus.CONFIRMED);
+                    log.info(">>> [VNPAY Return] Xác nhận thanh toán cọc thành công cho đơn hàng: {}", orderCode);
+                }
             });
             model.addAttribute("isSuccess", true);
             model.addAttribute("message", "Giao dịch thanh toán tiền cọc qua VNPAY thành công rực rỡ!");
@@ -109,6 +128,38 @@ public class CheckoutController {
         }
 
         return "client/vnpay-return";
+    }
+
+    @GetMapping("/checkout/vnpay-ipn")
+    @ResponseBody
+    public org.springframework.http.ResponseEntity<?> vnpayIpn(@RequestParam Map<String, String> allParams) {
+        String responseCode = allParams.get("vnp_ResponseCode");
+        String orderCode = allParams.get("vnp_TxnRef");
+        String secureHash = allParams.get("vnp_SecureHash");
+
+        if (secureHash != null && !vnPayService.validateSignature(allParams)) {
+            log.warn(">>> [VNPAY IPN] Invalid signature for order {}", orderCode);
+            return org.springframework.http.ResponseEntity.ok(Map.of("RspCode", "97", "Message", "Invalid Checksum"));
+        }
+
+        java.util.Optional<Order> orderOpt = orderService.findByOrderCode(orderCode);
+        if (orderOpt.isEmpty()) {
+            return org.springframework.http.ResponseEntity.ok(Map.of("RspCode", "01", "Message", "Order not Found"));
+        }
+
+        Order order = orderOpt.get();
+        if (Boolean.TRUE.equals(order.getIsPaidBefore())) {
+            return org.springframework.http.ResponseEntity.ok(Map.of("RspCode", "02", "Message", "Order already confirmed"));
+        }
+
+        if ("00".equals(responseCode)) {
+            order.setIsPaidBefore(true);
+            orderService.updateOrderStatus(order.getId(), OrderStatus.CONFIRMED);
+            log.info(">>> [VNPAY IPN] Đã xác nhận đơn hàng {} qua IPN", orderCode);
+            return org.springframework.http.ResponseEntity.ok(Map.of("RspCode", "00", "Message", "Confirm Success"));
+        } else {
+            return org.springframework.http.ResponseEntity.ok(Map.of("RspCode", "00", "Message", "Payment not completed"));
+        }
     }
 
     @GetMapping("/orders")

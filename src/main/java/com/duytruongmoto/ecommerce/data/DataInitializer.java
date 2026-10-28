@@ -25,6 +25,9 @@ public class DataInitializer implements CommandLineRunner {
     private final CategoryRepository categoryRepository;
     private final StoreRepository storeRepository;
     private final ProductRepository productRepository;
+    private final OrderRepository orderRepository;
+    private final OrderItemRepository orderItemRepository;
+    private final VoucherRepository voucherRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -52,6 +55,7 @@ public class DataInitializer implements CommandLineRunner {
         }
 
         try {
+            try { initVouchers(); } catch (Exception e) { log.error("Lỗi initVouchers: {}", e.getMessage()); }
             initAll60Products(catMap, storeMap);
         } catch (Exception e) {
             log.error("Lỗi initAll60Products: {}", e.getMessage());
@@ -89,8 +93,8 @@ public class DataInitializer implements CommandLineRunner {
         }
 
         // 1. Admin Toàn Sàn - Trương Quốc Duy (pass: admin123)
-        upsertUser("Duy", "Trương Quốc", "duy-truong-admin", "admin@duytruongmoto.com", "0901234567", "admin123", Role.ROLE_ADMIN, diamond, 9999L, BigDecimal.valueOf(500000000));
-        upsertUser("Duy", "Trương Quốc", "duy-truong-leader", "duytq4906@gmail.com", "0901234568", "admin123", Role.ROLE_ADMIN, diamond, 9999L, BigDecimal.valueOf(500000000));
+        // Không có hạng khách, không tích điểm, không ví ảo (Chuẩn hóa tài khoản Quản trị viên hệ thống)
+        upsertUser("Duy", "Trương Quốc", "duy-truong-admin", "admin@duytruongmoto.com", "0909111999", "admin123", Role.ROLE_ADMIN, null, 0L, BigDecimal.ZERO);
 
         // 2. Vendor Showroom Cầu Giấy Hà Nội - Đỗ Trọng Khôi (pass: vendor123)
         upsertUser("Khôi", "Đỗ Trọng", "do-trong-khoi", "dotrongkhoi2002@gmail.com", "0903112002", "vendor123", Role.ROLE_VENDOR, gold, 3000L, BigDecimal.valueOf(180000000));
@@ -99,27 +103,44 @@ public class DataInitializer implements CommandLineRunner {
         upsertUser("Tình", "Lê Nghĩa", "le-nghia-tinh", "nghiatinh2002@gmail.com", "0905112002", "vendor123", Role.ROLE_VENDOR, gold, 2500L, BigDecimal.valueOf(140000000));
 
         // 4. Vendor Showroom Phú Nhuận TP.HCM - Minh Quản Lý (pass: vendor123)
-        upsertUser("Minh", "Showroom Q1", "minh-showroom-q1", "vendor@duytruongmoto.com", "0903456789", "vendor123", Role.ROLE_VENDOR, gold, 2000L, BigDecimal.valueOf(150000000));
+        upsertUser("Minh", "Showroom Phú Nhuận", "minh-showroom-phunhuan", "vendor@duytruongmoto.com", "0903111222", "vendor123", Role.ROLE_VENDOR, gold, 2000L, BigDecimal.valueOf(150000000));
 
-        // 5. Shipper Sàn Trượt (pass: shipper123)
-        upsertUser("Tuấn", "Vận Chuyển", "tuan-shipper", "shipper@duytruongmoto.com", "0904567890", "shipper123", Role.ROLE_SHIPPER, silver, 100L, BigDecimal.ZERO);
-        upsertUser("Tuấn", "Vận Chuyển", "tuan-shipper-motor", "shipper@duytruongmotor.com", "0904567891", "shipper123", Role.ROLE_SHIPPER, silver, 100L, BigDecimal.ZERO);
+        // 5. Shipper Vận Tải Sàn Trượt VIP (pass: shipper123)
+        upsertUser("Tuấn", "Vận Chuyển", "tuan-shipper", "shipper@duytruongmoto.com", "0904333444", "shipper123", Role.ROLE_SHIPPER, silver, 100L, BigDecimal.ZERO);
 
-        // 6. Khách Hàng VIP (pass: user123)
-        upsertUser("Hoàng", "Biker VIP", "hoang-biker-vip", "customer@gmail.com", "0905678901", "user123", Role.ROLE_USER, diamond, 5500L, BigDecimal.valueOf(75000000));
-        upsertUser("Hùng", "Biker VIP", "hung-biker-vip", "customer@duytruongmoto.com", "0905678902", "user123", Role.ROLE_USER, diamond, 5500L, BigDecimal.valueOf(75000000));
+        // 6. Khách Hàng VIP (pass: customer123)
+        upsertUser("Hoàng", "Biker VIP", "hoang-biker-vip", "customer@duytruongmoto.com", "0905555777", "customer123", Role.ROLE_USER, diamond, 5500L, BigDecimal.valueOf(75000000));
+        upsertUser("Hùng", "Biker VIP", "hung-biker-vip", "hung.biker@duytruongmoto.com", "0905666888", "customer123", Role.ROLE_USER, diamond, 5500L, BigDecimal.valueOf(75000000));
+
+        cleanupDuplicateUsers();
     }
 
     private void upsertUser(String firstname, String lastname, String slug, String email, String phone, String plainPassword, Role role, UserLevel userLevel, Long point, BigDecimal eWallet) {
         try {
             User user = userRepository.findByEmail(email).orElse(null);
             if (user == null) {
-                // Đảm bảo số điện thoại không bị trùng lặp với người dùng khác
-                if (phone != null && userRepository.existsByPhone(phone)) {
-                    phone = "09" + String.valueOf(System.currentTimeMillis()).substring(5);
+                // Phone uniqueness check (safe)
+                if (phone != null) {
+                    try {
+                        if (userRepository.existsByPhone(phone)) {
+                            phone = "09" + String.valueOf(System.currentTimeMillis()).substring(5);
+                        }
+                    } catch (Exception ex) {
+                        phone = "09" + String.valueOf(System.currentTimeMillis()).substring(5);
+                    }
+                }
+                // Slug uniqueness check (safe)
+                String finalSlug = slug;
+                try {
+                    final String checkSlug = slug;
+                    if (userRepository.findAll().stream().anyMatch(u -> u.getSlug() != null && u.getSlug().equals(checkSlug))) {
+                        finalSlug = slug + "-" + System.currentTimeMillis();
+                    }
+                } catch (Exception ignored) {
+                    finalSlug = slug + "-" + System.currentTimeMillis();
                 }
                 user = User.builder()
-                        .firstname(firstname).lastname(lastname).slug(slug)
+                        .firstname(firstname).lastname(lastname).slug(finalSlug)
                         .email(email).phone(phone)
                         .password(passwordEncoder.encode(plainPassword))
                         .role(role).userLevel(userLevel)
@@ -127,18 +148,79 @@ public class DataInitializer implements CommandLineRunner {
                         .isEmailActive(true).isPhoneActive(true)
                         .avatar("https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80")
                         .build();
+                userRepository.save(user);
+                log.info(">>> [DataInit] CREATED user: {} | role: {} | pass: {}", email, role, plainPassword);
             } else {
+                // Always re-encode password on every startup to ensure correct credentials
                 user.setPassword(passwordEncoder.encode(plainPassword));
+                user.setFirstname(firstname);
+                user.setLastname(lastname);
                 user.setRole(role);
                 user.setIsEmailActive(true);
                 user.setIsPhoneActive(true);
                 user.setUserLevel(userLevel);
                 if (user.getPoint() == null || user.getPoint() == 0) user.setPoint(point);
                 if (user.getEWallet() == null) user.setEWallet(eWallet);
+                userRepository.save(user);
+                log.info(">>> [DataInit] UPDATED user: {} | role: {} | password reset -> {}", email, role, plainPassword);
             }
-            userRepository.save(user);
         } catch (Exception ex) {
-            log.warn("Không thể upsert user {}: {}", email, ex.getMessage());
+            log.error(">>> [DataInit] FAILED upsert user {}: {}", email, ex.getMessage(), ex);
+        }
+    }
+
+
+    private void cleanupDuplicateUsers() {
+        try {
+            userRepository.findByEmail("duytq4906@gmail.com").ifPresent(userRepository::delete);
+            userRepository.findByEmail("shipper@duytruongmotor.com").ifPresent(userRepository::delete);
+            userRepository.findByEmail("customer@gmail.com").ifPresent(userRepository::delete);
+            userRepository.findByEmail("admin@duytruongmotor.com").ifPresent(userRepository::delete);
+            userRepository.findByEmail("vendor@duytruongmotor.com").ifPresent(userRepository::delete);
+        } catch (Exception ex) {
+            log.warn("Lưu ý khi dọn dẹp user trùng lặp: {}", ex.getMessage());
+        }
+    }
+
+    private void initVouchers() {
+        if (voucherRepository.count() == 0) {
+            voucherRepository.save(Voucher.builder()
+                .code("BIKERVIP")
+                .name("Ưu đãi khách hàng thân thiết Biker VIP")
+                .description("Giảm 5% tối đa 30.000.000 đ cho các dòng xe phân khối lớn")
+                .discountPercent(5)
+                .maxDiscountAmount(BigDecimal.valueOf(30000000))
+                .minOrderAmount(BigDecimal.valueOf(200000000))
+                .usageLimit(100)
+                .usedCount(5)
+                .isDeleted(false)
+                .build());
+
+            voucherRepository.save(Voucher.builder()
+                .code("FREESHIP-VIP")
+                .name("Miễn phí 100% chi phí xe sàn trượt VIP")
+                .description("Hỗ trợ chi phí xe sàn trượt thủy lực VIP tận nhà cho khách hàng")
+                .discountPercent(100)
+                .maxDiscountAmount(BigDecimal.valueOf(2000000))
+                .minOrderAmount(BigDecimal.valueOf(100000000))
+                .usageLimit(200)
+                .usedCount(12)
+                .isDeleted(false)
+                .build());
+
+            voucherRepository.save(Voucher.builder()
+                .code("BAOHO-500K")
+                .name("Voucher Phụ Kiện Đồ Bảo Hộ")
+                .description("Giảm ngay 500.000 đ cho nón AGV, giáp Dainese, găng Alpinestars")
+                .discountPercent(10)
+                .maxDiscountAmount(BigDecimal.valueOf(500000))
+                .minOrderAmount(BigDecimal.valueOf(5000000))
+                .usageLimit(500)
+                .usedCount(38)
+                .isDeleted(false)
+                .build());
+
+            log.info(">>> Đã khởi tạo thành công 3 mã khuyến mãi Voucher mẫu!");
         }
     }
 
@@ -173,19 +255,19 @@ public class DataInitializer implements CommandLineRunner {
 
     private Map<Integer, Store> initStores() {
         Map<Integer, Store> storeMap = new HashMap<>();
-        User adminHCM = userRepository.findByEmail("admin@duytruongmoto.com").orElse(null);
-        User vendorKhoi = userRepository.findByEmail("dotrongkhoi2002@gmail.com").orElse(adminHCM);
-        User vendorTinh = userRepository.findByEmail("nghiatinh2002@gmail.com").orElse(adminHCM);
+        User vendorMinh = userRepository.findByEmail("vendor@duytruongmoto.com").orElse(null);
+        User vendorKhoi = userRepository.findByEmail("dotrongkhoi2002@gmail.com").orElse(vendorMinh);
+        User vendorTinh = userRepository.findByEmail("nghiatinh2002@gmail.com").orElse(vendorMinh);
         Commission comm = commissionRepository.findAll().stream().findFirst().orElse(null);
 
         Store s1 = storeRepository.findBySlug("duy-truong-moto-showroom-quan-1").orElseGet(() ->
             storeRepository.save(Store.builder()
                 .name("Duy Truong Moto - Trụ Sở & Kho Phụ Tùng Phú Nhuận TP.HCM")
                 .slug("duy-truong-moto-showroom-quan-1")
-                .owner(adminHCM)
-                .bio("Trụ sở chính & kho tổng phụ tùng đồ bảo hộ mô tô lớn nhất miền Nam. Quản lý bởi Trương Quốc Duy.")
-                .address("Số 88 Đường Nguyễn Hữu Cảnh, Phường 22, Quận 1, TP. Hồ Chí Minh")
-                .phone("0903456789")
+                .owner(vendorMinh)
+                .bio("Trụ sở chính & kho tổng phụ tùng đồ bảo hộ mô tô lớn nhất miền Nam. Quản lý bởi Minh Showroom Phú Nhuận.")
+                .address("Số 123 Đường Hoàng Văn Thụ, Phường 8, Quận Phú Nhuận, TP. Hồ Chí Minh")
+                .phone("0903.456.789")
                 .avatar("https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=300&q=80")
                 .cover("https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=1200&q=80")
                 .isActive(true).isOpen(true).commission(comm).point(1200L).rating(4.9)
@@ -200,7 +282,7 @@ public class DataInitializer implements CommandLineRunner {
                 .owner(vendorKhoi)
                 .bio("Chi nhánh miền Bắc phân phối đồ bảo hộ và phụ tùng xe mô tô. Quản lý bởi Đỗ Trọng Khôi.")
                 .address("Số 168 Đường Trần Duy Hưng, Cầu Giấy, Hà Nội")
-                .phone("0901234567")
+                .phone("024.3999.8888")
                 .avatar("https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=300&q=80")
                 .cover("https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=1200&q=80")
                 .isActive(true).isOpen(true).commission(comm).point(980L).rating(5.0)
@@ -215,7 +297,7 @@ public class DataInitializer implements CommandLineRunner {
                 .owner(vendorTinh)
                 .bio("Chi nhánh miền Trung phân phối đồ bảo hộ và phụ tùng xe mô tô. Quản lý bởi Lê Nghĩa Tình.")
                 .address("Số 234 Đường Nguyễn Văn Linh, Hải Châu, Đà Nẵng")
-                .phone("0905678901")
+                .phone("0236.3888.999")
                 .avatar("https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=300&q=80")
                 .cover("https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=1200&q=80")
                 .isActive(true).isOpen(true).commission(comm).point(850L).rating(4.9)
@@ -1057,4 +1139,148 @@ public class DataInitializer implements CommandLineRunner {
             "/images/ohlins_suspension.jpg",
             "Đỉnh cao của hệ thống giảm xóc xe đua thế giới. Trang bị công nghệ van tiết lưu TTX độc quyền triệt tiêu hoàn toàn hiện tượng bọt khí dầu phuộc, đem lại độ êm ái, bám đường tuyệt đối khi vào cua tốc độ cao trên đường đua cũng như đường phố.");
     }
+
+    private void initDemoOrders(Map<Integer, Store> storeMap) {
+        if (orderRepository.count() > 0) {
+            log.info(">>> Đã có {} đơn hàng trong CSDL, bỏ qua seed đơn hàng demo.", orderRepository.count());
+            return;
+        }
+
+        User customerHung = userRepository.findByEmail("customer@duytruongmoto.com").orElse(null);
+        User customerHoang = userRepository.findByEmail("customer@gmail.com").orElse(customerHung);
+        User shipperTuan = userRepository.findByEmail("shipper@duytruongmoto.com").orElse(null);
+        Delivery delivVip = deliveryRepository.findAll().stream().findFirst().orElse(null);
+
+        Store s1 = storeMap.get(1); // Phu Nhuan HCM
+        Store s2 = storeMap.get(2); // Cau Giay HN
+        Store s3 = storeMap.get(3); // Hai Chau DN
+
+        // Order 1: Delivered - KTM 300 EXC
+        Product p1 = productRepository.findBySlug("ktm-300-exc-tpi-factory-edition-2024-101").orElse(null);
+        if (p1 != null && s1 != null && customerHung != null) {
+            BigDecimal total1 = p1.getEffectivePrice().add(BigDecimal.valueOf(1500000));
+            Order o1 = orderRepository.save(Order.builder()
+                .orderCode("DTM-2026-001")
+                .user(customerHung).store(s1).delivery(delivVip).shipper(shipperTuan)
+                .recipientName("Nguyễn Văn Hùng").phone("0918234567")
+                .address("Số 45 Đường Lê Lợi, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh")
+                .paymentMethod("VNPAY").isPaidBefore(true).status(OrderStatus.DELIVERED)
+                .amountFromUser(total1)
+                .amountToStore(total1.multiply(BigDecimal.valueOf(0.95)))
+                .amountToGD(total1.multiply(BigDecimal.valueOf(0.05)))
+                .note("Bàn giao xe sàn trượt VIP tận phòng khách, hướng dẫn bảo dưỡng 2 thì TPI.")
+                .createdAt(LocalDateTime.now().minusDays(3))
+                .updatedAt(LocalDateTime.now().minusDays(2))
+                .build());
+            orderItemRepository.save(OrderItem.builder().order(o1).product(p1).count(1).price(p1.getEffectivePrice()).selectedStyle("Cam Đen Factory").build());
+        }
+
+        // Order 2: Shipping - BMW S1000RR
+        Product p2 = productRepository.findBySlug("bmw-s1000rr-m-package-2025-ca-map-len-canh-3").orElse(null);
+        if (p2 != null && s2 != null && customerHoang != null) {
+            BigDecimal total2 = p2.getEffectivePrice().add(BigDecimal.valueOf(1500000));
+            Order o2 = orderRepository.save(Order.builder()
+                .orderCode("DTM-2026-002")
+                .user(customerHoang).store(s2).delivery(delivVip).shipper(shipperTuan)
+                .recipientName("Trần Minh Trí").phone("0983888999")
+                .address("Biệt thự Hoa Lan 02, Vinhomes Riverside, Quận Long Biên, Hà Nội")
+                .paymentMethod("VNPAY").isPaidBefore(true).status(OrderStatus.SHIPPING)
+                .amountFromUser(total2)
+                .amountToStore(total2.multiply(BigDecimal.valueOf(0.95)))
+                .amountToGD(total2.multiply(BigDecimal.valueOf(0.05)))
+                .note("Đang trên xe sàn trượt di chuyển từ showroom Cầu Giấy giao cho khách VIP.")
+                .createdAt(LocalDateTime.now().minusHours(18))
+                .updatedAt(LocalDateTime.now().minusHours(2))
+                .build());
+            orderItemRepository.save(OrderItem.builder().order(o2).product(p2).count(1).price(p2.getEffectivePrice()).selectedStyle("Trắng Xanh Đỏ M Motorsport").build());
+        }
+
+        // Order 3: Confirmed - Kawasaki KLX300
+        Product p3 = productRepository.findBySlug("kawasaki-klx300-dual-sport-a-ia-hinh-105").orElse(null);
+        if (p3 != null && s3 != null && customerHung != null) {
+            BigDecimal total3 = p3.getEffectivePrice();
+            Order o3 = orderRepository.save(Order.builder()
+                .orderCode("DTM-2026-003")
+                .user(customerHung).store(s3).delivery(delivVip).shipper(shipperTuan)
+                .recipientName("Lê Hoàng Nam").phone("0905123456")
+                .address("Số 89 Đường Bạch Đằng, Phường Hải Châu 1, Quận Hải Châu, Đà Nẵng")
+                .paymentMethod("COD").isPaidBefore(false).status(OrderStatus.CONFIRMED)
+                .amountFromUser(total3)
+                .amountToStore(total3.multiply(BigDecimal.valueOf(0.95)))
+                .amountToGD(total3.multiply(BigDecimal.valueOf(0.05)))
+                .note("Khách cọc giữ xe tại showroom, hẹn ngày đẹp lấy biển số HQCN.")
+                .createdAt(LocalDateTime.now().minusHours(8))
+                .updatedAt(LocalDateTime.now().minusHours(5))
+                .build());
+            orderItemRepository.save(OrderItem.builder().order(o3).product(p3).count(1).price(p3.getEffectivePrice()).selectedStyle("Xanh Cốm Lime Green").build());
+        }
+
+        // Order 4: Delivered - Đồ bảo hộ Dainese & AGV
+        Product p4 = productRepository.findBySlug("dainese-mugello-3-d-air-402").orElse(null);
+        Product p5 = productRepository.findBySlug("agv-pista-gp-rr-carbon-italia-401").orElse(null);
+        if (p4 != null && s1 != null && customerHoang != null) {
+            BigDecimal total4 = p4.getEffectivePrice();
+            if (p5 != null) total4 = total4.add(p5.getEffectivePrice());
+            Order o4 = orderRepository.save(Order.builder()
+                .orderCode("DTM-2026-004")
+                .user(customerHoang).store(s1).delivery(delivVip).shipper(shipperTuan)
+                .recipientName("Vũ Thành Đạt").phone("0938555777")
+                .address("Căn hộ Landmark 81, 720A Điện Biên Phủ, Phường 22, Quận Bình Thạnh, TP. Hồ Chí Minh")
+                .paymentMethod("VNPAY").isPaidBefore(true).status(OrderStatus.DELIVERED)
+                .amountFromUser(total4)
+                .amountToStore(total4.multiply(BigDecimal.valueOf(0.95)))
+                .amountToGD(total4.multiply(BigDecimal.valueOf(0.05)))
+                .note("Giao giáp liền và mũ carbon nguyên seal, đã kiểm tra phụ kiện đầy đủ.")
+                .createdAt(LocalDateTime.now().minusDays(5))
+                .updatedAt(LocalDateTime.now().minusDays(4))
+                .build());
+            orderItemRepository.save(OrderItem.builder().order(o4).product(p4).count(1).price(p4.getEffectivePrice()).selectedStyle("Đen Trắng Đỏ Fluo Racing").build());
+            if (p5 != null) {
+                orderItemRepository.save(OrderItem.builder().order(o4).product(p5).count(1).price(p5.getEffectivePrice()).selectedStyle("Carbon Italia 3 Màu Cờ Ý").build());
+            }
+        }
+
+        // Order 5: Picked Up - Pô SC Project
+        Product p6 = productRepository.findBySlug("sc-project-sc1-r-titanium-404").orElse(null);
+        if (p6 != null && s2 != null && customerHung != null) {
+            BigDecimal total5 = p6.getEffectivePrice();
+            Order o5 = orderRepository.save(Order.builder()
+                .orderCode("DTM-2026-005")
+                .user(customerHung).store(s2).delivery(delivVip).shipper(shipperTuan)
+                .recipientName("Đặng Quốc Tuấn").phone("0912345678")
+                .address("Số 12 Phố Tràng Tiền, Quận Hoàn Kiếm, Hà Nội")
+                .paymentMethod("VNPAY").isPaidBefore(true).status(OrderStatus.PICKED_UP)
+                .amountFromUser(total5)
+                .amountToStore(total5.multiply(BigDecimal.valueOf(0.95)))
+                .amountToGD(total5.multiply(BigDecimal.valueOf(0.05)))
+                .note("Shipper đã nhận hàng từ kho Cầu Giấy, bàn giao trong ngày.")
+                .createdAt(LocalDateTime.now().minusHours(4))
+                .updatedAt(LocalDateTime.now().minusMinutes(45))
+                .build());
+            orderItemRepository.save(OrderItem.builder().order(o5).product(p6).count(1).price(p6.getEffectivePrice()).selectedStyle("Titanium Mờ Lưới Tổ Ong").build());
+        }
+
+        // Order 6: Not processed - Yamaha WR450F
+        Product p7 = productRepository.findBySlug("yamaha-wr450f-rally-champion-2024-108").orElse(null);
+        if (p7 != null && s3 != null && customerHoang != null) {
+            BigDecimal total6 = p7.getEffectivePrice();
+            Order o6 = orderRepository.save(Order.builder()
+                .orderCode("DTM-2026-006")
+                .user(customerHoang).store(s3).delivery(delivVip).shipper(shipperTuan)
+                .recipientName("Phạm Quốc Bảo").phone("0905777888")
+                .address("Số 268 Đường Trần Hưng Đạo, Phường An Hải Tây, Quận Sơn Trà, Đà Nẵng")
+                .paymentMethod("COD").isPaidBefore(false).status(OrderStatus.NOT_PROCESSED)
+                .amountFromUser(total6)
+                .amountToStore(total6.multiply(BigDecimal.valueOf(0.95)))
+                .amountToGD(total6.multiply(BigDecimal.valueOf(0.05)))
+                .note("Đơn mới tạo qua website, chờ quản lý showroom Đà Nẵng duyệt xuất kho.")
+                .createdAt(LocalDateTime.now().minusMinutes(25))
+                .updatedAt(LocalDateTime.now().minusMinutes(25))
+                .build());
+            orderItemRepository.save(OrderItem.builder().order(o6).product(p7).count(1).price(p7.getEffectivePrice()).selectedStyle("Xanh Yamaha Racing Blue").build());
+        }
+
+        log.info(">>> Đã khởi tạo thành công 6 đơn hàng mẫu phủ khắp 3 Showroom Duy Trương Moto!");
+    }
+
 }

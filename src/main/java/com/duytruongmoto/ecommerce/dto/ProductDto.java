@@ -37,7 +37,6 @@ public class ProductDto {
     private String odo;
     private String year;
     @Builder.Default
-    @Builder.Default
     private List<String> badges = new ArrayList<>();
     @Builder.Default
     private List<BranchStockDto> branchStocks = new ArrayList<>();

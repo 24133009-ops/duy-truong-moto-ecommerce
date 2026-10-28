@@ -76,7 +76,8 @@ public class OrderApiController {
             String phone = (String) req.getOrDefault("phone", "0901234567");
             String address = (String) req.getOrDefault("address", "Showroom Duy Trương Motor");
             String paymentMethod = (String) req.getOrDefault("paymentMethod", "COD");
-            Boolean isPaid = (Boolean) req.getOrDefault("isPaid", false);
+            // Bao mat: Khong tin tuong flag isPaid tu client, luon khoi tao false cho den khi co callback VNPAY hop le
+            Boolean isPaid = false;
             BigDecimal totalAmount = new BigDecimal(req.getOrDefault("totalAmount", "0").toString());
 
             // Default fallback entities

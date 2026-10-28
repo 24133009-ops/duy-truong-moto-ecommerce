@@ -94,6 +94,41 @@ public class VnPayService {
         return vnpUrl + "?" + query.toString();
     }
 
+    public boolean validateSignature(Map<String, String> fields) {
+        String vnpSecureHash = fields.get("vnp_SecureHash");
+        if (vnpSecureHash == null || vnpSecureHash.trim().isEmpty()) {
+            return false;
+        }
+
+        List<String> fieldNames = new ArrayList<>(fields.keySet());
+        fieldNames.remove("vnp_SecureHash");
+        fieldNames.remove("vnp_SecureHashType");
+        Collections.sort(fieldNames);
+
+        StringBuilder hashData = new StringBuilder();
+        try {
+            Iterator<String> itr = fieldNames.iterator();
+            while (itr.hasNext()) {
+                String fieldName = itr.next();
+                String fieldValue = fields.get(fieldName);
+                if (fieldValue != null && fieldValue.length() > 0) {
+                    hashData.append(fieldName);
+                    hashData.append('=');
+                    hashData.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
+                    if (itr.hasNext()) {
+                        hashData.append('&');
+                    }
+                }
+            }
+        } catch (UnsupportedEncodingException e) {
+            log.error("VNPAY signature hash encoding error", e);
+            return false;
+        }
+
+        String signValue = hmacSHA512(vnpHashSecret, hashData.toString());
+        return signValue.equalsIgnoreCase(vnpSecureHash);
+    }
+
     public static String hmacSHA512(final String key, final String data) {
         try {
             if (key == null || data == null) return "";

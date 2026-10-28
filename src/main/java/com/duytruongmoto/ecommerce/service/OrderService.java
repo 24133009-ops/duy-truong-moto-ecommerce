@@ -23,10 +23,18 @@ public class OrderService {
     private final DeliveryRepository deliveryRepository;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
+    private final VoucherRepository voucherRepository;
+    private final VoucherService voucherService;
 
     @Transactional
     public Order createOrder(Long userId, String recipientName, String phone, String address,
                             Long deliveryId, String paymentMethod, String note) {
+        return createOrder(userId, recipientName, phone, address, deliveryId, paymentMethod, note, null);
+    }
+
+    @Transactional
+    public Order createOrder(Long userId, String recipientName, String phone, String address,
+                            Long deliveryId, String paymentMethod, String note, String voucherCode) {
         Cart cart = cartRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalStateException("Giỏ hàng của bạn đang trống!"));
 
@@ -46,6 +54,19 @@ public class OrderService {
 
         BigDecimal totalAmount = subtotal.add(delivery.getPrice());
 
+        // Áp dụng Voucher giảm giá nếu khách nhập mã
+        BigDecimal discountAmount = BigDecimal.ZERO;
+        if (voucherCode != null && !voucherCode.isBlank()) {
+            Voucher voucher = voucherRepository.findByCodeIgnoreCaseAndIsDeletedFalse(voucherCode.trim()).orElse(null);
+            if (voucher != null && voucher.isValid()) {
+                discountAmount = voucherService.calculateDiscount(voucher, subtotal);
+                voucher.setUsedCount(voucher.getUsedCount() + 1);
+                voucherRepository.save(voucher);
+            }
+        }
+        totalAmount = totalAmount.subtract(discountAmount);
+        if (totalAmount.compareTo(BigDecimal.ZERO) < 0) totalAmount = BigDecimal.ZERO;
+
         // Hoa hồng sàn (ví dụ 5% hoặc theo cấu hình commission của store)
         BigDecimal commissionRate = (store.getCommission() != null) ? store.getCommission().getCost() : BigDecimal.valueOf(5.0);
         BigDecimal amountToGD = subtotal.multiply(commissionRate).divide(BigDecimal.valueOf(100));
@@ -62,7 +83,7 @@ public class OrderService {
                 .phone(phone)
                 .address(address)
                 .status(OrderStatus.NOT_PROCESSED)
-                .isPaidBefore("VNPAY".equalsIgnoreCase(paymentMethod) || "MOMO".equalsIgnoreCase(paymentMethod))
+                .isPaidBefore(false)
                 .paymentMethod(paymentMethod)
                 .amountFromUser(totalAmount)
                 .amountToStore(amountToStore)

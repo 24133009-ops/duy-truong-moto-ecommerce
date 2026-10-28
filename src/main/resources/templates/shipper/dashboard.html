@@ -23,6 +23,38 @@
             <span class="badge bg-gold text-dark fs-6" th:text="${#lists.size(orders)} + ' Cuốc Xe Bàn Giao'"></span>
         </div>
 
+        <!-- Shipper Metrics Overview -->
+        <div class="row g-3 mb-4">
+            <div class="col-sm-6 col-lg-3">
+                <div class="glass-panel p-3 rounded-4">
+                    <div class="text-secondary small fw-bold mb-1">TỔNG ĐƠN PHÂN CÔNG</div>
+                    <h3 class="fw-black text-white mb-0" th:text="${totalAssigned} + ' Chuyến'"></h3>
+                    <div class="small text-secondary mt-1">Được gán cho tài xế</div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="glass-panel p-3 rounded-4">
+                    <div class="text-secondary small fw-bold mb-1">ĐANG TRÊN ĐƯỜNG GIAO</div>
+                    <h3 class="fw-black text-warning mb-0" th:text="${inTransitCount} + ' Đơn'"></h3>
+                    <div class="small text-warning mt-1">Sàn trượt đang vận chuyển</div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="glass-panel p-3 rounded-4">
+                    <div class="text-secondary small fw-bold mb-1">ĐÃ BÀN GIAO XONG</div>
+                    <h3 class="fw-black text-success mb-0" th:text="${deliveredCount} + ' Xe'"></h3>
+                    <div class="small text-success mt-1">Khách ký biên bản nghiệm thu</div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="glass-panel p-3 rounded-4">
+                    <div class="text-secondary small fw-bold mb-1">TIỀN THU HỘ (COD)</div>
+                    <h3 class="fw-black text-gradient-gold mb-0" th:text="${#numbers.formatDecimal(totalCod, 0, 'COMMA', 0, 'POINT')} + ' đ'"></h3>
+                    <div class="small text-gold mt-1">Tiền mặt bàn giao về kho</div>
+                </div>
+            </div>
+        </div>
+
         <!-- Alert Messages -->
         <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show bg-success text-white border-0 rounded-4 shadow">
             <i class="fa-solid fa-circle-check me-2"></i> <span th:text="${successMessage}"></span>

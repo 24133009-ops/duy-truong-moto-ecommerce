@@ -53,6 +53,10 @@ public class User {
     @Column(nullable = false)
     private Boolean isPhoneActive = false;
 
+    @Builder.Default
+    @Column(nullable = false)
+    private Boolean isBlocked = false;
+
     private String otpCode;
     private LocalDateTime otpExpiry;
 

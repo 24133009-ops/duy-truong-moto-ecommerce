@@ -16,8 +16,11 @@
     <div class="container py-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <a th:href="@{/admin/dashboard}" class="text-gold text-decoration-none small d-inline-block mb-1"><i class="fa-solid fa-arrow-left me-1"></i> Trở về Dashboard Admin</a>
-                <h3 class="fw-bold text-white mb-0"><i class="fa-solid fa-store text-gold me-2"></i> QUẢN LÝ & CẤP PHÉP CHUỖI SHOWROOM CHI NHÁNH</h3>
+                <a th:href="@{/admin/dashboard}" class="text-gold text-decoration-none small d-inline-block mb-1">
+                    <i class="fa-solid fa-arrow-left me-1"></i> Trở về Dashboard Admin
+                </a>
+                <h3 class="fw-bold text-white mb-0"><i class="fa-solid fa-store text-gold me-2"></i> QUẢN LÝ &amp; CẤP PHÉP CHUỖI SHOWROOM CHI NHÁNH</h3>
+                <p class="text-secondary small">Kiểm soát hoạt động các showroom Hà Nội, TP.HCM, Đà Nẵng và cấu hình chiết khấu hoa hồng sàn.</p>
             </div>
         </div>
 
@@ -26,17 +29,17 @@
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
         </div>
 
-        <div class="glass-panel p-4 rounded-4">
+        <div class="glass-panel p-4 rounded-4 shadow">
             <div class="table-responsive">
                 <table class="table table-dark table-borderless align-middle mb-0">
                     <thead>
                         <tr class="border-bottom border-secondary text-gold small">
                             <th>SHOWROOM</th>
-                            <th>CHỦ SỞ HỮU</th>
+                            <th>QUẢN LÝ (VENDOR)</th>
                             <th>ĐỊA CHỈ</th>
                             <th>HOTLINE</th>
-                            <th>HOA HỒNG SÀN</th>
-                            <th>TRẠNG THÁI HOẠT ĐỘNG</th>
+                            <th>CHIẾT KHẤU SÀN</th>
+                            <th>TRẠNG THÁI</th>
                             <th>THAO TÁC CẤP PHÉP</th>
                         </tr>
                     </thead>
@@ -51,20 +54,25 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="text-white small" th:text="${st.owner.getFullName()}"></td>
+                            <td class="text-white small" th:text="${st.owner != null ? st.owner.getFullName() : 'Chưa gán'}"></td>
                             <td class="text-secondary small" style="max-width: 250px;" th:text="${st.address}"></td>
                             <td class="text-gold small fw-bold" th:text="${st.phone}"></td>
                             <td>
-                                <span class="badge bg-dark border border-secondary text-warning" th:text="${st.commission != null ? st.commission.cost + '%' : '5.0%'}"></span>
+                                <form th:action="@{'/admin/stores/' + ${st.id} + '/commission'}" method="post" class="d-flex align-items-center gap-1">
+                                    <select name="commissionId" class="form-select form-select-sm bg-black text-warning border-secondary" onchange="this.form.submit()" style="max-width: 130px;">
+                                        <option th:each="c : ${commissions}" th:value="${c.id}" th:text="${c.name} + ' (' + ${c.cost} + '%)'" th:selected="${st.commission != null and st.commission.id == c.id}"></option>
+                                    </select>
+                                </form>
                             </td>
                             <td>
-                                <span th:if="${st.isActive}" class="badge bg-success">Đã Cấp Phép</span>
+                                <span th:if="${st.isActive}" class="badge bg-success">Đang Hoạt Động</span>
                                 <span th:if="${!st.isActive}" class="badge bg-danger">Bị Tạm Khóa</span>
                             </td>
                             <td>
-                                <form th:action="@{/admin/stores/{id}/toggle(id=${st.id})}" method="post">
+                                <form th:action="@{/admin/stores/{id}/toggle(id=${st.id})}" method="post"
+                                      th:onsubmit="return confirm('Xác nhận ' + (${st.isActive} ? 'TẠM KHÓA' : 'CẤP PHÉP HOẠT ĐỘNG') + ' showroom: ' + [[${st.name}]] + '?');">
                                     <input type="hidden" name="isActive" th:value="${!st.isActive}">
-                                    <button type="submit" class="btn btn-sm rounded-pill px-3" 
+                                    <button type="submit" class="btn btn-sm rounded-pill px-3 fw-bold" 
                                             th:classappend="${st.isActive ? 'btn-outline-danger' : 'btn-outline-success'}"
                                             th:text="${st.isActive ? 'Khóa Cửa Hàng' : 'Cấp Phép Ngay'}">
                                     </button>

@@ -21,6 +21,26 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || (
 export default function App() {
   // --- STATE LAYER ---
   const [currentRoleKey, setCurrentRoleKey] = useState('guest');
+  const [isRoleDockMinimized, setIsRoleDockMinimized] = useState(false);
+
+  // --- REAL AUTHENTICATION & SESSION STATE ---
+  const [authToken, setAuthToken] = useState(() => localStorage.getItem('dtm_auth_token') || '');
+  const [authUser, setAuthUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem('dtm_auth_user');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState('login'); // 'login' | 'register'
+  const [loginForm, setLoginForm] = useState({ email: '', password: '' });
+  const [registerForm, setRegisterForm] = useState({ firstname: '', lastname: '', email: '', phone: '', password: '' });
+  const [authError, setAuthError] = useState('');
+  const [authSuccess, setAuthSuccess] = useState('');
+  const [authLoading, setAuthLoading] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentTab, setCurrentTab] = useState('home'); // home, products, showrooms, orders, vendor, admin, shipper
   const [selectedShowroomFilter, setSelectedShowroomFilter] = useState('all');
   const [selectedCategoryGroup, setSelectedCategoryGroup] = useState('all'); // all, rider-gear, bike-parts, motor
@@ -40,10 +60,12 @@ export default function App() {
     message: 'Đang kết nối backend Spring Boot...'
   });
 
-  // Live Backend API Synchronization
+  // Live Backend API Synchronization (Products & Orders)
   useEffect(() => {
     let isMounted = true;
     const syncWithBackend = async () => {
+      // 1. Sync Products
+      setIsProductsLoading(true);
       try {
         const res = await fetch(`${API_BASE_URL}/products`);
         if (res.ok) {
@@ -55,11 +77,11 @@ export default function App() {
               source: 'LIVE_API',
               message: `Đã kết nối trực tiếp Spring Boot 3 REST API (${liveData.length} sản phẩm đồng bộ từ DB)`
             });
-            console.log(`[Duy Trương Motor] ✅ Live API Synchronized ${liveData.length} products!`);
+            console.log(`[Duy Trương Moto] ✅ Live API Synchronized ${liveData.length} products!`);
           }
         }
       } catch (err) {
-        console.warn("[Duy Trương Motor] Backend API unreachable, operating in resilient standalone mode:", err);
+        console.warn("[Duy Trương Moto] Backend API unreachable for products:", err);
         if (isMounted) {
           setApiStatus({
             connected: false,
@@ -67,6 +89,25 @@ export default function App() {
             message: 'Chế độ độc lập (Frontend Static Resilience)'
           });
         }
+      } finally {
+        if (isMounted) setIsProductsLoading(false);
+      }
+
+      // 2. Sync Orders
+      setIsOrdersLoading(true);
+      try {
+        const orderRes = await fetch(`${API_BASE_URL}/orders`);
+        if (orderRes.ok) {
+          const liveOrders = await orderRes.json();
+          if (isMounted && Array.isArray(liveOrders)) {
+            setOrders(liveOrders);
+            console.log(`[Duy Trương Moto] ✅ Live API Synchronized ${liveOrders.length} orders!`);
+          }
+        }
+      } catch (err) {
+        console.warn("[Duy Trương Moto] Backend API unreachable for orders:", err);
+      } finally {
+        if (isMounted) setIsOrdersLoading(false);
       }
     };
 
@@ -76,23 +117,7 @@ export default function App() {
   const [cart, setCart] = useState([
     { product: INITIAL_PRODUCTS[0], count: 1 } // Default 1 KTM 300 EXC TPI in cart
   ]);
-  const [orders, setOrders] = useState([
-    {
-      id: "DTM-9824A1B2",
-      customerName: "Hoàng Biker",
-      phone: "0905.678.901",
-      address: "123 Hoàng Văn Thụ, Phường 8, Quận Phú Nhuận, TP. HCM",
-      productName: "KTM 300 EXC TPI Factory Edition 2024",
-      productImage: INITIAL_PRODUCTS[0].image,
-      storeName: "Showroom Phú Nhuận TP.HCM",
-      deliveryName: "Giao xe cào cào sàn trượt thủy lực VIP tận nhà",
-      totalAmount: 369500000,
-      paymentMethod: "VNPAY",
-      isPaid: true,
-      status: "CONFIRMED", // NOT_PROCESSED, CONFIRMED, SHIPPING, DELIVERED, CANCELLED
-      date: "25/10/2026 14:30"
-    }
-  ]);
+  const [orders, setOrders] = useState([]);
 
   // Modal States
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -150,7 +175,164 @@ export default function App() {
   const [chatInput, setChatInput] = useState('');
   const [isBotTyping, setIsBotTyping] = useState(false);
 
-  const currentUser = DEMO_USERS[currentRoleKey];
+  // --- REAL AUTHENTICATION HANDLERS ---
+  const handleLoginSubmit = async (e, directEmail, directPass, directRoleKey) => {
+    if (e) e.preventDefault();
+    const email = directEmail || loginForm.email;
+    const password = directPass || loginForm.password;
+    if (!email || !password) {
+      setAuthError('Vui lòng nhập đầy đủ email và mật khẩu!');
+      return;
+    }
+    setAuthLoading(true);
+    setAuthError('');
+    setAuthSuccess('');
+    try {
+      const res = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim(), password })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setAuthError(data.error || 'Email hoặc mật khẩu không chính xác!');
+        return;
+      }
+      const token = data.token || ('jwt-dtm-' + Date.now());
+      localStorage.setItem('dtm_auth_token', token);
+      localStorage.setItem('dtm_auth_user', JSON.stringify(data));
+      setAuthToken(token);
+      setAuthUser(data);
+      setIsAuthModalOpen(false);
+
+      if (directRoleKey) {
+        setCurrentRoleKey(directRoleKey);
+      } else {
+        if (data.role === 'ROLE_ADMIN') setCurrentRoleKey('admin');
+        else if (data.role === 'ROLE_VENDOR') {
+          if (data.email && data.email.includes('nghiatinh')) setCurrentRoleKey('vendor_tinh');
+          else setCurrentRoleKey('vendor');
+        } else if (data.role === 'ROLE_SHIPPER') setCurrentRoleKey('shipper');
+        else setCurrentRoleKey('customer');
+      }
+    } catch (err) {
+      console.warn('API login error, fallback to resilience:', err);
+      if (directRoleKey && DEMO_USERS[directRoleKey]) {
+        setCurrentRoleKey(directRoleKey);
+        setAuthUser(DEMO_USERS[directRoleKey]);
+        setIsAuthModalOpen(false);
+      } else {
+        setAuthError('Không thể kết nối đến máy chủ backend. Vui lòng thử lại!');
+      }
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  const handleRegisterSubmit = async (e) => {
+    e.preventDefault();
+    if (!registerForm.email || !registerForm.password || !registerForm.firstname) {
+      setAuthError('Vui lòng điền đầy đủ họ tên, email và mật khẩu!');
+      return;
+    }
+    setAuthLoading(true);
+    setAuthError('');
+    try {
+      const res = await fetch(`${API_BASE_URL}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(registerForm)
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setAuthError(data.error || 'Đăng ký tài khoản không thành công!');
+        return;
+      }
+      setAuthSuccess('Đăng ký tài khoản thành công! Bạn có thể đăng nhập ngay.');
+      setAuthModalMode('login');
+      setLoginForm({ email: registerForm.email, password: registerForm.password });
+    } catch (err) {
+      setAuthError('Lỗi kết nối máy chủ backend!');
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('dtm_auth_token');
+    localStorage.removeItem('dtm_auth_user');
+    setAuthToken('');
+    setAuthUser(null);
+    setCurrentRoleKey('guest');
+    setCurrentTab('home');
+  };
+
+  const handleQuickSwitchRole = (roleKey, email, pass, targetTab) => {
+    if (roleKey === 'guest') {
+      handleLogout();
+      if (targetTab) setCurrentTab(targetTab);
+      return;
+    }
+    handleLoginSubmit(null, email, pass, roleKey);
+    if (targetTab) setCurrentTab(targetTab);
+  };
+
+  const currentUser = authUser ? {
+    role: authUser.role?.replace('ROLE_', '') || 'CUSTOMER',
+    name: authUser.fullName || authUser.email,
+    levelTitle: authUser.levelName || 'Thành viên Biker',
+    permissions: authUser.role === 'ROLE_ADMIN' ? 'Toàn quyền quản trị 3 chi nhánh' : 'Quản lý tài khoản',
+    avatar: authUser.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80',
+    email: authUser.email,
+    canBuy: true
+  } : DEMO_USERS[currentRoleKey];
+
+  // --- DYNAMIC FINANCIAL & ORDER METRICS (Calculated directly from live database orders) ---
+  const adminTotalGmv = useMemo(() => {
+    return orders.reduce((sum, o) => sum + (Number(o.totalAmount || o.amountFromUser) || 0), 0);
+  }, [orders]);
+
+  const adminCommission = useMemo(() => {
+    return Math.round(adminTotalGmv * 0.05);
+  }, [adminTotalGmv]);
+
+  const adminNetPayout = useMemo(() => {
+    return adminTotalGmv - adminCommission;
+  }, [adminTotalGmv, adminCommission]);
+
+  // Current Vendor Store Orders
+  const currentStoreOrders = useMemo(() => {
+    if (!currentUser.storeId) return orders;
+    return orders.filter(o => {
+      if (o.storeId && Number(o.storeId) === Number(currentUser.storeId)) return true;
+      if (o.store && Number(o.store.id) === Number(currentUser.storeId)) return true;
+      if (o.storeName) {
+        if (currentUser.storeId === 1 && (o.storeName.includes('Phú Nhuận') || o.storeName.includes('HCM'))) return true;
+        if (currentUser.storeId === 2 && (o.storeName.includes('Cầu Giấy') || o.storeName.includes('Hà Nội'))) return true;
+        if (currentUser.storeId === 3 && (o.storeName.includes('Hải Châu') || o.storeName.includes('Đà Nẵng'))) return true;
+      }
+      return false;
+    });
+  }, [orders, currentUser]);
+
+  const vendorGmv = useMemo(() => {
+    return currentStoreOrders.reduce((sum, o) => sum + (Number(o.totalAmount || o.amountFromUser) || 0), 0);
+  }, [currentStoreOrders]);
+
+  const vendorNetRevenue = useMemo(() => {
+    return Math.round(vendorGmv * 0.95);
+  }, [vendorGmv]);
+
+  // User Orders Count
+  const userOrders = useMemo(() => {
+    if (currentRoleKey === 'guest') return [];
+    return orders.filter(o => {
+      if (o.phone && currentUser.phone && o.phone === currentUser.phone) return true;
+      if (o.customerName && currentUser.name && o.customerName.includes(currentUser.name.split(' ')[0])) return true;
+      return false;
+    });
+  }, [orders, currentUser, currentRoleKey]);
+
 
   // Live Countdown Timer for VNPAY QR Payment
   useEffect(() => {
@@ -464,59 +646,60 @@ export default function App() {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
 
-      {/* 1. TOP UTILITY BAR: MULTI-TIER RBAC ROLE SWITCHER HUD + SLOGAN & HOTLINE */}
-      <div className="top-slogan-bar" style={{ padding: '8px 48px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#07090e', borderBottom: '1px solid rgba(212,175,55,0.2)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-          <span style={{ color: 'var(--gold-primary)', fontWeight: 800, fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <i className="fa-solid fa-user-shield text-gold"></i> PHÂN QUYỀN RBAC:
-          </span>
-          <div className="role-chips" style={{ display: 'flex', gap: '6px' }}>
-            <button className={`role-chip ${currentRoleKey === 'guest' ? 'active' : ''}`} onClick={() => { setCurrentRoleKey('guest'); setCurrentTab('home'); }}>
-              1. Khách Vãng Lai
-            </button>
-            <button className={`role-chip ${currentRoleKey === 'customer' ? 'active' : ''}`} onClick={() => { setCurrentRoleKey('customer'); setCurrentTab('home'); }}>
-              2. Khách Mua (Biker)
-            </button>
-            <button className={`role-chip ${currentRoleKey === 'vendor' ? 'active' : ''}`} onClick={() => { setCurrentRoleKey('vendor'); setCurrentTab('vendor'); }}>
-              3. Khôi (Kho Cầu Giấy HN)
-            </button>
-            <button className={`role-chip ${currentRoleKey === 'vendor_tinh' ? 'active' : ''}`} onClick={() => { setCurrentRoleKey('vendor_tinh'); setCurrentTab('vendor'); }}>
-              4. Tình (Kho Hải Châu ĐN)
-            </button>
-            <button className={`role-chip ${currentRoleKey === 'admin' ? 'active' : ''}`} onClick={() => { setCurrentRoleKey('admin'); setCurrentTab('admin'); }}>
-              5. Duy (Tổng Sàn Admin)
-            </button>
-            <button className={`role-chip ${currentRoleKey === 'shipper' ? 'active' : ''}`} onClick={() => { setCurrentRoleKey('shipper'); setCurrentTab('shipper'); }}>
-              6. Tuấn (Shipper)
-            </button>
+      {/* 1. TOP SHOWROOM UTILITY BAR */}
+      <div className="top-slogan-bar" style={{ padding: '8px 36px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#06080e', borderBottom: '1px solid rgba(212,175,55,0.2)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '18px', fontSize: '0.82rem' }}>
+          <div style={{ color: 'var(--gold-light)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <i className="fa-solid fa-crown text-gold"></i>
+            <strong style={{ color: '#fff', letterSpacing: '0.5px' }}>DUY TRƯƠNG MOTO</strong>
+            <span style={{ color: 'rgba(255,255,255,0.2)' }}>|</span>
+            <span style={{ color: 'var(--gold-primary)', fontStyle: 'italic', fontWeight: 600 }}>"Mua của người chán - &amp; Bán cho người cần"</span>
           </div>
-          <span className="badge-hqcn" style={{ fontSize: '0.72rem', padding: '3px 8px' }}>
-            <i className="fa-solid fa-shield-halved me-1 text-gold"></i>
-            {currentUser.levelTitle || currentUser.name}
-          </span>
+          <div className="d-none d-xl-flex" style={{ color: '#10b981', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.78rem' }}>
+            <i className="fa-solid fa-circle-check"></i> 100% HQCN • Sang Tên 24h • Giao Xe Sàn Trượt VIP
+          </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '24px', fontSize: '0.82rem', color: 'var(--text-sub)' }}>
-          <div className="slogan-highlight d-none d-xl-flex" style={{ color: 'var(--gold-light)', fontSize: '0.82rem' }}>
-            <i className="fa-solid fa-quote-left text-gold me-1"></i>
-            <span>MUA CỦA NGƯỜI CHÁN - &amp; BÁN CHO NGƯỜI CẦN</span>
-          </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px', fontSize: '0.82rem', color: 'var(--text-sub)' }}>
           <div>
             <i className="fa-solid fa-phone text-gold me-1"></i> Hotline: <a href="tel:0903456789" style={{ color: 'var(--gold-primary)', textDecoration: 'none', fontWeight: 700 }}>0903.456.789</a>
           </div>
-          <div>
-            <i className="fa-solid fa-location-dot text-gold me-1"></i> Kho Chi Nhánh:
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <i className="fa-solid fa-location-dot text-gold"></i>
+            <span>Kho Showroom:</span>
             <select 
               value={selectedShowroomFilter} 
               onChange={(e) => setSelectedShowroomFilter(e.target.value)}
-              style={{ background: 'transparent', color: '#fff', border: 'none', marginLeft: '4px', fontWeight: 'bold', cursor: 'pointer', fontSize: '0.82rem' }}
+              style={{ background: '#0e111a', color: '#fff', border: '1px solid rgba(212,175,55,0.3)', borderRadius: '6px', padding: '3px 8px', fontWeight: '600', cursor: 'pointer', fontSize: '0.8rem' }}
             >
-              <option value="all" style={{ background: '#0e111a' }}>Toàn Quốc (3 Showroom)</option>
+              <option value="all">Toàn Quốc (3 Showroom)</option>
               {SHOWROOMS.map(s => (
-                <option key={s.id} value={s.id} style={{ background: '#0e111a' }}>{s.name}</option>
+                <option key={s.id} value={s.id}>{s.name}</option>
               ))}
             </select>
           </div>
+          <button
+            type="button"
+            onClick={() => setIsRoleDockMinimized(prev => !prev)}
+            style={{ 
+              background: 'rgba(212,175,55,0.12)', 
+              border: '1px solid var(--gold-primary)', 
+              color: 'var(--gold-light)', 
+              padding: '4px 12px', 
+              borderRadius: '16px', 
+              fontSize: '0.76rem', 
+              fontWeight: 700, 
+              cursor: 'pointer', 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '6px',
+              transition: 'all 0.2s'
+            }}
+            title="Bật/Tắt thanh điều khiển vai trò demo"
+          >
+            <i className="fa-solid fa-users-gear text-gold"></i>
+            <span>{isRoleDockMinimized ? 'Hiện vai trò demo' : 'Ẩn vai trò demo'}</span>
+          </button>
         </div>
       </div>
 
@@ -586,7 +769,7 @@ export default function App() {
             <img src={currentUser.avatar} alt="Avatar" style={{ width: '36px', height: '36px', borderRadius: '50%', border: '2px solid var(--gold-primary)', objectFit: 'cover' }} />
             <div style={{ fontSize: '0.82rem' }}>
               <div style={{ fontWeight: 700, color: '#fff' }}>{currentUser.name}</div>
-              <span style={{ color: 'var(--gold-primary)', fontSize: '0.68rem', fontWeight: 800 }}>[{currentUser.role}]</span>
+              <span style={{ color: 'var(--gold-primary)', fontSize: '0.68rem', fontWeight: 700 }}>{currentUser.levelTitle || currentUser.name}</span>
             </div>
           </div>
         </div>
@@ -840,7 +1023,7 @@ export default function App() {
                     </div>
                     <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#fff', marginTop: '6px' }}>KTM 300 EXC TPI Factory Edition 2024</div>
                     <div style={{ color: 'var(--gold-light)', fontWeight: 700, fontSize: '1rem', marginTop: '4px' }}>
-                      <span className="price-racing">{formatMoney(368000000)}</span> ({INITIAL_PRODUCTS[0].priceDisplay}) • 293cc TPI • 54 HP
+                      <span className="price-racing">{formatMoney(INITIAL_PRODUCTS[0].promotionalPrice || 355000000)}</span> ({INITIAL_PRODUCTS[0].priceDisplay}) • 293cc TPI • 54 HP
                     </div>
                   </div>
                 </div>
@@ -905,13 +1088,13 @@ export default function App() {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '32px', borderLeft: '4px solid var(--red-racing)', paddingLeft: '18px' }}>
                 <div>
                   <div style={{ color: 'var(--red-racing)', fontWeight: 800, fontSize: '0.85rem', letterSpacing: '1px' }}>
-                    <i className="fa-solid fa-fire me-1"></i> TIÊU CHÍ GUEST (ĐỀ TÀI YÊU CẦU)
+                    <i className="fa-solid fa-fire me-1"></i> BẢNG XẾP HẠNG DOANH SỐ SHOWROOM
                   </div>
                   <h2 className="brand-title" style={{ fontSize: '2.1rem', color: '#fff', margin: '4px 0' }}>
-                    TOP XE BÁN CHẠY TRÊN 10 CHIẾC (SẮP XẾP GIẢM DẦN)
+                    TOP XE & TRANG BỊ ĐƯỢC SĂN ĐÓN NHẤT (ĐÃ BÁN TRÊN 10 SẢN PHẨM)
                   </h2>
                   <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
-                    Tổng hợp từ hệ thống 3 Showroom Duy Trương Motor (Các dòng xe cào cào và siêu môtô bán trên 10 chiếc)
+                    Tổng hợp từ hệ thống 3 Showroom Duy Trương Motor • Các mẫu xe và đồ bảo hộ có lượt mua kỷ lục trên toàn quốc
                   </p>
                 </div>
                 <div style={{ background: '#121520', border: '1px solid var(--gold-primary)', color: 'var(--gold-light)', padding: '6px 16px', borderRadius: '20px', fontSize: '0.85rem', fontWeight: 700 }}>
@@ -923,7 +1106,7 @@ export default function App() {
                 {topOver10Sold.map(bike => (
                   <div key={bike.id} className="bike-card">
                     <div className="bike-img-box">
-                      <img src={bike.image} alt={bike.name} />
+                      <img src={bike.image} alt={bike.name} loading="lazy" />
                       <div className="badge-sold">
                         <i className="fa-solid fa-fire text-racing me-1"></i> Đã bán: <strong>{bike.sold} xe</strong>
                       </div>
@@ -1096,7 +1279,7 @@ export default function App() {
                     {filteredProducts.map(bike => (
                       <div key={bike.id} className="bike-card">
                         <div className="bike-img-box">
-                          <img src={bike.image} alt={bike.name} />
+                          <img src={bike.image} alt={bike.name} loading="lazy" />
                           <div className="badge-showroom">
                             <i className="fa-solid fa-store text-gold me-1"></i> {bike.storeName}
                           </div>
@@ -1254,7 +1437,7 @@ export default function App() {
           <div style={{ maxWidth: '1240px', margin: '0 auto', padding: '50px 30px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
               <div>
-                <span style={{ background: 'var(--gold-primary)', color: '#000', padding: '4px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 800 }}>KÊNH STORE MANAGER</span>
+                <span style={{ background: 'var(--gold-primary)', color: '#000', padding: '4px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 800 }}>QUẢN TRỊ SHOWROOM CHI NHÁNH</span>
                 <h2 className="brand-title" style={{ fontSize: '2.2rem', color: '#fff', marginTop: '6px' }}>
                   {currentUser.storeName ? currentUser.storeName.toUpperCase() : "QUẢN TRỊ KHO CHI NHÁNH"}
                 </h2>
@@ -1271,8 +1454,8 @@ export default function App() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px', marginBottom: '36px' }}>
               <div className="glass-box" style={{ padding: '24px' }}>
                 <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 700 }}>DOANH THU CHI NHÁNH</div>
-                <div className="price-racing text-gradient-gold" style={{ fontSize: '2.2rem', margin: '8px 0' }}>{formatMoney(currentUser.storeId === 2 ? 1850000000 : (currentUser.storeId === 3 ? 1240000000 : 2450000000))}</div>
-                <div style={{ color: '#28a745', fontSize: '0.8rem' }}><i className="fa-solid fa-arrow-up"></i> +18.5% so với tháng trước</div>
+                <div className="price-racing text-gradient-gold" style={{ fontSize: '2.2rem', margin: '8px 0' }}>{formatMoney(vendorGmv)}</div>
+                <div style={{ color: '#28a745', fontSize: '0.8rem' }}><i className="fa-solid fa-receipt"></i> {currentStoreOrders.length} đơn hàng chi nhánh</div>
               </div>
               <div className="glass-box" style={{ padding: '24px' }}>
                 <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 700 }}>MẶT HÀNG TRONG KHO</div>
@@ -1281,8 +1464,8 @@ export default function App() {
               </div>
               <div className="glass-box" style={{ padding: '24px' }}>
                 <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 700 }}>VÍ TIỀN CHI NHÁNH</div>
-                <div className="price-racing" style={{ fontSize: '2.2rem', color: '#fff', margin: '8px 0' }}>{formatMoney(currentUser.storeId === 2 ? 180000000 : (currentUser.storeId === 3 ? 140000000 : 280000000))}</div>
-                <div style={{ color: 'var(--text-sub)', fontSize: '0.8rem' }}>Sẵn sàng rút về tài khoản chi nhánh</div>
+                <div className="price-racing" style={{ fontSize: '2.2rem', color: '#fff', margin: '8px 0' }}>{formatMoney(vendorNetRevenue)}</div>
+                <div style={{ color: 'var(--text-sub)', fontSize: '0.8rem' }}>Doanh thu thực nhận sau trừ 5% hoa hồng</div>
               </div>
             </div>
 
@@ -1305,7 +1488,7 @@ export default function App() {
                     {products.filter(p => p.storeId === (currentUser.storeId || 1)).map(p => (
                       <tr key={p.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
                         <td style={{ padding: '12px' }}>
-                          <img src={p.image} alt={p.name} style={{ width: '60px', height: '42px', objectFit: 'cover', borderRadius: '6px' }} />
+                          <img src={p.image} alt={p.name} loading="lazy" style={{ width: '60px', height: '42px', objectFit: 'cover', borderRadius: '6px' }} />
                         </td>
                         <td style={{ padding: '12px', fontWeight: 700, color: '#fff' }}>{p.name}</td>
                         <td style={{ padding: '12px', color: 'var(--gold-primary)', fontWeight: 700 }}>{formatMoney(p.price)}</td>
@@ -1329,7 +1512,7 @@ export default function App() {
         {currentTab === 'admin' && (
           <div style={{ maxWidth: '1240px', margin: '0 auto', padding: '50px 30px' }}>
             <div style={{ marginBottom: '32px' }}>
-              <span style={{ background: 'var(--red-racing)', color: '#fff', padding: '4px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 800 }}>TỔNG QUẢN TRỊ HỆ THỐNG</span>
+              <span style={{ background: 'var(--red-racing)', color: '#fff', padding: '4px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 800 }}>TRUNG TÂM ĐIỀU HÀNH CHUỖI SHOWROOM</span>
               <h2 className="brand-title" style={{ fontSize: '2.4rem', color: '#fff', marginTop: '6px' }}>
                 BẢNG ĐIỀU HÀNH TOÀN CHUỖI DUY TRƯƠNG MOTOR
               </h2>
@@ -1338,12 +1521,12 @@ export default function App() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '36px' }}>
               <div className="glass-box" style={{ padding: '22px' }}>
                 <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 700 }}>TỔNG GMV TOÀN SÀN</div>
-                <div className="price-racing text-gradient-gold" style={{ fontSize: '2rem', margin: '6px 0' }}>{formatMoney(9850000000)}</div>
+                <div className="price-racing text-gradient-gold" style={{ fontSize: '2rem', margin: '6px 0' }}>{formatMoney(adminTotalGmv)}</div>
                 <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Toàn bộ 3 chi nhánh</div>
               </div>
               <div className="glass-box" style={{ padding: '22px' }}>
                 <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 700 }}>HOA HỒNG SÀN (5%)</div>
-                <div className="price-racing" style={{ fontSize: '2rem', color: '#28a745', margin: '6px 0' }}>{formatMoney(492500000)}</div>
+                <div className="price-racing" style={{ fontSize: '2rem', color: '#28a745', margin: '6px 0' }}>{formatMoney(adminCommission)}</div>
                 <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Lợi nhuận trích sàn 5%</div>
               </div>
               <div className="glass-box" style={{ padding: '22px' }}>
@@ -1353,15 +1536,15 @@ export default function App() {
               </div>
               <div className="glass-box" style={{ padding: '22px' }}>
                 <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 700 }}>THÀNH VIÊN ĐÃ KÍCH HOẠT</div>
-                <div style={{ fontSize: '1.8rem', fontWeight: 900, color: 'var(--cyan-neon)', margin: '6px 0', fontFamily: 'var(--font-brand)' }}>1.450 Biker</div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Xác thực qua Email OTP</div>
+                <div style={{ fontSize: '1.8rem', fontWeight: 900, color: 'var(--cyan-neon)', margin: '6px 0', fontFamily: 'var(--font-brand)' }}>${orders.length} Đơn Hàng</div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Đã ghi nhận trên hệ thống</div>
               </div>
             </div>
 
             {/* Showroom Approval & Commission Management */}
             <div className="glass-box" style={{ padding: '28px' }}>
               <h4 style={{ color: 'var(--gold-primary)', fontWeight: 800, marginBottom: '20px', fontFamily: 'var(--font-brand)' }}>
-                <i className="fa-solid fa-building-circle-check me-2"></i> QUẢN LÝ CẤP PHÉP SHOWROOM (UC_018)
+                <i className="fa-solid fa-building-circle-check me-2"></i> QUẢN LÝ CẤP PHÉP SHOWROOM 
               </h4>
               <div style={{ overflowX: 'auto' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.9rem' }}>
@@ -1933,7 +2116,7 @@ export default function App() {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px', marginBottom: '30px' }}>
               <div>
-                <img src={activeProductDetail.image} alt={activeProductDetail.name} style={{ width: '100%', borderRadius: '16px', border: '1px solid var(--gold-primary)', objectFit: 'cover' }} />
+                <img src={activeProductDetail.image} alt={activeProductDetail.name} loading="lazy" style={{ width: '100%', borderRadius: '16px', border: '1px solid var(--gold-primary)', objectFit: 'cover' }} />
                 <div style={{ display: 'flex', gap: '8px', marginTop: '12px', flexWrap: 'wrap' }}>
                   <span className="badge-hqcn">Bao Test Hãng</span>
                   <span className="badge-odo">Odo: {activeProductDetail.odo || 'Mới 100%'}</span>
@@ -2027,7 +2210,7 @@ export default function App() {
                   {activeProductDetail.description}
                 </p>
 
-                {/* BRANCH INVENTORY LOOKUP (TÍNH NĂNG CHUỖI CỬA HÀNG ĐA CHI NHÁNH THEO ĐỀ TÀI) */}
+                {/* BRANCH INVENTORY LOOKUP (HỆ THỐNG QUẢN LÝ KHO ĐA CHI NHÁNH) */}
                 <div style={{ 
                   background: 'rgba(212, 175, 55, 0.06)', 
                   border: '1px solid rgba(212, 175, 55, 0.35)', 
@@ -2508,33 +2691,18 @@ export default function App() {
         </div>
       </footer>
 
-      {/* 13. RIGHT FLOATING QUICK ACTION DOCK (VƯƠNG KHANG MOTOR STYLE) */}
+      {/* 13. RIGHT FLOATING ACTION DOCK (2 NÚT GỌN GÀNG: HOTLINE & CHAT) */}
       <div className="vk-floating-dock">
-        <button className="vk-dock-btn" onClick={() => setIsChatOpen(true)} title="Định giá thu mua xe cũ">
-          <i className="fa-solid fa-handshake"></i>
-          <span className="dock-tooltip">Định Giá Thu Mua Xe</span>
-        </button>
-        <button className="vk-dock-btn" onClick={() => alert("CAM KẾT PHÁP LÝ DUY TRƯƠNG MOTOR:\n• 100% Xe Hải Quan Chính Ngạch (HQCN)\n• Bao sang tên bấm biển số toàn quốc\n• Bao rút hồ sơ gốc trong 24 giờ\n• Hoàn tiền 100% nếu phát hiện xe tranh chấp pháp lý!")} title="Hồ sơ pháp lý HQCN">
-          <i className="fa-solid fa-shield-halved"></i>
-          <span className="dock-tooltip">Hồ Sơ Pháp Lý HQCN</span>
-        </button>
-        <button className="vk-dock-btn" onClick={() => { setSelectedCategory('all'); setBrandFilter('all'); setCurrentTab('products'); }} title="Kho hình ảnh thực tế">
-          <i className="fa-solid fa-images"></i>
-          <span className="dock-tooltip">Kho Ảnh Xe Thực Tế</span>
-        </button>
-        <a href="tel:0903456789" className="vk-dock-btn" title="Hotline gọi ngay">
+        <a href="tel:0903456789" className="vk-dock-btn" style={{ background: '#10b981', color: '#fff', border: '2px solid #fff' }} title="Hotline tư vấn: 0903.456.789">
           <i className="fa-solid fa-phone"></i>
           <span className="dock-tooltip">Hotline: 0903.456.789</span>
         </a>
-        <a href="https://zalo.me/0903456789" target="_blank" rel="noreferrer" className="vk-dock-btn" style={{ background: '#0068ff', color: '#fff' }} title="Zalo tư vấn">
-          <i className="fa-solid fa-comment-dots"></i>
-          <span className="dock-tooltip">Zalo: 0903.456.789</span>
-        </a>
+        <button className="vk-dock-btn" onClick={() => setIsChatOpen(true)} style={{ background: 'linear-gradient(135deg, #d4af37, #aa771c)', color: '#000', border: '2px solid #fff' }} title="Tư vấn showroom trực tuyến">
+          <i className="fa-solid fa-comments"></i>
+          <span className="dock-tooltip">Tư Vấn Showroom 24/7</span>
+        </button>
       </div>
 
-
-
-    
       {/* 9.1 MODAL THƯƠNG LƯỢNG GIÁ & BỚT LỘC SHOWROOM */}
       {isNegotiateModalOpen && negotiateProduct && (
         <div className="modal-overlay" onClick={() => setIsNegotiateModalOpen(false)}>
@@ -2746,6 +2914,261 @@ export default function App() {
         </div>
       )}
 
+    
+
+      {/* ================= MODAL ĐĂNG NHẬP / ĐĂNG KÝ THỰC TẾ (REAL JWT AUTH) ================= */}
+      {isAuthModalOpen && (
+        <div className="auth-modal-overlay" onClick={() => setIsAuthModalOpen(false)}>
+          <div className="auth-modal-card" onClick={e => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <i className="fa-solid fa-shield-halved text-gold" style={{ fontSize: '1.4rem' }}></i>
+                <h4 style={{ margin: 0, fontWeight: 800, color: '#fff' }}>
+                  {authModalMode === 'login' ? 'ĐĂNG NHẬP HỆ THỐNG' : 'ĐĂNG KÝ THÀNH VIÊN'}
+                </h4>
+              </div>
+              <button 
+                type="button" 
+                onClick={() => setIsAuthModalOpen(false)}
+                style={{ background: 'transparent', border: 'none', color: '#94a3b8', fontSize: '1.2rem', cursor: 'pointer' }}
+              >
+                <i className="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+
+            <div className="auth-modal-tabs">
+              <button 
+                className={`auth-modal-tab ${authModalMode === 'login' ? 'active' : ''}`}
+                onClick={() => { setAuthModalMode('login'); setAuthError(''); setAuthSuccess(''); }}
+              >
+                <i className="fa-solid fa-arrow-right-to-bracket me-1"></i> Đăng Nhập
+              </button>
+              <button 
+                className={`auth-modal-tab ${authModalMode === 'register' ? 'active' : ''}`}
+                onClick={() => { setAuthModalMode('register'); setAuthError(''); setAuthSuccess(''); }}
+              >
+                <i className="fa-solid fa-user-plus me-1"></i> Đăng Ký
+              </button>
+            </div>
+
+            {authError && (
+              <div style={{ background: 'rgba(239, 68, 68, 0.15)', border: '1px solid #ef4444', color: '#fca5a5', padding: '10px 14px', borderRadius: '10px', fontSize: '0.85rem', marginBottom: '16px' }}>
+                <i className="fa-solid fa-circle-exclamation me-1"></i> {authError}
+              </div>
+            )}
+
+            {authSuccess && (
+              <div style={{ background: 'rgba(16, 185, 129, 0.15)', border: '1px solid #10b981', color: '#6ee7b7', padding: '10px 14px', borderRadius: '10px', fontSize: '0.85rem', marginBottom: '16px' }}>
+                <i className="fa-solid fa-circle-check me-1"></i> {authSuccess}
+              </div>
+            )}
+
+            {authModalMode === 'login' ? (
+              <div>
+                <form onSubmit={handleLoginSubmit}>
+                  <div className="auth-form-group">
+                    <label className="auth-form-label">Địa Chỉ Email</label>
+                    <input 
+                      type="email" 
+                      className="auth-form-input" 
+                      placeholder="admin@duytruongmoto.com hoặc email của bạn" 
+                      value={loginForm.email}
+                      onChange={e => setLoginForm({ ...loginForm, email: e.target.value })}
+                      required 
+                    />
+                  </div>
+                  <div className="auth-form-group">
+                    <label className="auth-form-label">Mật Khẩu</label>
+                    <input 
+                      type="password" 
+                      className="auth-form-input" 
+                      placeholder="••••••••" 
+                      value={loginForm.password}
+                      onChange={e => setLoginForm({ ...loginForm, password: e.target.value })}
+                      required 
+                    />
+                  </div>
+                  <button 
+                    type="submit" 
+                    className="btn-gold w-100 py-3 fw-bold mt-2" 
+                    style={{ borderRadius: '10px', border: 'none', cursor: 'pointer', fontSize: '0.95rem' }}
+                    disabled={authLoading}
+                  >
+                    {authLoading ? 'Đang xác thực...' : 'ĐĂNG NHẬP NGAY'}
+                  </button>
+                </form>
+
+                <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', marginTop: '20px', paddingTop: '16px' }}>
+                  <div style={{ fontSize: '0.78rem', color: '#94a3b8', fontWeight: 700, marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                    <i className="fa-solid fa-bolt text-gold me-1"></i> 1-Click Điền &amp; Đăng Nhập Tài Khoản Mẫu:
+                  </div>
+
+                  <div className="demo-account-pill-card" onClick={() => handleLoginSubmit(null, 'admin@duytruongmoto.com', 'admin123', 'admin')}>
+                    <div>
+                      <strong style={{ fontSize: '0.85rem', color: '#fff' }}><i className="fa-solid fa-shield-halved text-racing me-1"></i> Super Admin</strong> (Trương Quốc Duy)
+                      <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>admin@duytruongmoto.com • admin123</div>
+                    </div>
+                    <span style={{ background: 'rgba(229,9,20,0.2)', color: '#f87171', border: '1px solid rgba(229,9,20,0.4)', borderRadius: '6px', fontSize: '0.72rem', padding: '3px 8px', fontWeight: 700 }}>Toàn Sàn</span>
+                  </div>
+
+                  <div className="demo-account-pill-card" onClick={() => handleLoginSubmit(null, 'dotrongkhoi2002@gmail.com', 'vendor123', 'vendor')}>
+                    <div>
+                      <strong style={{ fontSize: '0.85rem', color: '#fff' }}><i className="fa-solid fa-warehouse text-gold me-1"></i> QL Kho Cầu Giấy HN</strong> (Đỗ Trọng Khôi)
+                      <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>dotrongkhoi2002@gmail.com • vendor123</div>
+                    </div>
+                    <span style={{ background: 'rgba(212,175,55,0.2)', color: 'var(--gold-light)', border: '1px solid rgba(212,175,55,0.4)', borderRadius: '6px', fontSize: '0.72rem', padding: '3px 8px', fontWeight: 700 }}>Hà Nội</span>
+                  </div>
+
+                  <div className="demo-account-pill-card" onClick={() => handleLoginSubmit(null, 'nghiatinh2002@gmail.com', 'vendor123', 'vendor_tinh')}>
+                    <div>
+                      <strong style={{ fontSize: '0.85rem', color: '#fff' }}><i className="fa-solid fa-warehouse text-gold me-1"></i> QL Kho Hải Châu ĐN</strong> (Lê Nghĩa Tình)
+                      <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>nghiatinh2002@gmail.com • vendor123</div>
+                    </div>
+                    <span style={{ background: 'rgba(212,175,55,0.2)', color: 'var(--gold-light)', border: '1px solid rgba(212,175,55,0.4)', borderRadius: '6px', fontSize: '0.72rem', padding: '3px 8px', fontWeight: 700 }}>Đà Nẵng</span>
+                  </div>
+
+                  <div className="demo-account-pill-card" onClick={() => handleLoginSubmit(null, 'customer@duytruongmoto.com', 'customer123', 'customer')}>
+                    <div>
+                      <strong style={{ fontSize: '0.85rem', color: '#fff' }}><i className="fa-solid fa-crown text-gold me-1"></i> Khách Hàng Biker VIP</strong>
+                      <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>customer@duytruongmoto.com • customer123</div>
+                    </div>
+                    <span style={{ background: 'rgba(255,255,255,0.1)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '6px', fontSize: '0.72rem', padding: '3px 8px', fontWeight: 700 }}>Biker</span>
+                  </div>
+
+                  <div className="demo-account-pill-card" onClick={() => handleLoginSubmit(null, 'shipper@duytruongmoto.com', 'shipper123', 'shipper')}>
+                    <div>
+                      <strong style={{ fontSize: '0.85rem', color: '#fff' }}><i className="fa-solid fa-truck-fast text-info me-1"></i> Đội Vận Tải Sàn Trượt VIP</strong>
+                      <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>shipper@duytruongmoto.com • shipper123</div>
+                    </div>
+                    <span style={{ background: 'rgba(6,182,212,0.2)', color: '#38bdf8', border: '1px solid rgba(6,182,212,0.4)', borderRadius: '6px', fontSize: '0.72rem', padding: '3px 8px', fontWeight: 700 }}>Vận Tải</span>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <form onSubmit={handleRegisterSubmit}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                  <div className="auth-form-group">
+                    <label className="auth-form-label">Họ &amp; Tên Đệm</label>
+                    <input 
+                      type="text" 
+                      className="auth-form-input" 
+                      placeholder="Nguyễn Văn" 
+                      value={registerForm.firstname}
+                      onChange={e => setRegisterForm({ ...registerForm, firstname: e.target.value })}
+                      required 
+                    />
+                  </div>
+                  <div className="auth-form-group">
+                    <label className="auth-form-label">Tên</label>
+                    <input 
+                      type="text" 
+                      className="auth-form-input" 
+                      placeholder="An" 
+                      value={registerForm.lastname}
+                      onChange={e => setRegisterForm({ ...registerForm, lastname: e.target.value })}
+                      required 
+                    />
+                  </div>
+                </div>
+                <div className="auth-form-group">
+                  <label className="auth-form-label">Địa Chỉ Email</label>
+                  <input 
+                    type="email" 
+                    className="auth-form-input" 
+                    placeholder="biker@gmail.com" 
+                    value={registerForm.email}
+                    onChange={e => setRegisterForm({ ...registerForm, email: e.target.value })}
+                    required 
+                  />
+                </div>
+                <div className="auth-form-group">
+                  <label className="auth-form-label">Số Điện Thoại</label>
+                  <input 
+                    type="tel" 
+                    className="auth-form-input" 
+                    placeholder="0901234567" 
+                    value={registerForm.phone}
+                    onChange={e => setRegisterForm({ ...registerForm, phone: e.target.value })}
+                    required 
+                  />
+                </div>
+                <div className="auth-form-group">
+                  <label className="auth-form-label">Mật Khẩu</label>
+                  <input 
+                    type="password" 
+                    className="auth-form-input" 
+                    placeholder="••••••••" 
+                    value={registerForm.password}
+                    onChange={e => setRegisterForm({ ...registerForm, password: e.target.value })}
+                    required 
+                  />
+                </div>
+                <button 
+                  type="submit" 
+                  className="btn-gold w-100 py-3 fw-bold mt-2" 
+                  style={{ borderRadius: '10px', border: 'none', cursor: 'pointer', fontSize: '0.95rem' }}
+                  disabled={authLoading}
+                >
+                  {authLoading ? 'Đang kích hoạt...' : 'TẠO TÀI KHOẢN MỚI'}
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ================= FLOATING ROLE DEMO DOCK (DYNAMIC ISLAND LUXURY) ================= */}
+      <aside className={`demo-role-dock ${isRoleDockMinimized ? 'minimized' : ''}`} aria-label="Thanh chuyển vai trò demo">
+        {isRoleDockMinimized ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <span className="demo-role-badge">
+              <i className="fa-solid fa-user-shield text-gold"></i>
+              <span>{currentUser.name} [{currentUser.role}]</span>
+            </span>
+            <button 
+              type="button"
+              className="demo-toggle-btn"
+              onClick={() => setIsRoleDockMinimized(false)}
+              title="Mở rộng thanh chuyển vai trò"
+            >
+              <i className="fa-solid fa-chevron-up"></i>
+            </button>
+          </div>
+        ) : (
+          <>
+            <span className="demo-role-badge">
+              <i className="fa-solid fa-users-gear text-gold"></i>
+              <span>VAI TRÒ DEMO:</span>
+            </span>
+            <button className={`demo-role-btn ${currentRoleKey === 'guest' ? 'active' : ''}`} onClick={() => handleQuickSwitchRole('guest', null, null, 'home')}>
+              <i className="fa-solid fa-user"></i> 1. Khách Vãng Lai
+            </button>
+            <button className={`demo-role-btn ${currentRoleKey === 'customer' ? 'active' : ''}`} onClick={() => handleQuickSwitchRole('customer', 'customer@duytruongmoto.com', 'customer123', 'home')}>
+              <i className="fa-solid fa-crown text-gold"></i> 2. Khách Biker VIP
+            </button>
+            <button className={`demo-role-btn ${currentRoleKey === 'vendor' ? 'active' : ''}`} onClick={() => handleQuickSwitchRole('vendor', 'dotrongkhoi2002@gmail.com', 'vendor123', 'vendor')}>
+              <i className="fa-solid fa-warehouse"></i> 3. QL Khôi (Kho Cầu Giấy)
+            </button>
+            <button className={`demo-role-btn ${currentRoleKey === 'vendor_tinh' ? 'active' : ''}`} onClick={() => handleQuickSwitchRole('vendor_tinh', 'nghiatinh2002@gmail.com', 'vendor123', 'vendor')}>
+              <i className="fa-solid fa-warehouse"></i> 4. QL Tình (Kho Đà Nẵng)
+            </button>
+            <button className={`demo-role-btn ${currentRoleKey === 'admin' ? 'active' : ''}`} onClick={() => handleQuickSwitchRole('admin', 'admin@duytruongmoto.com', 'admin123', 'admin')}>
+              <i className="fa-solid fa-shield-halved text-racing"></i> 5. Admin Duy (Tổng Sàn)
+            </button>
+            <button className={`demo-role-btn ${currentRoleKey === 'shipper' ? 'active' : ''}`} onClick={() => handleQuickSwitchRole('shipper', 'shipper@duytruongmoto.com', 'shipper123', 'shipper')}>
+              <i className="fa-solid fa-truck-fast" style={{ color: 'var(--cyan-neon)' }}></i> 6. Shipper Tuấn (Xe Sàn Trượt)
+            </button>
+            <button 
+              type="button"
+              className="demo-toggle-btn ms-1"
+              onClick={() => setIsRoleDockMinimized(true)}
+              title="Thu nhỏ thanh điều khiển"
+            >
+              <i className="fa-solid fa-chevron-down"></i>
+            </button>
+          </>
+        )}
+      </aside>
     </div>
   );
 }

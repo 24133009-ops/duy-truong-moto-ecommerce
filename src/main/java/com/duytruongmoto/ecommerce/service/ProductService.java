@@ -102,6 +102,36 @@ public class ProductService {
         return productRepository.save(product);
     }
 
+
+    @Transactional
+    public Product updateProduct(Long productId, Long storeId, Long categoryId, String name, String slug,
+                                 String description, BigDecimal price, BigDecimal promotionalPrice,
+                                 Integer quantity, String mainImage, String engineCapacity, String color, String brand) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("Sản phẩm không tồn tại!"));
+        if (!product.getStore().getId().equals(storeId)) {
+            throw new IllegalArgumentException("Bạn không có quyền sửa sản phẩm của showroom khác!");
+        }
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new IllegalArgumentException("Danh mục không tồn tại!"));
+
+        product.setCategory(category);
+        product.setName(name);
+        product.setSlug(slug);
+        product.setDescription(description);
+        product.setPrice(price);
+        product.setPromotionalPrice(promotionalPrice);
+        product.setQuantity(quantity);
+        if (mainImage != null && !mainImage.isBlank()) {
+            product.setMainImage(mainImage);
+        }
+        product.setEngineCapacity(engineCapacity);
+        product.setColor(color);
+        product.setBrand(brand);
+        product.setUpdatedAt(LocalDateTime.now());
+        return productRepository.save(product);
+    }
+
     @Transactional
     public void toggleSelling(Long productId, Long storeId) {
         Product product = productRepository.findById(productId)
