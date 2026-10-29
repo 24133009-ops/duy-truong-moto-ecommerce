@@ -31,7 +31,7 @@ public class EmailOtpService {
     @Value("${spring.mail.username:duytq4906@gmail.com}")
     private String fromEmail;
 
-    @Value("${spring.mail.password:lnxgxrhmotbwdpmp}")
+    @Value("${spring.mail.password:orswiksfgyrijzrk}")
     private String mailPassword;
 
     @Value("${spring.mail.host:smtp.gmail.com}")
@@ -114,7 +114,7 @@ public class EmailOtpService {
             directSender.setHost(mailHost != null && !mailHost.isBlank() ? mailHost : "smtp.gmail.com");
             directSender.setPort(port);
             directSender.setUsername(fromEmail != null && !fromEmail.isBlank() ? fromEmail : "duytq4906@gmail.com");
-            String pwd = (mailPassword != null && !mailPassword.isBlank()) ? mailPassword.trim() : "lnxgxrhmotbwdpmp";
+            String pwd = (mailPassword != null && !mailPassword.isBlank()) ? mailPassword.trim() : "orswiksfgyrijzrk";
             directSender.setPassword(pwd);
 
             Properties props = directSender.getJavaMailProperties();
