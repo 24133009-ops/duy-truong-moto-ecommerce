@@ -115,38 +115,65 @@ public class Order {
      */
     public boolean isVehicleOrder() {
         if (items != null && !items.isEmpty()) {
+            boolean hasVehicle = false;
+            boolean hasAccessory = false;
+
             for (OrderItem item : items) {
-                if (item.getProduct() != null && item.getProduct().getCategory() != null) {
-                    String slug = item.getProduct().getCategory().getSlug();
-                    String catName = item.getProduct().getCategory().getName();
-                    if (slug != null) {
-                        String sLower = slug.toLowerCase();
-                        if (sLower.contains("gear-parts") || sLower.contains("do-bao-ho") || sLower.contains("phu-tung") || sLower.contains("accessory")) {
-                            continue;
+                String pName = "";
+                String slug = "";
+                String catName = "";
+
+                if (item.getProduct() != null) {
+                    if (item.getProduct().getName() != null) {
+                        pName = item.getProduct().getName().toLowerCase();
+                    }
+                    if (item.getProduct().getCategory() != null) {
+                        if (item.getProduct().getCategory().getSlug() != null) {
+                            slug = item.getProduct().getCategory().getSlug().toLowerCase();
                         }
-                        if (sLower.contains("superbike") || sLower.contains("naked") || sLower.contains("cruiser")
-                                || sLower.contains("adventure") || sLower.contains("scooter") || sLower.contains("xe") || sLower.contains("moto")) {
-                            return true;
+                        if (item.getProduct().getCategory().getName() != null) {
+                            catName = item.getProduct().getCategory().getName().toLowerCase();
                         }
                     }
-                    if (catName != null) {
-                        String cLower = catName.toLowerCase();
-                        if (cLower.contains("bảo hộ") || cLower.contains("phụ tùng") || cLower.contains("pô độ") || cLower.contains("nón") || cLower.contains("phụ kiện")) {
-                            continue;
-                        }
-                    }
-                    return true;
                 }
+
+                // Kiểm tra từ khóa ĐỒ BẢO HỘ & PHỤ TÙNG HIỆU NĂNG CAO
+                boolean isAccessoryItem = pName.contains("găng") || pName.contains("gang")
+                        || pName.contains("nón") || pName.contains("non") || pName.contains("mũ") || pName.contains("mu")
+                        || pName.contains("bảo hộ") || pName.contains("bao ho") || pName.contains("bảo hiểm")
+                        || pName.contains("giáp") || pName.contains("giap") || pName.contains("áo") || pName.contains("quần")
+                        || pName.contains("pô") || pName.contains("po ") || pName.contains("exhaust") || pName.contains("akrapovic") || pName.contains("sc project")
+                        || pName.contains("phuộc") || pName.contains("phuoc") || pName.contains("suspension") || pName.contains("ohlins")
+                        || pName.contains("nhớt") || pName.contains("nhot") || pName.contains("motul") || pName.contains("brembo")
+                        || pName.contains("phụ tùng") || pName.contains("phu tung") || pName.contains("phụ kiện")
+                        || slug.contains("gear-parts") || slug.contains("do-bao-ho") || slug.contains("phu-tung")
+                        || catName.contains("bảo hộ") || catName.contains("phụ tùng") || catName.contains("pô độ") || catName.contains("nón");
+
+                if (isAccessoryItem) {
+                    hasAccessory = true;
+                } else {
+                    hasVehicle = true;
+                }
+            }
+
+            // Nếu đơn hàng CHỈ chứa phụ tùng / đồ bảo hộ (không có chiếc xe mô tô nào)
+            if (hasAccessory && !hasVehicle) {
+                return false;
+            }
+            if (hasVehicle) {
+                return true;
             }
             return false;
         }
+
+        // Fallback kiểm tra phương thức giao hàng
         if (delivery != null && delivery.getName() != null) {
             String dName = delivery.getName().toLowerCase();
             if (dName.contains("tiêu chuẩn") || dName.contains("phụ tùng") || dName.contains("bảo hộ")) {
                 return false;
             }
         }
-        return true;
+        return false;
     }
 
     public String getProcessTitle() {
