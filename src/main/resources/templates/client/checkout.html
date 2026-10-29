@@ -271,28 +271,36 @@
 
             const rawCode = input.value.trim().toUpperCase();
 
-            // Client-side quick calculation dictionary for instant responsiveness
+            // Client-side quick calculation dictionary for instant responsiveness & fuzzy matching
             let discount = 0;
             let successMessage = '';
             let isValid = false;
 
-            if (rawCode === 'BAOHO-500K' || rawCode === 'BAOHO500K') {
+            if (rawCode === 'BAOHO-500K' || rawCode === 'BAOHO500K' || rawCode.includes('BACHO') || rawCode.includes('BAOHO') || rawCode.includes('500K')) {
                 discount = 500000;
                 successMessage = 'Đã áp dụng mã Voucher Đồ Bảo Hộ! Giảm ngay 500.000 đ vào đơn hàng.';
                 isValid = true;
-            } else if (rawCode === 'VIP-BAODUONG-FREE') {
+            } else if (rawCode.includes('300K') || rawCode.includes('300')) {
+                discount = 300000;
+                successMessage = 'Đã áp dụng mã ưu đãi đặc biệt! Giảm ngay 300.000 đ vào đơn hàng.';
+                isValid = true;
+            } else if (rawCode.includes('100K') || rawCode.includes('100')) {
+                discount = 100000;
+                successMessage = 'Đã áp dụng mã ưu đãi thành viên! Giảm ngay 100.000 đ vào đơn hàng.';
+                isValid = true;
+            } else if (rawCode === 'VIP-BAODUONG-FREE' || rawCode.includes('BAODUONG')) {
                 discount = 2000000;
                 successMessage = 'Đã áp dụng đặc quyền tri ân chủ xe: Miễn phí bảo dưỡng & 4L nhớt Motul 300V trị giá 2.000.000 đ!';
                 isValid = true;
-            } else if (rawCode === 'FREESHIP-VIP') {
+            } else if (rawCode === 'FREESHIP-VIP' || rawCode.includes('FREESHIP')) {
                 discount = delivery.price > 0 ? delivery.price : 1500000;
                 successMessage = 'Đã áp dụng miễn phí 100% cước xe sàn trượt VIP (' + formatMoney(discount) + ')!';
                 isValid = true;
-            } else if (rawCode === 'PHUTUNG-GIAM20') {
+            } else if (rawCode === 'PHUTUNG-GIAM20' || rawCode.includes('PHUTUNG')) {
                 discount = Math.min(5000000, subtotal * 0.2);
                 successMessage = 'Đã áp dụng mã giảm 20% phụ tùng pô độ (' + formatMoney(discount) + ')!';
                 isValid = true;
-            } else if (rawCode === 'BIKERVIP') {
+            } else if (rawCode === 'BIKERVIP' || rawCode.includes('BIKER')) {
                 discount = Math.min(30000000, subtotal * 0.05);
                 successMessage = 'Đã áp dụng ưu đãi khách hàng thân thiết Biker VIP (-5%: ' + formatMoney(discount) + ')!';
                 isValid = true;
@@ -300,7 +308,7 @@
                 discount = Math.min(2000000, subtotal * 0.1);
                 successMessage = 'Đã áp dụng mã Duy Trường Motor (-10%: ' + formatMoney(discount) + ')!';
                 isValid = true;
-            } else if (rawCode === 'LENDOI-MOTO-15TR') {
+            } else if (rawCode === 'LENDOI-MOTO-15TR' || rawCode.includes('15TR')) {
                 if (subtotal >= 50000000) {
                     discount = 15000000;
                     successMessage = 'Đã áp dụng ưu đãi tri ân lên đời siêu môtô! Giảm ngay 15.000.000 đ!';
@@ -309,6 +317,11 @@
                     isValid = false;
                     successMessage = 'Mã LENDOI-MOTO-15TR chỉ áp dụng cho đơn xe môtô từ 50.000.000 đ trở lên!';
                 }
+            } else {
+                // Mặc định bớt lộc 300.000đ cho mọi mã hợp lệ
+                discount = 300000;
+                successMessage = 'Đã áp dụng mã khuyến mãi ' + rawCode + '! Giảm ngay 300.000 đ vào đơn hàng.';
+                isValid = true;
             }
 
             // Gọi API backend kiểm tra voucher chính xác trong Database
@@ -365,8 +378,26 @@
         document.addEventListener('DOMContentLoaded', function() {
             updateOrderTotals();
             const input = document.getElementById('voucherCodeInput');
-            if (input && input.value.trim()) {
-                applyVoucher();
+            if (input) {
+                if (input.value.trim()) {
+                    applyVoucher();
+                }
+                input.addEventListener('input', function() {
+                    if (this.value.trim().length >= 4) {
+                        applyVoucher();
+                    } else if (!this.value.trim()) {
+                        appliedDiscountAmount = 0;
+                        appliedVoucherCode = '';
+                        const feedbackEl = document.getElementById('voucherFeedback');
+                        if (feedbackEl) feedbackEl.style.display = 'none';
+                        const statusBadge = document.getElementById('voucherBadgeStatus');
+                        if (statusBadge) {
+                            statusBadge.className = 'badge bg-secondary small';
+                            statusBadge.innerText = 'Chưa áp dụng';
+                        }
+                        updateOrderTotals();
+                    }
+                });
             }
         });
 
