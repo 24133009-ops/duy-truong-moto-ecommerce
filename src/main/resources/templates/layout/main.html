@@ -146,7 +146,7 @@
                         <div class="dropdown">
                             <button class="btn btn-dark border border-secondary rounded-pill py-2 px-3 text-gold d-flex align-items-center gap-2 shadow-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" title="Menu tài khoản">
                                 <i class="fa-solid fa-circle-user text-gold fs-6"></i>
-                                <span sec:authentication="name" class="fw-bold text-gold small text-truncate d-inline-block" style="max-width: 110px;">Tài khoản</span>
+                                <span sec:authentication="name" class="fw-bold text-gold small text-nowrap d-inline-block" style="max-width: 220px; overflow: hidden; text-overflow: ellipsis;">Tài khoản</span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow-lg border-secondary p-2 mt-2">
                                 <li><a class="dropdown-item py-2" th:href="@{/user/profile}"><i class="fa-solid fa-user-gear me-2 text-gold"></i> Hồ sơ &amp; Sổ địa chỉ</a></li>

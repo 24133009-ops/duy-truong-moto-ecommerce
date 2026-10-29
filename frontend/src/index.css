@@ -1,4 +1,4 @@
-﻿/* ==========================================================================
+/* ==========================================================================
    DUY TRƯƠNG MOTOR - DESIGN SYSTEM ĐẲNG CẤP CHUỖI SHOWROOM MÔ TÔ & XE CÀO CÀO
    Phong cách chuẩn theo Vương Khang Motor (vuongkhangmotor.com)
    100% Vanilla CSS • Phông chữ chuẩn tiếng Việt UTF-8 không lỗi font
@@ -1641,6 +1641,7 @@ html {
     position: relative;
     padding: 10px 0;
     margin: 15px 0 5px 0;
+    overflow: hidden;
 }
 
 .delivery-stepper-line {

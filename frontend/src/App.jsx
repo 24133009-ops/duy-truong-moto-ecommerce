@@ -356,12 +356,12 @@ const INITIAL_DEMO_ORDERS = [
     cccd: '079202008899',
     specialist: 'Luật sư Trần Quang Duy (Trưởng phòng Pháp Lý DTM)',
     specialistPhone: '0903.456.789',
-    step: 3, // 1 -> 4
+    step: 4, // ĐÃ HOÀN TẤT 4/4 CHẶNG
     steps: [
       { id: 1, title: 'Kiểm định số khung & Check phạt nguội Cục CSGT', status: 'done', time: '28/10/2026 18:50', note: 'Số khung số máy đối chiếu 100% trùng khớp cà vẹt gốc, 0 vi phạm phạt nguội trên cổng Cục CSGT.' },
       { id: 2, title: 'Ký công chứng Hợp đồng Mua Bán / Ủy quyền', status: 'done', time: '28/10/2026 19:15', note: 'Đã hoàn tất ký công chứng mua bán tại VPCC Cầu Giấy Hà Nội, đóng dấu mộc chuẩn pháp lý.' },
-      { id: 3, title: 'Rút túi hồ sơ gốc niêm phong tại CSGT tỉnh gốc', status: 'processing', time: '29/10/2026 09:30', note: 'Đã nộp hồ sơ thu hồi biển cũ. Đang chuyển phát bảo đảm túi hồ sơ niêm phong về Đội CSGT mới.' },
-      { id: 4, title: 'Đóng thuế trước bạ 1% & Bấm biển số định danh', status: 'pending', time: 'Dự kiến 30/10/2026', note: 'Đã chuẩn bị sẵn tờ khai nộp thuế điện tử. Chuyên viên đón khách tại Đội CSGT để bấm biển số.' }
+      { id: 3, title: 'Rút túi hồ sơ gốc niêm phong tại CSGT tỉnh gốc', status: 'done', time: '29/10/2026 09:30', note: 'Đã hoàn tất rút túi hồ sơ gốc niêm phong tại CSGT tỉnh gốc. Chuyển phát bảo đảm an toàn về Đội CSGT tiếp nhận.' },
+      { id: 4, title: 'Đóng thuế trước bạ 1% & Bấm biển số định danh', status: 'done', time: '29/10/2026 10:15', note: 'Đã hoàn tất nộp lệ phí trước bạ điện tử 1% & Bấm biển số định danh 29A1-999.88 theo CCCD thành công tại Đội CSGT. Đã bàn giao trọn bộ biển số và cà vẹt chính chủ cho khách hàng.' }
     ]
   });
 
@@ -943,15 +943,15 @@ const INITIAL_DEMO_ORDERS = [
 
       {/* 2. MAIN APP HEADER (Thoáng đãng, rộng rãi, đẳng cấp showroom) */}
       <header className="app-header">
-        <div className="logo-badge" onClick={() => navigateTab('home')}>
-          <div className="logo-icon-box">
+        <div className="logo-badge" onClick={() => navigateTab('home')} style={{ flexShrink: 0, minWidth: 'max-content', marginRight: '24px' }}>
+          <div className="logo-icon-box" style={{ flexShrink: 0 }}>
             <i className="fa-solid fa-helmet-safety"></i>
           </div>
-          <div>
-            <div className="brand-title" style={{ fontSize: '1.45rem', lineHeight: 1.1 }}>
+          <div style={{ flexShrink: 0, whiteSpace: 'nowrap' }}>
+            <div className="brand-title" style={{ fontSize: '1.45rem', lineHeight: 1.1, whiteSpace: 'nowrap' }}>
               <span className="text-gradient-gold">DUY TRƯƠNG</span> <span style={{ color: '#fff' }}>MOTOR</span>
             </div>
-            <div style={{ fontSize: '0.62rem', color: 'var(--gold-primary)', letterSpacing: '0.5px', fontWeight: 800 }}>
+            <div style={{ fontSize: '0.62rem', color: 'var(--gold-primary)', letterSpacing: '0.5px', fontWeight: 800, whiteSpace: 'nowrap' }}>
               CHUỖI MÔ TÔ PKL, CÀO CÀO &amp; ĐỒ BẢO HỘ
             </div>
           </div>
@@ -2056,9 +2056,13 @@ const INITIAL_DEMO_ORDERS = [
                               {sIdx === 6 ? 'Chặng 6/6 • Hoàn Tất Bàn Giao & Bảo Hành 3 Năm' : `Chặng ${sIdx}/6 • Đang thực hiện`}
                             </span>
                           </div>
-                          <div className="delivery-stepper" style={{ margin: 0, padding: 0 }}>
+                          <div className="delivery-stepper" style={{ margin: 0, padding: 0, overflow: 'hidden' }}>
                             <div className="delivery-stepper-line" style={{ top: '22px' }}></div>
-                            <div className="delivery-stepper-progress" style={{ top: '22px', width: `${Math.min(83.33, (sIdx - 1) * 16.667)}%` }}></div>
+                            <div className="delivery-stepper-progress" style={{ 
+                              top: '22px', 
+                              width: `${Math.min(83.33, (sIdx - 1) * 16.667)}%`,
+                              background: sIdx === 6 ? '#10b981' : undefined
+                            }}></div>
                             {steps.map(s => {
                               const isCompleted = sIdx > s.num || (sIdx === 6 && s.num === 6);
                               const isActive = sIdx === s.num && sIdx !== 6;
@@ -2180,57 +2184,77 @@ const INITIAL_DEMO_ORDERS = [
                 </div>
               </div>
 
-              {/* Sub-Navigation Tabs */}
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '28px', background: 'rgba(0,0,0,0.4)', padding: '6px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.06)' }}>
+              {/* Sub-Navigation Tabs (Grid cân đối, Typography chuẩn Dark Luxury Showroom) */}
+              <div style={{ 
+                display: 'grid', 
+                gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', 
+                gap: '8px', 
+                marginBottom: '28px', 
+                background: '#07090e', 
+                padding: '6px', 
+                borderRadius: '12px', 
+                border: '1px solid rgba(212,175,55,0.22)',
+                boxShadow: '0 4px 20px rgba(0,0,0,0.5)'
+              }}>
                 <button 
                   onClick={() => setLegalSubTab('process')}
                   style={{
-                    flex: '1 1 auto', minWidth: '160px', padding: '10px 16px', borderRadius: '8px', border: 'none',
-                    background: legalSubTab === 'process' ? 'var(--gold-primary)' : 'transparent',
-                    color: legalSubTab === 'process' ? '#000' : 'var(--text-sub)',
-                    fontWeight: legalSubTab === 'process' ? 800 : 600, fontSize: '0.85rem', cursor: 'pointer', transition: 'all 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'
+                    padding: '11px 12px', borderRadius: '8px', border: legalSubTab === 'process' ? '1px solid var(--gold-primary)' : '1px solid rgba(255,255,255,0.05)',
+                    background: legalSubTab === 'process' ? 'linear-gradient(135deg, #d4af37 0%, #aa8010 100%)' : 'rgba(255,255,255,0.02)',
+                    color: legalSubTab === 'process' ? '#05070b' : 'var(--text-sub)',
+                    fontWeight: 800, fontSize: '0.78rem', fontFamily: 'var(--font-brand)', letterSpacing: '0.5px', textTransform: 'uppercase',
+                    cursor: 'pointer', transition: 'all 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                    boxShadow: legalSubTab === 'process' ? '0 0 16px rgba(212,175,55,0.35)' : 'none'
                   }}>
-                  <i className="fa-solid fa-list-check"></i> 1. Quy Trình 4 Bước Chuẩn
+                  <i className="fa-solid fa-shield-halved"></i> QUY TRÌNH HQCN
                 </button>
                 <button 
                   onClick={() => setLegalSubTab('calculator')}
                   style={{
-                    flex: '1 1 auto', minWidth: '160px', padding: '10px 16px', borderRadius: '8px', border: 'none',
-                    background: legalSubTab === 'calculator' ? 'var(--gold-primary)' : 'transparent',
-                    color: legalSubTab === 'calculator' ? '#000' : 'var(--text-sub)',
-                    fontWeight: legalSubTab === 'calculator' ? 800 : 600, fontSize: '0.85rem', cursor: 'pointer', transition: 'all 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'
+                    padding: '11px 12px', borderRadius: '8px', border: legalSubTab === 'calculator' ? '1px solid var(--gold-primary)' : '1px solid rgba(255,255,255,0.05)',
+                    background: legalSubTab === 'calculator' ? 'linear-gradient(135deg, #d4af37 0%, #aa8010 100%)' : 'rgba(255,255,255,0.02)',
+                    color: legalSubTab === 'calculator' ? '#05070b' : 'var(--text-sub)',
+                    fontWeight: 800, fontSize: '0.78rem', fontFamily: 'var(--font-brand)', letterSpacing: '0.5px', textTransform: 'uppercase',
+                    cursor: 'pointer', transition: 'all 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                    boxShadow: legalSubTab === 'calculator' ? '0 0 16px rgba(212,175,55,0.35)' : 'none'
                   }}>
-                  <i className="fa-solid fa-calculator"></i> 2. Dự Toán Chi Phí Sang Tên
+                  <i className="fa-solid fa-calculator"></i> DỰ TOÁN LĂN BÁNH
                 </button>
                 <button 
                   onClick={() => setLegalSubTab('finecheck')}
                   style={{
-                    flex: '1 1 auto', minWidth: '160px', padding: '10px 16px', borderRadius: '8px', border: 'none',
-                    background: legalSubTab === 'finecheck' ? 'var(--gold-primary)' : 'transparent',
-                    color: legalSubTab === 'finecheck' ? '#000' : 'var(--text-sub)',
-                    fontWeight: legalSubTab === 'finecheck' ? 800 : 600, fontSize: '0.85rem', cursor: 'pointer', transition: 'all 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'
+                    padding: '11px 12px', borderRadius: '8px', border: legalSubTab === 'finecheck' ? '1px solid var(--gold-primary)' : '1px solid rgba(255,255,255,0.05)',
+                    background: legalSubTab === 'finecheck' ? 'linear-gradient(135deg, #d4af37 0%, #aa8010 100%)' : 'rgba(255,255,255,0.02)',
+                    color: legalSubTab === 'finecheck' ? '#05070b' : 'var(--text-sub)',
+                    fontWeight: 800, fontSize: '0.78rem', fontFamily: 'var(--font-brand)', letterSpacing: '0.5px', textTransform: 'uppercase',
+                    cursor: 'pointer', transition: 'all 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                    boxShadow: legalSubTab === 'finecheck' ? '0 0 16px rgba(212,175,55,0.35)' : 'none'
                   }}>
-                  <i className="fa-solid fa-traffic-light"></i> 3. Tra Cứu Phạt Nguội &amp; Số Khung
+                  <i className="fa-solid fa-traffic-light"></i> TRA CỨU PHẠT NGUỘI
                 </button>
                 <button 
                   onClick={() => setLegalSubTab('booking')}
                   style={{
-                    flex: '1 1 auto', minWidth: '160px', padding: '10px 16px', borderRadius: '8px', border: 'none',
-                    background: legalSubTab === 'booking' ? 'var(--gold-primary)' : 'transparent',
-                    color: legalSubTab === 'booking' ? '#000' : 'var(--text-sub)',
-                    fontWeight: legalSubTab === 'booking' ? 800 : 600, fontSize: '0.85rem', cursor: 'pointer', transition: 'all 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'
+                    padding: '11px 12px', borderRadius: '8px', border: legalSubTab === 'booking' ? '1px solid var(--gold-primary)' : '1px solid rgba(255,255,255,0.05)',
+                    background: legalSubTab === 'booking' ? 'linear-gradient(135deg, #d4af37 0%, #aa8010 100%)' : 'rgba(255,255,255,0.02)',
+                    color: legalSubTab === 'booking' ? '#05070b' : 'var(--text-sub)',
+                    fontWeight: 800, fontSize: '0.78rem', fontFamily: 'var(--font-brand)', letterSpacing: '0.5px', textTransform: 'uppercase',
+                    cursor: 'pointer', transition: 'all 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                    boxShadow: legalSubTab === 'booking' ? '0 0 16px rgba(212,175,55,0.35)' : 'none'
                   }}>
-                  <i className="fa-solid fa-calendar-check"></i> 4. Đặt Lịch Hẹn Công Chứng
+                  <i className="fa-solid fa-calendar-check"></i> LỊCH HẸN CÔNG CHỨNG
                 </button>
                 <button 
                   onClick={() => setLegalSubTab('tracker')}
                   style={{
-                    flex: '1 1 auto', minWidth: '160px', padding: '10px 16px', borderRadius: '8px', border: 'none',
-                    background: legalSubTab === 'tracker' ? 'var(--gold-primary)' : 'transparent',
-                    color: legalSubTab === 'tracker' ? '#000' : 'var(--text-sub)',
-                    fontWeight: legalSubTab === 'tracker' ? 800 : 600, fontSize: '0.85rem', cursor: 'pointer', transition: 'all 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'
+                    padding: '11px 12px', borderRadius: '8px', border: legalSubTab === 'tracker' ? '1px solid var(--gold-primary)' : '1px solid rgba(255,255,255,0.05)',
+                    background: legalSubTab === 'tracker' ? 'linear-gradient(135deg, #d4af37 0%, #aa8010 100%)' : 'rgba(255,255,255,0.02)',
+                    color: legalSubTab === 'tracker' ? '#05070b' : 'var(--text-sub)',
+                    fontWeight: 800, fontSize: '0.78rem', fontFamily: 'var(--font-brand)', letterSpacing: '0.5px', textTransform: 'uppercase',
+                    cursor: 'pointer', transition: 'all 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                    boxShadow: legalSubTab === 'tracker' ? '0 0 16px rgba(212,175,55,0.35)' : 'none'
                   }}>
-                  <i className="fa-solid fa-route"></i> 5. Theo Dõi Tiến Độ Hồ Sơ
+                  <i className="fa-solid fa-route"></i> TIẾN ĐỘ HỒ SƠ XE
                 </button>
               </div>
 
@@ -2876,8 +2900,15 @@ const INITIAL_DEMO_ORDERS = [
                         <h5 style={{ color: 'var(--gold-primary)', fontWeight: 900, margin: '2px 0 0 0', fontSize: '1.2rem' }}>{activeLegalFile.code}</h5>
                       </div>
                       <div style={{ textAlign: 'right' }}>
-                        <span className="badge bg-gold text-dark fw-bold px-3 py-2">
-                          <i className="fa-solid fa-spinner fa-spin me-1"></i> CHẶNG {activeLegalFile.step}/4: ĐANG XỬ LÝ RÚT GỐC
+                        <span className="badge px-3 py-2" style={{ 
+                          background: activeLegalFile.step === 4 ? '#28a745' : 'var(--gold-primary)', 
+                          color: activeLegalFile.step === 4 ? '#fff' : '#000', 
+                          fontWeight: 800, fontSize: '0.82rem', letterSpacing: '0.5px',
+                          borderRadius: '20px',
+                          boxShadow: activeLegalFile.step === 4 ? '0 0 16px rgba(40,167,69,0.4)' : 'none'
+                        }}>
+                          <i className={`fa-solid ${activeLegalFile.step === 4 ? 'fa-circle-check' : 'fa-spinner fa-spin'} me-1`}></i> 
+                          CHẶNG {activeLegalFile.step}/4: {activeLegalFile.step === 4 ? 'HOÀN TẤT SANG TÊN & CẤP BIỂN SỐ ĐỊNH DANH' : 'ĐANG XỬ LÝ RÚT GỐC'}
                         </span>
                       </div>
                     </div>
@@ -3188,9 +3219,13 @@ const INITIAL_DEMO_ORDERS = [
                               {sIdx === 6 ? 'Chặng 6/6: Hoàn Tất Bàn Giao & Bảo Hành 3 Năm' : `Chặng ${sIdx}/6: ${steps[sIdx - 1]?.title || ''}`}
                             </span>
                           </div>
-                          <div className="delivery-stepper" style={{ margin: 0, padding: 0 }}>
+                          <div className="delivery-stepper" style={{ margin: 0, padding: 0, overflow: 'hidden' }}>
                             <div className="delivery-stepper-line" style={{ top: '22px' }}></div>
-                            <div className="delivery-stepper-progress" style={{ top: '22px', width: `${Math.min(83.33, (sIdx - 1) * 16.667)}%` }}></div>
+                            <div className="delivery-stepper-progress" style={{ 
+                              top: '22px', 
+                              width: `${Math.min(83.33, (sIdx - 1) * 16.667)}%`,
+                              background: sIdx === 6 ? '#10b981' : undefined
+                            }}></div>
                             {steps.map(s => {
                               const isCompleted = sIdx > s.num || (sIdx === 6 && s.num === 6);
                               const isActive = sIdx === s.num && sIdx !== 6;
@@ -3527,9 +3562,13 @@ const INITIAL_DEMO_ORDERS = [
                             Chặng {sIdx}/6 {sIdx === 6 ? '• Hoàn Tất Bàn Giao' : '• Đang Tiến Hành'}
                           </span>
                         </div>
-                        <div className="delivery-stepper" style={{ margin: 0, padding: 0 }}>
+                        <div className="delivery-stepper" style={{ margin: 0, padding: 0, overflow: 'hidden' }}>
                           <div className="delivery-stepper-line" style={{ top: '18px' }}></div>
-                          <div className="delivery-stepper-progress" style={{ top: '18px', width: `${Math.min(83.33, (sIdx - 1) * 16.667)}%` }}></div>
+                          <div className="delivery-stepper-progress" style={{ 
+                            top: '18px', 
+                            width: `${Math.min(83.33, (sIdx - 1) * 16.667)}%`,
+                            background: sIdx === 6 ? '#10b981' : undefined
+                          }}></div>
                           {steps.map(s => {
                             const isCompleted = sIdx > s.num || (sIdx === 6 && s.num === 6);
                             const isActive = sIdx === s.num && sIdx !== 6;

@@ -1273,6 +1273,7 @@ label,
     position: relative;
     padding: 10px 0;
     margin: 15px 0 5px 0;
+    overflow: hidden;
 }
 
 .delivery-stepper-line {
