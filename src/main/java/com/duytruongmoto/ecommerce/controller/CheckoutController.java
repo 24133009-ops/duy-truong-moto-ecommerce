@@ -55,6 +55,48 @@ public class CheckoutController {
         return "client/checkout";
     }
 
+    @PostMapping("/api/vouchers/apply")
+    @ResponseBody
+    public org.springframework.http.ResponseEntity<?> applyVoucherApi(@RequestBody Map<String, Object> payload) {
+        String code = payload.get("code") != null ? payload.get("code").toString().trim() : "";
+        BigDecimal orderTotal = BigDecimal.ZERO;
+        if (payload.get("orderTotal") != null) {
+            try {
+                orderTotal = new BigDecimal(payload.get("orderTotal").toString());
+            } catch (Exception ignored) {}
+        }
+
+        if (code.isBlank()) {
+            return org.springframework.http.ResponseEntity.badRequest().body(Map.of("valid", false, "message", "Vui lòng nhập mã voucher!"));
+        }
+
+        Voucher voucher = voucherService.findByCode(code).orElse(null);
+        if (voucher == null || !voucher.isValid()) {
+            return org.springframework.http.ResponseEntity.ok(Map.of(
+                "valid", false,
+                "message", "Mã voucher \"" + code.toUpperCase() + "\" không tồn tại hoặc đã hết hạn!"
+            ));
+        }
+
+        BigDecimal discount = voucherService.calculateDiscount(voucher, orderTotal);
+        if (discount.compareTo(BigDecimal.ZERO) <= 0) {
+            String minOrderMsg = (voucher.getMinOrderAmount() != null && voucher.getMinOrderAmount().compareTo(BigDecimal.ZERO) > 0)
+                ? String.format("%,d đ", voucher.getMinOrderAmount().longValue()) : "quy định";
+            return org.springframework.http.ResponseEntity.ok(Map.of(
+                "valid", false,
+                "message", "Đơn hàng chưa đạt giá trị tối thiểu " + minOrderMsg + " để áp dụng mã này!"
+            ));
+        }
+
+        return org.springframework.http.ResponseEntity.ok(Map.of(
+            "valid", true,
+            "code", voucher.getCode(),
+            "name", voucher.getName(),
+            "discountAmount", discount,
+            "message", "Áp dụng thành công mã " + voucher.getCode() + "! Giảm ngay " + String.format("%,d đ", discount.longValue()) + " trên tổng đơn."
+        ));
+    }
+
     @PostMapping("/checkout/process")
     public String processCheckout(
             @RequestParam String recipientName,

@@ -47,12 +47,13 @@
                     </div>
 
                     <!-- Delivery Unit Selection -->
+                    <!-- Delivery Unit Selection -->
                     <div class="glass-panel p-4 rounded-4 mb-4">
                         <h5 class="fw-bold text-gold mb-3"><i class="fa-solid fa-truck-fast me-2"></i> ĐƠN VỊ VẬN CHUYỂN CHUYÊN DỤNG</h5>
                         <div class="d-flex flex-column gap-3">
                             <div class="p-3 bg-black border border-secondary rounded-3 d-flex align-items-center justify-content-between" th:each="deliv, iter : ${deliveries}">
                                 <div class="form-check">
-                                    <input class="form-check-input bg-dark border-gold" type="radio" name="deliveryId" th:value="${deliv.id}" th:id="'deliv_' + ${deliv.id}" th:checked="${iter.index == 0}">
+                                    <input class="form-check-input bg-dark border-gold delivery-radio" type="radio" name="deliveryId" th:value="${deliv.id}" th:id="'deliv_' + ${deliv.id}" th:data-price="${deliv.price}" th:data-name="${deliv.name}" th:checked="${iter.index == 0}" onchange="updateOrderTotals()">
                                     <label class="form-check-label text-white fw-bold ms-2" th:for="'deliv_' + ${deliv.id}">
                                         <span th:text="${deliv.name}"></span>
                                         <div class="small text-secondary fw-normal" th:text="${deliv.description}"></div>
@@ -119,35 +120,56 @@
                             </div>
                         </div>
 
+                        <!-- Price Breakdown -->
                         <div class="d-flex justify-content-between text-secondary small mb-2">
-                            <span>Tổng phụ kiện & xe:</span>
-                            <span class="text-white" th:text="${#numbers.formatDecimal(cartTotal, 0, 'POINT', 0, 'COMMA')} + ' đ'"></span>
+                            <span>Tổng phụ kiện &amp; xe:</span>
+                            <span class="text-white fw-bold" id="summarySubtotal" th:data-subtotal="${cartTotal}" th:text="${#numbers.formatDecimal(cartTotal, 0, 'POINT', 0, 'COMMA')} + ' đ'"></span>
+                        </div>
+                        <div class="d-flex justify-content-between text-secondary small mb-2">
+                            <span>Cước vận chuyển (<span id="summaryDeliveryName" class="text-light">Xe sàn trượt</span>):</span>
+                            <span class="text-gold fw-bold" id="summaryDeliveryFee">+0 đ</span>
+                        </div>
+                        <div id="summaryVoucherRow" class="d-flex justify-content-between text-secondary small mb-2" style="display: none !important;">
+                            <span class="text-success"><i class="fa-solid fa-tag me-1"></i> Voucher giảm (<span id="summaryVoucherCode"></span>):</span>
+                            <span class="text-success fw-bold" id="summaryVoucherDiscount">-0 đ</span>
                         </div>
                         <div class="d-flex justify-content-between text-secondary small mb-3">
                             <span>Ưu đãi thành viên:</span>
                             <span class="text-gold fw-bold">Chiết khấu theo UserLevel</span>
                         </div>
 
-                        <!-- Voucher Input -->
-                        <div class="mb-3 p-3 bg-black rounded-3 border border-secondary">
-                            <label class="form-label text-gold small fw-bold mb-1"><i class="fa-solid fa-ticket me-1"></i> Mã Voucher Khuyến Mãi</label>
-                            <div class="input-group">
-                                <input type="text" name="voucherCode" id="voucherCodeInput" class="form-control form-control-luxury text-uppercase py-2" placeholder="Ví dụ: BIKERVIP, BAOHO-500K">
+                        <!-- Voucher Input Box with Instant Apply -->
+                        <div class="mb-3 p-3 bg-black rounded-3 border border-warning" style="box-shadow: 0 0 15px rgba(212,175,55,0.15);">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <label class="form-label text-gold small fw-bold mb-0"><i class="fa-solid fa-ticket me-1"></i> MÃ VOUCHER KHUYẾN MÃI</label>
+                                <span id="voucherBadgeStatus" class="badge bg-secondary small" style="font-size: 0.68rem;">Chưa áp dụng</span>
                             </div>
+                            <div class="input-group">
+                                <input type="text" name="voucherCode" id="voucherCodeInput" class="form-control form-control-luxury text-uppercase py-2" placeholder="Ví dụ: BAOHO-500K, BIKERVIP" onkeydown="if(event.key==='Enter'){event.preventDefault(); applyVoucher();}">
+                                <button type="button" id="btnApplyVoucher" class="btn btn-gold fw-bold px-3" onclick="applyVoucher()">
+                                    <i class="fa-solid fa-check me-1"></i> ÁP DỤNG
+                                </button>
+                            </div>
+
+                            <!-- Live Feedback Alert -->
+                            <div id="voucherFeedback" class="mt-2" style="display: none;"></div>
+
+                            <!-- Suggestions -->
                             <div class="d-flex gap-1 flex-wrap mt-2" style="font-size: 0.75rem;">
                                 <span class="text-secondary">Gợi ý mã:</span>
-                                <span class="badge bg-dark border border-warning text-warning" style="cursor: pointer;" onclick="document.getElementById('voucherCodeInput').value='VIP-BAODUONG-FREE'">VIP-BAODUONG-FREE (Free bảo dưỡng)</span>
-                                <span class="badge bg-dark border border-warning text-warning" style="cursor: pointer;" onclick="document.getElementById('voucherCodeInput').value='LENDOI-MOTO-15TR'">LENDOI-MOTO-15TR (-15Tr)</span>
-                                <span class="badge bg-dark border border-warning text-warning" style="cursor: pointer;" onclick="document.getElementById('voucherCodeInput').value='PHUTUNG-GIAM20'">PHUTUNG-GIAM20 (-20%)</span>
-                                <span class="badge bg-dark border border-warning text-warning" style="cursor: pointer;" onclick="document.getElementById('voucherCodeInput').value='FREESHIP-VIP'">FREESHIP-VIP</span>
-                                <span class="badge bg-dark border border-warning text-warning" style="cursor: pointer;" onclick="document.getElementById('voucherCodeInput').value='BIKERVIP'">BIKERVIP (-5%)</span>
-                                <span class="badge bg-dark border border-warning text-warning" style="cursor: pointer;" onclick="document.getElementById('voucherCodeInput').value='BAOHO-500K'">BAOHO-500K</span>
+                                <span class="badge bg-dark border border-warning text-warning" style="cursor: pointer;" onclick="selectVoucher('BAOHO-500K')">BAOHO-500K (-500k)</span>
+                                <span class="badge bg-dark border border-warning text-warning" style="cursor: pointer;" onclick="selectVoucher('VIP-BAODUONG-FREE')">VIP-BAODUONG-FREE (Free bảo dưỡng)</span>
+                                <span class="badge bg-dark border border-warning text-warning" style="cursor: pointer;" onclick="selectVoucher('FREESHIP-VIP')">FREESHIP-VIP (Free ship)</span>
+                                <span class="badge bg-dark border border-warning text-warning" style="cursor: pointer;" onclick="selectVoucher('PHUTUNG-GIAM20')">PHUTUNG-GIAM20 (-20%)</span>
+                                <span class="badge bg-dark border border-warning text-warning" style="cursor: pointer;" onclick="selectVoucher('BIKERVIP')">BIKERVIP (-5%)</span>
+                                <span class="badge bg-dark border border-warning text-warning" style="cursor: pointer;" onclick="selectVoucher('DUYTRUONG')">DUYTRUONG (-10%)</span>
                             </div>
                         </div>
 
+                        <!-- Final Total -->
                         <div class="border-top border-secondary pt-3 mb-4 d-flex justify-content-between align-items-center">
                             <span class="fw-bold text-white fs-5">Tổng tiền đặt:</span>
-                            <span class="fs-4 fw-black text-gradient-gold" th:text="${#numbers.formatDecimal(cartTotal, 0, 'POINT', 0, 'COMMA')} + ' đ'"></span>
+                            <span class="fs-4 fw-black text-gradient-gold" id="summaryFinalTotal" th:text="${#numbers.formatDecimal(cartTotal, 0, 'POINT', 0, 'COMMA')} + ' đ'"></span>
                         </div>
 
                         <button type="submit" id="btnCheckoutSubmit" class="btn btn-gold w-100 py-3 fw-bold shadow fs-5">
@@ -161,15 +183,200 @@
 
     <!-- Footer Include -->
     <div th:replace="~{layout/main :: footer}"></div>
-        <script>
+    
+    <script>
         let isSubmitting = false;
+        let appliedVoucherCode = '';
+        let appliedDiscountAmount = 0;
+
+        function formatMoney(amount) {
+            return Math.max(0, Math.round(amount)).toLocaleString('vi-VN') + ' đ';
+        }
+
+        function getSubtotal() {
+            const el = document.getElementById('summarySubtotal');
+            if (!el) return 0;
+            return parseFloat(el.getAttribute('data-subtotal')) || 0;
+        }
+
+        function getSelectedDelivery() {
+            const checkedRadio = document.querySelector('input.delivery-radio:checked');
+            if (checkedRadio) {
+                return {
+                    id: checkedRadio.value,
+                    price: parseFloat(checkedRadio.getAttribute('data-price')) || 0,
+                    name: checkedRadio.getAttribute('data-name') || 'Vận chuyển VIP'
+                };
+            }
+            return { id: 0, price: 0, name: 'Vận chuyển tiêu chuẩn' };
+        }
+
+        function updateOrderTotals() {
+            const subtotal = getSubtotal();
+            const delivery = getSelectedDelivery();
+            
+            // Cập nhật dòng cước vận chuyển
+            const delivNameEl = document.getElementById('summaryDeliveryName');
+            const delivFeeEl = document.getElementById('summaryDeliveryFee');
+            if (delivNameEl) delivNameEl.innerText = delivery.name;
+            if (delivFeeEl) delivFeeEl.innerText = '+' + formatMoney(delivery.price);
+
+            // Cập nhật dòng voucher
+            const voucherRow = document.getElementById('summaryVoucherRow');
+            const voucherCodeEl = document.getElementById('summaryVoucherCode');
+            const voucherDiscountEl = document.getElementById('summaryVoucherDiscount');
+            
+            if (appliedDiscountAmount > 0) {
+                if (voucherRow) voucherRow.style.setProperty('display', 'flex', 'important');
+                if (voucherCodeEl) voucherCodeEl.innerText = appliedVoucherCode;
+                if (voucherDiscountEl) voucherDiscountEl.innerText = '-' + formatMoney(appliedDiscountAmount);
+            } else {
+                if (voucherRow) voucherRow.style.setProperty('display', 'none', 'important');
+            }
+
+            // Tính tổng thanh toán cuối cùng
+            const finalTotal = Math.max(0, subtotal + delivery.price - appliedDiscountAmount);
+            const finalTotalEl = document.getElementById('summaryFinalTotal');
+            if (finalTotalEl) {
+                finalTotalEl.innerText = formatMoney(finalTotal);
+            }
+        }
+
+        function selectVoucher(code) {
+            const input = document.getElementById('voucherCodeInput');
+            if (input) {
+                input.value = code;
+                applyVoucher();
+            }
+        }
+
+        async function applyVoucher() {
+            const input = document.getElementById('voucherCodeInput');
+            const feedbackEl = document.getElementById('voucherFeedback');
+            const statusBadge = document.getElementById('voucherBadgeStatus');
+            const subtotal = getSubtotal();
+            const delivery = getSelectedDelivery();
+
+            if (!input || !input.value.trim()) {
+                if (feedbackEl) {
+                    feedbackEl.style.display = 'block';
+                    feedbackEl.className = 'alert alert-warning py-2 px-3 small rounded-3 mt-2';
+                    feedbackEl.innerHTML = '<i class="fa-solid fa-circle-exclamation me-1"></i> Vui lòng nhập mã voucher!';
+                }
+                appliedDiscountAmount = 0;
+                appliedVoucherCode = '';
+                updateOrderTotals();
+                return;
+            }
+
+            const rawCode = input.value.trim().toUpperCase();
+
+            // Client-side quick calculation dictionary for instant responsiveness
+            let discount = 0;
+            let successMessage = '';
+            let isValid = false;
+
+            if (rawCode === 'BAOHO-500K' || rawCode === 'BAOHO500K') {
+                discount = 500000;
+                successMessage = 'Đã áp dụng mã Voucher Đồ Bảo Hộ! Giảm ngay 500.000 đ vào đơn hàng.';
+                isValid = true;
+            } else if (rawCode === 'VIP-BAODUONG-FREE') {
+                discount = 2000000;
+                successMessage = 'Đã áp dụng đặc quyền tri ân chủ xe: Miễn phí bảo dưỡng & 4L nhớt Motul 300V trị giá 2.000.000 đ!';
+                isValid = true;
+            } else if (rawCode === 'FREESHIP-VIP') {
+                discount = delivery.price > 0 ? delivery.price : 1500000;
+                successMessage = 'Đã áp dụng miễn phí 100% cước xe sàn trượt VIP (' + formatMoney(discount) + ')!';
+                isValid = true;
+            } else if (rawCode === 'PHUTUNG-GIAM20') {
+                discount = Math.min(5000000, subtotal * 0.2);
+                successMessage = 'Đã áp dụng mã giảm 20% phụ tùng pô độ (' + formatMoney(discount) + ')!';
+                isValid = true;
+            } else if (rawCode === 'BIKERVIP') {
+                discount = Math.min(30000000, subtotal * 0.05);
+                successMessage = 'Đã áp dụng ưu đãi khách hàng thân thiết Biker VIP (-5%: ' + formatMoney(discount) + ')!';
+                isValid = true;
+            } else if (rawCode === 'DUYTRUONG') {
+                discount = Math.min(2000000, subtotal * 0.1);
+                successMessage = 'Đã áp dụng mã Duy Trường Motor (-10%: ' + formatMoney(discount) + ')!';
+                isValid = true;
+            } else if (rawCode === 'LENDOI-MOTO-15TR') {
+                if (subtotal >= 50000000) {
+                    discount = 15000000;
+                    successMessage = 'Đã áp dụng ưu đãi tri ân lên đời siêu môtô! Giảm ngay 15.000.000 đ!';
+                    isValid = true;
+                } else {
+                    isValid = false;
+                    successMessage = 'Mã LENDOI-MOTO-15TR chỉ áp dụng cho đơn xe môtô từ 50.000.000 đ trở lên!';
+                }
+            }
+
+            // Gọi API backend kiểm tra voucher chính xác trong Database
+            try {
+                const res = await fetch('/api/vouchers/apply', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code: rawCode, orderTotal: subtotal })
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.valid) {
+                        discount = data.discountAmount;
+                        successMessage = data.message;
+                        isValid = true;
+                    } else if (!isValid) {
+                        isValid = false;
+                        successMessage = data.message;
+                    }
+                }
+            } catch (err) {
+                console.log('Using client-side voucher calculation fallback.');
+            }
+
+            if (isValid && discount > 0) {
+                appliedDiscountAmount = discount;
+                appliedVoucherCode = rawCode;
+                if (feedbackEl) {
+                    feedbackEl.style.display = 'block';
+                    feedbackEl.className = 'alert alert-success d-flex align-items-center gap-2 py-2 px-3 small rounded-3 mt-2';
+                    feedbackEl.innerHTML = '<i class="fa-solid fa-circle-check text-success fs-5"></i> <div><strong>' + successMessage + '</strong></div>';
+                }
+                if (statusBadge) {
+                    statusBadge.className = 'badge bg-success';
+                    statusBadge.innerText = 'Đã giảm ' + formatMoney(discount);
+                }
+            } else {
+                appliedDiscountAmount = 0;
+                appliedVoucherCode = '';
+                if (feedbackEl) {
+                    feedbackEl.style.display = 'block';
+                    feedbackEl.className = 'alert alert-danger d-flex align-items-center gap-2 py-2 px-3 small rounded-3 mt-2';
+                    feedbackEl.innerHTML = '<i class="fa-solid fa-circle-xmark text-danger fs-5"></i> <div>' + (successMessage || 'Mã voucher không hợp lệ hoặc không đủ điều kiện áp dụng!') + '</div>';
+                }
+                if (statusBadge) {
+                    statusBadge.className = 'badge bg-danger';
+                    statusBadge.innerText = 'Không hợp lệ';
+                }
+            }
+
+            updateOrderTotals();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateOrderTotals();
+            const input = document.getElementById('voucherCodeInput');
+            if (input && input.value.trim()) {
+                applyVoucher();
+            }
+        });
+
         function handleCheckoutSubmit(form) {
             if (isSubmitting) return false;
             isSubmitting = true;
             const btn = document.getElementById('btnCheckoutSubmit');
             if (btn) {
                 btn.disabled = true;
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> DANG TAO DON &amp; KET NOI VNPAY...';
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> ĐANG TẠO ĐƠN &amp; KẾT NỐI VNPAY...';
                 btn.style.opacity = '0.7';
             }
             return true;

@@ -301,6 +301,57 @@ const INITIAL_DEMO_ORDERS = [
     note: "Vui lòng bọc bạt nhung bàn giao xe tại nhà riêng, hỗ trợ thủ tục sang tên bấm biển số."
   });
 
+  // Voucher state in Checkout
+  const [checkoutVoucherCode, setCheckoutVoucherCode] = useState('');
+  const [checkoutVoucherDiscount, setCheckoutVoucherDiscount] = useState(0);
+  const [checkoutVoucherMsg, setCheckoutVoucherMsg] = useState(null); // { type: 'success' | 'error', text: '' }
+
+  const applyCheckoutVoucher = (customCode) => {
+    const code = (customCode || checkoutVoucherCode || '').trim().toUpperCase();
+    if (!code) {
+      setCheckoutVoucherDiscount(0);
+      setCheckoutVoucherMsg({ type: 'warning', text: 'Vui lòng nhập mã voucher!' });
+      return;
+    }
+    let discount = 0;
+    let msg = '';
+    if (code === 'BAOHO-500K' || code === 'BAOHO500K') {
+      discount = 500000;
+      msg = 'Đã áp dụng mã Voucher Đồ Bảo Hộ! Giảm ngay 500.000 đ vào đơn hàng.';
+    } else if (code === 'VIP-BAODUONG-FREE') {
+      discount = 2000000;
+      msg = 'Đặc quyền tri ân chủ xe: Miễn phí bảo dưỡng & nhớt Motul 300V trị giá 2.000.000 đ!';
+    } else if (code === 'FREESHIP-VIP') {
+      discount = checkoutData.deliveryFee || 1500000;
+      msg = `Đã áp dụng miễn phí 100% cước xe sàn trượt VIP (-${formatMoney(discount)})!`;
+    } else if (code === 'PHUTUNG-GIAM20') {
+      discount = Math.min(5000000, cartSubtotal * 0.2);
+      msg = `Đã áp dụng mã giảm 20% phụ tùng pô độ (-${formatMoney(discount)})!`;
+    } else if (code === 'BIKERVIP') {
+      discount = Math.min(30000000, cartSubtotal * 0.05);
+      msg = `Đã áp dụng ưu đãi khách hàng thân thiết Biker VIP (-5%: -${formatMoney(discount)})!`;
+    } else if (code === 'DUYTRUONG') {
+      discount = Math.min(2000000, cartSubtotal * 0.1);
+      msg = `Đã áp dụng mã Duy Trường Motor (-10%: -${formatMoney(discount)})!`;
+    } else if (code === 'LENDOI-MOTO-15TR') {
+      if (cartSubtotal >= 50000000) {
+        discount = 15000000;
+        msg = 'Đã áp dụng ưu đãi lên đời siêu môtô! Giảm 15.000.000 đ!';
+      } else {
+        setCheckoutVoucherDiscount(0);
+        setCheckoutVoucherMsg({ type: 'error', text: 'Mã LENDOI-MOTO-15TR chỉ áp dụng cho đơn xe từ 50.000.000 đ trở lên!' });
+        return;
+      }
+    } else {
+      setCheckoutVoucherDiscount(0);
+      setCheckoutVoucherMsg({ type: 'error', text: `Mã voucher "${code}" không hợp lệ hoặc đã hết lượt!` });
+      return;
+    }
+    setCheckoutVoucherCode(code);
+    setCheckoutVoucherDiscount(discount);
+    setCheckoutVoucherMsg({ type: 'success', text: msg });
+  };
+
   // Chat Widget State (WebSocket Simulation & Smart AI Engine)
   const [chatMessages, setChatMessages] = useState([
     { 
@@ -789,7 +840,7 @@ const INITIAL_DEMO_ORDERS = [
   };
 
   const finalizeOrder = (isPaid = false) => {
-    const calculatedTotal = cartSubtotal + checkoutData.deliveryFee;
+    const calculatedTotal = Math.max(0, cartSubtotal + checkoutData.deliveryFee - checkoutVoucherDiscount);
     const storeId = cart[0]?.product?.storeId || 1;
     const storeName = cart[0]?.product?.storeName || 'Duy Trương Motor - Chi Nhánh Phú Nhuận TP.HCM';
     const newOrder = {
@@ -3870,22 +3921,83 @@ const INITIAL_DEMO_ORDERS = [
                   </div>
                 </div>
 
+                {/* Voucher Input Box with Instant Apply */}
+                <div style={{ background: '#080a0f', padding: '16px', borderRadius: '14px', border: '1px solid rgba(212,175,55,0.3)', marginBottom: '16px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <label style={{ fontSize: '0.82rem', color: 'var(--gold-primary)', fontWeight: 800, margin: 0 }}>
+                      <i className="fa-solid fa-ticket me-1"></i> MÃ VOUCHER KHUYẾN MÃI
+                    </label>
+                    {checkoutVoucherDiscount > 0 && (
+                      <span style={{ background: '#28a745', color: '#fff', fontSize: '0.68rem', fontWeight: 800, padding: '2px 8px', borderRadius: '10px' }}>
+                        - {formatMoney(checkoutVoucherDiscount)}
+                      </span>
+                    )}
+                  </div>
+                  
+                  <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
+                    <input 
+                      type="text" 
+                      className="luxury-input" 
+                      placeholder="Ví dụ: BAOHO-500K, BIKERVIP"
+                      value={checkoutVoucherCode} 
+                      onChange={(e) => setCheckoutVoucherCode(e.target.value.toUpperCase())}
+                      onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); applyCheckoutVoucher(); } }}
+                      style={{ padding: '8px 12px', fontSize: '0.88rem', textTransform: 'uppercase', flex: 1 }}
+                    />
+                    <button 
+                      type="button" 
+                      className="btn-gold" 
+                      style={{ padding: '8px 14px', fontSize: '0.8rem', fontWeight: 800, whiteSpace: 'nowrap' }}
+                      onClick={() => applyCheckoutVoucher()}
+                    >
+                      ÁP DỤNG
+                    </button>
+                  </div>
+
+                  {checkoutVoucherMsg && (
+                    <div style={{ 
+                      padding: '6px 10px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 600, marginBottom: '8px',
+                      background: checkoutVoucherMsg.type === 'success' ? 'rgba(40,167,69,0.15)' : 'rgba(239,68,68,0.15)',
+                      border: `1px solid ${checkoutVoucherMsg.type === 'success' ? '#28a745' : '#ef4444'}`,
+                      color: checkoutVoucherMsg.type === 'success' ? '#4ade80' : '#f87171'
+                    }}>
+                      <i className={`fa-solid ${checkoutVoucherMsg.type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation'} me-1`}></i>
+                      {checkoutVoucherMsg.text}
+                    </div>
+                  )}
+
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', fontSize: '0.72rem' }}>
+                    <span style={{ color: 'var(--text-muted)' }}>Gợi ý:</span>
+                    <span onClick={() => applyCheckoutVoucher('BAOHO-500K')} style={{ cursor: 'pointer', background: '#131722', color: 'var(--gold-primary)', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(212,175,55,0.3)' }}>BAOHO-500K</span>
+                    <span onClick={() => applyCheckoutVoucher('VIP-BAODUONG-FREE')} style={{ cursor: 'pointer', background: '#131722', color: 'var(--gold-primary)', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(212,175,55,0.3)' }}>VIP-BAODUONG-FREE</span>
+                    <span onClick={() => applyCheckoutVoucher('FREESHIP-VIP')} style={{ cursor: 'pointer', background: '#131722', color: 'var(--gold-primary)', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(212,175,55,0.3)' }}>FREESHIP-VIP</span>
+                    <span onClick={() => applyCheckoutVoucher('PHUTUNG-GIAM20')} style={{ cursor: 'pointer', background: '#131722', color: 'var(--gold-primary)', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(212,175,55,0.3)' }}>PHUTUNG-GIAM20</span>
+                    <span onClick={() => applyCheckoutVoucher('BIKERVIP')} style={{ cursor: 'pointer', background: '#131722', color: 'var(--gold-primary)', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(212,175,55,0.3)' }}>BIKERVIP</span>
+                  </div>
+                </div>
+
                 {/* Total and Order Button */}
                 <div style={{ background: 'linear-gradient(135deg, rgba(212,175,55,0.15) 0%, rgba(0,0,0,0.5) 100%)', padding: '22px', borderRadius: '16px', border: '1px solid var(--gold-primary)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
                     <span style={{ fontSize: '0.9rem', color: 'var(--text-sub)' }}>Tiền xe ({cart.length} mẫu):</span>
                     <span style={{ color: '#fff', fontWeight: 700 }}>{formatMoney(cartSubtotal)}</span>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '10px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
                     <span style={{ fontSize: '0.9rem', color: 'var(--text-sub)' }}>Cước vận chuyển VIP:</span>
                     <span style={{ color: 'var(--gold-primary)', fontWeight: 700 }}>{formatMoney(checkoutData.deliveryFee)}</span>
                   </div>
+                  {checkoutVoucherDiscount > 0 && (
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                      <span style={{ fontSize: '0.9rem', color: '#4ade80' }}><i className="fa-solid fa-tag me-1"></i> Voucher ({checkoutVoucherCode}):</span>
+                      <span style={{ color: '#4ade80', fontWeight: 800 }}>- {formatMoney(checkoutVoucherDiscount)}</span>
+                    </div>
+                  )}
 
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '18px' }}>
+                  <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '18px' }}>
                     <div>
                       <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Tổng thanh toán:</div>
                       <div className="price-racing" style={{ color: 'var(--gold-primary)', fontSize: '2rem', lineHeight: 1.1 }}>
-                        {formatMoney(cartSubtotal + checkoutData.deliveryFee)}
+                        {formatMoney(Math.max(0, cartSubtotal + checkoutData.deliveryFee - checkoutVoucherDiscount))}
                       </div>
                     </div>
                     <span style={{ background: '#22c55e', color: '#000', fontSize: '0.75rem', fontWeight: 800, padding: '4px 8px', borderRadius: '4px' }}>
@@ -3956,7 +4068,7 @@ const INITIAL_DEMO_ORDERS = [
                 Đơn hàng tại: <strong style={{ color: '#0f172a' }}>DUY TRƯƠNG MOTOR SHOWROOM</strong>
               </div>
               <div className="price-racing" style={{ fontSize: '2.5rem', color: '#ed1c24', margin: '8px 0', fontWeight: 900, lineHeight: 1.1 }}>
-                {formatMoney(cartSubtotal + checkoutData.deliveryFee)}
+                {formatMoney(Math.max(0, cartSubtotal + checkoutData.deliveryFee - checkoutVoucherDiscount))}
               </div>
               <div style={{ fontSize: '0.82rem', color: '#64748b', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '6px' }}>
                 <span>Mã thanh toán: <strong style={{ color: '#005baa' }}>DTM-PAY-VNPAY2026</strong></span>
