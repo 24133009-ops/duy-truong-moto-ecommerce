@@ -1866,12 +1866,18 @@ const INITIAL_DEMO_ORDERS = [
                 </span>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '14px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
                 {/* Voucher 1 */}
-                <div style={{ background: '#080a0f', border: '1px solid rgba(212,175,55,0.3)', borderRadius: '12px', padding: '16px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'relative' }}>
-                  <span style={{ position: 'absolute', top: '10px', right: '10px', background: '#28a745', color: '#fff', padding: '2px 8px', borderRadius: '10px', fontSize: '0.65rem', fontWeight: 700 }}>FREE 100%</span>
+                <div style={{ background: '#080a0f', border: '1px solid rgba(212,175,55,0.3)', borderRadius: '12px', padding: '16px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                   <div>
-                    <div style={{ color: 'var(--gold-primary)', fontSize: '0.8rem', fontWeight: 800, marginBottom: '4px' }}><i className="fa-solid fa-oil-can me-1"></i> BẢO DƯỠNG ĐỊNH KỲ</div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', gap: '8px' }}>
+                      <div style={{ color: 'var(--gold-primary)', fontSize: '0.78rem', fontWeight: 800 }}>
+                        <i className="fa-solid fa-oil-can me-1"></i> BẢO DƯỠNG ĐỊNH KỲ
+                      </div>
+                      <span style={{ background: '#28a745', color: '#fff', padding: '2px 8px', borderRadius: '10px', fontSize: '0.65rem', fontWeight: 700, whiteSpace: 'nowrap', flexShrink: 0 }}>
+                        FREE 100%
+                      </span>
+                    </div>
                     <div style={{ color: '#fff', fontWeight: 700, fontSize: '0.85rem', marginBottom: '4px' }}>Free Toàn Bộ Công &amp; 4L Nhớt Motul 300V</div>
                     <p style={{ color: 'var(--text-muted)', fontSize: '0.72rem', lineHeight: 1.4, margin: '0 0 12px 0' }}>Đặc quyền chủ xe bảo dưỡng định kỳ, siết ốc PDI, tiết kiệm 2.000.000 đ.</p>
                   </div>
@@ -1887,10 +1893,16 @@ const INITIAL_DEMO_ORDERS = [
                 </div>
 
                 {/* Voucher 2 */}
-                <div style={{ background: '#080a0f', border: '1px solid rgba(212,175,55,0.3)', borderRadius: '12px', padding: '16px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'relative' }}>
-                  <span style={{ position: 'absolute', top: '10px', right: '10px', background: 'var(--gold-primary)', color: '#000', padding: '2px 8px', borderRadius: '10px', fontSize: '0.65rem', fontWeight: 800 }}>-15 TRIỆU</span>
+                <div style={{ background: '#080a0f', border: '1px solid rgba(212,175,55,0.3)', borderRadius: '12px', padding: '16px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                   <div>
-                    <div style={{ color: 'var(--gold-primary)', fontSize: '0.8rem', fontWeight: 800, marginBottom: '4px' }}><i className="fa-solid fa-motorcycle me-1"></i> LÊN ĐỜI SIÊU MÔTÔ</div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', gap: '8px' }}>
+                      <div style={{ color: 'var(--gold-primary)', fontSize: '0.78rem', fontWeight: 800 }}>
+                        <i className="fa-solid fa-motorcycle me-1"></i> LÊN ĐỜI SIÊU MÔTÔ
+                      </div>
+                      <span style={{ background: 'var(--gold-primary)', color: '#000', padding: '2px 8px', borderRadius: '10px', fontSize: '0.65rem', fontWeight: 800, whiteSpace: 'nowrap', flexShrink: 0 }}>
+                        -15 TRIỆU
+                      </span>
+                    </div>
                     <div style={{ color: '#fff', fontWeight: 700, fontSize: '0.85rem', marginBottom: '4px' }}>Trợ Giá 15.000.000 đ Xe Tiếp Theo</div>
                     <p style={{ color: 'var(--text-muted)', fontSize: '0.72rem', lineHeight: 1.4, margin: '0 0 12px 0' }}>Trừ thẳng 15 triệu khi lên đời phân khối lớn hơn hoặc tậu thêm xe thứ 2.</p>
                   </div>
@@ -1906,10 +1918,16 @@ const INITIAL_DEMO_ORDERS = [
                 </div>
 
                 {/* Voucher 3 */}
-                <div style={{ background: '#080a0f', border: '1px solid rgba(212,175,55,0.3)', borderRadius: '12px', padding: '16px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'relative' }}>
-                  <span style={{ position: 'absolute', top: '10px', right: '10px', background: '#e53e3e', color: '#fff', padding: '2px 8px', borderRadius: '10px', fontSize: '0.65rem', fontWeight: 700 }}>GIẢM 20%</span>
+                <div style={{ background: '#080a0f', border: '1px solid rgba(212,175,55,0.3)', borderRadius: '12px', padding: '16px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                   <div>
-                    <div style={{ color: 'var(--gold-primary)', fontSize: '0.8rem', fontWeight: 800, marginBottom: '4px' }}><i className="fa-solid fa-helmet-safety me-1"></i> PÔ ĐỘ &amp; BẢO HỘ</div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', gap: '8px' }}>
+                      <div style={{ color: 'var(--gold-primary)', fontSize: '0.78rem', fontWeight: 800 }}>
+                        <i className="fa-solid fa-helmet-safety me-1"></i> PÔ ĐỘ &amp; BẢO HỘ
+                      </div>
+                      <span style={{ background: '#e53e3e', color: '#fff', padding: '2px 8px', borderRadius: '10px', fontSize: '0.65rem', fontWeight: 700, whiteSpace: 'nowrap', flexShrink: 0 }}>
+                        GIẢM 20%
+                      </span>
+                    </div>
                     <div style={{ color: '#fff', fontWeight: 700, fontSize: '0.85rem', marginBottom: '4px' }}>Giảm 20% Pô Akrapovic &amp; AGV</div>
                     <p style={{ color: 'var(--text-muted)', fontSize: '0.72rem', lineHeight: 1.4, margin: '0 0 12px 0' }}>Giảm 20% khi độ pô Akrapovic, SC Project hoặc nón AGV Pista, áo giáp.</p>
                   </div>
@@ -1925,10 +1943,16 @@ const INITIAL_DEMO_ORDERS = [
                 </div>
 
                 {/* Voucher 4 */}
-                <div style={{ background: '#080a0f', border: '1px solid rgba(212,175,55,0.3)', borderRadius: '12px', padding: '16px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'relative' }}>
-                  <span style={{ position: 'absolute', top: '10px', right: '10px', background: '#00f2fe', color: '#000', padding: '2px 8px', borderRadius: '10px', fontSize: '0.65rem', fontWeight: 800 }}>VIP FREE</span>
+                <div style={{ background: '#080a0f', border: '1px solid rgba(212,175,55,0.3)', borderRadius: '12px', padding: '16px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                   <div>
-                    <div style={{ color: 'var(--gold-primary)', fontSize: '0.8rem', fontWeight: 800, marginBottom: '4px' }}><i className="fa-solid fa-truck-ramp-box me-1"></i> XE SÀN TRƯỢT VIP</div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', gap: '8px' }}>
+                      <div style={{ color: 'var(--gold-primary)', fontSize: '0.78rem', fontWeight: 800 }}>
+                        <i className="fa-solid fa-truck-ramp-box me-1"></i> XE SÀN TRƯỢT VIP
+                      </div>
+                      <span style={{ background: '#00f2fe', color: '#000', padding: '2px 8px', borderRadius: '10px', fontSize: '0.65rem', fontWeight: 800, whiteSpace: 'nowrap', flexShrink: 0 }}>
+                        VIP FREE
+                      </span>
+                    </div>
                     <div style={{ color: '#fff', fontWeight: 700, fontSize: '0.85rem', marginBottom: '4px' }}>Free 100% Giao Xe &amp; Cứu Hộ</div>
                     <p style={{ color: 'var(--text-muted)', fontSize: '0.72rem', lineHeight: 1.4, margin: '0 0 12px 0' }}>Tài xế sàn trượt chuyên dụng giao xe tận nhà, kiểm tra nổ máy ưng ý mới nhận.</p>
                   </div>
@@ -1966,11 +1990,11 @@ const INITIAL_DEMO_ORDERS = [
                       <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                         <span style={{ 
                           padding: '4px 12px', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 700,
-                          background: order.status === 'CONFIRMED' ? 'rgba(212,175,55,0.15)' : (order.status === 'DELIVERED' ? 'rgba(40,167,69,0.15)' : 'rgba(0,242,254,0.15)'),
-                          color: order.status === 'CONFIRMED' ? 'var(--gold-light)' : (order.status === 'DELIVERED' ? '#28a745' : 'var(--cyan-neon)'),
+                          background: order.status === 'CONFIRMED' ? 'rgba(212,175,55,0.15)' : (order.status === 'DELIVERED' ? 'rgba(40,167,69,0.15)' : (order.status === 'NOT_PROCESSED' ? 'rgba(0,242,254,0.15)' : 'rgba(255,255,255,0.1)')),
+                          color: order.status === 'CONFIRMED' ? 'var(--gold-light)' : (order.status === 'DELIVERED' ? '#28a745' : (order.status === 'NOT_PROCESSED' ? 'var(--cyan-neon)' : '#fff')),
                           border: '1px solid currentColor'
                         }}>
-                          {order.status === 'CONFIRMED' ? 'Đã Xác Nhận Đơn' : (order.status === 'DELIVERED' ? 'Đã Bàn Giao Xe' : order.status)}
+                          {order.status === 'NOT_PROCESSED' ? 'Chưa Xác Nhận' : (order.status === 'CONFIRMED' ? 'Đã Xác Nhận Đơn' : (order.status === 'PICKED_UP' ? 'Đã Xuất Kho PDI' : (order.status === 'SHIPPING' ? 'Đang Vận Chuyển VIP' : (order.status === 'HANDOVER' ? 'Bàn Giao & Test Pô' : (order.status === 'DELIVERED' ? 'Đã Bàn Giao Xe' : (order.status === 'CANCELLED' ? 'Đã Hủy' : 'Chưa Xác Nhận'))))))}
                         </span>
                         {order.isPaid && (
                           <span style={{ background: '#28a745', color: '#fff', padding: '3px 8px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 700 }}>

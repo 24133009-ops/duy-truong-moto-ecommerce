@@ -1,7 +1,7 @@
 package com.duytruongmoto.ecommerce.entity;
 
 public enum OrderStatus {
-    NOT_PROCESSED("Đơn hàng mới"),
+    NOT_PROCESSED("Chưa xác nhận"),
     CONFIRMED("Đã duyệt HQCN"),
     PICKED_UP("Hoàn tất PDI"),
     SHIPPING("Đang vận chuyển sàn trượt"),
