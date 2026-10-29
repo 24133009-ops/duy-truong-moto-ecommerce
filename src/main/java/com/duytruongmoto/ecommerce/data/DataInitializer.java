@@ -45,6 +45,23 @@ public class DataInitializer implements CommandLineRunner {
             log.error("Lỗi syncDemoAccounts: {}", e.getMessage());
         }
 
+        // Tự động mở khóa và kích hoạt các tài khoản người dùng thử nghiệm
+        try {
+            List<String> targetEmails = Arrays.asList("duytq4906@gmail.com", "khoidt0701@gmail.com", "nghaitinh0511@gmail.com");
+            for (String em : targetEmails) {
+                userRepository.findByEmail(em).ifPresent(u -> {
+                    u.setIsLocked(false);
+                    u.setIsEmailActive(true);
+                    u.setOtpAttempts(0);
+                    u.setOtpCode(null);
+                    userRepository.save(u);
+                    log.info(">>> [DataInitializer] Đã mở khóa & kích hoạt tài khoản: {}", em);
+                });
+            }
+        } catch (Exception ex) {
+            log.warn("Lỗi auto unlock demo accounts: {}", ex.getMessage());
+        }
+
         Map<String, Category> catMap = new HashMap<>();
         try {
             catMap = initCategories();

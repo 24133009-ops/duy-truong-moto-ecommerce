@@ -186,10 +186,10 @@ public class Order {
         boolean isVehicle = isVehicleOrder();
         switch (step) {
             case 1: return isVehicle ? "Đặt Cọc Online" : "Đặt Mua Online";
-            case 2: return isVehicle ? "Duyệt HQCN" : "Soạn Hàng";
-            case 3: return isVehicle ? "Xuất Kho PDI" : "Đóng Gói Chống Sốc";
+            case 2: return isVehicle ? "Duyệt HQCN" : "Soạn & Xếp Hàng";
+            case 3: return isVehicle ? "Xuất Kho PDI" : "Đóng Hộp Chống Sốc";
             case 4: return isVehicle ? "Xe Sàn Trượt" : "Bốc Hàng Lên Xe";
-            case 5: return isVehicle ? "Bàn Giao & Test Pô" : "Giao Hàng & Đồng Kiểm";
+            case 5: return isVehicle ? "Bàn Giao & Test Pô" : "Giao Hàng Đồng Kiểm";
             case 6: return isVehicle ? "Bảo Hành 3 Năm" : "Hoàn Tất Đơn Hàng";
             default: return "Chặng " + step;
         }
@@ -199,9 +199,9 @@ public class Order {
         boolean isVehicle = isVehicleOrder();
         switch (step) {
             case 1: return isVehicle ? "Khách cọc VNPay" : "Đã xác nhận đơn hàng";
-            case 2: return isVehicle ? "Showroom kiểm tra" : "Xếp hàng & kiểm đúng mẫu";
-            case 3: return isVehicle ? "Siết ốc & Rửa xe" : "Bọc xốp khí & niêm phong";
-            case 4: return isVehicle ? "Vận chuyển VIP" : "Bốc xếp & bàn giao shipper";
+            case 2: return isVehicle ? "Showroom kiểm tra" : "Xếp hàng kiểm tem chính hãng";
+            case 3: return isVehicle ? "Siết ốc & Rửa xe" : "Bọc màng khí & đóng kiện";
+            case 4: return isVehicle ? "Vận chuyển VIP" : "Bốc hàng xuất phát giao";
             case 5: return isVehicle ? "Hạ sàn & nổ máy" : "Khách kiểm tra hàng & nhận";
             case 6: return isVehicle ? "Kích hoạt chính hãng" : "Bảo hành phụ kiện chính hãng";
             default: return "";

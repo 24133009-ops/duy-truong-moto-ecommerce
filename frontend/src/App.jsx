@@ -608,44 +608,71 @@ const INITIAL_DEMO_ORDERS = [
   // Format VND Currency
   const formatMoney = (val) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(val);
 
+  const normalizeText = (str) => {
+    if (!str) return '';
+    return str.toString().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/đ/g, 'd');
+  };
+
   const isAccessory = (item) => {
     if (!item) return false;
-    const cat = (item.category || '').toLowerCase();
-    const catName = (item.categoryName || '').toLowerCase();
-    const nameUpper = (item.name || '').toUpperCase();
-    const brandUpper = (item.brand || '').toUpperCase();
-    return cat === 'do-bao-ho' || 
-           cat === 'gear-parts' || 
-           cat === 'phu-tung-po-do' ||
-           catName.includes('bảo hộ') ||
-           catName.includes('phụ tùng') ||
-           catName.includes('pô độ') ||
-           catName.includes('nón') ||
-           ['MŨ BẢO HIỂM', 'NÓN BẢO HIỂM', 'GĂNG TAY', 'GIÁP', 'PÔ', 'PHUỘC', 'ỐNG XẢ', 'AKRAPOVIC', 'SC-PROJECT', 'SC PROJECT', 'OHLINS', 'BREMBO', 'AGV', 'DAINESE', 'ALPINESTARS', 'LS2'].some(k => nameUpper.includes(k) || brandUpper.includes(k));
+    const cat = normalizeText(item.category || item.categorySlug || '');
+    const catName = normalizeText(item.categoryName || '');
+    const name = normalizeText(item.name || item.productName || item.title || '');
+    const brand = normalizeText(item.brand || '');
+    const full = `${name} ${brand} ${cat} ${catName}`;
+
+    if (cat.includes('bao-ho') || cat.includes('gear') || cat.includes('phu-tung') || cat.includes('do-choi')) return true;
+    if (catName.includes('bao ho') || catName.includes('phu tung') || catName.includes('phu kien') || catName.includes('do choi') || catName.includes('po do') || catName.includes('non') || catName.includes('mu')) return true;
+
+    const accKeywords = [
+      'gang tay', 'gang', 'mu bao hiem', 'non bao hiem', 'non', 'mu', 'bao ho', 'bao hiem', 
+      'giap', 'ao giap', 'quan giap', 'bo giap', 'po', 'ong xa', 'exhaust', 'akrapovic', 'sc-project', 
+      'sc project', 'phuoc', 'suspension', 'ohlins', 'nhot', 'motul', 'brembo', 'phu tung', 
+      'phu kien', 'do choi', 'alpinestars', 'dainese', 'agv', 'ls2', 'arai', 'shoei', 'hjc', 
+      'kyt', 'komine', 'taichi', 'arrow', 'yoshimura', 'leovince', 'austin racing', 'mivv'
+    ];
+
+    return accKeywords.some(k => full.includes(k));
   };
 
   const isOrderAccessory = (order) => {
     if (!order) return false;
+    
+    // Kiểm tra tên sản phẩm chính
+    const pNameNorm = normalizeText(order.productName || order.name || '');
+    
+    // Nếu có danh sách items
     if (order.items && order.items.length > 0) {
-      const anyVeh = order.items.some(it => !isAccessory(it.product || it));
+      const anyVeh = order.items.some(it => {
+        const itemObj = it.product || it;
+        const n = normalizeText(itemObj.name || itemObj.productName || '');
+        const isMoto = ['cbr1000', 's1000rr', 'panigale', 'h2', 'hayabusa', 'streetfighter', 'monster', 'ktm 300', '300 exc', 'crf300', 'yz450', 'wr450', 'klx', 'husqvarna', 'gasgas', 'harley', 'ninja'].some(k => n.includes(k));
+        return isMoto && !isAccessory(itemObj);
+      });
       const anyAcc = order.items.some(it => isAccessory(it.product || it));
       if (anyAcc && !anyVeh) return true;
       if (anyVeh) return false;
     }
-    const nameUpper = ((order.productName || '') + ' ' + (order.name || '')).toUpperCase();
-    return ['MŨ BẢO HIỂM', 'NÓN BẢO HIỂM', 'NÓN', 'MŨ', 'GĂNG TAY', 'GĂNG', 'GIÁP', 'ÁO GIÁP', 'PÔ', 'PHUỘC', 'ỐNG XẢ', 'AKRAPOVIC', 'SC-PROJECT', 'SC PROJECT', 'OHLINS', 'BREMBO', 'AGV', 'DAINESE', 'ALPINESTARS', 'LS2', 'PHỤ TÙNG', 'PHỤ KIỆN', 'ĐỒ CHƠI', 'NHỚT', 'MOTUL'].some(k => nameUpper.includes(k));
+
+    // Kiểm tra phương thức giao hàng
+    const delName = normalizeText(order.deliveryName || '');
+    if (delName.includes('tieu chuan') || delName.includes('phu tung') || delName.includes('bao ho')) {
+      return true;
+    }
+
+    return isAccessory({ name: pNameNorm });
   };
 
   const getOrderSteps = (order) => {
     const isAcc = isOrderAccessory(order);
     if (isAcc) {
       return [
-        { num: 1, title: 'Đặt Mua Online', desc: 'Xác nhận giỏ hàng', icon: 'fa-bag-shopping' },
-        { num: 2, title: 'Soạn Hàng', desc: 'Kiểm tem chống giả', icon: 'fa-dolly' },
-        { num: 3, title: 'Đóng Hộp Chống Sốc', desc: 'Bọc màng khí bọt', icon: 'fa-box-open' },
-        { num: 4, title: 'Bốc Hàng Lên Xe', desc: 'Bàn giao shipper', icon: 'fa-truck-fast' },
-        { num: 5, title: 'Giao Hàng Đồng Kiểm', desc: 'Khách kiểm & nhận', icon: 'fa-handshake' },
-        { num: 6, title: 'Hoàn Tất Đơn Hàng', desc: 'Bảo hành phụ kiện', icon: 'fa-circle-check' }
+        { num: 1, title: 'Đặt Mua Online', desc: 'Đã xác nhận đơn hàng', icon: 'fa-bag-shopping' },
+        { num: 2, title: 'Soạn & Xếp Hàng', desc: 'Xếp hàng kiểm tem chính hãng', icon: 'fa-dolly' },
+        { num: 3, title: 'Đóng Hộp Chống Sốc', desc: 'Bọc màng khí & đóng kiện', icon: 'fa-box-open' },
+        { num: 4, title: 'Bốc Hàng Lên Xe', desc: 'Bốc hàng xuất phát giao', icon: 'fa-truck-fast' },
+        { num: 5, title: 'Giao Hàng Đồng Kiểm', desc: 'Khách kiểm tra hàng & nhận', icon: 'fa-handshake' },
+        { num: 6, title: 'Hoàn Tất Đơn Hàng', desc: 'Kích hoạt bảo hành chính hãng', icon: 'fa-circle-check' }
       ];
     }
     return [
