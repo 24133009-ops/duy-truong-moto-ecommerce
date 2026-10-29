@@ -12,6 +12,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import com.duytruongmoto.ecommerce.entity.LegalRecord;
+import com.duytruongmoto.ecommerce.repository.LegalRecordRepository;
 import java.util.List;
 import java.util.Arrays;
 
@@ -30,6 +32,7 @@ public class DataInitializer implements CommandLineRunner {
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
     private final VoucherRepository voucherRepository;
+    private final LegalRecordRepository legalRecordRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -58,6 +61,7 @@ public class DataInitializer implements CommandLineRunner {
 
         try {
             try { initVouchers(); } catch (Exception e) { log.error("Lỗi initVouchers: {}", e.getMessage()); }
+            try { initLegalRecords(); } catch (Exception e) { log.error("Lỗi initLegalRecords: {}", e.getMessage()); }
             initAll60Products(catMap, storeMap);
         } catch (Exception e) {
             log.error("Lỗi initAll60Products: {}", e.getMessage());
@@ -328,6 +332,72 @@ public class DataInitializer implements CommandLineRunner {
             voucher.setIsDeleted(false);
             voucherRepository.save(voucher);
             log.info(">>> Đã đồng bộ cập nhật Voucher: {} - Giảm tối đa: {} đ", code, maxDiscount);
+        }
+    }
+
+    private void initLegalRecords() {
+        if (legalRecordRepository.count() == 0) {
+            // Hồ sơ 1: Đã hoàn tất 100% Chặng 4/4 (MV Agusta Brutale 1000 RR)
+            legalRecordRepository.save(LegalRecord.builder()
+                    .recordCode("DTM-LEGAL-9833BD")
+                    .customerName("Hoàng Biker VIP")
+                    .phone("0905555777")
+                    .idCard("079202008899")
+                    .vehicleName("MV Agusta Brutale 1000 RR")
+                    .vinNumber("MD44E-00892")
+                    .engineNumber("F4-1000RR-7821")
+                    .originalPlate("59A3-112.34")
+                    .targetPlate("29A1-999.88 (Hà Nội)")
+                    .showroomName("Duy Trương Motor - Chi Nhánh Cầu Giấy Hà Nội")
+                    .appointmentDate(java.time.LocalDate.now().minusDays(3))
+                    .appointmentTime("09:00 - 11:30 Sáng (Bấm biển tại CSGT)")
+                    .currentStep(4)
+                    .isCompleted(true)
+                    .lawyerContact("Luật sư Trần Quang Duy (0903.456.789)")
+                    .note("Đã hoàn tất nộp thuế trước bạ 1% và bấm biển số định danh 29A1-999.88 chính chủ theo CCCD. Bàn giao đủ hồ sơ gốc và cà vẹt cho khách hàng.")
+                    .build());
+
+            // Hồ sơ 2: Đang ở Chặng 3 (Rút hồ sơ gốc - Ducati Panigale V4 S)
+            legalRecordRepository.save(LegalRecord.builder()
+                    .recordCode("DTM-LEGAL-4521HN")
+                    .customerName("Lê Hoàng Nam")
+                    .phone("0905123456")
+                    .idCard("001201004567")
+                    .vehicleName("Ducati Panigale V4 S 2024")
+                    .vinNumber("ZDM13BEW0RB001245")
+                    .engineNumber("DESMO-V4-9842")
+                    .originalPlate("29A1-888.66")
+                    .targetPlate("43A1-168.88 (Đà Nẵng)")
+                    .showroomName("Duy Trương Motor - Chi Nhánh Phú Nhuận TP.HCM (Trụ Sở Chính)")
+                    .appointmentDate(java.time.LocalDate.now().plusDays(1))
+                    .appointmentTime("14:00 - 16:30 Chiều (Ký công chứng)")
+                    .currentStep(3)
+                    .isCompleted(false)
+                    .lawyerContact("Chuyên viên Nguyễn Minh Tuấn (0918.777.999)")
+                    .note("Đã nộp hồ sơ thu hồi biển số tại CSGT gốc, đang niêm phong túi hồ sơ gốc chuyển phát an toàn về Đội CSGT Đà Nẵng.")
+                    .build());
+
+            // Hồ sơ 3: Đang ở Chặng 2 (Aprilia SX 125 Supermoto)
+            legalRecordRepository.save(LegalRecord.builder()
+                    .recordCode("DTM-LEGAL-7729SG")
+                    .customerName("Đặng Quốc Tuấn")
+                    .phone("0912345678")
+                    .idCard("079203009988")
+                    .vehicleName("Aprilia SX 125 Supermoto Bánh Trơn")
+                    .vinNumber("ZD4KXA0000001892")
+                    .engineNumber("SX125-4T-3321")
+                    .originalPlate("60B1-555.22")
+                    .targetPlate("59A3-999.68 (TP.HCM)")
+                    .showroomName("Duy Trương Motor - Chi Nhánh Phú Nhuận TP.HCM (Trụ Sở Chính)")
+                    .appointmentDate(java.time.LocalDate.now().plusDays(2))
+                    .appointmentTime("09:00 - 11:30 Sáng (Bấm biển tại CSGT)")
+                    .currentStep(2)
+                    .isCompleted(false)
+                    .lawyerContact("Luật sư Trần Quang Duy (0903.456.789)")
+                    .note("Đã hoàn tất kiểm định số khung, cam kết 0 nợ phạt nguội. Chuẩn bị ký hợp đồng mua bán công chứng trong 30 phút.")
+                    .build());
+
+            log.info(">>> Đã khởi tạo thành công 3 Hồ Sơ Pháp Lý & Biển Số Định Danh mẫu vào cơ sở dữ liệu!");
         }
     }
 

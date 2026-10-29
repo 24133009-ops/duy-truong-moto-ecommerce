@@ -56,7 +56,7 @@ public class SecurityConfig {
                 // Tài nguyên công khai & REST API
                 .requestMatchers(
                     "/", "/home", "/policy", "/products/**", "/stores/**", "/auth/**",
-                    "/checkout/vnpay-simulator", "/checkout/vnpay-return",
+                    "/checkout/vnpay-simulator", "/checkout/vnpay-return", "/orders/*/invoice", "/orders/invoice/*",
                     "/css/**", "/js/**", "/images/**", "/fonts/**", "/webjars/**",
                     "/ws/**", "/api/**", "/ping", "/health"
                 ).permitAll()

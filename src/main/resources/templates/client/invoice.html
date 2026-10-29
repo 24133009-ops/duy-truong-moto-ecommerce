@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Hóa Đơn Điện Tử #' + ${order.orderCode} + ' - Duy Truong Motor'">Hóa Đơn Điện Tử - Duy Truong Motor</title>
+    <!-- Google Fonts: Be Vietnam Pro -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0f121d;
+            color: #1e293b;
+            padding: 30px 15px;
+        }
+        .invoice-sheet {
+            max-width: 850px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            padding: 45px 50px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+        .invoice-watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 4.5rem;
+            font-weight: 900;
+            color: rgba(212, 175, 55, 0.04);
+            white-space: nowrap;
+            pointer-events: none;
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            user-select: none;
+        }
+        .stamp-box {
+            position: relative;
+            display: inline-block;
+            border: 3px double #dc2626;
+            color: #dc2626;
+            padding: 10px 18px;
+            border-radius: 8px;
+            text-transform: uppercase;
+            font-weight: 800;
+            font-size: 0.85rem;
+            transform: rotate(-5deg);
+            background: rgba(254, 226, 226, 0.3);
+            box-shadow: 0 0 10px rgba(220, 38, 38, 0.15);
+        }
+        .stamp-box i {
+            margin-right: 6px;
+        }
+        .invoice-table th {
+            background-color: #0f172a !important;
+            color: #ffffff !important;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none;
+        }
+        .invoice-table td {
+            font-size: 0.9rem;
+            vertical-align: middle;
+            border-color: #f1f5f9;
+        }
+        .text-gold {
+            color: #b45309 !important;
+        }
+        .no-print-bar {
+            max-width: 850px;
+            margin: 0 auto 20px;
+        }
+        @media print {
+            body {
+                background: #ffffff !important;
+                padding: 0 !important;
+            }
+            .no-print-bar {
+                display: none !important;
+            }
+            .invoice-sheet {
+                box-shadow: none !important;
+                border: none !important;
+                padding: 20px !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+            @page {
+                size: A4;
+                margin: 1.5cm;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Print Action Header Bar -->
+    <div class="no-print-bar d-flex justify-content-between align-items-center">
+        <a th:href="@{/orders}" class="btn btn-outline-light rounded-pill px-3 py-2 small">
+            <i class="fa-solid fa-arrow-left me-1"></i> Quay Lại Đơn Hàng
+        </a>
+        <div class="d-flex gap-2">
+            <a th:href="@{/checkout/vnpay-return(vnp_ResponseCode='00', vnp_TxnRef=${order.orderCode})}" class="btn btn-secondary rounded-pill px-3 py-2 small">
+                <i class="fa-solid fa-receipt me-1"></i> Trang Thanh Toán
+            </a>
+            <button onclick="window.print()" class="btn btn-warning fw-bold rounded-pill px-4 py-2 shadow">
+                <i class="fa-solid fa-print me-1"></i> IN HÓA ĐƠN / LƯU PDF A4
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Invoice Sheet -->
+    <div class="invoice-sheet">
+        <div class="invoice-watermark">DUY TRUONG MOTOR</div>
+
+        <!-- Header -->
+        <div class="row align-items-center mb-4 pb-3 border-bottom border-2">
+            <div class="col-sm-7">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <div style="width: 44px; height: 44px; background: linear-gradient(135deg, #d4af37, #f3e5ab); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; color: #090a0f;">
+                        <i class="fa-solid fa-motorcycle"></i>
+                    </div>
+                    <div>
+                        <h4 class="fw-black mb-0" style="letter-spacing: 1px; color: #0f172a;">DUY TRUONG MOTOR</h4>
+                        <div style="font-size: 0.65rem; color: #b45309; letter-spacing: 1px;" class="fw-bold">CHUỖI SIÊU XE PHÂN KHỐI LỚN &amp; PHỤ KIỆN CAO CẤP</div>
+                    </div>
+                </div>
+                <div class="small text-secondary" style="font-size: 0.8rem; line-height: 1.5;">
+                    <div><strong>CÔNG TY TNHH SIÊU XE DUY TRUONG MOTOR LUXURY</strong></div>
+                    <div>Trụ sở: Số 123 Hoàng Văn Thụ, Phường 8, Q. Phú Nhuận, TP. Hồ Chí Minh</div>
+                    <div>Mã số thuế: <strong>0317894562</strong> &bull; Hotline: <strong>1900 6868</strong> - <strong>0948 029 409</strong></div>
+                    <div>Tài khoản Sacombank: <strong>0948029409</strong> (Chủ TK: TRƯƠNG QUỐC DUY)</div>
+                </div>
+            </div>
+            <div class="col-sm-5 text-sm-end mt-3 mt-sm-0">
+                <h4 class="fw-bold text-danger mb-1">HÓA ĐƠN BÁN HÀNG</h4>
+                <div class="text-secondary small">KIÊM BIÊN LAI ĐẶT CỌC ĐIỆN TỬ</div>
+                <div class="mt-2 small">
+                    <div>Ký hiệu: <strong>1C26TDT</strong></div>
+                    <div>Số HĐ: <strong class="text-primary font-monospace" th:text="${'HD-' + order.orderCode}">HD-DTM-2026</strong></div>
+                    <div>Ngày lập: <span th:text="${#temporals.format(order.createdAt, 'dd/MM/yyyy HH:mm')}">29/10/2026</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customer & Order Details -->
+        <div class="p-3 bg-light rounded-3 mb-4 border" style="font-size: 0.88rem;">
+            <div class="row g-2">
+                <div class="col-sm-6">
+                    <span class="text-secondary">Khách hàng (Người nhận):</span>
+                    <strong class="text-dark d-block" th:text="${order.recipientName}">Hoàng Biker VIP</strong>
+                </div>
+                <div class="col-sm-6 text-sm-end">
+                    <span class="text-secondary">Số điện thoại liên hệ:</span>
+                    <strong class="text-dark d-block font-monospace" th:text="${order.phone}">0905555777</strong>
+                </div>
+                <div class="col-sm-8">
+                    <span class="text-secondary">Địa chỉ bàn giao:</span>
+                    <span class="text-dark fw-semibold d-block" th:text="${order.address}">Số 123 Đường Hoàng Văn Thụ, TP. HCM</span>
+                </div>
+                <div class="col-sm-4 text-sm-end">
+                    <span class="text-secondary">Showroom phụ trách:</span>
+                    <span class="text-dark fw-bold d-block" th:text="${order.store != null ? order.store.name : 'Duy Truong Motor Phú Nhuận'}">Duy Truong Motor</span>
+                </div>
+                <div class="col-12" th:if="${order.customerNote != null and !order.customerNote.isEmpty()}">
+                    <span class="text-secondary">Ghi chú giao dịch:</span>
+                    <span class="fst-italic text-dark" th:text="${order.customerNote}">Giao giờ hành chính</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Items Table -->
+        <div class="table-responsive mb-4">
+            <table class="table table-bordered invoice-table mb-0">
+                <thead>
+                    <tr>
+                        <th class="text-center" style="width: 50px;">STT</th>
+                        <th>Tên Dòng Xe / Phụ Tùng / Đồ Bảo Hộ</th>
+                        <th class="text-center" style="width: 70px;">ĐVT</th>
+                        <th class="text-center" style="width: 70px;">SL</th>
+                        <th class="text-end" style="width: 140px;">Đơn Giá</th>
+                        <th class="text-end" style="width: 150px;">Thành Tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item, stat : ${order.items}">
+                        <td class="text-center fw-bold" th:text="${stat.count}">1</td>
+                        <td>
+                            <strong class="text-dark d-block" th:text="${item.product != null ? item.product.name : 'Sản phẩm siêu xe'}">Tên xe</strong>
+                            <small class="text-muted" th:if="${item.selectedStyle != null}" th:text="'Phân loại: ' + ${item.selectedStyle}"></small>
+                        </td>
+                        <td class="text-center" th:text="${order.isVehicleOrder() ? 'Chiếc' : 'Bộ/Cái'}">Chiếc</td>
+                        <td class="text-center fw-bold" th:text="${item.count}">1</td>
+                        <td class="text-end font-monospace" th:text="${#numbers.formatDecimal(item.price, 0, 'POINT', 0, 'COMMA') + ' đ'}">100.000.000 đ</td>
+                        <td class="text-end fw-bold font-monospace text-dark" th:text="${#numbers.formatDecimal(item.subTotal, 0, 'POINT', 0, 'COMMA') + ' đ'}">100.000.000 đ</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Summary Totals -->
+        <div class="row justify-content-end mb-4">
+            <div class="col-sm-6">
+                <div class="p-3 bg-light rounded-3 border" style="font-size: 0.9rem;">
+                    <div class="d-flex justify-content-between py-1">
+                        <span class="text-secondary">Phương thức vận chuyển:</span>
+                        <strong class="text-dark" th:text="${order.delivery != null ? order.delivery.name : 'Vận chuyển tiêu chuẩn'}">Xe sàn trượt VIP</strong>
+                    </div>
+                    <div class="d-flex justify-content-between py-1">
+                        <span class="text-secondary">Hình thức thanh toán:</span>
+                        <strong class="text-success" th:text="${order.paymentMethod != null ? order.paymentMethod : 'VNPAY / Sacombank'}">VNPAY-QR</strong>
+                    </div>
+                    <div class="d-flex justify-content-between py-1 border-top mt-1">
+                        <span class="text-secondary">Thuế suất GTGT (VAT):</span>
+                        <span class="text-muted">Đã bao gồm trong giá</span>
+                    </div>
+                    <div class="d-flex justify-content-between py-2 border-top mt-1 align-items-center">
+                        <strong class="text-dark fs-6">TỔNG THANH TOÁN:</strong>
+                        <strong class="text-danger fs-4 font-monospace" th:text="${#numbers.formatDecimal(order.amountFromUser, 0, 'POINT', 0, 'COMMA') + ' đ'}">100.000.000 đ</strong>
+                    </div>
+                    <div class="small text-secondary fst-italic text-end">
+                        Trạng thái: <strong class="text-success">ĐÃ THANH TOÁN XÁC NHẬN CỌC THÀNH CÔNG</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Signatures & Electronic Stamp -->
+        <div class="row pt-3 text-center" style="font-size: 0.88rem;">
+            <div class="col-6">
+                <div class="fw-bold text-dark mb-1">NGƯỜI MUA HÀNG</div>
+                <div class="text-secondary small mb-5">(Ký và ghi rõ họ tên)</div>
+                <div class="fw-bold text-dark pt-4" th:text="${order.recipientName}">Hoàng Biker VIP</div>
+            </div>
+            <div class="col-6 position-relative">
+                <div class="fw-bold text-dark mb-1">ĐẠI DIỆN DUY TRUONG MOTOR</div>
+                <div class="text-secondary small mb-3">(Chữ ký số &amp; Con dấu mộc điện tử)</div>
+                
+                <!-- Red Stamp -->
+                <div class="stamp-box my-2">
+                    <i class="fa-solid fa-stamp"></i> ĐÃ THANH TOÁN THÀNH CÔNG<br>
+                    <small style="font-size: 0.65rem; font-weight: 600;">CÔNG TY TNHH SIÊU XE DUY TRƯƠNG MOTOR</small>
+                </div>
+                <div class="fw-bold text-dark mt-2" style="font-size: 0.9rem;">TGĐ. TRƯƠNG QUỐC DUY</div>
+            </div>
+        </div>
+
+        <!-- Footer Notice -->
+        <div class="mt-4 pt-3 border-top text-center text-muted small" style="font-size: 0.75rem;">
+            <div>* Hóa đơn điện tử được khởi tạo và lưu trữ hợp pháp trên hệ thống Duy Truong Motor Luxury E-Commerce.</div>
+            <div>Mọi thắc mắc về bảo hành hoặc hoàn thuế, Quý khách vui lòng liên hệ Tổng đài: <strong>1900 6868</strong> hoặc email: <strong>cskh@duytruongmoto.com</strong></div>
+        </div>
+    </div>
+
+</body>
+</html>

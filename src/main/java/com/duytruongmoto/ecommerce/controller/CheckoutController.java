@@ -320,6 +320,29 @@ public class CheckoutController {
         return "client/order-detail";
     }
 
+    @GetMapping({"/orders/{codeOrId}/invoice", "/orders/invoice/{codeOrId}"})
+    public String viewInvoice(
+            @PathVariable String codeOrId,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            Model model) {
+        Order order = null;
+        try {
+            Long id = Long.parseLong(codeOrId);
+            order = orderService.findById(id).orElse(null);
+        } catch (NumberFormatException ignored) {}
+
+        if (order == null) {
+            order = orderService.findByOrderCode(codeOrId).orElse(null);
+        }
+
+        if (order == null) {
+            throw new IllegalArgumentException("Hóa đơn không tồn tại hoặc mã đơn hàng không hợp lệ!");
+        }
+
+        model.addAttribute("order", order);
+        return "client/invoice";
+    }
+
     @PostMapping("/orders/{id}/cancel")
     public String cancelOrder(
             @PathVariable Long id,

@@ -20,10 +20,15 @@
                 <a th:href="@{/orders}" class="text-gold text-decoration-none small mb-2 d-inline-block"><i class="fa-solid fa-arrow-left me-1"></i> Trở về danh sách đơn</a>
                 <h3 class="fw-bold text-white mb-0">HÓA ĐƠN & TIẾN ĐỘ BÀN GIAO: <span class="text-gold" th:text="${order.orderCode}"></span></h3>
             </div>
-            <span class="badge badge-status"
-                  th:classappend="${order.status.name() == 'NOT_PROCESSED' ? 'badge-status-new' : (order.status.name() == 'DELIVERED' ? 'badge-status-delivered' : 'badge-status-confirmed')}"
-                  th:text="${order.status.displayName}">
-            </span>
+            <div class="d-flex align-items-center gap-2">
+                <a th:href="@{'/orders/' + ${order.orderCode} + '/invoice'}" target="_blank" class="btn btn-outline-warning btn-sm fw-bold">
+                    <i class="fa-solid fa-print me-1"></i> Xuất Hóa Đơn VAT
+                </a>
+                <span class="badge badge-status"
+                      th:classappend="${order.status.name() == 'NOT_PROCESSED' ? 'badge-status-new' : (order.status.name() == 'DELIVERED' ? 'badge-status-delivered' : 'badge-status-confirmed')}"
+                      th:text="${order.status.displayName}">
+                </span>
+            </div>
         </div>
 
         <!-- 6-STEP VIP DELIVERY PROGRESS STEPPER (TIẾN TRÌNH BÀN GIAO SIÊU XE 6 CHẶNG LIÊN KẾT) -->

@@ -105,60 +105,147 @@
                 </div>
             </div>
 
-            <!-- Card Simulation -->
-            <h6 class="fw-bold mb-3 text-secondary text-uppercase small"><i class="fa-solid fa-credit-card me-2"></i> THẺ TEST THỬ NGHIỆM (NGÂN HÀNG NCB)</h6>
-            
-            <div class="card-preview-ncb">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div class="fw-bold fs-5 tracking-wide">NCB BANK (TEST)</div>
-                    <i class="fa-solid fa-wifi fs-4 opacity-75"></i>
+            <!-- Payment Method Tabs -->
+            <ul class="nav nav-pills nav-fill mb-4 p-1 bg-light rounded-3 border" id="vnpayTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active fw-bold py-2" id="qr-tab" data-bs-toggle="pill" data-bs-target="#tab-qr" type="button" role="tab">
+                        <i class="fa-solid fa-qrcode me-2 text-danger"></i> Quét Mã VNPAY-QR / Sacombank 247
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link fw-bold py-2 text-secondary" id="card-tab" data-bs-toggle="pill" data-bs-target="#tab-card" type="button" role="tab">
+                        <i class="fa-solid fa-credit-card me-2 text-primary"></i> Thẻ ATM Nội Địa NCB (Sandbox)
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="vnpayTabContent">
+                <!-- TAB 1: VIETQR SACOMBANK & VNPAY-QR -->
+                <div class="tab-pane fade show active text-center" id="tab-qr" role="tabpanel">
+                    <div class="p-3 bg-light rounded-3 border mb-3">
+                        <div class="d-flex align-items-center justify-content-center gap-3 mb-2">
+                            <span class="badge bg-danger px-3 py-2 fs-6 fw-bold">VIETQR NAPAS 247</span>
+                            <span class="badge bg-primary px-3 py-2 fs-6 fw-bold">SACOMBANK</span>
+                        </div>
+                        <div class="text-secondary small">Mở App Ngân hàng bất kỳ (Sacombank, MB, Vietcombank, Techcombank, VNPAY...) để quét mã:</div>
+                    </div>
+
+                    <!-- QR Image Container -->
+                    <div class="position-relative d-inline-block p-2 bg-white rounded-3 shadow-sm border mb-3" style="max-width: 340px;">
+                        <img th:src="@{/images/sacombank_vietqr.png}" alt="Sacombank VietQR Duy Truong Motor" class="img-fluid rounded-2" style="max-height: 440px; object-fit: contain;">
+                    </div>
+
+                    <!-- Bank Account Info Details -->
+                    <div class="p-3 bg-light rounded-3 border text-start small mb-4" style="max-width: 520px; margin: 0 auto;">
+                        <div class="d-flex justify-content-between align-items-center py-1 border-bottom">
+                            <span class="text-secondary">Ngân hàng thụ hưởng:</span>
+                            <strong class="text-dark">SACOMBANK (Napas 247)</strong>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center py-1 border-bottom">
+                            <span class="text-secondary">Chủ tài khoản:</span>
+                            <strong class="text-primary text-uppercase">TRƯƠNG QUỐC DUY</strong>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center py-1 border-bottom">
+                            <span class="text-secondary">Số tài khoản:</span>
+                            <div>
+                                <strong class="fs-5 text-dark me-2 font-monospace" id="stkNumber">0948029409</strong>
+                                <button type="button" class="btn btn-outline-secondary btn-sm py-0 px-2 rounded-pill" onclick="copyText('0948029409', this)">
+                                    <i class="fa-solid fa-copy me-1"></i>Copy
+                                </button>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center py-1 border-bottom">
+                            <span class="text-secondary">Số tiền thanh toán cọc:</span>
+                            <div>
+                                <strong class="fs-5 text-danger fw-bold me-2" th:text="${order.amountFromUser != null ? #numbers.formatDecimal(order.amountFromUser, 0, 'POINT', 0, 'COMMA') + ' đ' : '0 đ'}">0 đ</strong>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center py-1">
+                            <span class="text-secondary">Nội dung chuyển khoản:</span>
+                            <div>
+                                <strong class="text-success font-monospace me-2" th:text="${order.orderCode}">DTM-XXXXX</strong>
+                                <button type="button" class="btn btn-outline-secondary btn-sm py-0 px-2 rounded-pill" th:attr="onclick=|copyText('${order.orderCode}', this)|">
+                                    <i class="fa-solid fa-copy me-1"></i>Copy
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form th:action="@{/checkout/vnpay-return}" method="get">
+                        <input type="hidden" name="vnp_ResponseCode" value="00">
+                        <input type="hidden" name="vnp_TxnRef" th:value="${order.orderCode}">
+                        <input type="hidden" name="vnp_Amount" th:value="${order.amountFromUser != null ? order.amountFromUser.multiply(100).longValue() : 0}">
+                        <input type="hidden" name="vnp_OrderInfo" th:value="'Thanh toan don dat xe ' + ${order.orderCode}">
+                        <input type="hidden" name="vnp_PayDate" value="20261029010000">
+                        <input type="hidden" name="vnp_TransactionNo" th:value="'VIETQR-' + ${order.orderCode}">
+
+                        <button type="submit" class="btn btn-vnpay-pay w-100 shadow mb-2" style="background: linear-gradient(135deg, #ed1c24 0%, #b80d14 100%);">
+                            <i class="fa-solid fa-circle-check me-2"></i> TÔI ĐÃ QUÉT MÃ QR &amp; CHUYỂN KHOẢN THÀNH CÔNG
+                        </button>
+                        <a th:href="@{/checkout/vnpay-return(vnp_ResponseCode='24', vnp_TxnRef=${order.orderCode})}" class="btn btn-link text-secondary text-decoration-none small">
+                            <i class="fa-solid fa-xmark me-1"></i> Hủy giao dịch này và quay lại
+                        </a>
+                    </form>
                 </div>
-                <div class="fs-4 fw-bold letter-spacing-2 mb-3" style="letter-spacing: 3px;">
-                    9704 1985 2619 1432 198
-                </div>
-                <div class="d-flex justify-content-between small text-white-50">
-                    <div>
-                        <div style="font-size: 0.65rem;">CHỦ THẺ</div>
-                        <div class="text-white fw-bold">NGUYEN VAN A</div>
+
+                <!-- TAB 2: THẺ ATM TEST NCB -->
+                <div class="tab-pane fade" id="tab-card" role="tabpanel">
+                    <!-- Card Simulation -->
+                    <h6 class="fw-bold mb-3 text-secondary text-uppercase small"><i class="fa-solid fa-credit-card me-2"></i> THẺ TEST THỬ NGHIỆM (NGÂN HÀNG NCB)</h6>
+                    
+                    <div class="card-preview-ncb">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="fw-bold fs-5 tracking-wide">NCB BANK (TEST)</div>
+                            <i class="fa-solid fa-wifi fs-4 opacity-75"></i>
+                        </div>
+                        <div class="fs-4 fw-bold letter-spacing-2 mb-3" style="letter-spacing: 3px;">
+                            9704 1985 2619 1432 198
+                        </div>
+                        <div class="d-flex justify-content-between small text-white-50">
+                            <div>
+                                <div style="font-size: 0.65rem;">CHỦ THẺ</div>
+                                <div class="text-white fw-bold">NGUYEN VAN A</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 0.65rem;">NGÀY PHÁT HÀNH</div>
+                                <div class="text-white fw-bold">07/15</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 0.65rem;">MÃ OTP MẪU</div>
+                                <div class="text-warning fw-bold">123456</div>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <div style="font-size: 0.65rem;">NGÀY PHÁT HÀNH</div>
-                        <div class="text-white fw-bold">07/15</div>
-                    </div>
-                    <div>
-                        <div style="font-size: 0.65rem;">MÃ OTP MẪU</div>
-                        <div class="text-warning fw-bold">123456</div>
-                    </div>
+
+                    <!-- Form Confirmation -->
+                    <form th:action="@{/checkout/vnpay-return}" method="get">
+                        <input type="hidden" name="vnp_ResponseCode" value="00">
+                        <input type="hidden" name="vnp_TxnRef" th:value="${order.orderCode}">
+                        <input type="hidden" name="vnp_Amount" th:value="${order.amountFromUser != null ? order.amountFromUser.multiply(100).longValue() : 0}">
+                        <input type="hidden" name="vnp_OrderInfo" th:value="'Thanh toan don dat xe ' + ${order.orderCode}">
+                        <input type="hidden" name="vnp_PayDate" value="20261029010000">
+                        <input type="hidden" name="vnp_TransactionNo" th:value="'VNPAY-' + ${order.orderCode}">
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold small text-secondary">MÃ XÁC THỰC OTP (ĐÃ ĐIỀN TỰ ĐỘNG CHO TEST):</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white"><i class="fa-solid fa-shield-halved text-primary"></i></span>
+                                <input type="text" class="form-control form-control-lg fw-bold text-center text-primary" value="123456" readonly style="letter-spacing: 6px; font-size: 1.3rem;">
+                            </div>
+                            <div class="form-text small text-success"><i class="fa-solid fa-circle-check me-1"></i> Mã OTP thử nghiệm 123456 đã được hệ thống nhập sẵn. Bấm nút dưới để hoàn tất giao dịch cọc.</div>
+                        </div>
+
+                        <div class="d-flex flex-column gap-2">
+                            <button type="submit" class="btn btn-vnpay-pay w-100 shadow">
+                                <i class="fa-solid fa-check-double me-2"></i> XÁC NHẬN THANH TOÁN TIỀN CỌC (TEST SANDBOX VNPAY)
+                            </button>
+                            <a th:href="@{/checkout/vnpay-return(vnp_ResponseCode='24', vnp_TxnRef=${order.orderCode})}" class="btn btn-link text-secondary text-decoration-none small text-center mt-2">
+                                <i class="fa-solid fa-xmark me-1"></i> Hủy giao dịch này và quay lại
+                            </a>
+                        </div>
+                    </form>
                 </div>
             </div>
-
-            <!-- Form Confirmation -->
-            <form th:action="@{/checkout/vnpay-return}" method="get">
-                <input type="hidden" name="vnp_ResponseCode" value="00">
-                <input type="hidden" name="vnp_TxnRef" th:value="${order.orderCode}">
-                <input type="hidden" name="vnp_Amount" th:value="${order.amountFromUser != null ? order.amountFromUser.multiply(100).longValue() : 0}">
-                <input type="hidden" name="vnp_OrderInfo" th:value="'Thanh toan don dat xe ' + ${order.orderCode}">
-                <input type="hidden" name="vnp_PayDate" value="20261029010000">
-                <input type="hidden" name="vnp_TransactionNo" th:value="'VNPAY-' + ${order.orderCode}">
-
-                <div class="mb-4">
-                    <label class="form-label fw-bold small text-secondary">MÃ XÁC THỰC OTP (ĐÃ ĐIỀN TỰ ĐỘNG CHO TEST):</label>
-                    <div class="input-group">
-                        <span class="input-group-text bg-white"><i class="fa-solid fa-shield-halved text-primary"></i></span>
-                        <input type="text" class="form-control form-control-lg fw-bold text-center text-primary" value="123456" readonly style="letter-spacing: 6px; font-size: 1.3rem;">
-                    </div>
-                    <div class="form-text small text-success"><i class="fa-solid fa-circle-check me-1"></i> Mã OTP thử nghiệm 123456 đã được hệ thống nhập sẵn. Bấm nút dưới để hoàn tất giao dịch cọc.</div>
-                </div>
-
-                <div class="d-flex flex-column gap-2">
-                    <button type="submit" class="btn btn-vnpay-pay w-100 shadow">
-                        <i class="fa-solid fa-check-double me-2"></i> XÁC NHẬN THANH TOÁN TIỀN CỌC (TEST SANDBOX VNPAY)
-                    </button>
-                    <a th:href="@{/checkout/vnpay-return(vnp_ResponseCode='24', vnp_TxnRef=${order.orderCode})}" class="btn btn-link text-secondary text-decoration-none small text-center mt-2">
-                        <i class="fa-solid fa-xmark me-1"></i> Hủy giao dịch này và quay lại
-                    </a>
-                </div>
-            </form>
         </div>
 
         <div class="text-center small text-secondary mt-4">
@@ -166,6 +253,17 @@
         </div>
     </div>
 
+    <script>
+        function copyText(val, btn) {
+            navigator.clipboard.writeText(val).then(() => {
+                const oldText = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-check text-success me-1"></i>Đã chép!';
+                setTimeout(() => { btn.innerHTML = oldText; }, 2000);
+            }).catch(() => {
+                prompt('Sao chép thông tin:', val);
+            });
+        }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
