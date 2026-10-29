@@ -1,4 +1,4 @@
-﻿package com.duytruongmoto.ecommerce.entity;
+package com.duytruongmoto.ecommerce.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -79,13 +79,34 @@ public class Order {
         return amountFromUser;
     }
 
+    public static String cleanCustomerNote(String rawNote) {
+        if (rawNote == null || rawNote.trim().isEmpty()) {
+            return null;
+        }
+        // Tách lấy đúng lời dặn thực sự của khách trước các đoạn log timestamp [2026-10-29...
+        String clean = rawNote.split("\\[\\d{4}-\\d{2}-\\d{2}")[0].trim();
+        clean = clean.split("\\[Trạng thái")[0].trim();
+        clean = clean.split("(?i)trạng thái:")[0].trim();
+        clean = clean.split("(?i)chuyển trạng thái:")[0].trim();
+        if (clean.isEmpty() || clean.equals("-") || clean.startsWith("[")) {
+            return null;
+        }
+        return clean;
+    }
+
     public String getCustomerNote() {
-        if (note == null || note.trim().isEmpty()) {
-            return null;
-        }
-        if (note.contains("Trạng thái") || note.trim().startsWith("[")) {
-            return null;
-        }
-        return note.trim();
+        return cleanCustomerNote(this.note);
+    }
+
+    public String getNote() {
+        return cleanCustomerNote(this.note);
+    }
+
+    public String getRawNote() {
+        return this.note;
+    }
+
+    public void setNote(String note) {
+        this.note = cleanCustomerNote(note);
     }
 }

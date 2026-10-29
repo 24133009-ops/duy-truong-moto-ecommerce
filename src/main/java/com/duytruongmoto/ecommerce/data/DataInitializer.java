@@ -67,9 +67,12 @@ public class DataInitializer implements CommandLineRunner {
         // Purge dirty status strings from order notes
         try {
             orderRepository.findAll().forEach(ord -> {
-                if (ord.getNote() != null && (ord.getNote().contains("Trạng thái") || ord.getNote().trim().startsWith("["))) {
-                    ord.setNote("Bàn giao xe sàn trượt VIP và đầy đủ hồ sơ HQCN tận tay khách.");
+                String raw = ord.getRawNote();
+                String clean = Order.cleanCustomerNote(raw);
+                if (raw != null && !raw.equals(clean)) {
+                    ord.setNote(clean);
                     orderRepository.save(ord);
+                    log.info(">>> Đã dọn dẹp ghi chú đơn hàng {} thành công: '{}'", ord.getOrderCode(), clean);
                 }
             });
         } catch (Exception ex) {
@@ -268,10 +271,10 @@ public class DataInitializer implements CommandLineRunner {
             try {
                 List<Order> ordersWithNotes = orderRepository.findAll();
                 for (Order o : ordersWithNotes) {
-                    if (o.getNote() != null && (o.getNote().contains("Trạng thái:") || o.getNote().contains("["))) {
-                        String clean = o.getNote().replaceAll("\\[\\d{4}-\\d{2}-\\d{2}T[^\\]]*\\][^\\[\n]*", "").trim();
-                        clean = clean.replaceAll("(?m)^\\s*$\n?", "").trim();
-                        o.setNote(clean.isEmpty() ? null : clean);
+                    String raw = o.getRawNote();
+                    String clean = Order.cleanCustomerNote(raw);
+                    if (raw != null && !raw.equals(clean)) {
+                        o.setNote(clean);
                         orderRepository.save(o);
                     }
                 }
