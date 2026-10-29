@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+﻿import React, { useState, useMemo, useEffect } from 'react';
 import confetti from 'canvas-confetti';
 import { 
   SHOWROOMS, 
@@ -4132,7 +4132,7 @@ const INITIAL_DEMO_ORDERS = [
             <div style={{ position: 'relative', display: 'inline-block', padding: '18px', background: '#fff', border: '2px solid #005baa', borderRadius: '20px', boxShadow: '0 10px 30px rgba(0,91,170,0.12)', marginBottom: '18px' }}>
               {vnPayCountdown > 0 ? (
                 <img 
-                  src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=https://duytruongmotor.com/vnpay-pay-demo" 
+                  src="/images/sacombank_vietqr.png?v=20261029_sacombank_real_v2" 
                   alt="VNPAY QR Code" 
                   style={{ width: '230px', height: '230px', display: 'block' }} 
                 />
@@ -5284,3 +5284,4 @@ const INITIAL_DEMO_ORDERS = [
     </div>
   );
 }
+

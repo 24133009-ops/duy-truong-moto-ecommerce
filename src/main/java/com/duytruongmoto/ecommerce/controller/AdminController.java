@@ -73,6 +73,30 @@ public class AdminController {
         return "redirect:/admin/users";
     }
 
+    @PostMapping("/users/{id}/activate")
+    public String activateUser(
+            @PathVariable Long id,
+            RedirectAttributes redirectAttributes) {
+        try {
+            var user = userService.activateUserDirectly(id);
+            redirectAttributes.addFlashAttribute("successMessage", "Đã kích hoạt thành công tài khoản " + user.getEmail() + "! Người dùng có thể đăng nhập ngay.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+        return "redirect:/admin/users";
+    }
+
+    @PostMapping("/users/activate-all-pending")
+    public String activateAllPendingUsers(RedirectAttributes redirectAttributes) {
+        try {
+            int count = userService.activateAllPendingUsers();
+            redirectAttributes.addFlashAttribute("successMessage", "Đã kích hoạt thành công tất cả " + count + " tài khoản đang chờ OTP! Người dùng có thể đăng nhập ngay.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+        return "redirect:/admin/users";
+    }
+
     @GetMapping("/stores")
     public String listStores(Model model) {
         model.addAttribute("stores", storeService.getAllStores());

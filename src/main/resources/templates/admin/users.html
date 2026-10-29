@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
@@ -59,6 +59,12 @@
                         class="btn btn-outline-secondary">Đặt Lại</a>
                 </div>
             </form>
+            <div class="d-flex flex-wrap justify-content-between align-items-center mt-3 pt-3 border-top border-secondary border-opacity-25 gap-2">
+                <div class="small text-secondary"><i class="fa-solid fa-circle-info text-warning me-1"></i> Quản trị viên có thể kích hoạt tài khoản ngay tức thì khi hạ tầng máy chủ đám mây chặn SMTP.</div>
+                <form th:action="@{/admin/users/activate-all-pending}" method="post" class="m-0" onsubmit="return confirm('Kích hoạt tất cả tài khoản đang ở trạng thái chờ xác thực OTP?');">
+                    <button type="submit" class="btn btn-warning btn-sm text-dark fw-bold px-3 py-1 shadow-sm"><i class="fa-solid fa-bolt me-1"></i> ⚡ Kích Hoạt Tất Cả Đang Chờ</button>
+                </form>
+            </div>
         </div>
 
         <div class="glass-panel p-4 rounded-4 shadow">
@@ -112,7 +118,12 @@
                                         <i class="fa-solid fa-shield-halved me-1"></i> Super Admin
                                     </span>
                                 </div>
-                                <div th:unless="${u.email == 'admin@duytruongmoto.com' or (u.role != null and u.role.name() == 'ROLE_ADMIN')}">
+                                <div th:unless="${u.email == 'admin@duytruongmoto.com' or (u.role != null and u.role.name() == 'ROLE_ADMIN')}" class="d-flex align-items-center gap-1">
+                                    <form th:if="${u.isEmailActive != true}" th:action="@{'/admin/users/' + ${u.id} + '/activate'}" method="post" class="d-inline m-0">
+                                        <button type="submit" class="btn btn-warning btn-sm px-2 py-1 text-dark fw-bold" title="Kích hoạt OTP ngay lập tức">
+                                            <i class="fa-solid fa-bolt me-1"></i> Kích Hoạt OTP
+                                        </button>
+                                    </form>
                                     <form th:action="@{'/admin/users/' + ${u.id} + '/toggle-lock'}" method="post" class="d-inline m-0"
                                         onsubmit="return confirm('Bạn có chắc chắn muốn thay đổi trạng thái tài khoản này?');">
                                         <button th:unless="${u.isBlocked != null and u.isBlocked}" type="submit"
