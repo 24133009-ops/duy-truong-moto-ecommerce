@@ -1,5 +1,6 @@
 package com.duytruongmoto.ecommerce.controller;
 
+import com.duytruongmoto.ecommerce.repository.UserRepository;
 import com.duytruongmoto.ecommerce.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -7,12 +8,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDateTime;
+
 @Controller
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
     private final UserService userService;
+    private final UserRepository userRepository;
 
     @GetMapping("/login")
     public String loginPage(@RequestParam(value = "error", required = false) String error,
@@ -53,6 +57,13 @@ public class AuthController {
     @GetMapping("/verify-otp")
     public String verifyOtpPage(@RequestParam(required = false) String email, Model model) {
         model.addAttribute("email", email);
+        if (email != null && !email.isBlank()) {
+            userRepository.findByEmail(email.trim().toLowerCase()).ifPresent(user -> {
+                if (user.getOtpCode() != null && user.getOtpExpiry() != null && user.getOtpExpiry().isAfter(LocalDateTime.now())) {
+                    model.addAttribute("pendingOtp", user.getOtpCode());
+                }
+            });
+        }
         return "auth/verify-otp";
     }
 
@@ -111,6 +122,13 @@ public class AuthController {
     @GetMapping("/reset-password")
     public String resetPasswordPage(@RequestParam(required = false) String email, Model model) {
         model.addAttribute("email", email);
+        if (email != null && !email.isBlank()) {
+            userRepository.findByEmail(email.trim().toLowerCase()).ifPresent(user -> {
+                if (user.getOtpCode() != null && user.getOtpExpiry() != null && user.getOtpExpiry().isAfter(LocalDateTime.now())) {
+                    model.addAttribute("pendingOtp", user.getOtpCode());
+                }
+            });
+        }
         return "auth/reset-password";
     }
 
