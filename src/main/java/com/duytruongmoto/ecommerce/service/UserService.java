@@ -91,15 +91,32 @@ public class UserService {
     private final java.util.concurrent.ConcurrentHashMap<String, Integer> otpAttempts = new java.util.concurrent.ConcurrentHashMap<>();
     private final java.util.concurrent.ConcurrentHashMap<String, Long> otpSendCount = new java.util.concurrent.ConcurrentHashMap<>();
 
-    public Optional<String> getActiveOtpForEmail(String email) {
-        return userRepository.findByEmail(email).map(User::getOtpCode);
+    public void resendRegistrationOtp(String email) {
+        if (email == null || email.isBlank()) {
+            throw new IllegalArgumentException("Vui lòng cung cấp email hợp lệ!");
+        }
+        User user = userRepository.findByEmail(email.trim().toLowerCase())
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy thông tin tài khoản với email: " + email));
+
+        if (Boolean.TRUE.equals(user.getIsEmailActive())) {
+            throw new IllegalArgumentException("Tài khoản của bạn đã được kích hoạt thành công từ trước. Vui lòng đăng nhập!");
+        }
+
+        String otp = emailOtpService.generateOtp();
+        user.setOtpCode(otp);
+        user.setOtpExpiry(LocalDateTime.now().plusMinutes(5));
+        userRepository.save(user);
+
+        emailOtpService.sendOtpEmail(user.getEmail(), otp, "Kích hoạt tài khoản thành viên");
     }
 
     @Transactional
     public boolean verifyOtp(String email, String otpCode) {
+        if (email == null || otpCode == null) return false;
+
         int currentAttempts = otpAttempts.getOrDefault(email.toLowerCase(), 0);
         if (currentAttempts >= 5) {
-            Optional<User> uOpt = userRepository.findByEmail(email);
+            Optional<User> uOpt = userRepository.findByEmail(email.trim().toLowerCase());
             if (uOpt.isPresent()) {
                 User u = uOpt.get();
                 u.setOtpCode(null);
@@ -110,12 +127,14 @@ public class UserService {
             throw new IllegalArgumentException("Bạn đã nhập sai OTP quá 5 lần. Mã xác thực đã bị hủy vì lý do bảo mật. Vui lòng yêu cầu mã mới!");
         }
 
-        Optional<User> userOpt = userRepository.findByEmail(email);
+        Optional<User> userOpt = userRepository.findByEmail(email.trim().toLowerCase());
         if (userOpt.isPresent()) {
             User user = userOpt.get();
-            boolean isValid = "123456".equals(otpCode) || "888888".equals(otpCode)
-                    || (user.getOtpCode() != null && user.getOtpCode().equals(otpCode)
-                    && user.getOtpExpiry() != null && user.getOtpExpiry().isAfter(LocalDateTime.now()));
+            // CHỈ CHẤP NHẬN MÃ OTP THẬT ĐƯỢC GỬI VỀ EMAIL CỦA KHÁCH HÀNG (CÒN HIỆU LỰC 5 PHÚT)
+            boolean isValid = user.getOtpCode() != null
+                    && user.getOtpCode().trim().equals(otpCode.trim())
+                    && user.getOtpExpiry() != null
+                    && user.getOtpExpiry().isAfter(LocalDateTime.now());
             if (isValid) {
                 user.setIsEmailActive(true);
                 user.setOtpCode(null);
@@ -132,7 +151,10 @@ public class UserService {
 
     @Transactional
     public void sendForgotPasswordOtp(String email) {
-        User user = userRepository.findByEmail(email)
+        if (email == null || email.isBlank()) {
+            throw new IllegalArgumentException("Vui lòng nhập địa chỉ email!");
+        }
+        User user = userRepository.findByEmail(email.trim().toLowerCase())
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy tài khoản với email này!"));
 
         String otp = emailOtpService.generateOtp();
@@ -140,17 +162,20 @@ public class UserService {
         user.setOtpExpiry(LocalDateTime.now().plusMinutes(5));
         userRepository.save(user);
 
-        emailOtpService.sendOtpEmail(email, otp, "Khôi phục mật khẩu đăng nhập");
+        emailOtpService.sendOtpEmail(user.getEmail(), otp, "Khôi phục mật khẩu đăng nhập");
     }
 
     @Transactional
     public boolean resetPasswordWithOtp(String email, String otpCode, String newPassword) {
-        Optional<User> userOpt = userRepository.findByEmail(email);
+        if (email == null || otpCode == null) return false;
+        Optional<User> userOpt = userRepository.findByEmail(email.trim().toLowerCase());
         if (userOpt.isPresent()) {
             User user = userOpt.get();
-            boolean isValid = "123456".equals(otpCode) || "888888".equals(otpCode)
-                    || (user.getOtpCode() != null && user.getOtpCode().equals(otpCode)
-                    && user.getOtpExpiry() != null && user.getOtpExpiry().isAfter(LocalDateTime.now()));
+            // CHỈ CHẤP NHẬN MÃ OTP THẬT ĐƯỢC GỬI VỀ EMAIL (CÒN HIỆU LỰC 5 PHÚT)
+            boolean isValid = user.getOtpCode() != null
+                    && user.getOtpCode().trim().equals(otpCode.trim())
+                    && user.getOtpExpiry() != null
+                    && user.getOtpExpiry().isAfter(LocalDateTime.now());
             if (isValid) {
                 user.setPassword(passwordEncoder.encode(newPassword));
                 user.setOtpCode(null);

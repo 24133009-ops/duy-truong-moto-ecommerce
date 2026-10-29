@@ -53,25 +53,39 @@ public class AuthController {
     @GetMapping("/verify-otp")
     public String verifyOtpPage(@RequestParam(required = false) String email, Model model) {
         model.addAttribute("email", email);
-        if (email != null) {
-            String otp = userService.getActiveOtpForEmail(email).orElse("123456");
-            model.addAttribute("demoOtp", otp);
-        } else {
-            model.addAttribute("demoOtp", "123456");
-        }
         return "auth/verify-otp";
+    }
+
+    @GetMapping("/resend-otp")
+    public String handleResendOtp(@RequestParam(required = false) String email, RedirectAttributes redirectAttributes) {
+        if (email == null || email.isBlank()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Không tìm thấy địa chỉ email để gửi lại mã!");
+            return "redirect:/auth/register";
+        }
+        try {
+            userService.resendRegistrationOtp(email);
+            redirectAttributes.addFlashAttribute("infoMessage", "Mã xác thực OTP mới đã được gửi tới email " + email + ". Vui lòng kiểm tra hộp thư!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+        return "redirect:/auth/verify-otp?email=" + email;
     }
 
     @PostMapping("/verify-otp")
     public String handleVerifyOtp(@RequestParam String email,
                                   @RequestParam String otp,
                                   RedirectAttributes redirectAttributes) {
-        boolean verified = userService.verifyOtp(email, otp);
-        if (verified) {
-            redirectAttributes.addFlashAttribute("successMessage", "Kích hoạt tài khoản thành công! Bạn có thể đăng nhập ngay bây giờ.");
-            return "redirect:/auth/login";
-        } else {
-            redirectAttributes.addFlashAttribute("errorMessage", "Mã OTP không đúng hoặc đã hết hạn! Vui lòng thử lại.");
+        try {
+            boolean verified = userService.verifyOtp(email, otp);
+            if (verified) {
+                redirectAttributes.addFlashAttribute("successMessage", "Kích hoạt tài khoản thành công! Bạn có thể đăng nhập ngay bây giờ.");
+                return "redirect:/auth/login";
+            } else {
+                redirectAttributes.addFlashAttribute("errorMessage", "Mã OTP không đúng hoặc đã hết hạn (5 phút)! Vui lòng kiểm tra email và nhập lại.");
+                return "redirect:/auth/verify-otp?email=" + email;
+            }
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             return "redirect:/auth/verify-otp?email=" + email;
         }
     }
@@ -97,12 +111,6 @@ public class AuthController {
     @GetMapping("/reset-password")
     public String resetPasswordPage(@RequestParam(required = false) String email, Model model) {
         model.addAttribute("email", email);
-        if (email != null) {
-            String otp = userService.getActiveOtpForEmail(email).orElse("123456");
-            model.addAttribute("demoOtp", otp);
-        } else {
-            model.addAttribute("demoOtp", "123456");
-        }
         return "auth/reset-password";
     }
 
