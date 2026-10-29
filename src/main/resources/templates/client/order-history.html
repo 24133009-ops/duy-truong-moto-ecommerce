@@ -40,15 +40,15 @@
             </div>
         </div>
 
-        <!-- QUY TRÌNH 6 CHẶNG LIÊN KẾT BÀN GIAO XE SÀN TRƯỢT VIP -->
+        <!-- QUY TRÌNH 6 CHẶNG LIÊN KẾT BÀN GIAO XE SÀN TRƯỢT VIP & BỐC XẾP PHỤ KIỆN -->
         <div class="delivery-stepper-panel mb-4">
             <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary border-opacity-25">
                 <div>
                     <span class="badge bg-gold text-dark fw-bold small me-2"><i class="fa-solid fa-truck-fast me-1"></i> TIÊU CHUẨN DUY TRƯƠNG MOTOR</span>
-                    <strong class="text-white">QUY TRÌNH 6 CHẶNG LIÊN KẾT XÁC NHẬN &amp; ĐIỀU ĐỘNG XE SÀN TRƯỢT VIP</strong>
+                    <strong class="text-white">QUY TRÌNH 6 CHẶNG GIAO XE SÀN TRƯỢT &amp; BỐC XẾP PHỤ KIỆN CHÍNH HÃNG</strong>
                 </div>
                 <div class="small text-secondary">
-                    <i class="fa-solid fa-shield-halved text-gold me-1"></i> 100% Hải quan chính ngạch • Bàn giao tận nhà 63 tỉnh thành
+                    <i class="fa-solid fa-shield-halved text-gold me-1"></i> 100% Hải quan chính ngạch đối với Mô tô &bull; Xếp hàng bốc hàng cẩn thận với Phụ tùng / Đồ bảo hộ
                 </div>
             </div>
 
@@ -314,10 +314,10 @@
                 <div class="mt-4 pt-3 border-top border-secondary border-opacity-25" th:if="${stName != 'CANCELLED' and stName != 'REFUNDED'}">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <span class="small text-gold fw-bold">
-                            <i class="fa-solid fa-truck-fast me-1"></i> TIẾN TRÌNH BÀN GIAO ĐƠN HÀNG:
+                            <i class="fa-solid fa-truck-fast me-1"></i> <span th:text="${order.processTitle}">TIẾN TRÌNH BÀN GIAO ĐƠN HÀNG:</span>
                         </span>
                         <span class="small fw-bold" th:classappend="${stepIdx == 6 ? 'text-success' : 'text-gold'}">
-                            <span th:text="${stepIdx == 6 ? 'Chặng 6/6 • Hoàn Tất Bàn Giao & Bảo Hành 3 Năm' : 'Chặng ' + stepIdx + '/6 • ' + order.status.displayName}"></span>
+                            <span th:text="${stepIdx == 6 ? (order.isVehicleOrder() ? 'Chặng 6/6 • Hoàn Tất Bàn Giao & Bảo Hành 3 Năm' : 'Chặng 6/6 • Giao Hàng Thành Công') : 'Chặng ' + stepIdx + '/6 • ' + (order.isVehicleOrder() ? order.status.displayName : order.getStepName(stepIdx))}"></span>
                         </span>
                     </div>
                     <div class="delivery-stepper" style="margin: 0; padding: 10px 0;">
@@ -327,61 +327,61 @@
                         <!-- Chặng 1 -->
                         <div class="stepper-step" th:classappend="${stepIdx > 1 ? 'completed' : (stepIdx == 1 ? 'active' : '')}">
                             <div class="stepper-icon-circle" style="width: 36px; height: 36px; font-size: 0.85rem;">
-                                <i th:class="${stepIdx > 1 ? 'fa-solid fa-check' : 'fa-solid fa-file-invoice-dollar'}"></i>
+                                <i th:class="${stepIdx > 1 ? 'fa-solid fa-check' : order.getStepIcon(1)}"></i>
                             </div>
                             <div class="stepper-step-num">C1</div>
-                            <div class="stepper-title" style="font-size: 0.72rem;">Đặt Cọc</div>
-                            <div class="stepper-desc" style="font-size: 0.62rem;">Đã xác nhận cọc</div>
+                            <div class="stepper-title" style="font-size: 0.72rem;" th:text="${order.getStepName(1)}">Đặt Cọc</div>
+                            <div class="stepper-desc" style="font-size: 0.62rem;" th:text="${order.getStepDesc(1)}">Đã xác nhận cọc</div>
                         </div>
 
                         <!-- Chặng 2 -->
                         <div class="stepper-step" th:classappend="${stepIdx > 2 ? 'completed' : (stepIdx == 2 ? 'active' : '')}">
                             <div class="stepper-icon-circle" style="width: 36px; height: 36px; font-size: 0.85rem;">
-                                <i th:class="${stepIdx > 2 ? 'fa-solid fa-check' : 'fa-solid fa-stamp'}"></i>
+                                <i th:class="${stepIdx > 2 ? 'fa-solid fa-check' : order.getStepIcon(2)}"></i>
                             </div>
                             <div class="stepper-step-num">C2</div>
-                            <div class="stepper-title" style="font-size: 0.72rem;">Duyệt Hồ Sơ</div>
-                            <div class="stepper-desc" style="font-size: 0.62rem;">Hồ sơ HQCN 100%</div>
+                            <div class="stepper-title" style="font-size: 0.72rem;" th:text="${order.getStepName(2)}">Duyệt Hồ Sơ</div>
+                            <div class="stepper-desc" style="font-size: 0.62rem;" th:text="${order.getStepDesc(2)}">Hồ sơ HQCN 100%</div>
                         </div>
 
                         <!-- Chặng 3 -->
                         <div class="stepper-step" th:classappend="${stepIdx > 3 ? 'completed' : (stepIdx == 3 ? 'active' : '')}">
                             <div class="stepper-icon-circle" style="width: 36px; height: 36px; font-size: 0.85rem;">
-                                <i th:class="${stepIdx > 3 ? 'fa-solid fa-check' : 'fa-solid fa-warehouse'}"></i>
+                                <i th:class="${stepIdx > 3 ? 'fa-solid fa-check' : order.getStepIcon(3)}"></i>
                             </div>
                             <div class="stepper-step-num">C3</div>
-                            <div class="stepper-title" style="font-size: 0.72rem;">PDI Test Xe</div>
-                            <div class="stepper-desc" style="font-size: 0.62rem;">Kiểm định & rửa xe</div>
+                            <div class="stepper-title" style="font-size: 0.72rem;" th:text="${order.getStepName(3)}">Xuất Kho PDI</div>
+                            <div class="stepper-desc" style="font-size: 0.62rem;" th:text="${order.getStepDesc(3)}">Kiểm định & rửa xe</div>
                         </div>
 
                         <!-- Chặng 4 -->
                         <div class="stepper-step" th:classappend="${stepIdx > 4 ? 'completed' : (stepIdx == 4 ? 'active' : '')}">
                             <div class="stepper-icon-circle" style="width: 36px; height: 36px; font-size: 0.85rem;">
-                                <i th:class="${stepIdx > 4 ? 'fa-solid fa-check' : 'fa-solid fa-truck-ramp-box'}"></i>
+                                <i th:class="${stepIdx > 4 ? 'fa-solid fa-check' : order.getStepIcon(4)}"></i>
                             </div>
                             <div class="stepper-step-num">C4</div>
-                            <div class="stepper-title" style="font-size: 0.72rem;">Xe Sàn Trượt</div>
-                            <div class="stepper-desc" style="font-size: 0.62rem;">Điều động xuất bến</div>
+                            <div class="stepper-title" style="font-size: 0.72rem;" th:text="${order.getStepName(4)}">Xe Sàn Trượt</div>
+                            <div class="stepper-desc" style="font-size: 0.62rem;" th:text="${order.getStepDesc(4)}">Điều động xuất bến</div>
                         </div>
 
                         <!-- Chặng 5 -->
                         <div class="stepper-step" th:classappend="${stepIdx > 5 ? 'completed' : (stepIdx == 5 ? 'active' : '')}">
                             <div class="stepper-icon-circle" style="width: 36px; height: 36px; font-size: 0.85rem;">
-                                <i th:class="${stepIdx > 5 ? 'fa-solid fa-check' : 'fa-solid fa-volume-high'}"></i>
+                                <i th:class="${stepIdx > 5 ? 'fa-solid fa-check' : order.getStepIcon(5)}"></i>
                             </div>
                             <div class="stepper-step-num">C5</div>
-                            <div class="stepper-title" style="font-size: 0.72rem;">Bàn Giao &amp; Test Pô</div>
-                            <div class="stepper-desc" style="font-size: 0.62rem;">Hạ sàn &amp; nổ máy</div>
+                            <div class="stepper-title" style="font-size: 0.72rem;" th:text="${order.getStepName(5)}">Bàn Giao & Test Pô</div>
+                            <div class="stepper-desc" style="font-size: 0.62rem;" th:text="${order.getStepDesc(5)}">Hạ sàn & nổ máy</div>
                         </div>
 
                         <!-- Chặng 6 -->
                         <div class="stepper-step" th:classappend="${stepIdx >= 6 ? 'completed' : ''}">
                             <div class="stepper-icon-circle" style="width: 36px; height: 36px; font-size: 0.85rem;">
-                                <i th:class="${stepIdx >= 6 ? 'fa-solid fa-check' : 'fa-solid fa-shield-halved'}"></i>
+                                <i th:class="${stepIdx >= 6 ? 'fa-solid fa-check' : order.getStepIcon(6)}"></i>
                             </div>
                             <div class="stepper-step-num">C6</div>
-                            <div class="stepper-title" style="font-size: 0.72rem;">Bảo Hành 3 Năm</div>
-                            <div class="stepper-desc" style="font-size: 0.62rem;">Kích hoạt bảo hành VIP</div>
+                            <div class="stepper-title" style="font-size: 0.72rem;" th:text="${order.getStepName(6)}">Bảo Hành 3 Năm</div>
+                            <div class="stepper-desc" style="font-size: 0.62rem;" th:text="${order.getStepDesc(6)}">Kích hoạt bảo hành VIP</div>
                         </div>
                     </div>
 
@@ -390,8 +390,8 @@
                         <div class="d-flex align-items-center gap-2">
                             <i class="fa-solid fa-certificate text-gold fs-4"></i>
                             <div>
-                                <div class="text-white fw-bold small">ĐÃ KÍCH HOẠT ĐẶC QUYỀN CHỦ XE GARAGE VIP</div>
-                                <div class="text-secondary" style="font-size: 0.75rem;">Sổ bảo hành 3 năm điện tử đã kích hoạt. Bạn được tặng 3 voucher bảo dưỡng free, lên đời môtô và giảm 20% phụ tùng!</div>
+                                <div class="text-white fw-bold small" th:text="${order.isVehicleOrder() ? 'ĐÃ KÍCH HOẠT ĐẶC QUYỀN CHỦ XE GARAGE VIP' : 'ĐƠN HÀNG ĐÃ HOÀN TẤT THÀNH CÔNG'}">ĐÃ KÍCH HOẠT ĐẶC QUYỀN CHỦ XE GARAGE VIP</div>
+                                <div class="text-secondary" style="font-size: 0.75rem;" th:text="${order.isVehicleOrder() ? 'Sổ bảo hành 3 năm điện tử đã kích hoạt. Bạn được tặng 3 voucher bảo dưỡng free, lên đời môtô và giảm 20% phụ tùng!' : 'Cảm ơn Quý khách đã mua sắm phụ kiện & đồ bảo hộ chính hãng tại Duy Truong Motor. Sản phẩm được kích hoạt bảo hành theo tem chính hãng!'}">Sổ bảo hành 3 năm điện tử đã kích hoạt. Bạn được tặng 3 voucher bảo dưỡng free, lên đời môtô và giảm 20% phụ tùng!</div>
                             </div>
                         </div>
                         <div class="d-flex gap-2">

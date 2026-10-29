@@ -29,9 +29,9 @@
         <div class="glass-panel p-4 rounded-4 mb-5 border border-warning border-opacity-35 shadow-lg" style="background: rgba(13, 16, 23, 0.85);">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <span class="badge bg-gold text-dark fw-bold px-3 py-2 rounded-pill">
-                    <i class="fa-solid fa-shield-halved me-1"></i> QUY TRÌNH BÀN GIAO XE SÀN TRƯỢT VIP 6 CHẶNG LIÊN KẾT
+                    <i class="fa-solid fa-shield-halved me-1"></i> QUY TRÌNH XỬ LÝ &amp; GIAO HÀNG 6 CHẶNG CHUẨN (MÔ TÔ &amp; PHỤ KIỆN)
                 </span>
-                <span class="text-secondary small">Áp dụng đồng bộ cho Khách Hàng, Showroom Manager và Đội Xe VIP</span>
+                <span class="text-secondary small">Tự động thích ứng: Xe sàn trượt cho Mô tô PKL &bull; Xếp hàng bốc hàng chuyên nghiệp cho Phụ tùng / Đồ bảo hộ</span>
             </div>
             
             <div class="row g-2 text-center">
@@ -39,42 +39,42 @@
                     <div class="p-2 rounded-3 bg-dark bg-opacity-75 border border-secondary border-opacity-25 h-100">
                         <div class="text-gold mb-1"><i class="fa-solid fa-file-invoice-dollar fs-5"></i></div>
                         <div class="fw-bold text-white small">Chặng 1</div>
-                        <div class="text-secondary" style="font-size: 0.72rem;">Đặt Cọc Online (VNPay)</div>
+                        <div class="text-secondary" style="font-size: 0.72rem;">Đặt Cọc / Đặt Hàng</div>
                     </div>
                 </div>
                 <div class="col-6 col-md-2">
                     <div class="p-2 rounded-3 bg-dark bg-opacity-75 border border-secondary border-opacity-25 h-100">
                         <div class="text-gold mb-1"><i class="fa-solid fa-stamp fs-5"></i></div>
                         <div class="fw-bold text-white small">Chặng 2</div>
-                        <div class="text-secondary" style="font-size: 0.72rem;">Duyệt Hồ Sơ HQCN</div>
+                        <div class="text-secondary" style="font-size: 0.72rem;">Duyệt HQCN / Soạn Hàng</div>
                     </div>
                 </div>
                 <div class="col-6 col-md-2">
                     <div class="p-2 rounded-3 bg-dark bg-opacity-75 border border-secondary border-opacity-25 h-100">
                         <div class="text-gold mb-1"><i class="fa-solid fa-warehouse fs-5"></i></div>
                         <div class="fw-bold text-white small">Chặng 3</div>
-                        <div class="text-secondary" style="font-size: 0.72rem;">PDI Kiểm Định Xe</div>
+                        <div class="text-secondary" style="font-size: 0.72rem;">PDI Xe / Đóng Gói</div>
                     </div>
                 </div>
                 <div class="col-6 col-md-2">
                     <div class="p-2 rounded-3 bg-dark bg-opacity-75 border border-secondary border-opacity-25 h-100">
-                        <div class="text-gold mb-1"><i class="fa-solid fa-truck-ramp-box fs-5"></i></div>
+                        <div class="text-gold mb-1"><i class="fa-solid fa-truck-fast fs-5"></i></div>
                         <div class="fw-bold text-white small">Chặng 4</div>
-                        <div class="text-secondary" style="font-size: 0.72rem;">Xe Sàn Trượt Chạy</div>
+                        <div class="text-secondary" style="font-size: 0.72rem;">Xe Sàn Trượt / Bốc Hàng</div>
                     </div>
                 </div>
                 <div class="col-6 col-md-2">
                     <div class="p-2 rounded-3 bg-dark bg-opacity-75 border border-secondary border-opacity-25 h-100">
-                        <div class="text-gold mb-1"><i class="fa-solid fa-key fs-5"></i></div>
+                        <div class="text-gold mb-1"><i class="fa-solid fa-handshake fs-5"></i></div>
                         <div class="fw-bold text-white small">Chặng 5</div>
-                        <div class="text-secondary" style="font-size: 0.72rem;">Bàn Giao &amp; Test Pô</div>
+                        <div class="text-secondary" style="font-size: 0.72rem;">Hạ Sàn Test Pô / Đồng Kiểm</div>
                     </div>
                 </div>
                 <div class="col-6 col-md-2">
                     <div class="p-2 rounded-3 bg-dark bg-opacity-75 border border-secondary border-opacity-25 h-100">
                         <div class="text-success mb-1"><i class="fa-solid fa-shield-halved fs-5"></i></div>
                         <div class="fw-bold text-white small">Chặng 6</div>
-                        <div class="text-secondary" style="font-size: 0.72rem;">Bảo Hành 3 Năm</div>
+                        <div class="text-secondary" style="font-size: 0.72rem;">Bảo Hành Chính Hãng</div>
                     </div>
                 </div>
             </div>
@@ -170,7 +170,8 @@
                                         <form th:action="@{/vendor/orders/{id}/status(id=${order.id})}" method="post">
                                             <input type="hidden" name="status" value="CONFIRMED">
                                             <button type="submit" class="btn btn-gold btn-sm w-100 fw-bold py-1 px-2" style="font-size: 0.75rem;">
-                                                <i class="fa-solid fa-stamp me-1"></i> Duyệt HQCN (Chặng 2)
+                                                <i th:class="${order.isVehicleOrder() ? 'fa-solid fa-stamp me-1' : 'fa-solid fa-dolly me-1'}"></i> 
+                                                <span th:text="${order.isVehicleOrder() ? 'Duyệt HQCN (Chặng 2)' : 'Xác Nhận & Soạn Hàng (Chặng 2)'}"></span>
                                             </button>
                                         </form>
                                     </div>
@@ -178,7 +179,8 @@
                                         <form th:action="@{/vendor/orders/{id}/status(id=${order.id})}" method="post">
                                             <input type="hidden" name="status" value="PICKED_UP">
                                             <button type="submit" class="btn btn-gold btn-sm w-100 fw-bold py-1 px-2" style="font-size: 0.75rem;">
-                                                <i class="fa-solid fa-warehouse me-1"></i> Xong PDI &amp; Giao Shipper (Chặng 3)
+                                                <i th:class="${order.isVehicleOrder() ? 'fa-solid fa-warehouse me-1' : 'fa-solid fa-box-open me-1'}"></i> 
+                                                <span th:text="${order.isVehicleOrder() ? 'Xong PDI & Giao Shipper (Chặng 3)' : 'Đóng Gói & Giao Shipper (Chặng 3)'}"></span>
                                             </button>
                                         </form>
                                     </div>
@@ -189,16 +191,21 @@
                                     </div>
                                     <div th:if="${stName == 'SHIPPING'}">
                                         <span class="badge bg-warning text-dark py-1 px-2 w-100" style="font-size: 0.72rem;">
-                                            <i class="fa-solid fa-truck-ramp-box me-1"></i> Xe sàn trượt đang vận chuyển (C4)
+                                            <i th:class="${order.isVehicleOrder() ? 'fa-solid fa-truck-ramp-box me-1' : 'fa-solid fa-truck-fast me-1'}"></i> 
+                                            <span th:text="${order.isVehicleOrder() ? 'Xe sàn trượt đang vận chuyển (C4)' : 'Shipper đang giao hàng (C4)'}"></span>
                                         </span>
                                     </div>
                                     <div th:if="${stName == 'HANDOVER'}">
                                         <span class="badge bg-info text-dark py-1 px-2 w-100" style="font-size: 0.72rem;">
-                                            <i class="fa-solid fa-volume-high me-1"></i> Đang hạ sàn &amp; test pô tại nhà (C5)
+                                            <i th:class="${order.isVehicleOrder() ? 'fa-solid fa-volume-high me-1' : 'fa-solid fa-handshake me-1'}"></i> 
+                                            <span th:text="${order.isVehicleOrder() ? 'Đang hạ sàn & test pô tại nhà (C5)' : 'Đang giao hàng & đồng kiểm (C5)'}"></span>
                                         </span>
                                     </div>
                                     <div th:if="${stName == 'DELIVERED'}">
-                                        <span class="text-success small fw-bold"><i class="fa-solid fa-check-double me-1"></i> Hoàn tất bảo hành 3 năm (C6)</span>
+                                        <span class="text-success small fw-bold">
+                                            <i class="fa-solid fa-check-double me-1"></i> 
+                                            <span th:text="${order.isVehicleOrder() ? 'Hoàn tất bảo hành 3 năm (C6)' : 'Hoàn tất giao hàng thành công (C6)'}"></span>
+                                        </span>
                                     </div>
 
                                     <!-- Dropdown tùy chọn bất kỳ trạng thái nào -->

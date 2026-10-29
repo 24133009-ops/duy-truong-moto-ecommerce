@@ -109,4 +109,88 @@ public class Order {
     public void setNote(String note) {
         this.note = cleanCustomerNote(note);
     }
+
+    /**
+     * Kiểm tra đơn hàng có chứa xe mô tô nguyên chiếc hay là đơn phụ tùng / đồ bảo hộ
+     */
+    public boolean isVehicleOrder() {
+        if (items != null && !items.isEmpty()) {
+            for (OrderItem item : items) {
+                if (item.getProduct() != null && item.getProduct().getCategory() != null) {
+                    String slug = item.getProduct().getCategory().getSlug();
+                    String catName = item.getProduct().getCategory().getName();
+                    if (slug != null) {
+                        String sLower = slug.toLowerCase();
+                        if (sLower.contains("gear-parts") || sLower.contains("do-bao-ho") || sLower.contains("phu-tung") || sLower.contains("accessory")) {
+                            continue;
+                        }
+                        if (sLower.contains("superbike") || sLower.contains("naked") || sLower.contains("cruiser")
+                                || sLower.contains("adventure") || sLower.contains("scooter") || sLower.contains("xe") || sLower.contains("moto")) {
+                            return true;
+                        }
+                    }
+                    if (catName != null) {
+                        String cLower = catName.toLowerCase();
+                        if (cLower.contains("bảo hộ") || cLower.contains("phụ tùng") || cLower.contains("pô độ") || cLower.contains("nón") || cLower.contains("phụ kiện")) {
+                            continue;
+                        }
+                    }
+                    return true;
+                }
+            }
+            return false;
+        }
+        if (delivery != null && delivery.getName() != null) {
+            String dName = delivery.getName().toLowerCase();
+            if (dName.contains("tiêu chuẩn") || dName.contains("phụ tùng") || dName.contains("bảo hộ")) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public String getProcessTitle() {
+        return isVehicleOrder()
+                ? "TIẾN TRÌNH BÀN GIAO 6 CHẶNG CHUYÊN NGHIỆP"
+                : "TIẾN TRÌNH XẾP HÀNG & GIAO PHỤ KIỆN 6 BƯỚC";
+    }
+
+    public String getStepName(int step) {
+        boolean isVehicle = isVehicleOrder();
+        switch (step) {
+            case 1: return isVehicle ? "Đặt Cọc Online" : "Đặt Mua Online";
+            case 2: return isVehicle ? "Duyệt HQCN" : "Soạn Hàng";
+            case 3: return isVehicle ? "Xuất Kho PDI" : "Đóng Gói Chống Sốc";
+            case 4: return isVehicle ? "Xe Sàn Trượt" : "Bốc Hàng Lên Xe";
+            case 5: return isVehicle ? "Bàn Giao & Test Pô" : "Giao Hàng & Đồng Kiểm";
+            case 6: return isVehicle ? "Bảo Hành 3 Năm" : "Hoàn Tất Đơn Hàng";
+            default: return "Chặng " + step;
+        }
+    }
+
+    public String getStepDesc(int step) {
+        boolean isVehicle = isVehicleOrder();
+        switch (step) {
+            case 1: return isVehicle ? "Khách cọc VNPay" : "Đã xác nhận đơn hàng";
+            case 2: return isVehicle ? "Showroom kiểm tra" : "Xếp hàng & kiểm đúng mẫu";
+            case 3: return isVehicle ? "Siết ốc & Rửa xe" : "Bọc xốp khí & niêm phong";
+            case 4: return isVehicle ? "Vận chuyển VIP" : "Bốc xếp & bàn giao shipper";
+            case 5: return isVehicle ? "Hạ sàn & nổ máy" : "Khách kiểm tra hàng & nhận";
+            case 6: return isVehicle ? "Kích hoạt chính hãng" : "Bảo hành phụ kiện chính hãng";
+            default: return "";
+        }
+    }
+
+    public String getStepIcon(int step) {
+        boolean isVehicle = isVehicleOrder();
+        switch (step) {
+            case 1: return isVehicle ? "fa-solid fa-file-invoice-dollar" : "fa-solid fa-bag-shopping";
+            case 2: return isVehicle ? "fa-solid fa-stamp" : "fa-solid fa-dolly";
+            case 3: return isVehicle ? "fa-solid fa-warehouse" : "fa-solid fa-box-open";
+            case 4: return isVehicle ? "fa-solid fa-truck-ramp-box" : "fa-solid fa-truck-fast";
+            case 5: return isVehicle ? "fa-solid fa-volume-high" : "fa-solid fa-handshake";
+            case 6: return isVehicle ? "fa-solid fa-shield-halved" : "fa-solid fa-circle-check";
+            default: return "fa-solid fa-circle";
+        }
+    }
 }
