@@ -50,10 +50,10 @@ public class DataInitializer implements CommandLineRunner {
             List<String> targetEmails = Arrays.asList("duytq4906@gmail.com", "khoidt0701@gmail.com", "nghaitinh0511@gmail.com");
             for (String em : targetEmails) {
                 userRepository.findByEmail(em).ifPresent(u -> {
-                    u.setIsLocked(false);
+                    u.setIsBlocked(false);
                     u.setIsEmailActive(true);
-                    u.setOtpAttempts(0);
                     u.setOtpCode(null);
+                    u.setOtpExpiry(null);
                     userRepository.save(u);
                     log.info(">>> [DataInitializer] Đã mở khóa & kích hoạt tài khoản: {}", em);
                 });

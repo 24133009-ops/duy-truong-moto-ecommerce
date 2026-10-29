@@ -47,10 +47,12 @@ public class Order {
     @Column(length = 100)
     private String recipientName;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
     private OrderStatus status = OrderStatus.NOT_PROCESSED;
 
+    @Builder.Default
     @Column(nullable = false)
     private Boolean isPaidBefore = false;
 
@@ -69,10 +71,14 @@ public class Order {
     @Column(length = 1000)
     private String note;
 
+    @Builder.Default
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();
 
+    @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();
 
     public BigDecimal getTotalAmount() {
